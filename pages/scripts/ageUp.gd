@@ -18,7 +18,7 @@ func _ready() -> void:
 		if global.age >= 2: #you must be 2 or over to get random age up events
 			print("choosing random age up event...")
 			if global.age <= 4: #if age is 4 or below
-				global.revent.append("toddler-" + str(randi_range(0, 0))) #second number in the randi_range is the last ID for the event that exists
+				global.revent.append("toddler-" + str(randi_range(0, 1))) #second number in the randi_range is the last ID for the event that exists
 			elif global.age >= 5 && global.age <= 12: #if age is between 5 and 12
 				global.revent.append("child-" + str(randi_range(0, 0)))
 			elif global.age >= 13 && global.age <= 19: #if age is between 13 and 19
