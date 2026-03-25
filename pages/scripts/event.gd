@@ -228,6 +228,7 @@ func teenagehood(): #teenage base events - prefix is "teenager-"
 		$option3.text = "Leave " + pronounGenerator("him", global.eventPersonSex) + " alone"
 		$option4.modulate.a = 0
 		$credit.text = "mconcerning"
+	
 
 
 func adulthood(): #adult base events - prefix is "adult-"
@@ -244,6 +245,14 @@ func adulthood(): #adult base events - prefix is "adult-"
 		$option3.text = "Leave " + pronounGenerator("him", global.eventPersonSex) + " alone"
 		$option4.modulate.a = 0
 		$credit.text = "mconcerning"
+	elif global.revent[0] == "adult-0":
+		$heading.text = "Bully Returns"
+		$body.text = "You meet one of your childhood bullies after you've graduated highschool."
+		$option1.text = "Shame them for their behaviour" 
+		$option2.text = "Avoid them"
+		$option3.text = "Say hi and move on"
+		$option4.modulate.a = 0
+		$credit.text = "Goblin"
 
 
 func elderhood(): #elderly base events - prefix is "elder-"
@@ -297,12 +306,16 @@ func _on_option_1_pressed() -> void: #on option 1 selected
 		goHome()
 	elif global.revent[0] = "toddler-1":
 		outcome(global.revent[0] + "-o1")
+	elif global.revent[0] = "adulthood-0":
+		outcome(global.revent[0] + "-o1")
 
 
 func _on_option_2_pressed() -> void: #on option 2 selected
 	if global.revent[0] == "toddler-0" || global.revent[0] == "child-0" || global.revent[0] == "toddler-friend" || global.revent[0] == "child-friend" || global.revent[0] == "teenager-friend" || global.revent[0] == "adult-friend" || global.revent[0] == "elder-friend" || global.revent[0] == "change-save-management-mode-to-delete":
 		outcome(global.revent[0] + "-o2")
 	elif global.revent[0] = "toddler-1":
+		outcome(global.revent[0] + "-o2")
+	elif global.revent[0] = "adulthood-0":
 		outcome(global.revent[0] + "-o2")
 
 
