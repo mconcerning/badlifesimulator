@@ -175,6 +175,15 @@ func toddlerhood(): #toddlerhood base events - prefix is "toddler-"
 		$option3.text = "Bite your tongue and don't say anything"
 		$option4.modulate.a = 0 #there is no fourth option; this makes the button transparent (opacity of 0) so you can't see it. There is no way to interact with it either, provided its click functionality isn't implemented within the "if" statement for this event.
 		$credit.text = "mconcerning"
+	elif global.revent[0] == "toddler-1":
+		$heading.text = "The stolen teddy"
+		$body.text = "At daycare, another toddler takes away your favorite teddy bear from you and they refuse to give it back."
+		$option1.text = "Cry loudly until a teacher intervenes"
+		$option2.text = "Find another toy to play with."
+		$option3.text = "Snatch the teddy back yourself."
+		$option4.modulate.a = 0
+		$credit.text = "Orsted1"
+
 
 
 func childhood(): #childhood base events - prefix is "child-"
@@ -286,16 +295,19 @@ func _on_option_1_pressed() -> void: #on option 1 selected
 		goHome()
 	elif global.revent[0] == "elder-friend-o1" || global.revent[0] == "elder-friend-o2" || global.revent[0] == "elder-friend-o3":
 		goHome()
+	elif global.revent[0] = "toddler-1":
+		outcome(global.revent[0] + "-o1")
 
 
 func _on_option_2_pressed() -> void: #on option 2 selected
 	if global.revent[0] == "toddler-0" || global.revent[0] == "child-0" || global.revent[0] == "toddler-friend" || global.revent[0] == "child-friend" || global.revent[0] == "teenager-friend" || global.revent[0] == "adult-friend" || global.revent[0] == "elder-friend" || global.revent[0] == "change-save-management-mode-to-delete":
 		outcome(global.revent[0] + "-o2")
+	elif global.revent[0] = "toddler-1":
+		outcome(global.revent[0] + "-o2")
 
 
 func _on_option_3_pressed() -> void: #on option 3 selected
 	outcome(global.revent[0] + "-o3")
-
 
 func _on_option_4_pressed() -> void: #on option 4 selected
 	if global.revent[0] == "child-0":
@@ -370,7 +382,15 @@ func option1outcomes(): #option 1 has been picked
 		global.evality += 3 #since you did something semi-bad, you become slightly desensitised to doing bad things
 	elif global.revent[0] == "change-save-management-mode-to-delete-o1":
 		goToSpecific("res://pages/life_save_files.tscn")
-
+	elif global.revent[0] = "toddler-1-o1":
+		$heading.text = "Returned toy"
+		$body.text = "The teacher returns your teddy, but the other toddler glares at you. +5 joy"
+		$option1.text = "Okay"
+		$option2.modulate.a = 0
+		$option3.modulate.a = 0
+		$option4.modulate.a = 0
+		global.joy+=5
+		global.evality+=2
 
 func option2outcomes(): #option 2 has been picked
 	if global.revent[0] == "toddler-friend-o2" || global.revent[0] == "child-friend-o2":
@@ -486,6 +506,18 @@ func option2outcomes(): #option 2 has been picked
 		global.evality += 4 #since you did something bad, you become slightly desensitised to doing bad things
 	elif global.revent[0] == "change-save-management-mode-to-delete-o2":
 		goToSpecific("res://pages/life_save_files.tscn")
+	elif global.revent[0] = "toddler-1-o2":
+		$heading.text = "New friend"
+		$body.text = "You find a new toy, and make a new friend who enjoys playing with the same toys as you. +3 joy"
+		$option1.text = "Okay"
+		$option2.modulate.a = 0
+		$option3.modulate.a = 0
+		$option4.modulate.a = 0
+		global.joy+=3
+		if global.evality<=2:
+			global.evality=0
+		else:
+			global.evality-=2
 
 
 func option3outcomes(): #option 3 has been picked
@@ -533,6 +565,15 @@ func option3outcomes(): #option 3 has been picked
 		for i in parents.size(): #runs through every parent
 				global.familyRelationships[parents[i]] -= 8 #deducts 8 relationship from the parent at the index of parents[i] (parents stores indexes, so the parents at position i in the parents array could have a different index to themself in the other family arrays.
 		global.joy -= 12
+	elif global.revent[0] = "toddler-1-o3":
+		$heading.text = "Returned toy"
+		$body.text = "The toddler starts crying, and the teacher scolds you. -2 joy"
+		$option1.text = "Okay"
+		$option2.modulate.a = 0
+		$option3.modulate.a = 0
+		$option4.modulate.a = 0
+		global.joy-=2
+		global.evality+=5
 
 
 func option4outcomes(): #option 4 has been picked
