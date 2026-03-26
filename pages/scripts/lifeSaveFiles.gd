@@ -23,6 +23,7 @@ func deleteLife(saveFile, buttonName): #deletes ONE save file (specify file NAME
 	if saveFile == global.currentLife: #if you're deleting the life you're currently on
 		print("this is your current life, setting currentLife to ''")
 		global.currentLife = "" #empty current life (there's no life)
+		global.saveGame()
 
 
 func buttonPressed(saveFile, buttonName):

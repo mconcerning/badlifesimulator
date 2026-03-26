@@ -42,6 +42,21 @@ func EGPGenerator(ageRange, minAge): #randomly generates EGPs (Event Generated P
 	if global.eventPersonAge < minAge: #if the event person's age is less than the minimum age
 		global.eventPersonAge = minAge #sets their age to the minimum age
 
+func NPCKiller(type, index): #kills an NPC (family or misc)
+	if type == "family":
+		global.familyFirstNames.remove_at(index)
+		global.familyLastNames.remove_at(index)
+		global.familyRelationships.remove_at(index)
+		global.familyTypes.remove_at(index)
+		global.familyAges.remove_at(index)
+		global.familySexes.remove_at(index)
+	elif type == "misc":
+		global.miscFirstNames.remove_at(index)
+		global.miscLastNames.remove_at(index)
+		global.miscRelationships.remove_at(index)
+		global.miscTypes.remove_at(index)
+		global.miscAges.remove_at(index)
+		global.miscSexes.remove_at(index)
 
 func pronounGenerator(type, sex): #returns pronouns so you don't have to do it manually inside events - can be one of three types: him (objective), his (possessive), he (personal), or boy (noun)
 	if type == "him":
@@ -224,7 +239,7 @@ func teenagehood(): #teenage base events - prefix is "teenager-"
 			$body.text = "While out with family, " #this isn't unfinished, it gets appended to in a second
 		$body.text = $body.text + "you run into a " + pronounGenerator("boy", global.eventPersonSex) + " named " + global.eventPersonFirstName + ". You start talking and realise you have a lot of chemistry."
 		$option1.text = "Befriend " + pronounGenerator("him", global.eventPersonSex)
-		$option.text = "Ask " + pronounGenerator("him", global.eventPersonSex) + " out"
+		$option2.text = "Ask " + pronounGenerator("him", global.eventPersonSex) + " out"
 		$option3.text = "Leave " + pronounGenerator("him", global.eventPersonSex) + " alone"
 		$option4.modulate.a = 0
 		$credit.text = "mconcerning"
@@ -598,13 +613,7 @@ func option4outcomes(): #option 4 has been picked
 		$option2.modulate.a = 0
 		$option3.modulate.a = 0
 		$option4.modulate.a = 0
-		#kills uncle
-		global.familyFirstNames.remove_at(relativeOfChoice)
-		global.familyLastNames.remove_at(relativeOfChoice)
-		global.familyRelationships.remove_at(relativeOfChoice)
-		global.familyTypes.remove_at(relativeOfChoice)
-		global.familyAges.remove_at(relativeOfChoice)
-		global.familySexes.remove_at(relativeOfChoice)
+		NPCKiller("family", relativeOfChoice) #kills uncle
 		#stat effects
 		global.intellect = 100
 		global.crimes.append("1st-degree-murder")

@@ -129,14 +129,15 @@ func directoryGetter(): #gets path to lives
 	return "user://spycarsinc/bls/lives/" #returns path
 
 func saveGame(): #does the actual saving
-	var lifeSavePath = "user://spycarsinc/bls/lives/" + currentLife + ".bls" #the path on the user's device the save will be located - this save only stores the life-specific stuff that doesn't persist between lives (age, relationships, health...)
+	if currentLife != "": #if you currently HAVE a life to save
+		var lifeSavePath = "user://spycarsinc/bls/lives/" + currentLife + ".bls" #the path on the user's device the save will be located - this save only stores the life-specific stuff that doesn't persist between lives (age, relationships, health...)
+		var lifeSaveFile = FileAccess.open(lifeSavePath, FileAccess.WRITE)
+		lifeSaveFile.store_var(lifeSerialiser()) #overwrites the life save file with collinsDictionary from the lifeSerialiser() function above.
+		lifeSaveFile.close() #closes file and saves changes
 	var gameSavePath  = "user://spycarsinc/bls/game.bls" #this save stores all of the non-life-specific stuff that does persist between lives (achievements, XP and levels, DNA, etc...)
-	var lifeSaveFile = FileAccess.open(lifeSavePath, FileAccess.WRITE)
 	var gameSaveFile = FileAccess.open(gameSavePath, FileAccess.WRITE)
 	#and now do the rest
-	lifeSaveFile.store_var(lifeSerialiser()) #overwrites the life save file with collinsDictionary from the lifeSerialiser() function above.
 	gameSaveFile.store_var(gameSerialiser()) #overwrites the game save file with cambridgeDictionary from the gameSerialiser() function above.
-	lifeSaveFile.close() #closes file and saves changes
 	gameSaveFile.close() #closes file and saves changes
 
 func loadGame(): #does the actual GAME loading
@@ -195,3 +196,7 @@ func loadLife(): #does the actual LIFE loading
 			get_tree().change_scene_to_file("res://pages/game_menu.tscn")
 	else: #file does not exist
 		print("no life save file... how did you even run this function if there's no... i-")
+
+
+func death(): #when the player dies
+	pass
