@@ -321,7 +321,7 @@ func _on_option_1_pressed() -> void: #on option 1 selected
 		goHome()
 	elif global.revent[0] == "toddler-1":
 		outcome(global.revent[0] + "-o1")
-	elif global.revent[0] == "adulthood-0":
+	elif global.revent[0] == "adult-0":
 		outcome(global.revent[0] + "-o1")
 	elif global.revent[0] == "toddler-1-o1" || global.revent[0] == "toddler-1-o2" || global.revent[0] == "toddler-1-o3":
 		goHome()
@@ -333,7 +333,7 @@ func _on_option_2_pressed() -> void: #on option 2 selected
 		outcome(global.revent[0] + "-o2")
 	elif global.revent[0] == "toddler-1":
 		outcome(global.revent[0] + "-o2")
-	elif global.revent[0] == "adulthood-0":
+	elif global.revent[0] == "adult-0":
 		goHome()
 
 
