@@ -323,10 +323,10 @@ func _on_option_1_pressed() -> void: #on option 1 selected
 		outcome(global.revent[0] + "-o1")
 	elif global.revent[0] == "adulthood-0":
 		goHome()
-	elif global.revent[0] == "toddler-1-o1":
+	elif global.revent[0] == "toddler-1-o1" || global.revent[0] == "toddler-1-o2" || global.revent[0] == "toddler-1-o3":
 		goHome()
-	elif global.revent[0] == "adulthood-0-o1":
-
+	elif global.revent[0] == "adult-0-o1" || global.revent[0] == "adult-0-o2" || global.revent[0] == "adult-0-o3":
+		goHome()
 
 func _on_option_2_pressed() -> void: #on option 2 selected
 	if global.revent[0] == "toddler-0" || global.revent[0] == "child-0" || global.revent[0] == "toddler-friend" || global.revent[0] == "child-friend" || global.revent[0] == "teenager-friend" || global.revent[0] == "adult-friend" || global.revent[0] == "elder-friend" || global.revent[0] == "change-save-management-mode-to-delete":
