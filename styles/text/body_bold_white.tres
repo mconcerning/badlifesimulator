@@ -1,0 +1,7 @@
+[gd_resource type="LabelSettings" format=3 uid="uid://dp13hogu8m6pr"]
+
+[ext_resource type="FontFile" uid="uid://jc7d7o5eghs1" path="res://assets/fonts/poppins/Poppins-Bold.ttf" id="1_4n7hp"]
+
+[resource]
+font = ExtResource("1_4n7hp")
+font_size = 42

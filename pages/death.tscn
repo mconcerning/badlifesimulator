@@ -1,0 +1,114 @@
+[gd_scene format=3 uid="uid://b08m08cooyny7"]
+
+[ext_resource type="PackedScene" uid="uid://pmo8e2dmbkfm" path="res://objects/background.tscn" id="1_3kyg3"]
+[ext_resource type="Script" uid="uid://rwfkrkm8sxi0" path="res://pages/scripts/death.gd" id="1_k37ta"]
+[ext_resource type="LabelSettings" uid="uid://bdu57mu77gnih" path="res://styles/text/heading_white.tres" id="2_k6w8t"]
+[ext_resource type="Texture2D" uid="uid://cq57fino8h30i" path="res://assets/red-bg.png" id="3_4vejq"]
+[ext_resource type="LabelSettings" uid="uid://c3r4rskc4jrad" path="res://styles/text/heading.tres" id="5_ohchq"]
+
+[sub_resource type="Animation" id="Animation_4vejq"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("../youDiedWhite:modulate:a")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [0.0]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath(".:modulate:a")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [1.0]
+}
+
+[sub_resource type="Animation" id="Animation_ohchq"]
+resource_name = "fade"
+length = 2.0
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:modulate:a")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 1, 2),
+"transitions": PackedFloat32Array(1, 1, 2),
+"update": 0,
+"values": [1.0, 1.0, 0.0]
+}
+
+[sub_resource type="Animation" id="Animation_16vjf"]
+resource_name = "fadeText"
+length = 2.0
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("../youDiedWhite:modulate:a")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 1, 2),
+"transitions": PackedFloat32Array(1, 1, 2),
+"update": 0,
+"values": [1.0, 1.0, 0.0]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_16vjf"]
+_data = {
+&"RESET": SubResource("Animation_4vejq"),
+&"fade": SubResource("Animation_ohchq"),
+&"fadeText": SubResource("Animation_16vjf")
+}
+
+[node name="death" type="Node2D" unique_id=1806842325]
+script = ExtResource("1_k37ta")
+
+[node name="background" parent="." unique_id=1208101721 instance=ExtResource("1_3kyg3")]
+
+[node name="youDiedBlack" type="Label" parent="." unique_id=933004606]
+offset_top = 100.0
+offset_right = 1080.0
+offset_bottom = 240.0
+text = "You died"
+label_settings = ExtResource("5_ohchq")
+horizontal_alignment = 1
+
+[node name="backgroundRed" type="TextureRect" parent="." unique_id=220519884]
+visible = false
+offset_right = 1080.0
+offset_bottom = 1920.0
+texture = ExtResource("3_4vejq")
+metadata/_edit_use_anchors_ = true
+metadata/_edit_lock_ = true
+
+[node name="fadeAnimation" type="AnimationPlayer" parent="backgroundRed" unique_id=724821766]
+libraries/ = SubResource("AnimationLibrary_16vjf")
+autoplay = &"fade"
+
+[node name="youDiedWhite" type="Label" parent="." unique_id=1643953276]
+visible = false
+modulate = Color(1, 1, 1, 0)
+offset_right = 1080.0
+offset_bottom = 1920.0
+text = "You
+Died :("
+label_settings = ExtResource("2_k6w8t")
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="fadeAnimation" type="AnimationPlayer" parent="youDiedWhite" unique_id=1518117611]
+root_node = NodePath("../../backgroundRed")
+libraries/ = SubResource("AnimationLibrary_16vjf")
+autoplay = &"fadeText"

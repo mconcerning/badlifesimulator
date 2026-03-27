@@ -118,6 +118,15 @@ offset_bottom = 984.0
 theme = ExtResource("6_llmlx")
 text = "Set evality"
 
+[node name="die" type="Button" parent="scrollContainer/control" unique_id=1127429589]
+layout_mode = 0
+offset_left = 533.0
+offset_top = 1050.0
+offset_right = 627.0
+offset_bottom = 1134.0
+theme = ExtResource("6_llmlx")
+text = "Die"
+
 [node name="saveGame" type="TextureButton" parent="." unique_id=1317964170]
 offset_left = 960.0
 offset_top = 20.0
@@ -135,4 +144,5 @@ stretch_mode = 0
 [connection signal="pressed" from="scrollContainer/control/setLooks" to="." method="_on_set_looks_pressed"]
 [connection signal="pressed" from="scrollContainer/control/RAUE" to="." method="_on_raue_pressed"]
 [connection signal="pressed" from="scrollContainer/control/setEvality" to="." method="_on_set_evality_pressed"]
+[connection signal="pressed" from="scrollContainer/control/die" to="." method="_on_die_pressed"]
 [connection signal="pressed" from="saveGame" to="." method="_on_save_game_pressed"]

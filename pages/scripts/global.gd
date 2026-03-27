@@ -37,6 +37,13 @@ var familyTypes = []
 var familyAges = []
 var familySexes = []
 var familyRelationships = []
+#dead
+var deadFamilyFirstNames = []
+var deadFamilyLastNames = []
+var deadFamilyTypes = []
+var deadFamilyAges = []
+var deadFamilySexes = []
+var deadFamilyRelationships = []
 
 #other (miscellaneous) relationships
 var miscFirstNames = []
@@ -45,6 +52,13 @@ var miscTypes = []
 var miscAges = []
 var miscSexes = []
 var miscRelationships = []
+#dead
+var deadMiscFirstNames = []
+var deadMiscLastNames = []
+var deadMiscTypes = []
+var deadMiscAges = []
+var deadMiscSexes = []
+var deadMiscRelationships = []
 
 
 #miscellaneous stuff that must be stored over multiple pages
@@ -53,6 +67,13 @@ var eventPersonFirstName = ""
 var eventPersonLastName = ""
 var eventPersonAge = ""
 var eventPersonSex = ""
+
+
+#keeping track (for achievements or otherwise)
+var joyOverTime = [] #every time you age up, your current joy level is appended here. when you die, the average of all these values is calculated and you are told it.
+var healthOverTime = []
+var intellectOverTime = []
+var looksOverTime = []
 
 
 #testing variables - used in developer mode
@@ -98,7 +119,17 @@ func lifeSerialiser(): #serialises every life-specific variable we need to save 
 		"miscTypes" : miscTypes,
 		"miscAges" : miscAges,
 		"miscSexes" : miscSexes,
-		"miscRelationships" : miscRelationships
+		"miscRelationships" : miscRelationships,
+		#misc
+		"eventPersonFirstName" : eventPersonFirstName,
+		"eventPersonLastName" : eventPersonLastName,
+		"eventPersonAge" : eventPersonAge,
+		"eventPersonSex" : eventPersonSex,
+		#keeping track
+		"joyOverTime" : joyOverTime,
+		"healthOverTime" : healthOverTime,
+		"intellectOverTime" : intellectOverTime,
+		"looksOverTime" : looksOverTime,
 	}
 	return collinsDictionary
 
@@ -191,12 +222,18 @@ func loadLife(): #does the actual LIFE loading
 			miscAges = dictionary["miscAges"]
 			miscSexes = dictionary["miscSexes"]
 			miscRelationships = dictionary["miscRelationships"]
+			#misc
+			eventPersonFirstName = dictionary["eventPersonFirstName"]
+			eventPersonLastName = dictionary["eventPersonLastName"]
+			eventPersonAge = dictionary["eventPersonAge"]
+			eventPersonSex = dictionary["eventPersonSex"]
+			#keeping track
+			joyOverTime = dictionary["joyOverTime"]
+			healthOverTime = dictionary["healthOverTime"]
+			intellectOverTime = dictionary["intellectOverTime"]
+			looksOverTime = dictionary["looksOverTime"]
 			lifeSaveFile.close() #closes file so it doesn't do anything weird
 			print("hoorah, life load successful")
 			get_tree().change_scene_to_file("res://pages/game_menu.tscn")
 	else: #file does not exist
 		print("no life save file... how did you even run this function if there's no... i-")
-
-
-func death(): #when the player dies
-	pass

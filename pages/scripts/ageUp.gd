@@ -42,9 +42,10 @@ func _ready() -> void:
 			global.revent.append("elder-friend")
 		print("appended event " + str(global.revent[global.revent.size() - 1])) #prints the last event ID (the one that was just appended) in the revent array
 	#death chance
-	print("1 in " + str(max(1, 800 - global.age * 10 + global.health)) + " chance of you dying")
-	if randi_range(1, max(1, 800 - global.age * 10 + global.health)) == 1: #if you're old and unhealthy enough to die
-		print("you're so dead")
+	print("1 in " + str(max(1, 800 - global.age * 12 + global.health * 5)) + " chance of you dying")
+	if randi_range(1, max(1, 800 - global.age * 12 + global.health * 5)) == 1: #if you're old and unhealthy enough to die
+		get_tree().change_scene_to_file("res://pages/death.tscn") #kills you
+		return #ceases function of this function so nothing below this runs
 	#runs events if they're queued
 	if global.revent.size() > 0: #if there are random events slated to appear
 		get_tree().change_scene_to_file("res://pages/event.tscn") #goes to the event page
