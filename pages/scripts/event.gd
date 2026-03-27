@@ -322,7 +322,10 @@ func _on_option_1_pressed() -> void: #on option 1 selected
 	elif global.revent[0] == "toddler-1":
 		outcome(global.revent[0] + "-o1")
 	elif global.revent[0] == "adulthood-0":
-		outcome(global.revent[0] + "-o1")
+		goHome()
+	elif global.revent[0] == "toddler-1-o1":
+		goHome()
+	elif global.revent[0] == "adulthood-0-o1":
 
 
 func _on_option_2_pressed() -> void: #on option 2 selected
@@ -419,7 +422,7 @@ func option1outcomes(): #option 1 has been picked
 		$option4.modulate.a = 0
 		global.joy+=5
 		global.evality+=2
-	elif global.revent == "adult-0-o1":
+	elif global.revent[0] == "adult-0-o1":
 		$heading.text = "Shame on you!"
 		$body.text = "You shamne your high school bully, but it mostly feels akward. +3 joy"
 		$option1.text = "Okay"
@@ -609,7 +612,7 @@ func option3outcomes(): #option 3 has been picked
 		$option4.modulate.a = 0
 		global.joy-=2
 		global.evality+=5
-	elif global.revent[0] == "adult-0-o3"
+	elif global.revent[0] == "adult-0-o3":
 		$heading.text = "Ammends made"
 		$body.text = "You catch up, and they apologize for their actions, all is well. +15 joy"
 		$option1.text = "Okay"
