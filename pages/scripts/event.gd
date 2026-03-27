@@ -614,7 +614,7 @@ func option3outcomes(): #option 3 has been picked
 		global.evality+=5
 	elif global.revent[0] == "adult-0-o3":
 		$heading.text = "Ammends made"
-		$body.text = "You catch up, and they apologize for their actions, all is well. +15 joy"
+		$body.text = "You catch up, and they apologize for their actions, all is well. +10 joy"
 		$option1.text = "Okay"
 		$option2.modulate.a = 0
 		$option3.modulate.a = 0
