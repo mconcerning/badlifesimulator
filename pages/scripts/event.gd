@@ -58,7 +58,7 @@ func NPCKiller(type, index): #kills an NPC (family or misc)
 		global.miscAges.remove_at(index)
 		global.miscSexes.remove_at(index)
 
-func pronounGenerator(type, sex): #returns pronouns so you don't have to do it manually inside events - can be one of three types: him (objective), his (possessive), he (personal), or boy (noun)
+func pronounGenerator(type, sex): #returns pronouns so you don't have to do it manually inside events - can be one of four types: him (objective), his (possessive), he (personal), or boy (noun)
 	if type == "him":
 		if sex == "M": #if sex of person is male
 			return "him"
@@ -244,11 +244,12 @@ func teenagehood(): #teenage base events - prefix is "teenager-"
 		$option4.modulate.a = 0
 		$credit.text = "mconcerning"
 	elif global.revent[0] == "teenager-0":
+		EGPGenerator()
 		$heading.text = "High School Romance"
-		$body.text = "A classmate confesses their feelings for you after school."
-		$option1.text = "Start dating them"
-		$option2.text = "Politely reject them"
-		$option3.text = "Make fun of the loser." if global.evality>=40 else "Make fun of them in front of others."
+		$body.text =  global.eventPersonFirstName + " " + global.eventPersonLastName + " says " + pronounGenerator("he",global.eventPersonSex) + " has feelings for you after school."
+		$option1.text = "Start dating " + pronounGenerator("him",global.eventPersonSex)
+		$option2.text = "Politely reject" + pronounGenerator("him",global.eventPersonSex)
+		$option3.text = "Make fun of the loser." if global.evality>=40 else "Make fun of" + pronounGenerator("him",global.eventPersonSex) + " in front of everyone."
 		$option4.modulate.a = 0
 		$credit.text = "Orsted1"
 	
@@ -447,13 +448,18 @@ func option1outcomes(): #option 1 has been picked
 		global.joy+=3
 	elif global.revent[0] == "teenager-0-o1":
 		$heading.text = "New Romance"
-		$body.text = "You start dating him."
+		$body.text = "You start dating him. +5 joy, +5 looks"
 		$option1.text = "Okay"
 		$option2.modulate.a = 0
 		$option3.modulate.a = 0
 		$option4.modulate.a = 0
-		global.joy+=5
-		global.looks+=5
+		global.miscFirstNames += global.eventPersonFirstName
+		global.miscLastNames += glboal.eventPersonLastName
+		global.miscTypes += pronounGenerator("boy",eventPersonSex)+"friend"
+		global.miscAges += global.eventPersonAge
+		global.miscRelationships += randi_range(65,100)
+		global.joy += 5
+		global.looks += 5
 
 func option2outcomes(): #option 2 has been picked
 	if global.revent[0] == "toddler-friend-o2" || global.revent[0] == "child-friend-o2":
@@ -585,13 +591,13 @@ func option2outcomes(): #option 2 has been picked
 		goHome()
 	elif global.revent[0] == "teenager-0-o2":
 		$heading.text = "Honesty is the best policy"
-		$body.text = "They respect your honesty, but things are akward for a while."
+		$body.text = pronounGenerator("he",global.eventPersonSex).capitalise() + " respects your honesty, but things are akward for a while."
 		$option1.text = "Okay"
 		$option2.modulate.a = 0
 		$option3.modulate.a = 0
 		$option4.modulate.a = 0
-		$global.evality-= 5 if evality>=5 else global.evality
-		global.joy+=3
+		global.evality -= 5 if global.evality>=5 else global.evality
+		global.joy += 3
 
 
 func option3outcomes(): #option 3 has been picked
@@ -659,19 +665,19 @@ func option3outcomes(): #option 3 has been picked
 		global.evality -= 5 if global.evality >= 5 else global.evality
 	elif global.revent[0] == "teenager-0-o3":
 		if global.evality>=40:
-			$heading.text = ""
-			$body.text = "You embarrased that loser in front of everyone. +10 joy"
-			$option1.text = "Good."
-			global.evality += 5
+			$heading.text = "Pathetic fool."
+			$body.text = "You embarrased " +pronounGenerator("him",global.eventPersonSex) + " in front of everyone. +10 joy"
+			$option1.text = "Good"
 			global.joy += 10
 		else:
-			$heading.text = ""
-			$body.text = "You made fun of them in front of everyone, and now most of your class hates you. -10 joy"
+			$heading.text = "Now what?"
+			$body.text = "You made fun of " +pronounGenerator("him",global.eventPersonSex) + " in front of everyone, and now most of your class hates you. -10 joy"
 			$option1.text = "Okay"
-			global.joy-=10
+			global.joy -= 10
 		$option2.modulate.a = 0
 		$option3.modulate.a = 0
 		$option4.modulate.a = 0
+		global.evality += 5
 
 func option4outcomes(): #option 4 has been picked
 	if global.revent[0] == "child-0-o4":
