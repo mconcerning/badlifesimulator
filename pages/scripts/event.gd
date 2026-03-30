@@ -591,7 +591,7 @@ func option2outcomes(): #option 2 has been picked
 		goHome()
 	elif global.revent[0] == "teenager-0-o2":
 		$heading.text = "Honesty is the best policy"
-		$body.text = pronounGenerator("he",global.eventPersonSex).capitalise() + " respects your honesty, but things are akward for a while."
+		$body.text = pronounGenerator("he", global.eventPersonSex).capitalize() + " respects your honesty, but things are akward for a while."
 		$option1.text = "Okay"
 		$option2.modulate.a = 0
 		$option3.modulate.a = 0
