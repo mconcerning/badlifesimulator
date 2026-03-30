@@ -248,8 +248,8 @@ func teenagehood(): #teenage base events - prefix is "teenager-"
 		$heading.text = "High School Romance"
 		$body.text =  global.eventPersonFirstName + " " + global.eventPersonLastName + " says " + pronounGenerator("he",global.eventPersonSex) + " has feelings for you after school."
 		$option1.text = "Start dating " + pronounGenerator("him",global.eventPersonSex)
-		$option2.text = "Politely reject" + pronounGenerator("him",global.eventPersonSex)
-		$option3.text = "Make fun of the loser." if global.evality>=40 else "Make fun of" + pronounGenerator("him",global.eventPersonSex) + " in front of everyone."
+		$option2.text = "Politely reject " + pronounGenerator("him",global.eventPersonSex)
+		$option3.text = "Make fun of " + pronounGenerator("him",global.eventPersonSex) + " in front of everyone."
 		$option4.modulate.a = 0
 		$credit.text = "Orsted1"
 	
@@ -448,7 +448,7 @@ func option1outcomes(): #option 1 has been picked
 		global.joy+=3
 	elif global.revent[0] == "teenager-0-o1":
 		$heading.text = "New Romance"
-		$body.text = "You start dating him. +5 joy, +5 looks"
+		$body.text = "You start dating " + pronounGenerator("him", global.eventPersonSex) + ". +5 joy, +5 looks"
 		$option1.text = "Okay"
 		$option2.modulate.a = 0
 		$option3.modulate.a = 0
