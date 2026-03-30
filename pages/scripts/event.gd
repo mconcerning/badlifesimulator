@@ -244,7 +244,7 @@ func teenagehood(): #teenage base events - prefix is "teenager-"
 		$option4.modulate.a = 0
 		$credit.text = "mconcerning"
 	elif global.revent[0] == "teenager-0":
-		EGPGenerator()
+		EGPGenerator(global.age, 1)
 		$heading.text = "High School Romance"
 		$body.text =  global.eventPersonFirstName + " " + global.eventPersonLastName + " says " + pronounGenerator("he",global.eventPersonSex) + " has feelings for you after school."
 		$option1.text = "Start dating " + pronounGenerator("him",global.eventPersonSex)
@@ -453,11 +453,11 @@ func option1outcomes(): #option 1 has been picked
 		$option2.modulate.a = 0
 		$option3.modulate.a = 0
 		$option4.modulate.a = 0
-		global.miscFirstNames += global.eventPersonFirstName
-		global.miscLastNames += glboal.eventPersonLastName
-		global.miscTypes += pronounGenerator("boy",eventPersonSex)+"friend"
-		global.miscAges += global.eventPersonAge
-		global.miscRelationships += randi_range(65,100)
+		global.miscFirstNames.append(global.eventPersonFirstName)
+		global.miscLastNames.append(global.eventPersonLastName)
+		global.miscTypes.append(pronounGenerator("boy", global.eventPersonSex) + "friend")
+		global.miscAges.append(global.eventPersonAge)
+		global.miscRelationships.append(randi_range(65,100))
 		global.joy += 5
 		global.looks += 5
 
@@ -652,8 +652,8 @@ func option3outcomes(): #option 3 has been picked
 		$option2.modulate.a = 0
 		$option3.modulate.a = 0
 		$option4.modulate.a = 0
-		global.joy-=2
-		global.evality+=5
+		global.joy -= 2
+		global.evality += 5
 	elif global.revent[0] == "adult-0-o3":
 		$heading.text = "Ammends made"
 		$body.text = "You catch up, and they apologize for their actions, all is well. +10 joy"
