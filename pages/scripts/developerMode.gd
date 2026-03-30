@@ -58,4 +58,5 @@ func _on_set_evality_pressed() -> void:
 	print("set evality to " + str(global.evality))
 
 func _on_die_pressed() -> void:
+	global.causeOfDeath = "You died because you developed too hard"
 	get_tree().change_scene_to_file("res://pages/death.tscn") #kills you

@@ -94,6 +94,7 @@ label_settings = ExtResource("6_ohchq")
 horizontal_alignment = 1
 
 [node name="backgroundRed" type="TextureRect" parent="." unique_id=220519884]
+visible = false
 offset_right = 1080.0
 offset_bottom = 1920.0
 texture = ExtResource("3_4vejq")
@@ -105,6 +106,7 @@ libraries/ = SubResource("AnimationLibrary_16vjf")
 autoplay = &"fade"
 
 [node name="youDiedWhite" type="Label" parent="." unique_id=1643953276]
+visible = false
 modulate = Color(1, 1, 1, 0)
 offset_right = 1080.0
 offset_bottom = 1920.0
@@ -119,13 +121,7 @@ root_node = NodePath("../../backgroundRed")
 libraries/ = SubResource("AnimationLibrary_16vjf")
 autoplay = &"fadeText"
 
-[node name="2s" type="Timer" parent="." unique_id=1180354097]
-wait_time = 2.0
-one_shot = true
-autostart = true
-
-[node name="100ms" type="Timer" parent="." unique_id=673151771]
+[node name="timer" type="Timer" parent="." unique_id=673151771]
 wait_time = 0.1
 
-[connection signal="timeout" from="2s" to="." method="_on_2s_timeout"]
-[connection signal="timeout" from="100ms" to="." method="_on_100ms_timeout"]
+[connection signal="timeout" from="timer" to="." method="_on_timer_timeout"]

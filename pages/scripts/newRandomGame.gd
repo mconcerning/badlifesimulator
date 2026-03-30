@@ -79,6 +79,12 @@ func cleanLife(): #resets your existing life (if any) and generates new stats
 	print("Health: " + str(global.health))
 	print("Intellect: " + str(global.intellect))
 	print("Looks: " + str(global.looks))
+	global.joyOverTime.append(global.joy)
+	global.healthOverTime.append(global.health)
+	global.intellectOverTime.append(global.intellect)
+	global.looksOverTime.append(global.looks)
+	global.causeOfDeath = ""
+	global.XPQueued = 0
 
 func namePicker(): #generates a full name for the player
 	print(str(mFirstNames.size()) + " masculine first names.")

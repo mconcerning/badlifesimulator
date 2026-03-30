@@ -69,11 +69,13 @@ var eventPersonAge = ""
 var eventPersonSex = ""
 
 
-#keeping track (for achievements or otherwise)
+#keeping track (for achievements, use upon death, or otherwise)
 var joyOverTime = [] #every time you age up, your current joy level is appended here. when you die, the average of all these values is calculated and you are told it.
 var healthOverTime = []
 var intellectOverTime = []
 var looksOverTime = []
+var causeOfDeath = ""
+var XPQueued = 0 #the amount of XP that needs to be awarded when you die
 
 
 #testing variables - used in developer mode
@@ -81,7 +83,9 @@ var RAUE = true #RAUE is an acronym for Random Age Up Events. When true, events 
 
 
 #inter-life variables (non-life specific, saved into the game save file, persists across all lives)
-#none yet!
+var XP = 0
+var level = 0 #increments when you reach the amount of XP you need to level up
+var XPRequired = 500 #the amount of XP you need total to level up. Increases by 500 every level.
 
 
 #savegame stuff
@@ -130,12 +134,16 @@ func lifeSerialiser(): #serialises every life-specific variable we need to save 
 		"healthOverTime" : healthOverTime,
 		"intellectOverTime" : intellectOverTime,
 		"looksOverTime" : looksOverTime,
+		"XPQueued" : XPQueued,
 	}
 	return collinsDictionary
 
 func gameSerialiser(): #serialises every NON-life-specific variable we need to save into a dictionary and then returns it
 	var cambridgeDictionary = {
-		"currentLife" : currentLife
+		"currentLife" : currentLife,
+		"XP" : XP,
+		"level" : level,
+		"XPRequired" : XPRequired,
 	}
 	return cambridgeDictionary
 
@@ -177,6 +185,9 @@ func loadGame(): #does the actual GAME loading
 		if gameSaveFile:
 			var dictionary = gameSaveFile.get_var()
 			currentLife = dictionary["currentLife"]
+			XP = dictionary["XP"]
+			level = dictionary["level"]
+			XPRequired = dictionary["XPRequired"]
 			gameSaveFile.close() #closes file so it doesn't do anything weird
 			print("hoorah, game load successful")
 			print(currentLife)
@@ -232,6 +243,7 @@ func loadLife(): #does the actual LIFE loading
 			healthOverTime = dictionary["healthOverTime"]
 			intellectOverTime = dictionary["intellectOverTime"]
 			looksOverTime = dictionary["looksOverTime"]
+			XPQueued = dictionary["XPQueued"]
 			lifeSaveFile.close() #closes file so it doesn't do anything weird
 			print("hoorah, life load successful")
 			get_tree().change_scene_to_file("res://pages/game_menu.tscn")
