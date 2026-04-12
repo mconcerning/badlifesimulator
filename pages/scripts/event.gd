@@ -611,24 +611,23 @@ func option2outcomes(): #option 2 has been picked
 				parentNoun = "mother"
 			else: #if you only have a father
 				parentNoun = "father"
-		#if your parents refuse to pay for it
-		$heading.text = "That's okay, I'll get it in my inheritance"
-		$body.text = "Your " + str(parentNoun) + " refused to pay for your University tuition."
-		global.revent[0] = "university-degree-picked-o2-refused" #this sends you back to the start of the original event asking how you would like to pay tuition, but with the option to ask your parents to pay disabled, since you already tried that and it didn't work
-		#overwrites what the event does if your parents actually do agree to pay for your tuition
-		if global.familyRelationships[parent] >= 60: #if you have a good relationship with your parents
-			if randi_range(1,2) == 1: #if your parents agree to pay for your tuition (1 in 2 chance)
-				$heading.text = "Nepo baby?"
-				$body.text = "Your " + str(parentNoun) + " agreed to pay for your University tuition!"
-				global.schoolLevel = 3 #puts you in tertiary school
-				global.schoolName = global.lastNames[randi_range(0, global.lastNames.size() - 1)] #gives the university a random name
-				match randi_range(1,3): #gives the university name a random appendix
-					1:
-						global.schoolName += " Academy"
-					2:
-						global.schoolName += " College"
-					3:
-						global.schoolName += " University"
+		#if your parents actually do agree to pay for your tuition
+		if global.familyRelationships[parent] >= 60 && randi_range(1,2) == 1: #if you have a good relationship with your parents AND your parents actually agree to pay for your tuition (1 in 2 chance)
+			$heading.text = "Nepo baby?"
+			$body.text = "Your " + str(parentNoun) + " agreed to pay for your University tuition!"
+			global.schoolLevel = 3 #puts you in tertiary school
+			global.schoolName = global.lastNames[randi_range(0, global.lastNames.size() - 1)] #gives the university a random name
+			match randi_range(1,3): #gives the university name a random appendix
+				1:
+					global.schoolName += " Academy"
+				2:
+					global.schoolName += " College"
+				3:
+					global.schoolName += " University"
+		else: #if your parents refuse to pay for it
+			$heading.text = "I guess you just don't love me then"
+			$body.text = "Your " + str(parentNoun) + " refused to pay for your University tuition."
+			global.revent[0] = "university-degree-picked-o2-refused" #this sends you back to the start of the original event asking how you would like to pay tuition, but with the option to ask your parents to pay disabled, since you already tried that and it didn't work
 		$option1.text = "Okay"
 		optionRemover(2)
 

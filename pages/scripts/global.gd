@@ -289,7 +289,7 @@ func loadGame(): #does the actual GAME loading
 func loadLife(): #does the actual LIFE loading
 	if FileAccess.file_exists("user://spycarsinc/bls/lives/" + currentLife + ".bls") == true: #if the life save file exists, continue and load
 		var lifeSaveFile = FileAccess.open("user://spycarsinc/bls/lives/" + currentLife + ".bls", FileAccess.READ) #opens file to read
-		if lifeSaveFile:
+		if lifeSaveFile: #if the file is valid
 			var dictionary = lifeSaveFile.get_var()
 			#engine
 			revent = dictionary["revent"]
