@@ -7,7 +7,7 @@ var buttonAction = "load" #can be either load or delete; load by default
 
 func loadLife(saveFile): #loads a life save file (specify file NAME (extensionless))
 	print("button pressed - load mode - " + saveFile)
-	var dir = global.directoryGetter() #get the directory and make sure it exists
+	global.directoryGetter() #get the directory and make sure it exists
 	global.currentLife = saveFile #sets currentLife to the life you clicked on
 	print("now playing as " + saveFile)
 	global.loadLife() #loads life
@@ -15,7 +15,7 @@ func loadLife(saveFile): #loads a life save file (specify file NAME (extensionle
 
 func deleteLife(saveFile, buttonName): #deletes ONE save file (specify file NAME (extensionless))
 	print("button pressed - delete mode - " + saveFile)
-	var dir = global.directoryGetter() #get the directory and make sure it exists
+	global.directoryGetter() #get the directory and makes sure it exists
 	DirAccess.remove_absolute("user://spycarsinc/bls/lives/" + saveFile + ".bls") #deletes the file
 	print("removed " + saveFile)
 	get_node("scrollContainer/centerContainer/vBoxContainer/" + buttonName).queue_free() #deletes the button (vBoxContainer automatically re-arranged all the other buttons so there isn't a gap where this was)

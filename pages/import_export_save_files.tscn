@@ -5,6 +5,7 @@
 [ext_resource type="PackedScene" uid="uid://cjnbhqp8obehv" path="res://objects/back_button.tscn" id="2_755jd"]
 [ext_resource type="PackedScene" uid="uid://b7bfib5vbcvk6" path="res://objects/heading.tscn" id="3_xe645"]
 [ext_resource type="PackedScene" uid="uid://ck7ra4cupjjkm" path="res://objects/button_default.tscn" id="5_c6kya"]
+[ext_resource type="LabelSettings" uid="uid://dl6sog5hfkb6u" path="res://styles/text/body.tres" id="6_504qj"]
 
 [node name="importExportSaveFiles" type="Node2D" unique_id=209033438]
 script = ExtResource("1_xe645")
@@ -37,7 +38,34 @@ offset_right = 829.0
 offset_bottom = 684.0
 text = "Import legacy save"
 
-[node name="fileDialog" type="FileDialog" parent="." unique_id=1775899083]
+[node name="confirmation" type="Label" parent="." unique_id=1547871535]
+offset_left = 40.0
+offset_top = 1200.0
+offset_right = 1040.0
+offset_bottom = 1260.0
+label_settings = ExtResource("6_504qj")
+horizontal_alignment = 1
+autowrap_mode = 3
+
+[node name="legacyImport" type="FileDialog" parent="." unique_id=1775899083]
+oversampling_override = 1.0
+title = "Open a File"
+dialog_hide_on_ok = true
+file_mode = 0
+access = 2
+filters = PackedStringArray("*.bls")
+use_native_dialog = true
+
+[node name="export" type="FileDialog" parent="." unique_id=1436890077]
+oversampling_override = 1.0
+title = "Open a Directory"
+dialog_hide_on_ok = true
+file_mode = 2
+access = 2
+filters = PackedStringArray("*.bls")
+use_native_dialog = true
+
+[node name="import" type="FileDialog" parent="." unique_id=593930807]
 oversampling_override = 1.0
 title = "Open a File"
 dialog_hide_on_ok = true
@@ -47,5 +75,9 @@ filters = PackedStringArray("*.bls")
 use_native_dialog = true
 
 [connection signal="pressed" from="back" to="." method="_on_back_pressed"]
+[connection signal="pressed" from="importSave" to="." method="_on_import_save_pressed"]
+[connection signal="pressed" from="exportSave" to="." method="_on_export_save_pressed"]
 [connection signal="pressed" from="importLegacySave" to="." method="_on_import_legacy_save_pressed"]
-[connection signal="file_selected" from="fileDialog" to="." method="_on_file_dialog_file_selected"]
+[connection signal="file_selected" from="legacyImport" to="." method="_on_legacy_import_file_selected"]
+[connection signal="dir_selected" from="export" to="." method="_on_export_dir_selected"]
+[connection signal="file_selected" from="import" to="." method="_on_import_file_selected"]

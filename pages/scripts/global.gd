@@ -81,7 +81,10 @@ var eventPersonFirstName = ""
 var eventPersonLastName = ""
 var eventPersonAge = ""
 var eventPersonSex = ""
+#other
 var degreePicked = ""
+var customLifeSaveDir = ""
+var customLifeImportDir = ""
 
 
 #keeping track (for achievements, use upon death, or otherwise)
@@ -261,6 +264,9 @@ func directoryGetter(): #gets path to lives
 func saveGame(): #does the actual saving
 	if currentLife != "": #if you currently HAVE a life to save
 		var lifeSavePath = "user://spycarsinc/bls/lives/" + currentLife + ".bls" #the path on the user's device the save will be located - this save only stores the life-specific stuff that doesn't persist between lives (age, relationships, health...)
+		if customLifeSaveDir != "": #if you're saving to a custom directory (i.e. you've been sent by importExportSaveFiles.gd
+			lifeSavePath = customLifeSaveDir + "/" + currentLife + ".bls"
+			customLifeSaveDir = "" #reset, that's all we needed the custom directory for
 		var lifeSaveFile = FileAccess.open(lifeSavePath, FileAccess.WRITE)
 		lifeSaveFile.store_var(lifeSerialiser()) #overwrites the life save file with collinsDictionary from the lifeSerialiser() function above.
 		lifeSaveFile.close() #closes file and saves changes
@@ -287,8 +293,12 @@ func loadGame(): #does the actual GAME loading
 		print("no game save file, will create a brand new one...")
 
 func loadLife(): #does the actual LIFE loading
-	if FileAccess.file_exists("user://spycarsinc/bls/lives/" + currentLife + ".bls") == true: #if the life save file exists, continue and load
-		var lifeSaveFile = FileAccess.open("user://spycarsinc/bls/lives/" + currentLife + ".bls", FileAccess.READ) #opens file to read
+	var path = "user://spycarsinc/bls/lives/" + currentLife + ".bls"
+	if customLifeImportDir != "": #if you have a custom file you would like to import from (see again importExportSaveFiles.gd)
+		path = customLifeImportDir
+		customLifeImportDir = ""
+	if FileAccess.file_exists(path) == true: #if the life save file exists, continue and load
+		var lifeSaveFile = FileAccess.open(path, FileAccess.READ) #opens file to read
 		if lifeSaveFile: #if the file is valid
 			var dictionary = lifeSaveFile.get_var()
 			#engine
