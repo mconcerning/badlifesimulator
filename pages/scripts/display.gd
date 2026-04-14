@@ -8,6 +8,7 @@ func _on_back_pressed() -> void:
 func changeResolution(x, y):
 	global.windowSize = [x, y]
 	DisplayServer.window_set_size(Vector2i(global.windowSize[0], global.windowSize[1]))
+	global.saveGame() #save changes to window size preferences :)
 	get_tree().reload_current_scene()
 
 

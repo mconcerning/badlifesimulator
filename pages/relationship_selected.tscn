@@ -1,0 +1,25 @@
+[gd_scene format=3 uid="uid://2reltbxo1j2i"]
+
+[ext_resource type="Script" uid="uid://bkvn4kjt3mdum" path="res://pages/scripts/relationshipSelected.gd" id="1_bpeln"]
+[ext_resource type="PackedScene" uid="uid://pmo8e2dmbkfm" path="res://objects/background.tscn" id="2_tl0c8"]
+[ext_resource type="PackedScene" uid="uid://cjnbhqp8obehv" path="res://objects/back_button.tscn" id="3_rhx7h"]
+[ext_resource type="PackedScene" uid="uid://b3nrc0n5eeris" path="res://objects/subheading.tscn" id="4_ehrkj"]
+[ext_resource type="PackedScene" uid="uid://dvna50i2k0geh" path="res://objects/body.tscn" id="5_rhx7h"]
+
+[node name="relationshipSelected" type="Node2D" unique_id=907313831]
+script = ExtResource("1_bpeln")
+
+[node name="background" parent="." unique_id=431403932 instance=ExtResource("2_tl0c8")]
+
+[node name="back" parent="." unique_id=17962498 instance=ExtResource("3_rhx7h")]
+
+[node name="name" parent="." unique_id=1227387029 instance=ExtResource("4_ehrkj")]
+text = "Name Johnson"
+
+[node name="details" parent="." unique_id=1032932187 instance=ExtResource("5_rhx7h")]
+offset_top = 250.0
+offset_right = 1080.0
+offset_bottom = 310.0
+text = "Mother, Father, Strongly Disagree"
+
+[connection signal="pressed" from="back" to="." method="_on_back_pressed"]

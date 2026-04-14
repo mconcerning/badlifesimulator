@@ -4,6 +4,7 @@
 [ext_resource type="Script" uid="uid://bvg0hsmcdrwi0" path="res://pages/scripts/relationships.gd" id="1_ptorm"]
 [ext_resource type="PackedScene" uid="uid://cjnbhqp8obehv" path="res://objects/back_button.tscn" id="2_ptorm"]
 [ext_resource type="PackedScene" uid="uid://b7bfib5vbcvk6" path="res://objects/heading.tscn" id="3_ljbne"]
+[ext_resource type="PackedScene" uid="uid://dvna50i2k0geh" path="res://objects/body.tscn" id="5_ljbne"]
 
 [node name="relationships" type="Node2D" unique_id=1166061843]
 script = ExtResource("1_ptorm")
@@ -30,5 +31,11 @@ size_flags_horizontal = 3
 layout_mode = 2
 size_flags_horizontal = 4
 theme_override_constants/separation = 50
+
+[node name="noOfRelationships" parent="scrollContainer/centerContainer/vBoxContainer" unique_id=1032932187 instance=ExtResource("5_ljbne")]
+layout_mode = 2
+text = "You have N/A family members
+You have N/A other relationships
+You know N/A people in total"
 
 [connection signal="pressed" from="back" to="." method="_on_back_pressed"]

@@ -5,9 +5,11 @@ extends Node #author(s): Ethan Scott
 
 #engine
 var versionNumber = ProjectSettings.get_setting("application/config/version") #change this in settings when working on an update to the next version number :) go to project -> project settings -> application -> config
-var windowSize = [-1, -1] #9:16 ratio
+var windowSize = [360, 640] #9:16 ratio - 360 x 640 is the default window size
 var revent = [] #event IDs (can store multiple). begins with an age identifier (toddler, child, teenager, adult, elder, or "na" for not applicable) and ends with a unique number.
 var currentLife = ""
+var IDClicked = -1 #used to identify which relationship you're interacting with
+var IDClickedType = "" #used to identify what type of relationship you're interacting with; can be either "family" or "misc"
 
 
 #personal
