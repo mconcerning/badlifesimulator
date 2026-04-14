@@ -1,0 +1,96 @@
+[gd_scene format=3 uid="uid://dva1wci1g7pfs"]
+
+[ext_resource type="Script" uid="uid://errfhafq86w5" path="res://pages/scripts/display.gd" id="1_k1u84"]
+[ext_resource type="PackedScene" uid="uid://pmo8e2dmbkfm" path="res://objects/background.tscn" id="2_apq6l"]
+[ext_resource type="PackedScene" uid="uid://cjnbhqp8obehv" path="res://objects/back_button.tscn" id="3_orlio"]
+[ext_resource type="PackedScene" uid="uid://b7bfib5vbcvk6" path="res://objects/heading.tscn" id="4_apq6l"]
+[ext_resource type="PackedScene" uid="uid://b3nrc0n5eeris" path="res://objects/subheading.tscn" id="5_x5x31"]
+[ext_resource type="PackedScene" uid="uid://ck7ra4cupjjkm" path="res://objects/button_default.tscn" id="6_foqg1"]
+
+[node name="display" type="Node2D" unique_id=2123648090]
+script = ExtResource("1_k1u84")
+
+[node name="background" parent="." unique_id=569529408 instance=ExtResource("2_apq6l")]
+
+[node name="back" parent="." unique_id=17962498 instance=ExtResource("3_orlio")]
+
+[node name="heading" parent="." unique_id=33655322 instance=ExtResource("4_apq6l")]
+text = "Display"
+
+[node name="scrollContainer" type="ScrollContainer" parent="." unique_id=34123004]
+offset_top = 300.0
+offset_right = 1080.0
+offset_bottom = 1820.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="vBoxContainer" type="VBoxContainer" parent="scrollContainer" unique_id=481879194]
+layout_mode = 2
+size_flags_horizontal = 6
+theme_override_constants/separation = 50
+
+[node name="resolution" parent="scrollContainer/vBoxContainer" unique_id=1227387029 instance=ExtResource("5_x5x31")]
+layout_mode = 2
+text = "Resolution"
+
+[node name="resetDefault" parent="scrollContainer/vBoxContainer" unique_id=1544237965 instance=ExtResource("6_foqg1")]
+layout_mode = 2
+size_flags_horizontal = 4
+text = "Reset to default"
+
+[node name="144x256" parent="scrollContainer/vBoxContainer" unique_id=1709092787 instance=ExtResource("6_foqg1")]
+layout_mode = 2
+size_flags_horizontal = 4
+text = "144 x 256"
+
+[node name="240x426" parent="scrollContainer/vBoxContainer" unique_id=1531942800 instance=ExtResource("6_foqg1")]
+layout_mode = 2
+size_flags_horizontal = 4
+text = "240 x 426"
+
+[node name="360x640" parent="scrollContainer/vBoxContainer" unique_id=137615304 instance=ExtResource("6_foqg1")]
+layout_mode = 2
+size_flags_horizontal = 4
+text = "360 x 640"
+
+[node name="480x856" parent="scrollContainer/vBoxContainer" unique_id=1426522657 instance=ExtResource("6_foqg1")]
+layout_mode = 2
+size_flags_horizontal = 4
+text = "480 x 856"
+
+[node name="540x960" parent="scrollContainer/vBoxContainer" unique_id=477316294 instance=ExtResource("6_foqg1")]
+layout_mode = 2
+size_flags_horizontal = 4
+text = "540 x 960"
+
+[node name="720x1280" parent="scrollContainer/vBoxContainer" unique_id=1433692711 instance=ExtResource("6_foqg1")]
+layout_mode = 2
+size_flags_horizontal = 4
+text = "720 x 1280"
+
+[node name="768x1366" parent="scrollContainer/vBoxContainer" unique_id=414416244 instance=ExtResource("6_foqg1")]
+layout_mode = 2
+size_flags_horizontal = 4
+text = "768 x 1366"
+
+[node name="900x1600" parent="scrollContainer/vBoxContainer" unique_id=1908733393 instance=ExtResource("6_foqg1")]
+layout_mode = 2
+size_flags_horizontal = 4
+text = "900 x 1600"
+
+[node name="1080x1920" parent="scrollContainer/vBoxContainer" unique_id=1670683463 instance=ExtResource("6_foqg1")]
+layout_mode = 2
+size_flags_horizontal = 4
+text = "1080 x 1920"
+
+[connection signal="pressed" from="back" to="." method="_on_back_pressed"]
+[connection signal="pressed" from="scrollContainer/vBoxContainer/resetDefault" to="." method="_on_reset_default_pressed"]
+[connection signal="pressed" from="scrollContainer/vBoxContainer/144x256" to="." method="_on_x_256_pressed"]
+[connection signal="pressed" from="scrollContainer/vBoxContainer/240x426" to="." method="_on_x_426_pressed"]
+[connection signal="pressed" from="scrollContainer/vBoxContainer/360x640" to="." method="_on_x_640_pressed"]
+[connection signal="pressed" from="scrollContainer/vBoxContainer/480x856" to="." method="_on_x_856_pressed"]
+[connection signal="pressed" from="scrollContainer/vBoxContainer/540x960" to="." method="_on_x_960_pressed"]
+[connection signal="pressed" from="scrollContainer/vBoxContainer/720x1280" to="." method="_on_x_1280_pressed"]
+[connection signal="pressed" from="scrollContainer/vBoxContainer/768x1366" to="." method="_on_x_1366_pressed"]
+[connection signal="pressed" from="scrollContainer/vBoxContainer/900x1600" to="." method="_on_x_1600_pressed"]
+[connection signal="pressed" from="scrollContainer/vBoxContainer/1080x1920" to="." method="_on_x_1920_pressed"]

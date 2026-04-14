@@ -5,6 +5,7 @@ extends Node #author(s): Ethan Scott
 
 #engine
 var versionNumber = ProjectSettings.get_setting("application/config/version") #change this in settings when working on an update to the next version number :) go to project -> project settings -> application -> config
+var windowSize = [-1, -1] #9:16 ratio
 var revent = [] #event IDs (can store multiple). begins with an age identifier (toddler, child, teenager, adult, elder, or "na" for not applicable) and ends with a unique number.
 var currentLife = ""
 
@@ -156,6 +157,7 @@ func cooldown(activity): #returns how many times you've done a certain thing thi
 func lifeSerialiser(): #serialises every life-specific variable we need to save into a dictionary and then returns it
 	var collinsDictionary = {
 		#engine
+		"versionNumber" : versionNumber,
 		"revent" : revent,
 		"RAUE" : RAUE,
 		#personal
@@ -234,6 +236,7 @@ func lifeSerialiser(): #serialises every life-specific variable we need to save 
 
 func gameSerialiser(): #serialises every NON-life-specific variable we need to save into a dictionary and then returns it
 	var cambridgeDictionary = {
+		"windowSize" : windowSize,
 		"currentLife" : currentLife,
 		"XP" : XP,
 		"level" : level,
@@ -281,6 +284,7 @@ func loadGame(): #does the actual GAME loading
 		var gameSaveFile = FileAccess.open("user://spycarsinc/bls/game.bls", FileAccess.READ) #opens file to read
 		if gameSaveFile:
 			var dictionary = gameSaveFile.get_var()
+			windowSize = dictionary["windowSize"]
 			currentLife = dictionary["currentLife"]
 			XP = dictionary["XP"]
 			level = dictionary["level"]

@@ -5,5 +5,6 @@
 [node name="button" type="Button" unique_id=1544237965]
 offset_right = 479.0
 offset_bottom = 84.0
+size_flags_horizontal = 4
 theme = ExtResource("1_j2vkb")
 text = "To centre horizontally, set x position under control -> layout -> transform to 1080/2-(sizeX/2)"

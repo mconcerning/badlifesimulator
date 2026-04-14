@@ -6,6 +6,11 @@ func _ready() -> void:
 	$versionNumber.text = "v" + global.versionNumber #sets version number text
 	if global.currentLife != "": #if there is a recent life ready to be resumed
 		$continue.disabled = false #enable the continue button
+	#easter eggs (don't look)
+	if global.firstName == "Bob" && global.lastName == "Legacy":
+		$title.text = "Chud Life Simulator"
+	elif randi_range(1, 10000) == 1:
+		$title.text = "Geometry Dash"
 
 
 func _on_continue_pressed() -> void:

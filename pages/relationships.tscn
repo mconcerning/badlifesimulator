@@ -1,0 +1,34 @@
+[gd_scene format=3 uid="uid://bb8l7uhirmf7h"]
+
+[ext_resource type="PackedScene" uid="uid://pmo8e2dmbkfm" path="res://objects/background.tscn" id="1_bci0s"]
+[ext_resource type="Script" uid="uid://bvg0hsmcdrwi0" path="res://pages/scripts/relationships.gd" id="1_ptorm"]
+[ext_resource type="PackedScene" uid="uid://cjnbhqp8obehv" path="res://objects/back_button.tscn" id="2_ptorm"]
+[ext_resource type="PackedScene" uid="uid://b7bfib5vbcvk6" path="res://objects/heading.tscn" id="3_ljbne"]
+
+[node name="relationships" type="Node2D" unique_id=1166061843]
+script = ExtResource("1_ptorm")
+
+[node name="background" parent="." unique_id=1307357712 instance=ExtResource("1_bci0s")]
+
+[node name="back" parent="." unique_id=17962498 instance=ExtResource("2_ptorm")]
+
+[node name="heading" parent="." unique_id=33655322 instance=ExtResource("3_ljbne")]
+text = "Relationships"
+
+[node name="scrollContainer" type="ScrollContainer" parent="." unique_id=1779229069]
+offset_left = 40.0
+offset_top = 300.0
+offset_right = 1040.0
+offset_bottom = 1800.0
+
+[node name="centerContainer" type="CenterContainer" parent="scrollContainer" unique_id=1897062748]
+clip_contents = true
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="vBoxContainer" type="VBoxContainer" parent="scrollContainer/centerContainer" unique_id=1004264462]
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_constants/separation = 50
+
+[connection signal="pressed" from="back" to="." method="_on_back_pressed"]

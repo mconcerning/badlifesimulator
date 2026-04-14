@@ -1,0 +1,11 @@
+[gd_scene format=3 uid="uid://dvna50i2k0geh"]
+
+[ext_resource type="LabelSettings" uid="uid://dl6sog5hfkb6u" path="res://styles/text/body.tres" id="1_bacxm"]
+
+[node name="body" type="Label" unique_id=1032932187]
+offset_right = 40.0
+offset_bottom = 23.0
+size_flags_horizontal = 4
+text = "text goes here"
+label_settings = ExtResource("1_bacxm")
+horizontal_alignment = 1

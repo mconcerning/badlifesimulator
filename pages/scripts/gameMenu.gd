@@ -38,3 +38,6 @@ func _on_occupation_pressed() -> void:
 		get_tree().change_scene_to_file("res://pages/event.tscn") #child labour is thoroughly illegal. Unless...
 	elif global.schoolLevel == 1 || global.schoolLevel == 2 || global.schoolLevel == 3: #if you do go to school
 		get_tree().change_scene_to_file("res://pages/school.tscn") #go to school
+
+func _on_relationships_pressed() -> void:
+	get_tree().change_scene_to_file("res://pages/relationships.tscn")

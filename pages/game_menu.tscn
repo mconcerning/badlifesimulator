@@ -167,4 +167,5 @@ stretch_mode = 0
 [connection signal="mouse_entered" from="newGameEgg" to="." method="_on_new_game_egg_mouse_entered"]
 [connection signal="mouse_exited" from="newGameEgg" to="." method="_on_new_game_egg_mouse_exited"]
 [connection signal="pressed" from="newGameEgg" to="." method="_on_new_game_egg_pressed"]
+[connection signal="pressed" from="relationships" to="." method="_on_relationships_pressed"]
 [connection signal="pressed" from="occupation" to="." method="_on_occupation_pressed"]

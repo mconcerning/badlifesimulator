@@ -1,0 +1,26 @@
+extends Node2D #author(s): Ethan Scott
+
+
+const button = preload("res://objects/button_default.tscn")
+const labelBelowLabel = preload("res://objects/body.tscn")
+
+
+func _on_back_pressed() -> void:
+	get_tree().change_scene_to_file("res://pages/game_menu.tscn")
+
+
+# Called when the node enters the scene tree for the first time.
+func _ready() -> void:
+	#generates the buttons
+	for i in global.familyTypes.size(): #runs through every family member
+		#button
+		var buttonInstance = button.instantiate() #creates a button for the family member at index i
+		buttonInstance.text = global.familyFirstNames[i] + " " + global.familyLastNames[i] #puts their name on the button
+		$scrollContainer/centerContainer/vBoxContainer.add_child(buttonInstance) #places the button in the scene
+		#label below
+		var labelInstance = labelBelowLabel.instantiate() #creates the label for the family member at index i
+		labelInstance.text = global.familyTypes[i] + " (" + global.familySexes[i] + "), Age " + str(global.familyAges[i]) + ", Relationship: " + str(global.familyRelationships[i]) + "\n"
+		if labelInstance.get_minimum_size().x >= 1000:
+			labelInstance.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+			labelInstance.size.x = 900
+		$scrollContainer/centerContainer/vBoxContainer.add_child(labelInstance)
