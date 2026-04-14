@@ -48,13 +48,11 @@ theme_override_constants/separation = 50
 
 [node name="cancel" parent="scrollContainer/centerContainer/vBoxContainer" unique_id=1544237965 instance=ExtResource("4_r6h0o")]
 layout_mode = 2
-size_flags_horizontal = 4
 text = "Actually, nevermind"
 
 [node name="education" parent="scrollContainer/centerContainer/vBoxContainer" unique_id=1021089088 instance=ExtResource("4_r6h0o")]
 layout_mode = 2
-size_flags_horizontal = 4
 text = "Education"
 
 [connection signal="pressed" from="scrollContainer/centerContainer/vBoxContainer/cancel" to="." method="_on_cancel_pressed"]
-[connection signal="pressed" from="scrollContainer/centerContainer/vBoxContainer/education" to="." method="_on_medicine_pressed"]
+[connection signal="pressed" from="scrollContainer/centerContainer/vBoxContainer/education" to="." method="_on_education_pressed"]

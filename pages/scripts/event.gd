@@ -289,7 +289,7 @@ func specialised(): #runs any specialised, non-age-up events
 		$body.text = "You're too young to get a job. Child labour is thoroughly illegal. Unless..."
 		$option1.text = "Dang it"
 		optionRemover(2)
-	elif global.revent [0] == "university-degree-picked" || global.revent[0] == "university-degree-picked-o2-refused-o1" || global.revent[0] == "university-degree-picked-o4-refused-o1":
+	elif global.revent [0] == "university-degree-picked" || global.revent[0] == "university-degree-picked-o2-refused-o1" || global.revent[0] == "university-degree-picked-o4-rejected-o1":
 		$heading.text = "University degree"
 		$body.text = "You picked a"
 		if global.degreePicked == "education":
@@ -315,7 +315,7 @@ func specialised(): #runs any specialised, non-age-up events
 			optionRemover(5)
 			if global.revent[0] == "university-degree-picked-o2-refused-o1": #if your parents already refused to pay for your tuition
 				$option2.disabled = true #you can't just keep pestering them until they cave
-			elif global.revent[0] == "university-degree-picked-o4-refused-o1": #if your application for a scholarship was already denied
+			elif global.revent[0] == "university-degree-picked-o4-rejected-o1": #if your application for a scholarship was already denied
 				$option4.disabled = true #you can't try it again
 			global.revent[0] = "university-degree-picked"
 
@@ -389,7 +389,7 @@ func confirmation(): #non-random confirmation events that tell you that somethin
 
 func _on_option_1_pressed() -> void: #on option 1 selected
 	#event - option 1 will be an actual option
-	if global.revent[0] == "toddler-0" || global.revent[0] == "child-0" || global.revent[0] == "child-friend" || global.revent[0] == "toddler-friend" || global.revent[0] == "child-friend" || global.revent[0] == "teenager-friend" || global.revent[0] == "adult-friend" || global.revent[0] == "elder-friend" || global.revent[0] == "change-save-management-mode-to-delete" || global.revent[0] == "university-degree-picked" || global.revent[0] == "university-degree-picked-o2-refused" || global.revent[0] == "university-degree-picked-o4-refused":
+	if global.revent[0] == "toddler-0" || global.revent[0] == "child-0" || global.revent[0] == "child-friend" || global.revent[0] == "toddler-friend" || global.revent[0] == "child-friend" || global.revent[0] == "teenager-friend" || global.revent[0] == "adult-friend" || global.revent[0] == "elder-friend" || global.revent[0] == "change-save-management-mode-to-delete" || global.revent[0] == "university-degree-picked" || global.revent[0] == "university-degree-picked-o2-refused" || global.revent[0] == "university-degree-picked-o4-rejected":
 		outcome(global.revent[0] + "-o1")
 	#confirmation - option 1 will be the only button available when the event's purpose is only to display information. Generally, the button will say "Okay".
 	elif global.revent[0] == "toddler-0-o1" || global.revent[0] == "toddler-0-o2" || global.revent[0] == "toddler-0-o3" || global.revent[0] == "child-0-o1" || global.revent[0] == "child-0-o2" || global.revent[0] == "child-0-o3" || global.revent[0] == "child-0-o4" || global.revent[0] == "toddler-friend-o1" || global.revent[0] == "toddler-friend-o2" || global.revent[0] == "child-friend-o1" || global.revent[0] == "child-friend-o2" || global.revent[0] == "teenager-friend-o1" || global.revent[0] == "teenager-friend-o2" || global.revent[0] == "teenager-friend-o3" || global.revent[0] == "adult-friend-o1" || global.revent[0] == "adult-friend-o2" || global.revent[0] == "adult-friend-o3" || global.revent[0] == "elder-friend-o1" || global.revent[0] == "elder-friend-o2" || global.revent[0] == "elder-friend-o3" || global.revent[0] == "child-labour-is-outlawed" || global.revent[0] == "enrolled-in-primary-school" || global.revent[0] == "enrolled-in-high-school" || global.revent[0] == "graduated-high-school" || global.revent[0] == "study-harder" || global.revent[0] == "university-degree-picked-o1" || global.revent[0] == "university-degree-picked-o2" || global.revent[0] == "university-degree-picked-o3" || global.revent[0] == "university-degree-picked-o4" || global.revent[0] == "university-degree-picked-o2" || global.revent[0] == "graduated-university":
