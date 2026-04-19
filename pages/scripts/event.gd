@@ -61,33 +61,6 @@ func NPCKiller(type, index): #kills an NPC (family or misc)
 		global.miscAges.remove_at(index)
 		global.miscSexes.remove_at(index)
 
-func pronounGenerator(type, sex): #returns pronouns so you don't have to do it manually inside events - can be one of three types: him (objective), his (possessive), he (personal), or boy (noun)
-	if type == "him":
-		if sex == "M": #if sex of person is male
-			return "him"
-		else: #if sex of person is female
-			return "her"
-	elif type == "his":
-		if sex == "M": #if male
-			return "his"
-		else: #if female
-			return "hers"
-	elif type == "he":
-		if sex == "M": #if male
-			return "he"
-		else: #if female
-			return "she"
-	elif type == "boy":
-		if sex == "M": #if male
-			return "boy"
-		else: #if female
-			return "girl"
-	elif type == "guy":
-		if sex == "M": #if male
-			return "guy"
-		else: #if female
-			return "girl"
-
 
 func personRemover(index, whichArray): #removes the person at index "index" in the array "whichArray" (could be family, misc, etc.)
 	if whichArray == "family":
@@ -180,8 +153,8 @@ func toddlerhood(): #toddlerhood base events - prefix is "toddler-"
 		$heading.text = "New friend?"
 		EGPGenerator(4, 0) #generates a brand new, never-before-seen person to be featured in this event. Perameter is age range; in this case, the EGP will be between 4 years younger and 4 years older than you.
 		$body.text = "While out visiting a family friend, a small child emerges from another room and sits down to start playing with you.\n(" + global.eventPersonFirstName + " " + global.eventPersonLastName + ", " + global.eventPersonSex + ", " + str(global.eventPersonAge) + " years old)"
-		$option1.text = "Befriend " + pronounGenerator("him", global.eventPersonSex)
-		$option2.text = "Ignore " + pronounGenerator("him", global.eventPersonSex)
+		$option1.text = "Befriend " + global.pronounGenerator("him", global.eventPersonSex)
+		$option2.text = "Ignore " + global.pronounGenerator("him", global.eventPersonSex)
 		optionRemover(3)
 		$credit.text = "mconcerning"
 	elif global.revent[0] == "toddler-0": #if first element in the revent array is the following one
@@ -206,8 +179,8 @@ func childhood(): #childhood base events - prefix is "child-"
 		else: #random body text variation
 			$body.text = "While out and about with your " + str(global.familyTypes[0]).to_lower() +  ", you strike up a conversation with a random kid and you two seem to get along pretty well.\n("
 		$body.text = $body.text + global.eventPersonFirstName + " " + global.eventPersonLastName + ", " + global.eventPersonSex + ", " + str(global.eventPersonAge) + " years old)" #appends EGP details to the end of the body text
-		$option1.text = "Befriend " + pronounGenerator("him", global.eventPersonSex)
-		$option2.text = "Ignore " + pronounGenerator("him", global.eventPersonSex)
+		$option1.text = "Befriend " + global.pronounGenerator("him", global.eventPersonSex)
+		$option2.text = "Ignore " + global.pronounGenerator("him", global.eventPersonSex)
 		optionRemover(3)
 		$credit.text = "mconcerning"
 	elif global.revent[0] == "child-0":
@@ -218,7 +191,7 @@ func childhood(): #childhood base events - prefix is "child-"
 		$option2.text = "Thank them enthusiastically"
 		$option3.text = "Pitch a fit and cry"
 		if global.evality >= 90: #if you're like, REALLY evil
-			$option4.text = "Kill " + pronounGenerator("him", global.familySexes[relativeOfChoice]) #uh oh!???
+			$option4.text = "Kill " + global.pronounGenerator("him", global.familySexes[relativeOfChoice]) #uh oh!???
 		else: #if you're not
 			optionRemover(4) #don't worry; you can't still click it on accident
 		optionRemover(5)
@@ -233,10 +206,10 @@ func teenagehood(): #teenage base events - prefix is "teenager-"
 			$body.text = "While visiting a family friend, " #this isn't unfinished, it gets appended to in a second
 		else:
 			$body.text = "While out with family, " #this isn't unfinished, it gets appended to in a second
-		$body.text = $body.text + "you run into a " + pronounGenerator("boy", global.eventPersonSex) + " named " + global.eventPersonFirstName + ". You start talking and realise you have a lot of chemistry."
-		$option1.text = "Befriend " + pronounGenerator("him", global.eventPersonSex)
-		$option2.text = "Ask " + pronounGenerator("him", global.eventPersonSex) + " out"
-		$option3.text = "Leave " + pronounGenerator("him", global.eventPersonSex) + " alone"
+		$body.text = $body.text + "you run into a " + global.pronounGenerator("boy", global.eventPersonSex) + " named " + global.eventPersonFirstName + ". You start talking and realise you have a lot of chemistry."
+		$option1.text = "Befriend " + global.pronounGenerator("him", global.eventPersonSex)
+		$option2.text = "Ask " + global.pronounGenerator("him", global.eventPersonSex) + " out"
+		$option3.text = "Leave " + global.pronounGenerator("him", global.eventPersonSex) + " alone"
 		optionRemover(4)
 		$credit.text = "mconcerning"
 
@@ -246,13 +219,13 @@ func adulthood(): #adult base events - prefix is "adult-"
 		$heading.text = "New connection"
 		EGPGenerator(7, 18)
 		if randi_range(1,2) == 1: #body text variation
-			$body.text = "While out running errands, you strike up a conversation with a random " + pronounGenerator("guy", global.eventPersonSex) + " and you really hit it off.\n("
+			$body.text = "While out running errands, you strike up a conversation with a random " + global.pronounGenerator("guy", global.eventPersonSex) + " and you really hit it off.\n("
 		else: #body text variation
-			$body.text = "While eating out at a restaurant, you strike up a conversation with a random " + pronounGenerator("guy", global.eventPersonSex) + " and you really hit it off.\n("
+			$body.text = "While eating out at a restaurant, you strike up a conversation with a random " + global.pronounGenerator("guy", global.eventPersonSex) + " and you really hit it off.\n("
 		$body.text = $body.text + global.eventPersonFirstName + " " + global.eventPersonLastName + ", " + global.eventPersonSex + ", " + str(global.eventPersonAge) + " years old)"
-		$option1.text = "Befriend " + pronounGenerator("him", global.eventPersonSex)
-		$option2.text = "Ask " + pronounGenerator("him", global.eventPersonSex) + " on a date"
-		$option3.text = "Leave " + pronounGenerator("him", global.eventPersonSex) + " alone"
+		$option1.text = "Befriend " + global.pronounGenerator("him", global.eventPersonSex)
+		$option2.text = "Ask " + global.pronounGenerator("him", global.eventPersonSex) + " on a date"
+		$option3.text = "Leave " + global.pronounGenerator("him", global.eventPersonSex) + " alone"
 		optionRemover(4)
 		$credit.text = "mconcerning"
 
@@ -266,9 +239,9 @@ func elderhood(): #elderly base events - prefix is "elder-"
 		else: #body text variation
 			$body.text = "While eating out at a restaurant, you strike up a conversation with a random person and you realise you have a lot in common.\n("
 		$body.text = $body.text + global.eventPersonFirstName + " " + global.eventPersonLastName + ", " + global.eventPersonSex + ", " + str(global.eventPersonAge) + " years old)"
-		$option1.text = "Befriend " + pronounGenerator("him", global.eventPersonSex)
-		$option2.text = "Ask " + pronounGenerator("him", global.eventPersonSex) + " on a date"
-		$option3.text = "Leave " + pronounGenerator("him", global.eventPersonSex) + " alone"
+		$option1.text = "Befriend " + global.pronounGenerator("him", global.eventPersonSex)
+		$option2.text = "Ask " + global.pronounGenerator("him", global.eventPersonSex) + " on a date"
+		$option3.text = "Leave " + global.pronounGenerator("him", global.eventPersonSex) + " alone"
 		optionRemover(4)
 		$credit.text = "mconcerning"
 
@@ -431,7 +404,7 @@ func option1outcomes(): #option 1 has been picked
 	elif global.revent[0] == "teenager-friend-o1":
 		if randi_range(1,3) == 1: #if they refuse to be your friend
 			$heading.text = "That's awkward..."
-			$body.text = "You try to befriend " + pronounGenerator("him", global.eventPersonSex) + ", but " + pronounGenerator("he", global.eventPersonSex) + " rejects you."
+			$body.text = "You try to befriend " + global.pronounGenerator("him", global.eventPersonSex) + ", but " + global.pronounGenerator("he", global.eventPersonSex) + " rejects you."
 			$option1.text = "Dang"
 		else: #if they agree to be your friend
 			$heading.text = "Sweet"
@@ -441,7 +414,7 @@ func option1outcomes(): #option 1 has been picked
 	elif global.revent[0] == "adult-friend-o1" || global.revent[0] == "elder-friend-o1":
 		if randi_range(1,2) == 1: #if they refuse to be your friend
 			$heading.text = "Okay..."
-			$body.text = "You try to befriend " + pronounGenerator("him", global.eventPersonSex) + ", but " + pronounGenerator("he", global.eventPersonSex) + " rejects you."
+			$body.text = "You try to befriend " + global.pronounGenerator("him", global.eventPersonSex) + ", but " + global.pronounGenerator("he", global.eventPersonSex) + " rejects you."
 			$option1.text = "Dang"
 		else: #if they agree to be your friend
 			$heading.text = "A blossoming friendship"
@@ -493,7 +466,7 @@ func option1outcomes(): #option 1 has been picked
 func option2outcomes(): #option 2 has been picked
 	if global.revent[0] == "toddler-friend-o2" || global.revent[0] == "child-friend-o2":
 		$heading.text = "...Can you go away?"
-		$body.text = "You ignore " + pronounGenerator("him", global.eventPersonSex) + " for a while, and eventually " + pronounGenerator("he", global.eventPersonSex) + " goes away."
+		$body.text = "You ignore " + global.pronounGenerator("him", global.eventPersonSex) + " for a while, and eventually " + global.pronounGenerator("he", global.eventPersonSex) + " goes away."
 		$option1.text = "Okay"
 		optionRemover(2)
 		global.evality += 4 #i mean, it was kind of rude...
@@ -501,7 +474,7 @@ func option2outcomes(): #option 2 has been picked
 		@warning_ignore("integer_division")
 		if randi_range(1, round((36 - global.looks / 4) / 2) - 3) == 1: #if you're more physically attractive, you have a higher chance of being accepted
 			$heading.text = "What's your number?"
-			$body.text = "You ask " + pronounGenerator("him", global.eventPersonSex) + " out on a date, and " + pronounGenerator("he", global.eventPersonSex) + " says yes.\nJoy + 15"
+			$body.text = "You ask " + global.pronounGenerator("him", global.eventPersonSex) + " out on a date, and " + global.pronounGenerator("he", global.eventPersonSex) + " says yes.\nJoy + 15"
 			global.joy += 15
 			#if you already have an S/O, break up with (removes) them
 			for i in global.miscTypes.size(): #runs through every non-familial relationship
@@ -514,10 +487,10 @@ func option2outcomes(): #option 2 has been picked
 			global.miscSexes.append(global.eventPersonSex)
 			global.miscAges.append(global.eventPersonAge)
 			global.miscRelationships.append(randi_range(40, 80))
-			global.miscTypes.append((pronounGenerator("boy", global.eventPersonSex) + "friend").capitalize())
+			global.miscTypes.append((global.pronounGenerator("boy", global.eventPersonSex) + "friend").capitalize())
 		else: #they DON'T want to date you
 			$heading.text = "..."
-			$body.text = "You ask " + pronounGenerator("him", global.eventPersonSex) + " out, but " + pronounGenerator("he", global.eventPersonSex) + " rejects you.\nJoy - 15"
+			$body.text = "You ask " + global.pronounGenerator("him", global.eventPersonSex) + " out, but " + global.pronounGenerator("he", global.eventPersonSex) + " rejects you.\nJoy - 15"
 			global.joy -= 15
 		$option1.text = "Okay"
 		optionRemover(2)
@@ -525,7 +498,7 @@ func option2outcomes(): #option 2 has been picked
 		$heading.text = "You wanna go out sometime?"
 		@warning_ignore("integer_division")
 		if randi_range(1, round((36 - global.looks / 4) / 2) - 3) == 1: #if you're more physically attractive, you have a higher chance of being accepted
-			$body.text = "You ask " + pronounGenerator("him", global.eventPersonSex) + " out on a date, and " + pronounGenerator("he", global.eventPersonSex) + " says yes.\nJoy + 15"
+			$body.text = "You ask " + global.pronounGenerator("him", global.eventPersonSex) + " out on a date, and " + global.pronounGenerator("he", global.eventPersonSex) + " says yes.\nJoy + 15"
 			global.joy += 15
 			#if you already have an S/O, break up with (removes) them
 			for i in global.miscTypes.size(): #runs through every non-familial relationship
@@ -538,9 +511,9 @@ func option2outcomes(): #option 2 has been picked
 			global.miscSexes.append(global.eventPersonSex)
 			global.miscAges.append(global.eventPersonAge)
 			global.miscRelationships.append(randi_range(40, 80))
-			global.miscTypes.append((pronounGenerator("boy", global.eventPersonSex) + "friend").capitalize())
+			global.miscTypes.append((global.pronounGenerator("boy", global.eventPersonSex) + "friend").capitalize())
 		else: #they DON'T want to date you
-			$body.text = "You ask " + pronounGenerator("him", global.eventPersonSex) + " out, but " + pronounGenerator("he", global.eventPersonSex) + " rejects you.\nJoy - 15"
+			$body.text = "You ask " + global.pronounGenerator("him", global.eventPersonSex) + " out, but " + global.pronounGenerator("he", global.eventPersonSex) + " rejects you.\nJoy - 15"
 			global.joy -= 15
 		$option1.text = "Okay"
 		optionRemover(2)
@@ -548,7 +521,7 @@ func option2outcomes(): #option 2 has been picked
 		@warning_ignore("integer_division")
 		if randi_range(1, round(36 - global.looks / 4) - 3) == 1: #if you're more physically attractive, you have a higher chance of being accepted. You have lower chances either way though since you're older.
 			$heading.text = "Better late than never"
-			$body.text = "You ask " + pronounGenerator("him", global.eventPersonSex) + " out on a date, and " + pronounGenerator("he", global.eventPersonSex) + " says yes.\nJoy + 15"
+			$body.text = "You ask " + global.pronounGenerator("him", global.eventPersonSex) + " out on a date, and " + global.pronounGenerator("he", global.eventPersonSex) + " says yes.\nJoy + 15"
 			global.joy += 15
 			#if you already have an S/O, break up with (removes) them
 			for i in global.miscTypes.size(): #runs through every non-familial relationship
@@ -561,10 +534,10 @@ func option2outcomes(): #option 2 has been picked
 			global.miscSexes.append(global.eventPersonSex)
 			global.miscAges.append(global.eventPersonAge)
 			global.miscRelationships.append(randi_range(40, 80))
-			global.miscTypes.append((pronounGenerator("boy", global.eventPersonSex) + "friend").capitalize())
+			global.miscTypes.append((global.pronounGenerator("boy", global.eventPersonSex) + "friend").capitalize())
 		else: #they DON'T want to date you
 			$heading.text = str(global.age) + " and still unmarried"
-			$body.text = "You ask " + pronounGenerator("him", global.eventPersonSex) + " out on a date, but " + pronounGenerator("he", global.eventPersonSex) + " rejects you.\nJoy - 15"
+			$body.text = "You ask " + global.pronounGenerator("him", global.eventPersonSex) + " out on a date, but " + global.pronounGenerator("he", global.eventPersonSex) + " rejects you.\nJoy - 15"
 			global.joy -= 15
 		$option1.text = "Okay"
 		optionRemover(2)
@@ -636,11 +609,11 @@ func option3outcomes(): #option 3 has been picked
 	if global.revent[0] == "teenager-friend-o3" || global.revent[0] == "adult-friend-o3" || global.revent[0] == "elder-friend-o3":
 		if global.evality >= 60:
 			$heading.text = "Can you go away"
-			$body.text = "You stop talking to " + pronounGenerator("him", global.eventPersonSex) + " and " + pronounGenerator("he", global.eventPersonSex) + " eventually goes away."
+			$body.text = "You stop talking to " + global.pronounGenerator("him", global.eventPersonSex) + " and " + global.pronounGenerator("he", global.eventPersonSex) + " eventually goes away."
 			global.evality += 5
 		else:
 			$heading.text = "Alright, bye"
-			$body.text = "You finish talking to " + pronounGenerator("him", global.eventPersonSex) + " and you go your seperate ways."
+			$body.text = "You finish talking to " + global.pronounGenerator("him", global.eventPersonSex) + " and you go your seperate ways."
 		$option1.text = "Okay"
 		optionRemover(2)
 	elif global.revent[0] == "toddler-0-o3":
@@ -693,7 +666,7 @@ func option4outcomes(): #option 4 has been picked
 	if global.revent[0] == "child-0-o4":
 		var relativeOfChoice = global.familyRelationships.find(global.familyRelationships.min()) #gets the index of the relative featured in this event
 		$heading.text = "No one can ever know."
-		$body.text = "You kill your " + global.familyTypes[relativeOfChoice].to_lower() + " in cold blood. You push " + pronounGenerator("him", global.familySexes[relativeOfChoice]) + " down the stairs while no-one's looking.\n+ 100 Intellect"
+		$body.text = "You kill your " + global.familyTypes[relativeOfChoice].to_lower() + " in cold blood. You push " + global.pronounGenerator("him", global.familySexes[relativeOfChoice]) + " down the stairs while no-one's looking.\n+ 100 Intellect"
 		$option1.text = "Okay"
 		optionRemover(2)
 		NPCKiller("family", relativeOfChoice) #kills uncle

@@ -54,6 +54,7 @@ var familyTypes = []
 var familyAges = []
 var familySexes = []
 var familyRelationships = []
+var familyStats = []
 #dead
 var deadFamilyFirstNames = []
 var deadFamilyLastNames = []
@@ -69,6 +70,7 @@ var miscTypes = []
 var miscAges = []
 var miscSexes = []
 var miscRelationships = []
+var miscStats = []
 #dead
 var deadMiscFirstNames = []
 var deadMiscLastNames = []
@@ -76,6 +78,8 @@ var deadMiscTypes = []
 var deadMiscAges = []
 var deadMiscSexes = []
 var deadMiscRelationships = [] #how close you were with them when they died
+
+var possibleStats = ["money"] #relationship stats dictionary - the types match the index of their respective values.
 
 
 #miscellaneous stuff that must be stored over multiple pages
@@ -155,6 +159,34 @@ func cooldown(activity): #returns how many times you've done a certain thing thi
 	return timesActivityAppeared
 
 
+func pronounGenerator(type, sex): #returns pronouns so you don't have to do it manually inside anything - can be one of three types: him (objective), his (possessive), he (personal), or boy (noun)
+	if type == "him":
+		if sex == "M": #if sex of person is male
+			return "him"
+		else: #if sex of person is female
+			return "her"
+	elif type == "his":
+		if sex == "M": #if male
+			return "his"
+		else: #if female
+			return "hers"
+	elif type == "he":
+		if sex == "M": #if male
+			return "he"
+		else: #if female
+			return "she"
+	elif type == "boy":
+		if sex == "M": #if male
+			return "boy"
+		else: #if female
+			return "girl"
+	elif type == "guy":
+		if sex == "M": #if male
+			return "guy"
+		else: #if female
+			return "girl"
+
+
 #savegame stuff
 func lifeSerialiser(): #serialises every life-specific variable we need to save into a dictionary and then returns it
 	var collinsDictionary = {
@@ -199,6 +231,7 @@ func lifeSerialiser(): #serialises every life-specific variable we need to save 
 		"familyAges" : familyAges,
 		"familySexes" : familySexes,
 		"familyRelationships" : familyRelationships,
+		"familyStats" : familyStats,
 		#dead family
 		"deadFamilyFirstNames" : deadFamilyFirstNames,
 		"deadFamilyLastNames" : deadFamilyLastNames,
@@ -213,6 +246,7 @@ func lifeSerialiser(): #serialises every life-specific variable we need to save 
 		"miscAges" : miscAges,
 		"miscSexes" : miscSexes,
 		"miscRelationships" : miscRelationships,
+		"miscStats" : miscStats,
 		#dead other relationships
 		"deadMiscFirstNames" : deadMiscFirstNames,
 		"deadMiscLastNames" : deadMiscLastNames,
@@ -272,6 +306,9 @@ func saveGame(): #does the actual saving
 		if customLifeSaveDir != "": #if you're saving to a custom directory (i.e. you've been sent by importExportSaveFiles.gd
 			lifeSavePath = customLifeSaveDir + "/" + currentLife + ".bls"
 			customLifeSaveDir = "" #reset, that's all we needed the custom directory for
+		if lifeSavePath == null:
+			$confirmation.text = "Yuck! Failed to open file: " + str(FileAccess.get_open_error())
+			return
 		var lifeSaveFile = FileAccess.open(lifeSavePath, FileAccess.WRITE)
 		lifeSaveFile.store_var(lifeSerialiser()) #overwrites the life save file with collinsDictionary from the lifeSerialiser() function above.
 		lifeSaveFile.close() #closes file and saves changes
@@ -347,6 +384,7 @@ func loadLife(): #does the actual LIFE loading
 			familyAges = dictionary["familyAges"]
 			familySexes = dictionary["familySexes"]
 			familyRelationships = dictionary["familyRelationships"]
+			familyStats = dictionary["familyStats"]
 			#dead family
 			deadFamilyFirstNames = dictionary["deadFamilyFirstNames"]
 			deadFamilyLastNames = dictionary["deadFamilyLastNames"]
@@ -361,6 +399,7 @@ func loadLife(): #does the actual LIFE loading
 			miscAges = dictionary["miscAges"]
 			miscSexes = dictionary["miscSexes"]
 			miscRelationships = dictionary["miscRelationships"]
+			miscStats = dictionary["miscStats"]
 			#dead misc
 			deadMiscFirstNames = dictionary["deadMiscFirstNames"]
 			deadMiscLastNames = dictionary["deadMiscLastNames"]

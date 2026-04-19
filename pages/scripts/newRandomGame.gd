@@ -288,6 +288,10 @@ func familyGenerator(): #HELP I DON'T WANT TO MAKE THIS SCRIPT FOR A THIRD TIME 
 				ageOfUncaunt = global.familyTypes.find("Uncle") #finds the index of an uncle. Again, if you have neither an aunt nor an uncle, this variable (ageOfUncaunt) will not be used in the first place. Do not bother worrying about it.
 			ageOfUncaunt = global.familyAges[ageOfUncaunt] #gets the age of the Uncaunt at the index that was just acquired
 			global.familyAges.append(randi_range(0, ageOfUncaunt - 18)) #gives cousin an age based on the Uncaunt's age. They will be between 18 and 45 years younger than your Uncaunt (their parent).
+	if randi_range(1,30000) == 1: #easter egg
+		var whoIsBeyonce = randi_range(0, global.familyFirstNames.size() - 1) #picks a random family member
+		global.familyFirstNames[whoIsBeyonce] = "Beyoncé" #beyoncéficates them
+		global.familyLastNames[whoIsBeyonce] = ""
 	print(global.familyFirstNames)
 	print(global.familyLastNames)
 	print(global.familySexes)

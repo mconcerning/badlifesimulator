@@ -35,6 +35,7 @@ func legacyLoad(path): #when you pick a legacy save file. I'm gonna be 100% hone
 			print("k done")
 		else:
 			print("it failed dawg. what nightmare fuel did you just try to load")
+			$confirmation.text = "it failed dawg. what nightmare fuel did you just try to load"
 		file.close() #closes the file so it doesn't stay open and do anything weird
 		get_tree().change_scene_to_file("res://pages/game_menu.tscn")
 
