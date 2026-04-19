@@ -10,16 +10,10 @@ func _on_exit_pressed() -> void:
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
-	if global.IDClickedType == "family": #if the person selected is a family member, use the family arrays
-		$type.text = global.familyTypes[global.IDClicked]
-		$name.text = global.familyFirstNames[global.IDClicked] + " " + global.familyLastNames[global.IDClicked]
-		$details.text = "(" + global.familySexes[global.IDClicked] + "), Age " + str(global.familyAges[global.IDClicked]) + ", Relationship: " + str(global.familyRelationships[global.IDClicked])
-		$scrollContainer/centerContainer/vBoxContainer/conversation.text += global.pronounGenerator("him", global.familySexes[global.IDClicked])
-	else: #if the person selected is not your family
-		$type.text = global.miscTypes[global.IDClicked]
-		$name.text = global.miscFirstNames[global.IDClicked] + " " + global.miscLastNames[global.IDClicked]
-		$details.text = "(" + global.miscSexes[global.IDClicked] + "), Age " + str(global.miscAges[global.IDClicked]) + ", Relationship: " + str(global.miscRelationships[global.IDClicked])
-		$scrollContainer/centerContainer/vBoxContainer/conversation.text += global.pronounGenerator("him", global.miscSexes[global.IDClicked])
+	$type.text = global.personTypes[global.IDClicked]
+	$name.text = global.personFirstNames[global.IDClicked] + " " + global.personLastNames[global.IDClicked]
+	$details.text = "(" + global.personSexes[global.IDClicked] + "), Age " + str(global.personAges[global.IDClicked]) + ", Relationship: " + str(global.personRelationships[global.IDClicked])
+	$scrollContainer/centerContainer/vBoxContainer/conversation.text += global.pronounGenerator("him", global.personSexes[global.IDClicked])
 
 
 func _on_conversation_pressed() -> void:

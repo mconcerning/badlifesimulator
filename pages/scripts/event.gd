@@ -45,38 +45,30 @@ func EGPGenerator(ageRange, minAge): #randomly generates EGPs (Event Generated P
 	if global.eventPersonAge < minAge: #if the event person's age is less than the minimum age
 		global.eventPersonAge = minAge #sets their age to the minimum age
 
-func NPCKiller(type, index): #kills an NPC (family or misc)
-	if type == "family":
-		global.familyFirstNames.remove_at(index)
-		global.familyLastNames.remove_at(index)
-		global.familyRelationships.remove_at(index)
-		global.familyTypes.remove_at(index)
-		global.familyAges.remove_at(index)
-		global.familySexes.remove_at(index)
-	elif type == "misc":
-		global.miscFirstNames.remove_at(index)
-		global.miscLastNames.remove_at(index)
-		global.miscRelationships.remove_at(index)
-		global.miscTypes.remove_at(index)
-		global.miscAges.remove_at(index)
-		global.miscSexes.remove_at(index)
+func NPCKiller(index): #kills an NPC
+	global.personFirstNames.remove_at(index)
+	global.personLastNames.remove_at(index)
+	global.personRelationships.remove_at(index)
+	global.personTypes.remove_at(index)
+	global.personAges.remove_at(index)
+	global.personSexes.remove_at(index)
 
 
 func personRemover(index, whichArray): #removes the person at index "index" in the array "whichArray" (could be family, misc, etc.)
 	if whichArray == "family":
-		global.familyFirstNames.pop_at(index)
-		global.familyLastNames.pop_at(index)
-		global.familySexes.pop_at(index)
-		global.familyAges.pop_at(index)
-		global.familyRelationships.pop_at(index)
-		global.familyTypes.pop_at(index)
+		global.personFirstNames.pop_at(index)
+		global.personLastNames.pop_at(index)
+		global.personSexes.pop_at(index)
+		global.personAges.pop_at(index)
+		global.personRelationships.pop_at(index)
+		global.personTypes.pop_at(index)
 	elif whichArray == "misc":
 		global.miscFirstNames.pop_at(index)
 		global.miscLastNames.pop_at(index)
-		global.miscSexes.pop_at(index)
-		global.miscAges.pop_at(index)
-		global.miscRelationships.pop_at(index)
-		global.miscTypes.pop_at(index)
+		global.personSexes.pop_at(index)
+		global.personAges.pop_at(index)
+		global.personRelationships.pop_at(index)
+		global.personTypes.pop_at(index)
 
 
 func repositionResize(): #repositions and resizes the nodes on-screen
@@ -160,9 +152,9 @@ func toddlerhood(): #toddlerhood base events - prefix is "toddler-"
 	elif global.revent[0] == "toddler-0": #if first element in the revent array is the following one
 		$heading.text = "Parkscream"
 		$body.text = "While out with your family at the park, you notice that there is an ice cream shop situated across the road."
-		if global.familyTypes.has("Mother"): #if you have a mother
+		if global.personTypes.has("Mother"): #if you have a mother
 			$option1.text = "Ask your mother for one"
-		elif global.familyTypes.has("Father"): #if you have no mother, only (a) father(s)
+		elif global.personTypes.has("Father"): #if you have no mother, only (a) father(s)
 			$option1.text = "Ask your father for one"
 		$option2.text = "Cry until you get one"
 		$option3.text = "Bite your tongue and don't say anything"
@@ -175,23 +167,23 @@ func childhood(): #childhood base events - prefix is "child-"
 		$heading.text = "New friend?"
 		EGPGenerator(3, 0) #generates an event person to use
 		if randi_range(1,2) == 1: #random body text variation
-			$body.text = "While out and about with your " + str(global.familyTypes[0]).to_lower() +  ", you strike up a conversation with a random kid and you two seem to get along pretty well.\n("
+			$body.text = "While out and about with your " + str(global.personTypes[0]).to_lower() +  ", you strike up a conversation with a random kid and you two seem to get along pretty well.\n("
 		else: #random body text variation
-			$body.text = "While out and about with your " + str(global.familyTypes[0]).to_lower() +  ", you strike up a conversation with a random kid and you two seem to get along pretty well.\n("
+			$body.text = "While out and about with your " + str(global.personTypes[0]).to_lower() +  ", you strike up a conversation with a random kid and you two seem to get along pretty well.\n("
 		$body.text = $body.text + global.eventPersonFirstName + " " + global.eventPersonLastName + ", " + global.eventPersonSex + ", " + str(global.eventPersonAge) + " years old)" #appends EGP details to the end of the body text
 		$option1.text = "Befriend " + global.pronounGenerator("him", global.eventPersonSex)
 		$option2.text = "Ignore " + global.pronounGenerator("him", global.eventPersonSex)
 		optionRemover(3)
 		$credit.text = "mconcerning"
 	elif global.revent[0] == "child-0":
-		var relativeOfChoice = global.familyRelationships.find(global.familyRelationships.min()) #which relative will be featured in this event? gets the index of the family member you have the lowest relationship with.
+		var relativeOfChoice = global.personRelationships.find(global.personRelationships.min()) #which relative will be featured in this event? gets the index of the family member you have the lowest relationship with.
 		$heading.text = "Soft start"
-		$body.text = "It's your birthday party, and it's time to open presents! But the first present you open from your " + str(global.familyTypes[relativeOfChoice]).to_lower() + ", " + str(global.familyFirstNames[relativeOfChoice]) + ", was just a bunch of pillows and other bedding. You kind of wish they had just gotten you something else instead."
+		$body.text = "It's your birthday party, and it's time to open presents! But the first present you open from your " + str(global.personTypes[relativeOfChoice]).to_lower() + ", " + str(global.personFirstNames[relativeOfChoice]) + ", was just a bunch of pillows and other bedding. You kind of wish they had just gotten you something else instead."
 		$option1.text = "Thank them anyways"
 		$option2.text = "Thank them enthusiastically"
 		$option3.text = "Pitch a fit and cry"
 		if global.evality >= 90: #if you're like, REALLY evil
-			$option4.text = "Kill " + global.pronounGenerator("him", global.familySexes[relativeOfChoice]) #uh oh!???
+			$option4.text = "Kill " + global.pronounGenerator("him", global.personSexes[relativeOfChoice]) #uh oh!???
 		else: #if you're not
 			optionRemover(4) #don't worry; you can't still click it on accident
 		optionRemover(5)
@@ -273,10 +265,10 @@ func specialised(): #runs any specialised, non-age-up events
 			else: #if you have enough money to pay for it upfront
 				$body.text += "You have enough money to pay for it upfront ($" + str(global.money) + "), but you can still choose to take out a 20-year loan to cover the costs with an interest rate of 8%, or apply for a scholarship."
 			$option1.text = "Pay for it with cash"
-			if global.familyTypes.count("Mother") + global.familyTypes.count("Father") >= 2: #if you have two parents
+			if global.personTypes.count("Mother") + global.personTypes.count("Father") >= 2: #if you have two parents
 				$option2.text = "Ask your parents to pay"
-			elif global.familyTypes.count("Mother") + global.familyTypes.count("Father") == 1: #if you only have one parent
-				if global.familyTypes.find("Mother") == -1: #if you only have a father
+			elif global.personTypes.count("Mother") + global.personTypes.count("Father") == 1: #if you only have one parent
+				if global.personTypes.find("Mother") == -1: #if you only have a father
 					$option2.text = "Ask your father to pay"
 				else: #if you only have a mother
 					$option2.text = "Ask your mother to pay"
@@ -300,12 +292,12 @@ func confirmation(): #non-random confirmation events that tell you that somethin
 		else: #if you're being enrolled in high school
 			$heading.text = "High school"
 		$body.text = "Your "
-		if global.familyTypes.count("Mother") + global.familyTypes.count("Father") > 1: #if you have more than one parent
+		if global.personTypes.count("Mother") + global.personTypes.count("Father") > 1: #if you have more than one parent
 			$body.text += "parents have enrolled you in " + global.schoolName + "!"
-		elif global.familyTypes.count("Mother") + global.familyTypes.count("Father") == 1: #if you only have one parent
-			if global.familyTypes.find("Mother") != -1: #if you have only a mother
+		elif global.personTypes.count("Mother") + global.personTypes.count("Father") == 1: #if you only have one parent
+			if global.personTypes.find("Mother") != -1: #if you have only a mother
 				$body.text += "mother has enrolled you in " + global.schoolName + "!"
-			elif global.familyTypes.find("Father") != -1: #if you have only a father
+			elif global.personTypes.find("Father") != -1: #if you have only a father
 				$body.text += "father has enrolled you in " + global.schoolName + "!"
 			else: #if you have neither a mother or a father (technically could happen, if they die)
 				$body.text = "You have been enrolled in " + global.schoolName + "."
@@ -395,12 +387,12 @@ func option1outcomes(): #option 1 has been picked
 		$option1.text = "Hooray"
 		optionRemover(2)
 		#adds the EGP to your miscellanious relationships array
-		global.miscSexes.append(global.eventPersonSex)
+		global.personSexes.append(global.eventPersonSex)
 		global.miscFirstNames.append(global.eventPersonFirstName)
 		global.miscLastNames.append(global.eventPersonLastName)
-		global.miscAges.append(global.eventPersonAge)
-		global.miscRelationships.append(randi_range(20, 50))
-		global.miscTypes.append("Friend")
+		global.personAges.append(global.eventPersonAge)
+		global.personRelationships.append(randi_range(20, 50))
+		global.personTypes.append("Friend")
 	elif global.revent[0] == "teenager-friend-o1":
 		if randi_range(1,3) == 1: #if they refuse to be your friend
 			$heading.text = "That's awkward..."
@@ -423,24 +415,24 @@ func option1outcomes(): #option 1 has been picked
 		optionRemover(2)
 	elif global.revent[0] == "toddler-0-o1":
 		$heading.text = "Nooo"
-		if global.familyTypes.has("Mother"): #if you have a mother
+		if global.personTypes.has("Mother"): #if you have a mother
 			$body.text = "She says no. You go home depressed and don't leave your room for 11 days.\n- 10 Joy" #mother-specific body text
-		elif global.familyTypes.has("Father"): #if you have a father
+		elif global.personTypes.has("Father"): #if you have a father
 			$body.text = "He says no. You go home depressed and don't keave your room for 11 days.\n- 10 Joy" #father-specific body text
 		$option1.text = "Okay"
 		optionRemover(2)
 		global.joy -= 10 #deducts 10 joy
 	elif global.revent[0] == "child-0-o1":
-		var relativeOfChoice = global.familyRelationships.find(global.familyRelationships.min()) #gets the index of the gifter
+		var relativeOfChoice = global.personRelationships.find(global.personRelationships.min()) #gets the index of the gifter
 		$heading.text = "Wow... It's just... Wow."
 		if global.evality < 30: #if evality is under 30, you feel bad about lying
-			$body.text = "They appreciate your kind words, but you feel kind of bad about lying.\n+ 5 relationship with your " + str(global.familyTypes[relativeOfChoice]) + ", " + str(global.familyFirstNames[relativeOfChoice]) + ", - 5 Joy"
+			$body.text = "They appreciate your kind words, but you feel kind of bad about lying.\n+ 5 relationship with your " + str(global.personTypes[relativeOfChoice]) + ", " + str(global.personFirstNames[relativeOfChoice]) + ", - 5 Joy"
 			global.joy -= 5
 		else: #if evality is 30 or over, you don't feel bad
-			$body.text = "They appreciate your kind words.\n+ 5 relationship with your " + str(global.familyTypes[relativeOfChoice]).to_lower() + ", " + str(global.familyFirstNames[relativeOfChoice])
+			$body.text = "They appreciate your kind words.\n+ 5 relationship with your " + str(global.personTypes[relativeOfChoice]).to_lower() + ", " + str(global.personFirstNames[relativeOfChoice])
 		$option1.text = "Okay"
 		optionRemover(2)
-		global.familyRelationships[relativeOfChoice] += 5 #adds 5 to the relationship you have with the gifter
+		global.personRelationships[relativeOfChoice] += 5 #adds 5 to the relationship you have with the gifter
 		global.evality += 3 #since you did something semi-bad, you become slightly desensitised to doing bad things
 	elif global.revent[0] == "change-save-management-mode-to-delete-o1":
 		goToSpecific("res://pages/life_save_files.tscn")
@@ -477,17 +469,17 @@ func option2outcomes(): #option 2 has been picked
 			$body.text = "You ask " + global.pronounGenerator("him", global.eventPersonSex) + " out on a date, and " + global.pronounGenerator("he", global.eventPersonSex) + " says yes.\nJoy + 15"
 			global.joy += 15
 			#if you already have an S/O, break up with (removes) them
-			for i in global.miscTypes.size(): #runs through every non-familial relationship
-				if global.miscTypes[i] == "Boyfriend" || global.miscTypes[i] == "Girlfriend": #and if they're your gf/bf
+			for i in global.personTypes.size(): #runs through every non-familial relationship
+				if global.personTypes[i] == "Boyfriend" || global.personTypes[i] == "Girlfriend": #and if they're your gf/bf
 					personRemover(i, "misc") #removes them
 				#for loops automatically increase the variable they use (in this case, i) so no need to manually increment it
 			#adds them to your relationships
 			global.miscFirstNames.append(global.eventPersonFirstName)
 			global.miscLastNames.append(global.eventPersonLastName)
-			global.miscSexes.append(global.eventPersonSex)
-			global.miscAges.append(global.eventPersonAge)
-			global.miscRelationships.append(randi_range(40, 80))
-			global.miscTypes.append((global.pronounGenerator("boy", global.eventPersonSex) + "friend").capitalize())
+			global.personSexes.append(global.eventPersonSex)
+			global.personAges.append(global.eventPersonAge)
+			global.personRelationships.append(randi_range(40, 80))
+			global.personTypes.append((global.pronounGenerator("boy", global.eventPersonSex) + "friend").capitalize())
 		else: #they DON'T want to date you
 			$heading.text = "..."
 			$body.text = "You ask " + global.pronounGenerator("him", global.eventPersonSex) + " out, but " + global.pronounGenerator("he", global.eventPersonSex) + " rejects you.\nJoy - 15"
@@ -501,17 +493,17 @@ func option2outcomes(): #option 2 has been picked
 			$body.text = "You ask " + global.pronounGenerator("him", global.eventPersonSex) + " out on a date, and " + global.pronounGenerator("he", global.eventPersonSex) + " says yes.\nJoy + 15"
 			global.joy += 15
 			#if you already have an S/O, break up with (removes) them
-			for i in global.miscTypes.size(): #runs through every non-familial relationship
-				if global.miscTypes[i] == "Boyfriend" || global.miscTypes[i] == "Girlfriend": #and if they're your gf/bf
+			for i in global.personTypes.size(): #runs through every non-familial relationship
+				if global.personTypes[i] == "Boyfriend" || global.personTypes[i] == "Girlfriend": #and if they're your gf/bf
 					personRemover(i, "misc") #removes them
 				#for loops automatically increase the variable they use (in this case, i) so no need to manually increment it
 			#adds them to your relationships
 			global.miscFirstNames.append(global.eventPersonFirstName)
 			global.miscLastNames.append(global.eventPersonLastName)
-			global.miscSexes.append(global.eventPersonSex)
-			global.miscAges.append(global.eventPersonAge)
-			global.miscRelationships.append(randi_range(40, 80))
-			global.miscTypes.append((global.pronounGenerator("boy", global.eventPersonSex) + "friend").capitalize())
+			global.personSexes.append(global.eventPersonSex)
+			global.personAges.append(global.eventPersonAge)
+			global.personRelationships.append(randi_range(40, 80))
+			global.personTypes.append((global.pronounGenerator("boy", global.eventPersonSex) + "friend").capitalize())
 		else: #they DON'T want to date you
 			$body.text = "You ask " + global.pronounGenerator("him", global.eventPersonSex) + " out, but " + global.pronounGenerator("he", global.eventPersonSex) + " rejects you.\nJoy - 15"
 			global.joy -= 15
@@ -524,17 +516,17 @@ func option2outcomes(): #option 2 has been picked
 			$body.text = "You ask " + global.pronounGenerator("him", global.eventPersonSex) + " out on a date, and " + global.pronounGenerator("he", global.eventPersonSex) + " says yes.\nJoy + 15"
 			global.joy += 15
 			#if you already have an S/O, break up with (removes) them
-			for i in global.miscTypes.size(): #runs through every non-familial relationship
-				if global.miscTypes[i] == "Boyfriend" || global.miscTypes[i] == "Girlfriend": #and if they're your gf/bf
+			for i in global.personTypes.size(): #runs through every non-familial relationship
+				if global.personTypes[i] == "Boyfriend" || global.personTypes[i] == "Girlfriend": #and if they're your gf/bf
 					personRemover(i, "misc") #removes them
 				#for loops automatically increase the variable they use (in this case, i) so no need to manually increment it
 			#adds them to your relationships
 			global.miscFirstNames.append(global.eventPersonFirstName)
 			global.miscLastNames.append(global.eventPersonLastName)
-			global.miscSexes.append(global.eventPersonSex)
-			global.miscAges.append(global.eventPersonAge)
-			global.miscRelationships.append(randi_range(40, 80))
-			global.miscTypes.append((global.pronounGenerator("boy", global.eventPersonSex) + "friend").capitalize())
+			global.personSexes.append(global.eventPersonSex)
+			global.personAges.append(global.eventPersonAge)
+			global.personRelationships.append(randi_range(40, 80))
+			global.personTypes.append((global.pronounGenerator("boy", global.eventPersonSex) + "friend").capitalize())
 		else: #they DON'T want to date you
 			$heading.text = str(global.age) + " and still unmarried"
 			$body.text = "You ask " + global.pronounGenerator("him", global.eventPersonSex) + " out on a date, but " + global.pronounGenerator("he", global.eventPersonSex) + " rejects you.\nJoy - 15"
@@ -543,27 +535,27 @@ func option2outcomes(): #option 2 has been picked
 		optionRemover(2)
 	elif global.revent[0] == "toddler-0-o2":
 		$heading.text = "You screamed for ice cream"
-		if global.familyTypes.has("Mother"):
+		if global.personTypes.has("Mother"):
 			$body.text = "You cry, and eventually your mother gives in and buys you one.\nJoy + 5, relationship with mother -5"
-			global.familyRelationships[global.familyTypes.find("Mother")] -= 5
-		elif global.familyTypes.has("Father"):
+			global.personRelationships[global.personTypes.find("Mother")] -= 5
+		elif global.personTypes.has("Father"):
 			$body.text = "You cry, and eventually your father gives in and buys you one.\nJoy + 5, relationship with father -5"
-			global.familyRelationships[global.familyTypes.find("Father")] -= 5
+			global.personRelationships[global.personTypes.find("Father")] -= 5
 		$option1.text = "Okay"
 		optionRemover(2)
 		global.joy += 5
 		global.evality += 4
 	elif global.revent[0] == "child-0-o2":
-		var relativeOfChoice = global.familyRelationships.find(global.familyRelationships.min()) #gets the index of the gifter
+		var relativeOfChoice = global.personRelationships.find(global.personRelationships.min()) #gets the index of the gifter
 		$heading.text = "Wow! It's just... Wow!"
 		if global.evality < 40: #if evality is under 40, you feel bad about lying
-			$body.text = "They appreciate your kind words, so much so that they surprise you with another $50, but you feel really bad about lying.\n+ 8 relationship with your " + str(global.familyTypes[relativeOfChoice]).to_lower() + ", " + str(global.familyFirstNames[relativeOfChoice]) + ", - 10 Joy, + $50"
+			$body.text = "They appreciate your kind words, so much so that they surprise you with another $50, but you feel really bad about lying.\n+ 8 relationship with your " + str(global.personTypes[relativeOfChoice]).to_lower() + ", " + str(global.personFirstNames[relativeOfChoice]) + ", - 10 Joy, + $50"
 			global.joy -= 10
 		else: #if evality is 40 or above, you don't feel bad
-			$body.text = "They appreciate your kind words, so much so that they surprise you with another $50.\n+ 8 relationship with your " + str(global.familyTypes[relativeOfChoice]).to_lower() + ", " + str(global.familyFirstNames[relativeOfChoice]) + ", + $50"
+			$body.text = "They appreciate your kind words, so much so that they surprise you with another $50.\n+ 8 relationship with your " + str(global.personTypes[relativeOfChoice]).to_lower() + ", " + str(global.personFirstNames[relativeOfChoice]) + ", + $50"
 		$option1.text = "Okay"
 		optionRemover(2)
-		global.familyRelationships[relativeOfChoice] += 8
+		global.personRelationships[relativeOfChoice] += 8
 		global.money += 50
 		global.evality += 4 #since you did something bad, you become slightly desensitised to doing bad things
 	elif global.revent[0] == "change-save-management-mode-to-delete-o2":
@@ -573,19 +565,19 @@ func option2outcomes(): #option 2 has been picked
 	elif global.revent[0] == "university-degree-picked-o2":
 		var parent = 0
 		var parentNoun = ""
-		if global.familyTypes.find("Mother") != -1: #if you have a mother
-			parent = global.familyTypes.find("Mother") #gets the index of said mother
-		elif global.familyTypes.find("Father") != -1: #if you have only a father
-			parent = global.familyTypes.find("Father") #gets the index of said father
-		if global.familyTypes.count("Mother") + global.familyTypes.count("Father") >= 2: #if you have multiple parents
+		if global.personTypes.find("Mother") != -1: #if you have a mother
+			parent = global.personTypes.find("Mother") #gets the index of said mother
+		elif global.personTypes.find("Father") != -1: #if you have only a father
+			parent = global.personTypes.find("Father") #gets the index of said father
+		if global.personTypes.count("Mother") + global.personTypes.count("Father") >= 2: #if you have multiple parents
 			parentNoun = "parents"
-		elif global.familyTypes.count("Mother") + global.familyTypes.count("Father") == 1: #if you only have one parent
+		elif global.personTypes.count("Mother") + global.personTypes.count("Father") == 1: #if you only have one parent
 			if parent == "Mother": #if you have only a mother
 				parentNoun = "mother"
 			else: #if you only have a father
 				parentNoun = "father"
 		#if your parents actually do agree to pay for your tuition
-		if global.familyRelationships[parent] >= 60 && randi_range(1,2) == 1: #if you have a good relationship with your parents AND your parents actually agree to pay for your tuition (1 in 2 chance)
+		if global.personRelationships[parent] >= 60 && randi_range(1,2) == 1: #if you have a good relationship with your parents AND your parents actually agree to pay for your tuition (1 in 2 chance)
 			$heading.text = "Nepo baby?"
 			$body.text = "Your " + str(parentNoun) + " agreed to pay for your University tuition!"
 			global.schoolLevel = 3 #puts you in tertiary school
@@ -618,24 +610,24 @@ func option3outcomes(): #option 3 has been picked
 		optionRemover(2)
 	elif global.revent[0] == "toddler-0-o3":
 		$heading.text = "If you insist"
-		if global.familyTypes.has("Mother"):
+		if global.personTypes.has("Mother"):
 			$body.text = "Your mother points to the shop and asks you if you want to get one. You go on to have a great day out together.\nJoy + 10, relationship with mother + 10"
-			global.familyRelationships[global.familyTypes.find("Mother")] += 10
-		elif global.familyTypes.has("Father"):
+			global.personRelationships[global.personTypes.find("Mother")] += 10
+		elif global.personTypes.has("Father"):
 			$body.text = "Your father points to the shop and asks you if you want to get one. You go on to have a great day out together.\nJoy + 10, relationship with father + 10"
-			global.familyRelationships[global.familyTypes.find("Father")] += 10
+			global.personRelationships[global.personTypes.find("Father")] += 10
 		$option1.text = "Okay"
 		optionRemover(2)
 		global.joy += 10
 	elif global.revent[0] == "child-0-o3":
-		var relativeOfChoice = global.familyRelationships.find(global.familyRelationships.min()) #gets the index of the gifter
+		var relativeOfChoice = global.personRelationships.find(global.personRelationships.min()) #gets the index of the gifter
 		$heading.text = "Wow, this sucks"
 		var parents = [] #indexes of all parents; size determines whether "parent" should be plural or not in the body text
-		for i in global.familyTypes.size(): #runs through every family member to check for parents
-			if global.familyTypes[i] == "Mother" || global.familyTypes[i] == "Father": #if family member at the index we're checking is a parent
+		for i in global.personTypes.size(): #runs through every family member to check for parents
+			if global.personTypes[i] == "Mother" || global.personTypes[i] == "Father": #if family member at the index we're checking is a parent
 				parents.append(i)
 		if parents.size() > 1: #if you have more than one parent
-			$body.text = "Your parents scold you for being unappreciative.\n- 8 relationship with your " + global.familyTypes[relativeOfChoice].to_lower() + ", " + global.familyFirstNames[relativeOfChoice] + ", -8 relationship with your parents, - 12 Joy"
+			$body.text = "Your parents scold you for being unappreciative.\n- 8 relationship with your " + global.personTypes[relativeOfChoice].to_lower() + ", " + global.personFirstNames[relativeOfChoice] + ", -8 relationship with your parents, - 12 Joy"
 		else: #if you only have one parent
 			#finds parent
 			var whatParent = ""
@@ -643,12 +635,12 @@ func option3outcomes(): #option 3 has been picked
 				whatParent = "mother"
 			elif global.parents.find("Father") != -1: #if you have only a father
 				whatParent = "mather"
-			$body.text = "Your " + whatParent + " scolds you for being unappreciative.\n- 8 relationship with your " + global.familyTypes[relativeOfChoice].to_lower() + ", " + global.familyFirstNames[relativeOfChoice] + ", -8 relationship with your " + whatParent + ", - 12 Joy"
+			$body.text = "Your " + whatParent + " scolds you for being unappreciative.\n- 8 relationship with your " + global.personTypes[relativeOfChoice].to_lower() + ", " + global.personFirstNames[relativeOfChoice] + ", -8 relationship with your " + whatParent + ", - 12 Joy"
 		$option1.text = "Okay"
 		optionRemover(2)
-		global.familyRelationships[relativeOfChoice] -= 8 #deduct 8 relationship with gifter
+		global.personRelationships[relativeOfChoice] -= 8 #deduct 8 relationship with gifter
 		for i in parents.size(): #runs through every parent
-				global.familyRelationships[parents[i]] -= 8 #deducts 8 relationship from the parent at the index of parents[i] (parents stores indexes, so the parents at position i in the parents array could have a different index to themself in the other family arrays.
+				global.personRelationships[parents[i]] -= 8 #deducts 8 relationship from the parent at the index of parents[i] (parents stores indexes, so the parents at position i in the parents array could have a different index to themself in the other family arrays.
 		global.joy -= 12
 	elif global.revent[0] == "university-degree-picked-o3":
 		$heading.text = "Student loans"
@@ -664,12 +656,12 @@ func option3outcomes(): #option 3 has been picked
 
 func option4outcomes(): #option 4 has been picked
 	if global.revent[0] == "child-0-o4":
-		var relativeOfChoice = global.familyRelationships.find(global.familyRelationships.min()) #gets the index of the relative featured in this event
+		var relativeOfChoice = global.personRelationships.find(global.personRelationships.min()) #gets the index of the relative featured in this event
 		$heading.text = "No one can ever know."
-		$body.text = "You kill your " + global.familyTypes[relativeOfChoice].to_lower() + " in cold blood. You push " + global.pronounGenerator("him", global.familySexes[relativeOfChoice]) + " down the stairs while no-one's looking.\n+ 100 Intellect"
+		$body.text = "You kill your " + global.personTypes[relativeOfChoice].to_lower() + " in cold blood. You push " + global.pronounGenerator("him", global.personSexes[relativeOfChoice]) + " down the stairs while no-one's looking.\n+ 100 Intellect"
 		$option1.text = "Okay"
 		optionRemover(2)
-		NPCKiller("family", relativeOfChoice) #kills uncle
+		NPCKiller(relativeOfChoice) #kills uncle
 		#stat effects
 		global.intellect = 100
 		global.crimes.append("1st-degree-murder")

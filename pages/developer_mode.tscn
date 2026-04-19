@@ -146,78 +146,6 @@ size_flags_horizontal = 4
 theme = ExtResource("6_llmlx")
 text = "Set last name"
 
-[node name="setFamilyTypes" type="Button" parent="scrollContainer/centerContainer/vBoxContainer" unique_id=2075515948]
-layout_mode = 2
-size_flags_horizontal = 4
-theme = ExtResource("6_llmlx")
-text = "Set family types"
-
-[node name="setFamilyAges" type="Button" parent="scrollContainer/centerContainer/vBoxContainer" unique_id=401418804]
-layout_mode = 2
-size_flags_horizontal = 4
-theme = ExtResource("6_llmlx")
-text = "Set family ages"
-
-[node name="setFamilySexes" type="Button" parent="scrollContainer/centerContainer/vBoxContainer" unique_id=2011154275]
-layout_mode = 2
-size_flags_horizontal = 4
-theme = ExtResource("6_llmlx")
-text = "Set family sexes"
-
-[node name="setFamilyFirstNames" type="Button" parent="scrollContainer/centerContainer/vBoxContainer" unique_id=1901582023]
-layout_mode = 2
-size_flags_horizontal = 4
-theme = ExtResource("6_llmlx")
-text = "Set family first names"
-
-[node name="setFamilyLastNames" type="Button" parent="scrollContainer/centerContainer/vBoxContainer" unique_id=56995387]
-layout_mode = 2
-size_flags_horizontal = 4
-theme = ExtResource("6_llmlx")
-text = "Set family last names"
-
-[node name="setFamilyRelationships" type="Button" parent="scrollContainer/centerContainer/vBoxContainer" unique_id=568793141]
-layout_mode = 2
-size_flags_horizontal = 4
-theme = ExtResource("6_llmlx")
-text = "Set family relationships"
-
-[node name="setMiscTypes" type="Button" parent="scrollContainer/centerContainer/vBoxContainer" unique_id=1217921906]
-layout_mode = 2
-size_flags_horizontal = 4
-theme = ExtResource("6_llmlx")
-text = "Set misc types"
-
-[node name="setMiscAges" type="Button" parent="scrollContainer/centerContainer/vBoxContainer" unique_id=1031446693]
-layout_mode = 2
-size_flags_horizontal = 4
-theme = ExtResource("6_llmlx")
-text = "Set misc ages"
-
-[node name="setMiscSexes" type="Button" parent="scrollContainer/centerContainer/vBoxContainer" unique_id=924379587]
-layout_mode = 2
-size_flags_horizontal = 4
-theme = ExtResource("6_llmlx")
-text = "Set misc sexes"
-
-[node name="setMiscFirstNames" type="Button" parent="scrollContainer/centerContainer/vBoxContainer" unique_id=802789269]
-layout_mode = 2
-size_flags_horizontal = 4
-theme = ExtResource("6_llmlx")
-text = "Set misc first names"
-
-[node name="setMiscLastNames" type="Button" parent="scrollContainer/centerContainer/vBoxContainer" unique_id=126578153]
-layout_mode = 2
-size_flags_horizontal = 4
-theme = ExtResource("6_llmlx")
-text = "Set misc last names"
-
-[node name="setMiscRelationships" type="Button" parent="scrollContainer/centerContainer/vBoxContainer" unique_id=1644534188]
-layout_mode = 2
-size_flags_horizontal = 4
-theme = ExtResource("6_llmlx")
-text = "Set misc relationships"
-
 [node name="saveGame" type="TextureButton" parent="." unique_id=1317964170]
 offset_left = 960.0
 offset_top = 20.0
@@ -242,16 +170,4 @@ stretch_mode = 0
 [connection signal="pressed" from="scrollContainer/centerContainer/vBoxContainer/setLevel" to="." method="_on_set_level_pressed"]
 [connection signal="pressed" from="scrollContainer/centerContainer/vBoxContainer/setFirstName" to="." method="_on_set_first_name_pressed"]
 [connection signal="pressed" from="scrollContainer/centerContainer/vBoxContainer/setLastName" to="." method="_on_set_last_name_pressed"]
-[connection signal="pressed" from="scrollContainer/centerContainer/vBoxContainer/setFamilyTypes" to="." method="_on_set_family_types_pressed"]
-[connection signal="pressed" from="scrollContainer/centerContainer/vBoxContainer/setFamilyAges" to="." method="_on_set_family_ages_pressed"]
-[connection signal="pressed" from="scrollContainer/centerContainer/vBoxContainer/setFamilySexes" to="." method="_on_set_family_sexes_pressed"]
-[connection signal="pressed" from="scrollContainer/centerContainer/vBoxContainer/setFamilyFirstNames" to="." method="_on_set_family_first_names_pressed"]
-[connection signal="pressed" from="scrollContainer/centerContainer/vBoxContainer/setFamilyLastNames" to="." method="_on_set_family_last_names_pressed"]
-[connection signal="pressed" from="scrollContainer/centerContainer/vBoxContainer/setFamilyRelationships" to="." method="_on_set_family_relationships_pressed"]
-[connection signal="pressed" from="scrollContainer/centerContainer/vBoxContainer/setMiscTypes" to="." method="_on_set_misc_types_pressed"]
-[connection signal="pressed" from="scrollContainer/centerContainer/vBoxContainer/setMiscAges" to="." method="_on_set_misc_ages_pressed"]
-[connection signal="pressed" from="scrollContainer/centerContainer/vBoxContainer/setMiscSexes" to="." method="_on_set_misc_sexes_pressed"]
-[connection signal="pressed" from="scrollContainer/centerContainer/vBoxContainer/setMiscFirstNames" to="." method="_on_set_misc_first_names_pressed"]
-[connection signal="pressed" from="scrollContainer/centerContainer/vBoxContainer/setMiscLastNames" to="." method="_on_set_misc_last_names_pressed"]
-[connection signal="pressed" from="scrollContainer/centerContainer/vBoxContainer/setMiscRelationships" to="." method="_on_set_misc_relationships_pressed"]
 [connection signal="pressed" from="saveGame" to="." method="_on_save_game_pressed"]

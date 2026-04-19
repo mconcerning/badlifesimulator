@@ -46,40 +46,23 @@ var loans = [] #uh oh - can hold multiple loans at once - holds the total amount
 var loanPaybackDuration = [] #in how many years must the loan at its same index be fully paid back? Used to calculate how much you owe at the start of every year. The amount owed is then automatically deducted from your money total.
 var loanInterest = [] #the percentage interest you owe on top of what you would pay back on your loans
 
-
-#family
-var familyFirstNames = []
-var familyLastNames = []
-var familyTypes = []
-var familyAges = []
-var familySexes = []
-var familyRelationships = []
-var familyStats = []
+#NPC relationships
+var personFirstNames = []
+var personLastNames = []
+var personTypes = []
+var personAges = []
+var personSexes = []
+var personRelationships = []
+var personStats = []
 #dead
-var deadFamilyFirstNames = []
-var deadFamilyLastNames = []
-var deadFamilyTypes = []
-var deadFamilyAges = []
-var deadFamilySexes = []
-var deadFamilyRelationships = [] #how close you were with them when they died
-
-#other (miscellaneous) relationships
-var miscFirstNames = []
-var miscLastNames = []
-var miscTypes = []
-var miscAges = []
-var miscSexes = []
-var miscRelationships = []
-var miscStats = []
-#dead
-var deadMiscFirstNames = []
-var deadMiscLastNames = []
-var deadMiscTypes = []
-var deadMiscAges = []
-var deadMiscSexes = []
-var deadMiscRelationships = [] #how close you were with them when they died
-
-var possibleStats = ["money"] #relationship stats dictionary - the types match the index of their respective values.
+var deadPersonFirstNames = []
+var deadPersonLastNames = []
+var deadPersonTypes = []
+var deadPersonAges = []
+var deadPersonSexes = []
+var deadPersonRelationships = [] #how close you were with them when they died
+var deadPersonCause = [] #how did said person die
+var personPossibleStats = ["money"] #relationship stats dictionary - the types match the index of their respective values.
 
 
 #miscellaneous stuff that must be stored over multiple pages
@@ -224,36 +207,21 @@ func lifeSerialiser(): #serialises every life-specific variable we need to save 
 		"loans" : loans,
 		"loanPaybackDuration" : loanPaybackDuration,
 		"loanInterest" : loanInterest,
-		#family relationships
-		"familyFirstNames" : familyFirstNames,
-		"familyLastNames" : familyLastNames,
-		"familyTypes" : familyTypes,
-		"familyAges" : familyAges,
-		"familySexes" : familySexes,
-		"familyRelationships" : familyRelationships,
-		"familyStats" : familyStats,
-		#dead family
-		"deadFamilyFirstNames" : deadFamilyFirstNames,
-		"deadFamilyLastNames" : deadFamilyLastNames,
-		"deadFamilyTypes" : deadFamilyTypes,
-		"deadFamilyAges" : deadFamilyAges,
-		"deadFamilySexes" : deadFamilySexes,
-		"deadFamilyRelationships" : deadFamilyRelationships,
-		#other relationships
-		"miscFirstNames" : miscFirstNames,
-		"miscLastNames" : miscLastNames,
-		"miscTypes" : miscTypes,
-		"miscAges" : miscAges,
-		"miscSexes" : miscSexes,
-		"miscRelationships" : miscRelationships,
-		"miscStats" : miscStats,
-		#dead other relationships
-		"deadMiscFirstNames" : deadMiscFirstNames,
-		"deadMiscLastNames" : deadMiscLastNames,
-		"deadMiscTypes" : deadMiscTypes,
-		"deadMiscAges" : deadMiscAges,
-		"deadMiscSexes" : deadMiscSexes,
-		"deadMiscRelationships" : deadMiscRelationships,
+		#NPC relationships
+		"personFirstNames" : personFirstNames,
+		"personLastNames" : personLastNames,
+		"personTypes" : personTypes,
+		"personAges" : personAges,
+		"personSexes" : personSexes,
+		"personRelationships" : personRelationships,
+		"personStats" : personStats,
+		#dead NPCs
+		"deadPersonFirstNames" : deadPersonFirstNames,
+		"deadPersonLastNames" : deadPersonLastNames,
+		"deadPersonTypes" : deadPersonTypes,
+		"deadPersonAges" : deadPersonAges,
+		"deadPersonSexes" : deadPersonSexes,
+		"deadPersonRelationships" : deadPersonRelationships,
 		#misc
 		"eventPersonFirstName" : eventPersonFirstName,
 		"eventPersonLastName" : eventPersonLastName,
@@ -377,36 +345,21 @@ func loadLife(): #does the actual LIFE loading
 			loans = dictionary["loans"]
 			loanPaybackDuration = dictionary["loanPaybackDuration"]
 			loanInterest = dictionary["loanInterest"]
-			#family relationships
-			familyFirstNames = dictionary["familyFirstNames"]
-			familyLastNames = dictionary["familyLastNames"]
-			familyTypes = dictionary["familyTypes"]
-			familyAges = dictionary["familyAges"]
-			familySexes = dictionary["familySexes"]
-			familyRelationships = dictionary["familyRelationships"]
-			familyStats = dictionary["familyStats"]
-			#dead family
-			deadFamilyFirstNames = dictionary["deadFamilyFirstNames"]
-			deadFamilyLastNames = dictionary["deadFamilyLastNames"]
-			deadFamilyTypes = dictionary["deadFamilyTypes"]
-			deadFamilyAges = dictionary["deadFamilyAges"]
-			deadFamilySexes = dictionary["deadFamilySexes"]
-			deadFamilyRelationships = dictionary["deadFamilyRelationships"]
-			#misc relationships
-			miscFirstNames = dictionary["miscFirstNames"]
-			miscLastNames = dictionary["miscLastNames"]
-			miscTypes = dictionary["miscTypes"]
-			miscAges = dictionary["miscAges"]
-			miscSexes = dictionary["miscSexes"]
-			miscRelationships = dictionary["miscRelationships"]
-			miscStats = dictionary["miscStats"]
-			#dead misc
-			deadMiscFirstNames = dictionary["deadMiscFirstNames"]
-			deadMiscLastNames = dictionary["deadMiscLastNames"]
-			deadMiscTypes = dictionary["deadMiscTypes"]
-			deadMiscAges = dictionary["deadMiscAges"]
-			deadMiscSexes = dictionary["deadMiscSexes"]
-			deadMiscRelationships = dictionary["deadMiscRelationships"]
+			#NPC relationships
+			personFirstNames = dictionary["familyFirstNames"]
+			personLastNames = dictionary["familyLastNames"]
+			personTypes = dictionary["familyTypes"]
+			personAges = dictionary["familyAges"]
+			personSexes = dictionary["familySexes"]
+			personRelationships = dictionary["familyRelationships"]
+			personStats = dictionary["familyStats"]
+			#dead NPCs
+			deadPersonFirstNames = dictionary["deadPersonFirstNames"]
+			deadPersonLastNames = dictionary["deadPersonLastNames"]
+			deadPersonTypes = dictionary["deadPersonTypes"]
+			deadPersonAges = dictionary["deadPersonAges"]
+			deadPersonSexes = dictionary["deadPersonSexes"]
+			deadPersonRelationships = dictionary["deadPersonRelationships"]
 			#misc
 			eventPersonFirstName = dictionary["eventPersonFirstName"]
 			eventPersonLastName = dictionary["eventPersonLastName"]

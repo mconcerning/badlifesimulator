@@ -51,34 +51,21 @@ func cleanLife(): #resets your existing life (if any) and generates new stats
 	global.loans = []
 	global.loanPaybackDuration = []
 	global.loanInterest = []
-	#family
-	global.familyFirstNames = []
-	global.familyLastNames = []
-	global.familyTypes = []
-	global.familyAges = []
-	global.familyRelationships = []
-	global.familySexes = []
-	#dead family
-	global.deadFamilyFirstNames = []
-	global.deadFamilyLastNames = []
-	global.deadFamilyTypes = []
-	global.deadFamilyAges = []
-	global.deadFamilyRelationships = []
-	global.deadFamilySexes = []
-	#other (miscellanious) relationships
-	global.miscFirstNames = []
-	global.miscLastNames = []
-	global.miscTypes = []
-	global.miscAges = []
-	global.miscRelationships = []
-	global.miscSexes = []
-	#dead misc
-	global.deadMiscFirstNames = []
-	global.deadMiscLastNames = []
-	global.deadMiscTypes = []
-	global.deadMiscAges = []
-	global.deadMiscRelationships = []
-	global.deadMiscSexes = []
+	#NPCs
+	global.personFirstNames = []
+	global.personLastNames = []
+	global.personTypes = []
+	global.personAges = []
+	global.personRelationships = []
+	global.personSexes = []
+	global.personStats = []
+	#dead NPCs
+	global.deadPersonFirstNames = []
+	global.deadPersonLastNames = []
+	global.deadPersonTypes = []
+	global.deadPersonAges = []
+	global.deadPersonRelationships = []
+	global.deadPersonSexes = []
 	#keeping track
 	global.joyOverTime.append(global.joy)
 	global.healthOverTime.append(global.health)
@@ -136,169 +123,169 @@ func familyGenerator(): #HELP I DON'T WANT TO MAKE THIS SCRIPT FOR A THIRD TIME 
 	if randi_range(1, 8) == 1: #if you have a single parent
 		howManyParents = 1 #you have one parent
 		if randi_range(1, 2) == 1: #if you have a single mother
-			global.familyTypes.append("Mother") #appends mother
+			global.personTypes.append("Mother") #appends mother
 		else: #if you have a single father
-			global.familyTypes.append("Father") #appends father
+			global.personTypes.append("Father") #appends father
 		howManyGrandparents = randi_range(0, 2) #how many grandparents do you have
 	else: #if you have TWO parents
 		howManyParents = 2 #you have two parents
 		if randi_range(1, 14) == 1: #if you have two parents of the same sex
 			if randi_range(1, 2) == 1: #if two mothers
-				global.familyTypes.append("Mother") #appends mother
-				global.familyTypes.append("Mother") #appends mother
+				global.personTypes.append("Mother") #appends mother
+				global.personTypes.append("Mother") #appends mother
 			else: #if two fathers
-				global.familyTypes.append("Father") #appends father
-				global.familyTypes.append("Father") #appends father
+				global.personTypes.append("Father") #appends father
+				global.personTypes.append("Father") #appends father
 		else: #if you have two parents of DIFFERENT sex
-			global.familyTypes.append("Mother") #appends mother
-			global.familyTypes.append("Father") #appends father
+			global.personTypes.append("Mother") #appends mother
+			global.personTypes.append("Father") #appends father
 		howManyGrandparents = randi_range(0, 4) #how many grandparents do you have
 	if randi_range(1, 2) == 1: #if you're getting siblings
 		var howManySiblings = randi_range(1, 4) #how many siblings will be generated
 		while howManySiblings > 0: #while there are still siblings left to be generated
 			if randi_range(1, 2) == 1: #if sibling is a female
-				global.familyTypes.append("Sister") #appends sister
+				global.personTypes.append("Sister") #appends sister
 			else: #if sibling is a male
-				global.familyTypes.append("Brother") #appends brother
+				global.personTypes.append("Brother") #appends brother
 			howManySiblings -= 1 #we just generated a sibling, remember? god
 	while howManyGrandparents > 0: #while there are still grandparents left to generate
 		if howManyGrandparents >= 2: #must be greater than or equal to 2 considering we are appending two grandparents
 			if randi_range(1, 60) == 1: #if you have two grandparents of the same sex; much less likely because they are old
 					if randi_range(1, 2) == 1: #if you have two grandmothers
-						global.familyTypes.append("Grandmother") #appends grandmother
-						global.familyTypes.append("Grandmother") #appends grandmother
+						global.personTypes.append("Grandmother") #appends grandmother
+						global.personTypes.append("Grandmother") #appends grandmother
 					else: #if you have two grandfathers
-						global.familyTypes.append("Grandfather") #appends grandfather
-						global.familyTypes.append("Grandfather") #appends grandfather
+						global.personTypes.append("Grandfather") #appends grandfather
+						global.personTypes.append("Grandfather") #appends grandfather
 					howManyGrandparents -= 2 #-2 because we just appended two grandparents at once
 			else: #if you have two grandparents of DIFFERENT sex
-				global.familyTypes.append("Grandmother") #appends grandmother
-				global.familyTypes.append("Grandfather") #appends grandfather
+				global.personTypes.append("Grandmother") #appends grandmother
+				global.personTypes.append("Grandfather") #appends grandfather
 				howManyGrandparents -= 2 #-2 because we just appended two grandparents at once
 		else: #if you only have one grandparent left to generate (can't be 0 because to be here in the first place you must have over 0)
 			if randi_range(1, 2) == 1: #if you have one grandmother
-				global.familyTypes.append("Grandmother") #appends grandmother
+				global.personTypes.append("Grandmother") #appends grandmother
 			else: #if you have one grandfather
-				global.familyTypes.append("Grandfather") #appends grandfather
+				global.personTypes.append("Grandfather") #appends grandfather
 			howManyGrandparents -= 1 #1 less grandparent you need to generate
-	if global.familyTypes.has("Grandmother") || global.familyTypes.has("Grandfather"): #you CANNOT have an aunt or uncle without grandparents for age generation reasons.
+	if global.personTypes.has("Grandmother") || global.personTypes.has("Grandfather"): #you CANNOT have an aunt or uncle without grandparents for age generation reasons.
 		if randi_range(1, 3) == 1: #if you have aunts/uncles
 			var howManyUncaunts = randi_range(1, 4) #you may have any number of aunts/uncles between 1 and 4
 			while howManyUncaunts > 0: #while there are still more aunts/uncles to generate
 				if randi_range(1, 2) == 1: #if you're getting an aunt
-					global.familyTypes.append("Aunt") #appens aunt
+					global.personTypes.append("Aunt") #appens aunt
 				else: #if you're getting an uncle
-					global.familyTypes.append("Uncle") #appends uncle
+					global.personTypes.append("Uncle") #appends uncle
 				howManyUncaunts -= 1 #1 less aunt/uncle you need to generate
 			if randi_range(1, 3) == 1: #if you're getting cousins - requires aunts/uncles
 				var howManyCousins = randi_range(1, 5) #how many cousins you will get, from 1 to 5
 				while howManyCousins > 0: #while there are still cousins left to generate
-					global.familyTypes.append("Cousin") #don't need to do seperate appendings by sex since cousin is a gender neutral term; sexes will be assigned later
+					global.personTypes.append("Cousin") #don't need to do seperate appendings by sex since cousin is a gender neutral term; sexes will be assigned later
 					howManyCousins -= 1 #1 less cousin left to generate
 	#sexer
-	for i in global.familyTypes.size(): #sets a variable, i, to run through every item in the familyTypes array. Runs once for every item in it. Index of the family member corresponds with the index of their sex.
-		if global.familyTypes[i] == "Mother" || global.familyTypes[i] == "Sister" || global.familyTypes[i] == "Grandmother" || global.familyTypes[i] == "Aunt": #if family member at index i is female
-			global.familySexes.append("F") #appends female
-		elif global.familyTypes[i] == "Father" || global.familyTypes[i] == "Brother" || global.familyTypes[i] == "Grandfather" || global.familyTypes[i] == "Uncle": #if family member at index i is male
-			global.familySexes.append("M") #appends male
+	for i in global.personTypes.size(): #sets a variable, i, to run through every item in the personTypes array. Runs once for every item in it. Index of the family member corresponds with the index of their sex.
+		if global.personTypes[i] == "Mother" || global.personTypes[i] == "Sister" || global.personTypes[i] == "Grandmother" || global.personTypes[i] == "Aunt": #if family member at index i is female
+			global.personSexes.append("F") #appends female
+		elif global.personTypes[i] == "Father" || global.personTypes[i] == "Brother" || global.personTypes[i] == "Grandfather" || global.personTypes[i] == "Uncle": #if family member at index i is male
+			global.personSexes.append("M") #appends male
 		else: #if family member at index i is your cousin (the only remaining possible type of family member)
 			if randi_range(1, 2) == 1: #if cousin is female
-				global.familySexes.append("F") #appends female
+				global.personSexes.append("F") #appends female
 			else: #if cousin is male
-				global.familySexes.append("M") #appends male
+				global.personSexes.append("M") #appends male
 	#namer
 	var parentsAreMarried = false #parents aren't married by default, but this might change:
 	if howManyParents == 2: #if you have two parents
 		if randi_range(1, 2) == 1: #if parents ARE married (1 in 2 chance)
 			parentsAreMarried = true #then parents being married is TRUE
-	for i in global.familyTypes.size(): #sets a variable, i, to run through every item in the familyTypes array. Runs once for every item in it. Index of the family member corresponds with the index of their name.
+	for i in global.personTypes.size(): #sets a variable, i, to run through every item in the personTypes array. Runs once for every item in it. Index of the family member corresponds with the index of their name.
 		#last names - Last names are assigned before first names so they can be overridden by rare names, which are all full names.
-		if global.familyTypes[i] == "Mother" || global.familyTypes[i] == "Father": #if the family member being analysed now is a parent
+		if global.personTypes[i] == "Mother" || global.personTypes[i] == "Father": #if the family member being analysed now is a parent
 			if howManyParents == 1: #if you only have one parent
-				global.familyLastNames.append(global.lastName) #they get your surname automatically
+				global.personLastNames.append(global.lastName) #they get your surname automatically
 			elif parentsAreMarried == true: #if parents are married. If this is true, it also means that you have two parents because of how the true value gets assigned. If true, you and both of them will share the same family surname. If they are not, you and ONE of them will share one. If the family member you would have originally gotten your surname from later gets a rare name and therefore a special rare surname, I guess they made it up because now you've gotten yours from nowhere.
-				global.familyLastNames.append(global.lastName) #gives them the family surname
+				global.personLastNames.append(global.lastName) #gives them the family surname
 			else: #if you have two parents BUT they're aren't married
-				var parentsBeforeThis = false #are there any parents in the familyTypes array before this one? The first parent in the array will get your surname. False by default so it only gets changed if there are other parents before.
+				var parentsBeforeThis = false #are there any parents in the personTypes array before this one? The first parent in the array will get your surname. False by default so it only gets changed if there are other parents before.
 				var x = i-1 #used to keep track of which family member we're checking. Starts off by checking the family member before this one.
 				while x >= 0: #while there are still family members earlier in the array
-					if global.familyTypes[x] == "Mother" || global.familyTypes[x] == "Father": #if the family member at the index x is a parent, that means there is a parent before the one at i
+					if global.personTypes[x] == "Mother" || global.personTypes[x] == "Father": #if the family member at the index x is a parent, that means there is a parent before the one at i
 						parentsBeforeThis = true #the parent at index i is not the first parent
 					x -= 1 #advance
 				if parentsBeforeThis == false: #if, after we checked, we found there aren't any parents in the array before this
-					global.familyLastNames.append(global.lastName) #parent gets your last name
+					global.personLastNames.append(global.lastName) #parent gets your last name
 				if parentsBeforeThis == true: #if there are parents before this one, they already have your last name instead
-					global.familyLastNames.append(global.lastNames[randi_range(0, global.lastNames.size() - 1)]) #gives the parent at index i a completely random last name
+					global.personLastNames.append(global.lastNames[randi_range(0, global.lastNames.size() - 1)]) #gives the parent at index i a completely random last name
 		else: #if family member at index i is NOT your parent
-			global.familyLastNames.append(global.lastNames[randi_range(0, global.lastNames.size() - 1)]) #gives them a random last name
+			global.personLastNames.append(global.lastNames[randi_range(0, global.lastNames.size() - 1)]) #gives them a random last name
 		#first names and rare names
 		if randi_range(1, 3000) == 1: #if family member is getting a rare full name
 			var rareNameIndex = randi_range(0, global.rareFirstNames.size() - 1) #first name and last name have the same index. picks one random index to use.
-			global.familyFirstNames.append(global.rareFirstNames[rareNameIndex]) #appends the first name of the index
-			global.familyLastNames.pop_back() #removes (pops) the last element of the familyglobal.lastNames array. This is because this family member was already given a last name and we are about to override that with a new one.
-			global.familyLastNames.append(global.rareLastNames[rareNameIndex]) #appends the last name of the index
+			global.personFirstNames.append(global.rareFirstNames[rareNameIndex]) #appends the first name of the index
+			global.personLastNames.pop_back() #removes (pops) the last element of the familyglobal.lastNames array. This is because this family member was already given a last name and we are about to override that with a new one.
+			global.personLastNames.append(global.rareLastNames[rareNameIndex]) #appends the last name of the index
 		else: #if family member is NOT getting a rare full name
 			if randi_range(1, 20) == 1: #if family member is getting a unisex first name
-				global.familyFirstNames.append(global.uFirstNames[randi_range(0, global.uFirstNames.size() - 1)]) #appends a random unisex first name
+				global.personFirstNames.append(global.uFirstNames[randi_range(0, global.uFirstNames.size() - 1)]) #appends a random unisex first name
 			else: #if family member is NOT getting a unisex first name
-				if global.familySexes[i] == "F": #if family member at index i is female
-					global.familyFirstNames.append(global.fFirstNames[randi_range(0, global.fFirstNames.size() - 1)]) #appends to familyFirstNames a random female first name
+				if global.personSexes[i] == "F": #if family member at index i is female
+					global.personFirstNames.append(global.fFirstNames[randi_range(0, global.fFirstNames.size() - 1)]) #appends to personFirstNames a random female first name
 				else: #if family member at index i is male
-					global.familyFirstNames.append(global.mFirstNames[randi_range(0, global.mFirstNames.size() - 1)]) #appends to familyFirstNames a random male first name
+					global.personFirstNames.append(global.mFirstNames[randi_range(0, global.mFirstNames.size() - 1)]) #appends to personFirstNames a random male first name
 	#relationshipper
-	for i in global.familyTypes.size(): #runs through and checks every family member, assigning them a relationship to you
-		if global.familyTypes[i] == "Mother" || global.familyTypes[i] == "Father": #if family member at i is your parent
-			global.familyRelationships.append(randi_range(30, 100))
-		elif global.familyTypes[i] == "Grandmother" || global.familyTypes[i] == "Grandfather": #if family member is your grandparent
-			global.familyRelationships.append(randi_range(30, 100))
-		elif global.familyTypes[i] == "Aunt" || global.familyTypes[i] == "Uncle": #if family member is your aunt/uncle
-			global.familyRelationships.append(randi_range(20, 70))
-		elif global.familyTypes[i] == "Brother" || global.familyTypes[i] == "Sister": #if family member is your sibling
-			global.familyRelationships.append(randi_range(40, 80))
-		elif global.familyTypes[i] == "Cousin": #if family member is your cousin
-			global.familyRelationships.append(randi_range(0, 30))
+	for i in global.personTypes.size(): #runs through and checks every family member, assigning them a relationship to you
+		if global.personTypes[i] == "Mother" || global.personTypes[i] == "Father": #if family member at i is your parent
+			global.personRelationships.append(randi_range(30, 100))
+		elif global.personTypes[i] == "Grandmother" || global.personTypes[i] == "Grandfather": #if family member is your grandparent
+			global.personRelationships.append(randi_range(30, 100))
+		elif global.personTypes[i] == "Aunt" || global.personTypes[i] == "Uncle": #if family member is your aunt/uncle
+			global.personRelationships.append(randi_range(20, 70))
+		elif global.personTypes[i] == "Brother" || global.personTypes[i] == "Sister": #if family member is your sibling
+			global.personRelationships.append(randi_range(40, 80))
+		elif global.personTypes[i] == "Cousin": #if family member is your cousin
+			global.personRelationships.append(randi_range(0, 30))
 	#ager
 	var ageOfParent
 	var ageOfGrandparent
 	var ageOfUncaunt
-	for i in global.familyTypes.size(): #runs through every family member
-		if global.familyTypes[i] == "Mother": #if family member at index i is your mother
-			global.familyAges.append(randi_range(18, 45)) #gives her a random age between 18 and 45
-		elif global.familyTypes[i] == "Father": #if family member at index i is your father
-			global.familyAges.append(randi_range(18, 45)) #men generally can father at older than around 45, unlike most women, but just for now, fathers will have the same
+	for i in global.personTypes.size(): #runs through every family member
+		if global.personTypes[i] == "Mother": #if family member at index i is your mother
+			global.personAges.append(randi_range(18, 45)) #gives her a random age between 18 and 45
+		elif global.personTypes[i] == "Father": #if family member at index i is your father
+			global.personAges.append(randi_range(18, 45)) #men generally can father at older than around 45, unlike most women, but just for now, fathers will have the same
 		#this has to happen now so the other multple family members' ages who rely on knowing the parents' ages can be generated (this does not have to happen for ageOfGrandparent and ageOfUncaunt:
-		ageOfParent = global.familyTypes.find("Mother") #finds index of mother. This variable is used to keep track of the age of your parents without having to re-find it every time. .find() finds the first mother in the familyTypes array.
+		ageOfParent = global.personTypes.find("Mother") #finds index of mother. This variable is used to keep track of the age of your parents without having to re-find it every time. .find() finds the first mother in the personTypes array.
 		#in case you have no mother:
 		if ageOfParent == -1: #if you have NO mother; .find() returns -1 by default if it can't find anything
-			ageOfParent = global.familyTypes.find("Father") #finds the first FATHER in the familyTypes array. If you have no mother, you MUST have a father.
-		ageOfParent = global.familyAges[ageOfParent] #finds the age of the parent at the index of ageOfParent
-		if global.familyTypes[i] == "Grandmother" || global.familyTypes[i] == "Grandfather": #if family member is a grandparent
-			global.familyAges.append(randi_range(ageOfParent + 18, ageOfParent + 45)) #gives the grandparent an age between 18 and 45 years older than the first parent in the familyTypes array
-		elif global.familyTypes[i] == "Brother" || global.familyTypes[i] == "Sister": #if family member is a sibling
-			global.familyAges.append(randi_range(0, ageOfParent - 18)) #gives sibling an age between 18 and 45 years younger than the first parent in the array. Your parent would have had them between the ages of 18 and 45, so if they were 18, they would be 18 years younger than them, and if they were 45, they would be 45 years younger.
-		elif global.familyTypes[i] == "Aunt" || global.familyTypes[i] == "Uncle": #if family member is a pibling (sidenote: pibling, or "parent's sibling" is a dumb gender-neutral term for aunt/uncle. We need a better one. I still stand by Uncaunt, a portmanteau of Uncle and Aunt coined by me. I am not biased, but that is the best one)
-			ageOfGrandparent = global.familyTypes.find("Grandmother") #finds index of grandmother
+			ageOfParent = global.personTypes.find("Father") #finds the first FATHER in the personTypes array. If you have no mother, you MUST have a father.
+		ageOfParent = global.personAges[ageOfParent] #finds the age of the parent at the index of ageOfParent
+		if global.personTypes[i] == "Grandmother" || global.personTypes[i] == "Grandfather": #if family member is a grandparent
+			global.personAges.append(randi_range(ageOfParent + 18, ageOfParent + 45)) #gives the grandparent an age between 18 and 45 years older than the first parent in the personTypes array
+		elif global.personTypes[i] == "Brother" || global.personTypes[i] == "Sister": #if family member is a sibling
+			global.personAges.append(randi_range(0, ageOfParent - 18)) #gives sibling an age between 18 and 45 years younger than the first parent in the array. Your parent would have had them between the ages of 18 and 45, so if they were 18, they would be 18 years younger than them, and if they were 45, they would be 45 years younger.
+		elif global.personTypes[i] == "Aunt" || global.personTypes[i] == "Uncle": #if family member is a pibling (sidenote: pibling, or "parent's sibling" is a dumb gender-neutral term for aunt/uncle. We need a better one. I still stand by Uncaunt, a portmanteau of Uncle and Aunt coined by me. I am not biased, but that is the best one)
+			ageOfGrandparent = global.personTypes.find("Grandmother") #finds index of grandmother
 			if ageOfGrandparent == -1: #if you have NO grandmother
-				ageOfGrandparent = global.familyTypes.find("Grandfather") #if you have neither a grandmother nor a grandfather, this variable won't be used anyway. Don't lose any sleep over it.
-			ageOfGrandparent = global.familyAges[ageOfGrandparent] #sets ageOfGrandparent to the actual age of the grandparent at index ageOfGrandparent (set just before) (it's confusing)
-			global.familyAges.append(randi_range(ageOfParent, ageOfGrandparent - 18)) #gives uncaunt an age. They will be between the age of YOUR parent and 18 years younger than your grandparent (THEIR parent).
-		elif global.familyTypes[i] == "Cousin": #if family member is a... cousin. Look, I don't know man, this is super self-explanatory. This will only ever run if you have cousins, which will only ever happen if you have at least one aunt/uncle (see the family typer section).
-			ageOfUncaunt = global.familyTypes.find("Aunt") #finds index of an aunt
+				ageOfGrandparent = global.personTypes.find("Grandfather") #if you have neither a grandmother nor a grandfather, this variable won't be used anyway. Don't lose any sleep over it.
+			ageOfGrandparent = global.personAges[ageOfGrandparent] #sets ageOfGrandparent to the actual age of the grandparent at index ageOfGrandparent (set just before) (it's confusing)
+			global.personAges.append(randi_range(ageOfParent, ageOfGrandparent - 18)) #gives uncaunt an age. They will be between the age of YOUR parent and 18 years younger than your grandparent (THEIR parent).
+		elif global.personTypes[i] == "Cousin": #if family member is a... cousin. Look, I don't know man, this is super self-explanatory. This will only ever run if you have cousins, which will only ever happen if you have at least one aunt/uncle (see the family typer section).
+			ageOfUncaunt = global.personTypes.find("Aunt") #finds index of an aunt
 			if ageOfUncaunt == -1: #if you have NO aunt
-				ageOfUncaunt = global.familyTypes.find("Uncle") #finds the index of an uncle. Again, if you have neither an aunt nor an uncle, this variable (ageOfUncaunt) will not be used in the first place. Do not bother worrying about it.
-			ageOfUncaunt = global.familyAges[ageOfUncaunt] #gets the age of the Uncaunt at the index that was just acquired
-			global.familyAges.append(randi_range(0, ageOfUncaunt - 18)) #gives cousin an age based on the Uncaunt's age. They will be between 18 and 45 years younger than your Uncaunt (their parent).
+				ageOfUncaunt = global.personTypes.find("Uncle") #finds the index of an uncle. Again, if you have neither an aunt nor an uncle, this variable (ageOfUncaunt) will not be used in the first place. Do not bother worrying about it.
+			ageOfUncaunt = global.personAges[ageOfUncaunt] #gets the age of the Uncaunt at the index that was just acquired
+			global.personAges.append(randi_range(0, ageOfUncaunt - 18)) #gives cousin an age based on the Uncaunt's age. They will be between 18 and 45 years younger than your Uncaunt (their parent).
 	if randi_range(1,30000) == 1: #easter egg
-		var whoIsBeyonce = randi_range(0, global.familyFirstNames.size() - 1) #picks a random family member
-		global.familyFirstNames[whoIsBeyonce] = "Beyoncé" #beyoncéficates them
-		global.familyLastNames[whoIsBeyonce] = ""
-	print(global.familyFirstNames)
-	print(global.familyLastNames)
-	print(global.familySexes)
-	print(global.familyAges)
-	print(global.familyTypes)
-	print(global.familyRelationships)
-	print("in total, you have " + str(global.familyTypes.size()) + " family members")
+		var whoIsBeyonce = randi_range(0, global.personFirstNames.size() - 1) #picks a random family member
+		global.personFirstNames[whoIsBeyonce] = "Beyoncé" #beyoncéficates them
+		global.personLastNames[whoIsBeyonce] = ""
+	print(global.personFirstNames)
+	print(global.personLastNames)
+	print(global.personSexes)
+	print(global.personAges)
+	print(global.personTypes)
+	print(global.personRelationships)
+	print("in total, you have " + str(global.personTypes.size()) + " family members")
 
 
 # Called when the node enters the scene tree for the first time.
