@@ -50,10 +50,10 @@ layout_mode = 2
 size_flags_horizontal = 4
 theme_override_constants/separation = 50
 
-[node name="conversation" parent="scrollContainer/centerContainer/vBoxContainer" unique_id=1544237965 instance=ExtResource("7_7jk2y")]
+[node name="compliment" parent="scrollContainer/centerContainer/vBoxContainer" unique_id=1544237965 instance=ExtResource("7_7jk2y")]
 layout_mode = 2
-text = "Have a conversation with "
+text = "Compliment "
 
 [connection signal="pressed" from="back" to="." method="_on_back_pressed"]
 [connection signal="pressed" from="exit" to="." method="_on_exit_pressed"]
-[connection signal="pressed" from="scrollContainer/centerContainer/vBoxContainer/conversation" to="." method="_on_conversation_pressed"]
+[connection signal="pressed" from="scrollContainer/centerContainer/vBoxContainer/compliment" to="." method="_on_compliment_pressed"]

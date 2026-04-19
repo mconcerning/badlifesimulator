@@ -54,6 +54,7 @@ var personAges = []
 var personSexes = []
 var personRelationships = []
 var personStats = []
+var personCategories = [] #can be family or misc
 #dead
 var deadPersonFirstNames = []
 var deadPersonLastNames = []
@@ -62,6 +63,7 @@ var deadPersonAges = []
 var deadPersonSexes = []
 var deadPersonRelationships = [] #how close you were with them when they died
 var deadPersonCause = [] #how did said person die
+var deadPersonCategories = []
 var personPossibleStats = ["money"] #relationship stats dictionary - the types match the index of their respective values.
 
 
@@ -137,6 +139,8 @@ func statClamper(): #if stats are out of bounds (above or below their max/min va
 func cooldown(activity): #returns how many times you've done a certain thing this year already. This number can then be used to create a cooldown of sorts; if you've done something a million times this year, make it ineffective for once.
 	var timesActivityAppeared = 0
 	for i in history.size(): #runs through everything you've done this year
+		print(i)
+		print(history.size())
 		if history[i] == activity: #if it's the activity we're looking for
 			timesActivityAppeared += 1 #it has appeared one more time
 	return timesActivityAppeared
@@ -168,6 +172,16 @@ func pronounGenerator(type, sex): #returns pronouns so you don't have to do it m
 			return "guy"
 		else: #if female
 			return "girl"
+
+
+func NPCKiller(index): #kills an NPC
+	global.personFirstNames.remove_at(index)
+	global.personLastNames.remove_at(index)
+	global.personRelationships.remove_at(index)
+	global.personTypes.remove_at(index)
+	global.personAges.remove_at(index)
+	global.personSexes.remove_at(index)
+	global.personStats.remove_at(index)
 
 
 #savegame stuff
@@ -215,6 +229,7 @@ func lifeSerialiser(): #serialises every life-specific variable we need to save 
 		"personSexes" : personSexes,
 		"personRelationships" : personRelationships,
 		"personStats" : personStats,
+		"personCategories" : personCategories,
 		#dead NPCs
 		"deadPersonFirstNames" : deadPersonFirstNames,
 		"deadPersonLastNames" : deadPersonLastNames,
@@ -222,6 +237,7 @@ func lifeSerialiser(): #serialises every life-specific variable we need to save 
 		"deadPersonAges" : deadPersonAges,
 		"deadPersonSexes" : deadPersonSexes,
 		"deadPersonRelationships" : deadPersonRelationships,
+		"deadPersonCategories" : deadPersonCategories,
 		#misc
 		"eventPersonFirstName" : eventPersonFirstName,
 		"eventPersonLastName" : eventPersonLastName,
@@ -346,13 +362,14 @@ func loadLife(): #does the actual LIFE loading
 			loanPaybackDuration = dictionary["loanPaybackDuration"]
 			loanInterest = dictionary["loanInterest"]
 			#NPC relationships
-			personFirstNames = dictionary["familyFirstNames"]
-			personLastNames = dictionary["familyLastNames"]
-			personTypes = dictionary["familyTypes"]
-			personAges = dictionary["familyAges"]
-			personSexes = dictionary["familySexes"]
-			personRelationships = dictionary["familyRelationships"]
-			personStats = dictionary["familyStats"]
+			personFirstNames = dictionary["personFirstNames"]
+			personLastNames = dictionary["personLastNames"]
+			personTypes = dictionary["personTypes"]
+			personAges = dictionary["personAges"]
+			personSexes = dictionary["personSexes"]
+			personRelationships = dictionary["personRelationships"]
+			personStats = dictionary["personStats"]
+			personCategories = dictionary["personCategories"]
 			#dead NPCs
 			deadPersonFirstNames = dictionary["deadPersonFirstNames"]
 			deadPersonLastNames = dictionary["deadPersonLastNames"]
@@ -360,6 +377,7 @@ func loadLife(): #does the actual LIFE loading
 			deadPersonAges = dictionary["deadPersonAges"]
 			deadPersonSexes = dictionary["deadPersonSexes"]
 			deadPersonRelationships = dictionary["deadPersonRelationships"]
+			deadPersonCategories = dictionary["deadPersonCategories"]
 			#misc
 			eventPersonFirstName = dictionary["eventPersonFirstName"]
 			eventPersonLastName = dictionary["eventPersonLastName"]

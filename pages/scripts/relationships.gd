@@ -19,7 +19,7 @@ func _ready() -> void:
 	var family = [] #filled with indexes of family members
 	var misc = [] #filled with indexes of non-family relationships
 	for i in global.personTypes.size(): #runs through everyone you know
-		if global.personTypes[i] == "Mother" || global.personTypes[i] == "Father" || global.personTypes[i] == "Brother" || global.personTypes[i] == "Sister" || global.personTypes[i] == "Grandmother" || global.personTypes[i] == "Grandfather" ||global.personTypes[i] == "Aunt" || global.personTypes[i] == "Uncle" || global.personTypes[i] == "Cousin": #if the person at index i is a family member
+		if global.personCategories[i] == "family": #if the person at index i is a family member
 			family.append(i) #adds their index to the family array
 		else: #if the person at index i is NOT a family member
 			misc.append(i)

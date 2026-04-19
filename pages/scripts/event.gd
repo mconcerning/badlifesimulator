@@ -45,30 +45,14 @@ func EGPGenerator(ageRange, minAge): #randomly generates EGPs (Event Generated P
 	if global.eventPersonAge < minAge: #if the event person's age is less than the minimum age
 		global.eventPersonAge = minAge #sets their age to the minimum age
 
-func NPCKiller(index): #kills an NPC
-	global.personFirstNames.remove_at(index)
-	global.personLastNames.remove_at(index)
-	global.personRelationships.remove_at(index)
-	global.personTypes.remove_at(index)
-	global.personAges.remove_at(index)
-	global.personSexes.remove_at(index)
 
-
-func personRemover(index, whichArray): #removes the person at index "index" in the array "whichArray" (could be family, misc, etc.)
-	if whichArray == "family":
-		global.personFirstNames.pop_at(index)
-		global.personLastNames.pop_at(index)
-		global.personSexes.pop_at(index)
-		global.personAges.pop_at(index)
-		global.personRelationships.pop_at(index)
-		global.personTypes.pop_at(index)
-	elif whichArray == "misc":
-		global.miscFirstNames.pop_at(index)
-		global.miscLastNames.pop_at(index)
-		global.personSexes.pop_at(index)
-		global.personAges.pop_at(index)
-		global.personRelationships.pop_at(index)
-		global.personTypes.pop_at(index)
+func personRemover(index): #removes the person at index "index" in the NPCs array
+	global.personFirstNames.pop_at(index)
+	global.personLastNames.pop_at(index)
+	global.personSexes.pop_at(index)
+	global.personAges.pop_at(index)
+	global.personRelationships.pop_at(index)
+	global.personTypes.pop_at(index)
 
 
 func repositionResize(): #repositions and resizes the nodes on-screen
@@ -242,7 +226,7 @@ func multiAgeRange(): #runs events that span across multiple age ranges
 	pass
 
 
-func specialised(): #runs any specialised, non-age-up events
+func specialised(): #runs any miscellanious specialised, non-age-up events
 	if global.revent[0] == "change-save-management-mode-to-delete":
 		$heading.text = "Please confirm"
 		$body.text = "Are you sure you want to enter delete mode?\nANY save file you press will be PERMANENTLY deleted. This action CANNOT be undone.\nPress the ''Load mode'' button above your save files to switch back to load mode at any time.\nYou cannot delete your MAIN game save here. Rest assured, no matter what, that will stay intact. You can, however, delete individual lives, including the one you're playing on currently."
@@ -283,6 +267,28 @@ func specialised(): #runs any specialised, non-age-up events
 			elif global.revent[0] == "university-degree-picked-o4-rejected-o1": #if your application for a scholarship was already denied
 				$option4.disabled = true #you can't try it again
 			global.revent[0] = "university-degree-picked"
+
+
+func relationships(): #specialised relationship events
+	if global.revent[0] == "compliment-relationship":
+		global.history.append("compliment-relationship")
+		const possibleCompliments = ["racist", "really cool", "incredibly attractive", "talented", "fun to be around", "kind", "productive", "intelligent", "smart", "energetic", "creative", "interesting", "a hero", "the best", "a tangerine"]
+		var complimentSelected = possibleCompliments[randi_range(0, possibleCompliments.size() - 1)] #picks a compliment to give
+		if global.cooldown("compliment-relationship") >= 3: #if you've complimented them too much recently
+			$heading.text = "Whatever you say"
+			$body.text = "Your " + global.personTypes[global.IDClicked].to_lower() + ", " + global.personFirstNames[global.IDClicked] + ", said " + global.pronounGenerator("he", global.personSexes[global.IDClicked]) + "'s sick of you complimenting " + global.pronounGenerator("him", global.personSexes[global.IDClicked]) + " so much and you need to calm down."
+		else: #if you haven't complimented them 3 or more times already this year
+			$heading.text = "How tertiary"
+			$body.text = "You told your " + global.personTypes[global.IDClicked].to_lower() + ", " + global.personFirstNames[global.IDClicked] + ", that " + global.pronounGenerator("he", global.personSexes[global.IDClicked]) + "'s " + complimentSelected + "."
+			if complimentSelected == "racist" || (complimentSelected == "incredibly attractive" && global.personCategories[global.IDClicked] == "family"): #if you accidentally didn't compliment them
+				$heading.text = "...Thanks."
+				global.personRelationships[global.IDClicked] -= randi_range(5, 20)
+			else: #if you did compliment them
+				var relationshipGained = randi_range(4, 7)
+				global.personRelationships[global.IDClicked] += relationshipGained
+				$body.text += "\n+ " + str(relationshipGained) + " relationship."
+		$option1.text = "Okay"
+		optionRemover(2)
 
 
 func confirmation(): #non-random confirmation events that tell you that something just happened
@@ -357,7 +363,7 @@ func _on_option_1_pressed() -> void: #on option 1 selected
 	if global.revent[0] == "toddler-0" || global.revent[0] == "child-0" || global.revent[0] == "child-friend" || global.revent[0] == "toddler-friend" || global.revent[0] == "child-friend" || global.revent[0] == "teenager-friend" || global.revent[0] == "adult-friend" || global.revent[0] == "elder-friend" || global.revent[0] == "change-save-management-mode-to-delete" || global.revent[0] == "university-degree-picked" || global.revent[0] == "university-degree-picked-o2-refused" || global.revent[0] == "university-degree-picked-o4-rejected":
 		outcome(global.revent[0] + "-o1")
 	#confirmation - option 1 will be the only button available when the event's purpose is only to display information. Generally, the button will say "Okay".
-	elif global.revent[0] == "toddler-0-o1" || global.revent[0] == "toddler-0-o2" || global.revent[0] == "toddler-0-o3" || global.revent[0] == "child-0-o1" || global.revent[0] == "child-0-o2" || global.revent[0] == "child-0-o3" || global.revent[0] == "child-0-o4" || global.revent[0] == "toddler-friend-o1" || global.revent[0] == "toddler-friend-o2" || global.revent[0] == "child-friend-o1" || global.revent[0] == "child-friend-o2" || global.revent[0] == "teenager-friend-o1" || global.revent[0] == "teenager-friend-o2" || global.revent[0] == "teenager-friend-o3" || global.revent[0] == "adult-friend-o1" || global.revent[0] == "adult-friend-o2" || global.revent[0] == "adult-friend-o3" || global.revent[0] == "elder-friend-o1" || global.revent[0] == "elder-friend-o2" || global.revent[0] == "elder-friend-o3" || global.revent[0] == "child-labour-is-outlawed" || global.revent[0] == "enrolled-in-primary-school" || global.revent[0] == "enrolled-in-high-school" || global.revent[0] == "graduated-high-school" || global.revent[0] == "study-harder" || global.revent[0] == "university-degree-picked-o1" || global.revent[0] == "university-degree-picked-o2" || global.revent[0] == "university-degree-picked-o3" || global.revent[0] == "university-degree-picked-o4" || global.revent[0] == "university-degree-picked-o2" || global.revent[0] == "graduated-university":
+	elif global.revent[0] == "toddler-0-o1" || global.revent[0] == "toddler-0-o2" || global.revent[0] == "toddler-0-o3" || global.revent[0] == "child-0-o1" || global.revent[0] == "child-0-o2" || global.revent[0] == "child-0-o3" || global.revent[0] == "child-0-o4" || global.revent[0] == "toddler-friend-o1" || global.revent[0] == "toddler-friend-o2" || global.revent[0] == "child-friend-o1" || global.revent[0] == "child-friend-o2" || global.revent[0] == "teenager-friend-o1" || global.revent[0] == "teenager-friend-o2" || global.revent[0] == "teenager-friend-o3" || global.revent[0] == "adult-friend-o1" || global.revent[0] == "adult-friend-o2" || global.revent[0] == "adult-friend-o3" || global.revent[0] == "elder-friend-o1" || global.revent[0] == "elder-friend-o2" || global.revent[0] == "elder-friend-o3" || global.revent[0] == "child-labour-is-outlawed" || global.revent[0] == "enrolled-in-primary-school" || global.revent[0] == "enrolled-in-high-school" || global.revent[0] == "graduated-high-school" || global.revent[0] == "study-harder" || global.revent[0] == "university-degree-picked-o1" || global.revent[0] == "university-degree-picked-o2" || global.revent[0] == "university-degree-picked-o3" || global.revent[0] == "university-degree-picked-o4" || global.revent[0] == "university-degree-picked-o2" || global.revent[0] == "graduated-university" || global.revent[0] == "compliment-relationship":
 		goHome()
 
 
@@ -386,13 +392,14 @@ func option1outcomes(): #option 1 has been picked
 		$body.text = "You befriended " + global.eventPersonFirstName + " " + global.eventPersonLastName + "!"
 		$option1.text = "Hooray"
 		optionRemover(2)
-		#adds the EGP to your miscellanious relationships array
+		#adds the EGP to your relationships array
 		global.personSexes.append(global.eventPersonSex)
 		global.miscFirstNames.append(global.eventPersonFirstName)
 		global.miscLastNames.append(global.eventPersonLastName)
 		global.personAges.append(global.eventPersonAge)
 		global.personRelationships.append(randi_range(20, 50))
 		global.personTypes.append("Friend")
+		global.personCategories.append("misc")
 	elif global.revent[0] == "teenager-friend-o1":
 		if randi_range(1,3) == 1: #if they refuse to be your friend
 			$heading.text = "That's awkward..."
@@ -401,6 +408,14 @@ func option1outcomes(): #option 1 has been picked
 		else: #if they agree to be your friend
 			$heading.text = "Sweet"
 			$body.text = "You befriended " + global.eventPersonFirstName + " " + global.eventPersonLastName + "."
+			#adds the EGP to your relationships array
+			global.personSexes.append(global.eventPersonSex)
+			global.miscFirstNames.append(global.eventPersonFirstName)
+			global.miscLastNames.append(global.eventPersonLastName)
+			global.personAges.append(global.eventPersonAge)
+			global.personRelationships.append(randi_range(20, 50))
+			global.personTypes.append("Friend")
+			global.personCategories.append("misc")
 			$option1.text = "Okay"
 		optionRemover(2)
 	elif global.revent[0] == "adult-friend-o1" || global.revent[0] == "elder-friend-o1":
@@ -411,6 +426,14 @@ func option1outcomes(): #option 1 has been picked
 		else: #if they agree to be your friend
 			$heading.text = "A blossoming friendship"
 			$body.text = "You befriended " + global.eventPersonFirstName + " " + global.eventPersonLastName + "."
+			#adds the EGP to your relationships array
+			global.personSexes.append(global.eventPersonSex)
+			global.miscFirstNames.append(global.eventPersonFirstName)
+			global.miscLastNames.append(global.eventPersonLastName)
+			global.personAges.append(global.eventPersonAge)
+			global.personRelationships.append(randi_range(20, 50))
+			global.personTypes.append("Friend")
+			global.personCategories.append("misc")
 			$option1.text = "Okay"
 		optionRemover(2)
 	elif global.revent[0] == "toddler-0-o1":
@@ -471,7 +494,7 @@ func option2outcomes(): #option 2 has been picked
 			#if you already have an S/O, break up with (removes) them
 			for i in global.personTypes.size(): #runs through every non-familial relationship
 				if global.personTypes[i] == "Boyfriend" || global.personTypes[i] == "Girlfriend": #and if they're your gf/bf
-					personRemover(i, "misc") #removes them
+					personRemover(i) #removes them
 				#for loops automatically increase the variable they use (in this case, i) so no need to manually increment it
 			#adds them to your relationships
 			global.miscFirstNames.append(global.eventPersonFirstName)
@@ -480,6 +503,7 @@ func option2outcomes(): #option 2 has been picked
 			global.personAges.append(global.eventPersonAge)
 			global.personRelationships.append(randi_range(40, 80))
 			global.personTypes.append((global.pronounGenerator("boy", global.eventPersonSex) + "friend").capitalize())
+			global.personCategories.append("misc")
 		else: #they DON'T want to date you
 			$heading.text = "..."
 			$body.text = "You ask " + global.pronounGenerator("him", global.eventPersonSex) + " out, but " + global.pronounGenerator("he", global.eventPersonSex) + " rejects you.\nJoy - 15"
@@ -493,9 +517,9 @@ func option2outcomes(): #option 2 has been picked
 			$body.text = "You ask " + global.pronounGenerator("him", global.eventPersonSex) + " out on a date, and " + global.pronounGenerator("he", global.eventPersonSex) + " says yes.\nJoy + 15"
 			global.joy += 15
 			#if you already have an S/O, break up with (removes) them
-			for i in global.personTypes.size(): #runs through every non-familial relationship
+			for i in global.personTypes.size(): #runs through every relationship
 				if global.personTypes[i] == "Boyfriend" || global.personTypes[i] == "Girlfriend": #and if they're your gf/bf
-					personRemover(i, "misc") #removes them
+					personRemover(i) #removes them
 				#for loops automatically increase the variable they use (in this case, i) so no need to manually increment it
 			#adds them to your relationships
 			global.miscFirstNames.append(global.eventPersonFirstName)
@@ -504,6 +528,7 @@ func option2outcomes(): #option 2 has been picked
 			global.personAges.append(global.eventPersonAge)
 			global.personRelationships.append(randi_range(40, 80))
 			global.personTypes.append((global.pronounGenerator("boy", global.eventPersonSex) + "friend").capitalize())
+			global.personCategories.append("misc")
 		else: #they DON'T want to date you
 			$body.text = "You ask " + global.pronounGenerator("him", global.eventPersonSex) + " out, but " + global.pronounGenerator("he", global.eventPersonSex) + " rejects you.\nJoy - 15"
 			global.joy -= 15
@@ -518,7 +543,7 @@ func option2outcomes(): #option 2 has been picked
 			#if you already have an S/O, break up with (removes) them
 			for i in global.personTypes.size(): #runs through every non-familial relationship
 				if global.personTypes[i] == "Boyfriend" || global.personTypes[i] == "Girlfriend": #and if they're your gf/bf
-					personRemover(i, "misc") #removes them
+					personRemover(i) #removes them
 				#for loops automatically increase the variable they use (in this case, i) so no need to manually increment it
 			#adds them to your relationships
 			global.miscFirstNames.append(global.eventPersonFirstName)
@@ -527,6 +552,7 @@ func option2outcomes(): #option 2 has been picked
 			global.personAges.append(global.eventPersonAge)
 			global.personRelationships.append(randi_range(40, 80))
 			global.personTypes.append((global.pronounGenerator("boy", global.eventPersonSex) + "friend").capitalize())
+			global.personCategories.append("misc")
 		else: #they DON'T want to date you
 			$heading.text = str(global.age) + " and still unmarried"
 			$body.text = "You ask " + global.pronounGenerator("him", global.eventPersonSex) + " out on a date, but " + global.pronounGenerator("he", global.eventPersonSex) + " rejects you.\nJoy - 15"
@@ -661,11 +687,11 @@ func option4outcomes(): #option 4 has been picked
 		$body.text = "You kill your " + global.personTypes[relativeOfChoice].to_lower() + " in cold blood. You push " + global.pronounGenerator("him", global.personSexes[relativeOfChoice]) + " down the stairs while no-one's looking.\n+ 100 Intellect"
 		$option1.text = "Okay"
 		optionRemover(2)
-		NPCKiller(relativeOfChoice) #kills uncle
 		#stat effects
 		global.intellect = 100
-		global.crimes.append("1st-degree-murder")
-		global.crimesSeverity.append(100)
+		global.NPCKiller(relativeOfChoice) #kills uncle
+		global.crimes.append("Second degree homicide")
+		global.crimesSeverity.append(95)
 	elif global.revent[0] == "university-degree-picked-o4":
 		if global.schoolPerformance >= 80: #if you did really well at your last school (usually highschool, unless you're going for a second degree)
 			$heading.text = "What a scholar"
@@ -700,6 +726,7 @@ func eventer(): #runs all the functions
 	elderhood()
 	multiAgeRange()
 	specialised()
+	relationships()
 	confirmation()
 	option1outcomes()
 	option2outcomes()

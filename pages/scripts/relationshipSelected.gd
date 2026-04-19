@@ -13,9 +13,9 @@ func _ready() -> void:
 	$type.text = global.personTypes[global.IDClicked]
 	$name.text = global.personFirstNames[global.IDClicked] + " " + global.personLastNames[global.IDClicked]
 	$details.text = "(" + global.personSexes[global.IDClicked] + "), Age " + str(global.personAges[global.IDClicked]) + ", Relationship: " + str(global.personRelationships[global.IDClicked])
-	$scrollContainer/centerContainer/vBoxContainer/conversation.text += global.pronounGenerator("him", global.personSexes[global.IDClicked])
+	$scrollContainer/centerContainer/vBoxContainer/compliment.text += global.pronounGenerator("him", global.personSexes[global.IDClicked])
 
 
-func _on_conversation_pressed() -> void:
-	global.revent.append("conversation-with-relationship")
+func _on_compliment_pressed() -> void:
+	global.revent.append("compliment-relationship")
 	get_tree().change_scene_to_file("res://pages/event.tscn")

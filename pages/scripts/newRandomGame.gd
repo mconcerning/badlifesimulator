@@ -59,6 +59,7 @@ func cleanLife(): #resets your existing life (if any) and generates new stats
 	global.personRelationships = []
 	global.personSexes = []
 	global.personStats = []
+	global.personCategories = []
 	#dead NPCs
 	global.deadPersonFirstNames = []
 	global.deadPersonLastNames = []
@@ -66,6 +67,7 @@ func cleanLife(): #resets your existing life (if any) and generates new stats
 	global.deadPersonAges = []
 	global.deadPersonRelationships = []
 	global.deadPersonSexes = []
+	global.deadPersonCategories = []
 	#keeping track
 	global.joyOverTime.append(global.joy)
 	global.healthOverTime.append(global.health)
@@ -126,6 +128,7 @@ func familyGenerator(): #HELP I DON'T WANT TO MAKE THIS SCRIPT FOR A THIRD TIME 
 			global.personTypes.append("Mother") #appends mother
 		else: #if you have a single father
 			global.personTypes.append("Father") #appends father
+		global.personCategories.append("family")
 		howManyGrandparents = randi_range(0, 2) #how many grandparents do you have
 	else: #if you have TWO parents
 		howManyParents = 2 #you have two parents
@@ -139,6 +142,8 @@ func familyGenerator(): #HELP I DON'T WANT TO MAKE THIS SCRIPT FOR A THIRD TIME 
 		else: #if you have two parents of DIFFERENT sex
 			global.personTypes.append("Mother") #appends mother
 			global.personTypes.append("Father") #appends father
+		global.personCategories.append("family")
+		global.personCategories.append("family")
 		howManyGrandparents = randi_range(0, 4) #how many grandparents do you have
 	if randi_range(1, 2) == 1: #if you're getting siblings
 		var howManySiblings = randi_range(1, 4) #how many siblings will be generated
@@ -147,6 +152,7 @@ func familyGenerator(): #HELP I DON'T WANT TO MAKE THIS SCRIPT FOR A THIRD TIME 
 				global.personTypes.append("Sister") #appends sister
 			else: #if sibling is a male
 				global.personTypes.append("Brother") #appends brother
+			global.personCategories.append("family")
 			howManySiblings -= 1 #we just generated a sibling, remember? god
 	while howManyGrandparents > 0: #while there are still grandparents left to generate
 		if howManyGrandparents >= 2: #must be greater than or equal to 2 considering we are appending two grandparents
@@ -157,16 +163,18 @@ func familyGenerator(): #HELP I DON'T WANT TO MAKE THIS SCRIPT FOR A THIRD TIME 
 					else: #if you have two grandfathers
 						global.personTypes.append("Grandfather") #appends grandfather
 						global.personTypes.append("Grandfather") #appends grandfather
-					howManyGrandparents -= 2 #-2 because we just appended two grandparents at once
 			else: #if you have two grandparents of DIFFERENT sex
 				global.personTypes.append("Grandmother") #appends grandmother
 				global.personTypes.append("Grandfather") #appends grandfather
-				howManyGrandparents -= 2 #-2 because we just appended two grandparents at once
+			global.personCategories.append("family")
+			global.personCategories.append("family")
+			howManyGrandparents -= 2 #-2 because we just appended two grandparents at once
 		else: #if you only have one grandparent left to generate (can't be 0 because to be here in the first place you must have over 0)
 			if randi_range(1, 2) == 1: #if you have one grandmother
 				global.personTypes.append("Grandmother") #appends grandmother
 			else: #if you have one grandfather
 				global.personTypes.append("Grandfather") #appends grandfather
+			global.personCategories.append("family")
 			howManyGrandparents -= 1 #1 less grandparent you need to generate
 	if global.personTypes.has("Grandmother") || global.personTypes.has("Grandfather"): #you CANNOT have an aunt or uncle without grandparents for age generation reasons.
 		if randi_range(1, 3) == 1: #if you have aunts/uncles
@@ -176,11 +184,13 @@ func familyGenerator(): #HELP I DON'T WANT TO MAKE THIS SCRIPT FOR A THIRD TIME 
 					global.personTypes.append("Aunt") #appens aunt
 				else: #if you're getting an uncle
 					global.personTypes.append("Uncle") #appends uncle
+				global.personCategories.append("family")
 				howManyUncaunts -= 1 #1 less aunt/uncle you need to generate
 			if randi_range(1, 3) == 1: #if you're getting cousins - requires aunts/uncles
 				var howManyCousins = randi_range(1, 5) #how many cousins you will get, from 1 to 5
 				while howManyCousins > 0: #while there are still cousins left to generate
 					global.personTypes.append("Cousin") #don't need to do seperate appendings by sex since cousin is a gender neutral term; sexes will be assigned later
+					global.personCategories.append("family")
 					howManyCousins -= 1 #1 less cousin left to generate
 	#sexer
 	for i in global.personTypes.size(): #sets a variable, i, to run through every item in the personTypes array. Runs once for every item in it. Index of the family member corresponds with the index of their sex.
