@@ -47,11 +47,16 @@ offset_top = 400.0
 offset_right = 1080.0
 offset_bottom = 1920.0
 size_flags_horizontal = 4
+theme_override_constants/separation = 50
 
 [node name="studyHarder" parent="vBoxContainer" unique_id=1544237965 instance=ExtResource("7_j0g5h")]
 layout_mode = 2
-size_flags_horizontal = 4
 text = "Study extra hard"
+
+[node name="skipClass" parent="vBoxContainer" unique_id=150245277 instance=ExtResource("7_j0g5h")]
+layout_mode = 2
+text = "Skip class"
 
 [connection signal="pressed" from="back" to="." method="_on_back_pressed"]
 [connection signal="pressed" from="vBoxContainer/studyHarder" to="." method="_on_study_harder_pressed"]
+[connection signal="pressed" from="vBoxContainer/skipClass" to="." method="_on_skip_class_pressed"]

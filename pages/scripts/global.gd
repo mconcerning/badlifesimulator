@@ -15,16 +15,16 @@ var IDClickedType = "" #used to identify what type of relationship you're intera
 #personal
 var firstName = "" #both this and last name should begin with a capital
 var lastName = ""
-var age = 0 #in years
+var age : int = 0 #in years
 var sex = "" #will become either M for Male or F for Female during new life generation. For simplicity's sake I am not yet adding intersexuality, but I may later.
-var joy = 0
-var health = 0
-var intellect = 0
-var looks = 0
+var joy : int = 0
+var health : int = 0
+var intellect : int = 0
+var looks : int = 0
 var logs = ""
-var money = 0
+var money : int = 0
 #hidden stats - not shown to the player
-var evality = 0 #on a scale from 0 - 100, how evil are you? i.e. how much joy do you derive from doing bad things, and what bad things are you capable of? higher is more.
+var evality : int = 0 #on a scale from 0 - 100, how evil are you? i.e. how much joy do you derive from doing bad things, and what bad things are you capable of? higher is more.
 var sexuality = "" #stored definitively, not relative to the sex of the player, i.e. if you're attracted to men, this value would be "M", if you're attracted to women, it would be "F", if you were attracted to both, it would be "Bi", and so on.
 
 
@@ -53,7 +53,10 @@ var personTypes = []
 var personAges = []
 var personSexes = []
 var personRelationships = []
-var personStats = []
+var personUIDsUsed = 0
+var personUIDs = [] #stores unique ID numbers for each NPC. Used when we have to keep track of EXACTLY the same person. Differs from their INDEX, accessed through other arrays, which can change if NPCs are removed. This stays consistent per person throughout their entire life. Each person's UID is entirely unique. personUIDsUsed is set to 0 at the start of a new life, and appended here before being incremented whenever a new person is added. A person's UID is popped upon their removal from other arrays, but their UID will never be used again. Use only when using indexes is insufficient. Most times it is fine, and in some cases even preferable, to simply use those.
+var personStats = [] #a 2D array, meaning this is an array that contains other arrays. each element in this array is another array whose index corresponds to an NPC. Each element inside each nested array is a stat, whose element in that array corresponds to a definition in the personStatsDictionary.
+var personStatsDictionary = ["joy"] #relationship stats dictionary - the types match the index of their respective values.
 var personCategories = [] #can be family or misc
 #dead
 var deadPersonFirstNames = []
@@ -64,7 +67,6 @@ var deadPersonSexes = []
 var deadPersonRelationships = [] #how close you were with them when they died
 var deadPersonCause = [] #how did said person die
 var deadPersonCategories = []
-var personPossibleStats = ["money"] #relationship stats dictionary - the types match the index of their respective values.
 
 
 #miscellaneous stuff that must be stored over multiple pages
@@ -105,23 +107,28 @@ func statClamper(): #if stats are out of bounds (above or below their max/min va
 		joy = 100
 	elif joy < 0:
 		joy = 0
+	int(joy)
 	if health > 100:
 		health = 100
 	elif health < 0:
 		health = 0
+	int(health)
 	if intellect > 100:
 		intellect = 100
 	elif intellect < 0:
 		intellect = 0
+	int(intellect) #ha... haha... int... intellect... get it?
 	if looks > 100:
 		looks = 100
 	elif looks < 0:
 		looks = 0
+	int(looks)
 	if evality > 100:
 		evality = 100
 	elif evality < 0:
 		evality = 0
-	#rest-of-life-relatedd
+	int(evality)
+	#rest-of-life-related
 	if schoolPerformance > 100:
 		schoolPerformance = 100
 	elif schoolPerformance < 0:
@@ -134,6 +141,19 @@ func statClamper(): #if stats are out of bounds (above or below their max/min va
 		fullTimePerformance = 100
 	elif fullTimePerformance < 0:
 		fullTimePerformance = 0
+	#NPC-related
+	for i in personTypes.size(): #runs through everyone you know
+		if personRelationships[i] > 100:
+			personRelationships[i] = 100
+		elif personRelationships[i] < 0:
+			personRelationships[i] = 0
+		for x in personStats[i].size(): #runs through all of their stats
+			var stats = personStats[i]
+			if personStatsDictionary[x] == "joy":
+				if stats[x] > 100:
+					stats[x] = 100
+				elif stats[x] < 0:
+					stats[x] = 0
 
 
 func cooldown(activity): #returns how many times you've done a certain thing this year already. This number can then be used to create a cooldown of sorts; if you've done something a million times this year, make it ineffective for once.
@@ -146,35 +166,57 @@ func cooldown(activity): #returns how many times you've done a certain thing thi
 	return timesActivityAppeared
 
 
-func pronounGenerator(type, sex): #returns pronouns so you don't have to do it manually inside anything - can be one of three types: him (objective), his (possessive), he (personal), or boy (noun)
+func pronounGenerator(type, selectedSex): #returns pronouns so you don't have to do it manually inside anything - can be one of three types: him (objective), his (possessive), he (personal), or boy (noun)
 	if type == "him":
-		if sex == "M": #if sex of person is male
+		if selectedSex == "M": #if sex of person is male
 			return "him"
 		else: #if sex of person is female
 			return "her"
 	elif type == "his":
-		if sex == "M": #if male
+		if selectedSex == "M": #if male
 			return "his"
 		else: #if female
 			return "hers"
 	elif type == "he":
-		if sex == "M": #if male
+		if selectedSex == "M": #if male
 			return "he"
 		else: #if female
 			return "she"
 	elif type == "boy":
-		if sex == "M": #if male
+		if selectedSex == "M": #if male
 			return "boy"
 		else: #if female
 			return "girl"
 	elif type == "guy":
-		if sex == "M": #if male
+		if selectedSex == "M": #if male
 			return "guy"
 		else: #if female
 			return "girl"
 
 
-func NPCKiller(index): #kills an NPC
+func NPCCreator(NPCsex, NPCfirstName, NPClastName, NPCage, NPCrelationship, NPCtype, NPCcategory, NPCstats): #creates an NPC from several custom perameters
+	personSexes.append(NPCsex)
+	personFirstNames.append(NPCfirstName)
+	personLastNames.append(NPClastName)
+	personAges.append(NPCage)
+	personRelationships.append(NPCrelationship)
+	personTypes.append(NPCtype)
+	personCategories.append(NPCcategory)
+	if NPCstats == "random":
+		personStats.append([randi_range(0, 100)])
+	personUIDs.append(personUIDsUsed)
+	personUIDsUsed += 1
+
+func NPCKiller(type, index): #kills an NPC. type can be either "kill" or "remove"
+	#archival
+	if type == "kill":
+		global.deadPersonFirstNames.append(global.personFirstNames[index])
+		global.deadPersonLastNames.append(global.personLastNames[index])
+		global.deadPersonRelationships.append(global.personRelationships[index])
+		global.deadPersonTypes.append(global.personTypes[index])
+		global.deadPersonAges.append(global.personAges[index])
+		global.deadPersonSexes.append(global.personSexes[index])
+	#removal
 	global.personFirstNames.remove_at(index)
 	global.personLastNames.remove_at(index)
 	global.personRelationships.remove_at(index)
@@ -182,6 +224,7 @@ func NPCKiller(index): #kills an NPC
 	global.personAges.remove_at(index)
 	global.personSexes.remove_at(index)
 	global.personStats.remove_at(index)
+	global.personUIDs.remove_at(index)
 
 
 #savegame stuff
@@ -228,6 +271,8 @@ func lifeSerialiser(): #serialises every life-specific variable we need to save 
 		"personAges" : personAges,
 		"personSexes" : personSexes,
 		"personRelationships" : personRelationships,
+		"personUIDsUsed" : personUIDsUsed,
+		"personUIDs" : personUIDs,
 		"personStats" : personStats,
 		"personCategories" : personCategories,
 		#dead NPCs
@@ -368,6 +413,8 @@ func loadLife(): #does the actual LIFE loading
 			personAges = dictionary["personAges"]
 			personSexes = dictionary["personSexes"]
 			personRelationships = dictionary["personRelationships"]
+			personUIDsUsed = dictionary["personUIDsUsed"]
+			personUIDs = dictionary["personUIDs"]
 			personStats = dictionary["personStats"]
 			personCategories = dictionary["personCategories"]
 			#dead NPCs

@@ -8,16 +8,18 @@ func basicStatChanges():
 	global.health += randi_range(-8, 8)
 	global.intellect += randi_range(-8, 8)
 	global.looks += randi_range(-8, 8)
-	global.statClamper() #clamps stats if they're below 0 or above 100
-	#over timers
+	#over-timers
 	global.joyOverTime.append(global.joy)
 	global.healthOverTime.append(global.health)
 	global.intellectOverTime.append(global.intellect)
 	global.looksOverTime.append(global.looks)
-	for i in global.familyAges.size(): #runs through every family member and ages them up
-		global.familyAges[i] += 1
-	for i in global.miscAges.size(): #runs through every miscellanious person you know and ages them up
-		global.miscAges[i] += 1
+	for i in global.personAges.size(): #runs through every NPC and ages them up
+		global.personAges[i] += 1
+		var stats = global.personStats[i]
+		for x in stats.size(): #runs through all their stats
+			if global.personStatsDictionary[x] == "joy":
+				stats[x] += randi_range(-6, 6)
+	global.statClamper() #clamps stats if they're below 0 or above 100
 	global.history = [] #clears activity history
 
 
@@ -25,7 +27,7 @@ func school():
 	if global.schoolLevel != -1 && global.schoolLevel != 0: #if you have not not entered school yet and have not graduated yet (i.e. you are in school)
 		global.workExperience.append("school-" + str(global.schoolLevel)) #adds schooling as work experience - this is used and removed only when you graduated
 		global.schoolPerformance = global.intellect + randi_range(-6, 6) #you are doing as well in school as you are intelligent (with a little bit of random variation)
-		global.intellect += round(global.schoolPerformance / 12) + randi_range(-3, 3) #if you're doing well in school, you're getting smarter
+		global.intellect += round(float(global.schoolPerformance) / 12) + randi_range(-3, 3) #if you're doing well in school, you're getting smarter
 	#primary school
 	if (global.age == 4 && global.schoolLevel == -1 && randi_range(1,2) == 1) || (global.age == 5 && global.schoolLevel == -1): #if you're 4 years old and aren't in school yet, there's a 1 in 2 chance of you getting put in primary school early, and if you're 5 and not in school yet, you automatically get put in no matter what
 		global.schoolLevel = 1 #you get put in primary school

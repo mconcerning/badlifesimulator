@@ -29,3 +29,7 @@ func _on_back_pressed() -> void:
 func _on_study_harder_pressed() -> void:
 	global.revent.append("study-harder")
 	get_tree().change_scene_to_file("res://pages/event.tscn")
+
+func _on_skip_class_pressed() -> void:
+	global.revent.append("skip-class")
+	get_tree().change_scene_to_file("res://pages/event.tscn")

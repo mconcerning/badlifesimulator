@@ -50,7 +50,7 @@ func _ready() -> void:
 		button.name = "life" + str(i) #renames the new node
 		button.text = dir[i].get_basename() #sets the text on the new button to the extension-less file name of the "i"th save file
 		button.size.x = 0 #sets the button to the minimum width it can be
-		button.position = Vector2(1080 / 2 - button.size.x / 2, positionDown) #sets its position to be centred horizontally and positionDown pixels lower on the y axis than the top of the scrollContainer
+		button.position = Vector2(1080 / 2 - float(button.size.x) / 2, positionDown) #sets its position to be centred horizontally and positionDown pixels lower on the y axis than the top of the scrollContainer
 		button.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
 		button.clip_text = true
 		#gets how much x size the text takes up on the button
