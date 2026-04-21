@@ -275,6 +275,7 @@ func relationships(): #specialised relationship events
 			$heading.text = "Whatever you say"
 			$body.text = "Your " + global.personTypes[global.IDClicked].to_lower() + ", " + global.personFirstNames[global.IDClicked] + ", said " + global.pronounGenerator("he", global.personSexes[global.IDClicked]) + "'s sick of you trying to compliment " + global.pronounGenerator("him", global.personSexes[global.IDClicked]) + " so much and you need to calm down."
 		else: #if you haven't complimented them 3 or more times already this year
+			global.XPQueued += 3
 			$heading.text = "How tertiary"
 			$body.text = "You told your " + global.personTypes[global.IDClicked].to_lower() + ", " + global.personFirstNames[global.IDClicked] + ", that " + global.pronounGenerator("he", global.personSexes[global.IDClicked]) + "'s " + complimentSelected + "."
 			if complimentSelected == "racist" || (complimentSelected == "incredibly attractive" && global.personCategories[global.IDClicked] == "family"): #if you accidentally didn't compliment them
@@ -336,23 +337,49 @@ func confirmation(): #non-random confirmation events that tell you that somethin
 			global.joy -= joySubtracted
 			global.history.append("study-harder")
 		else:
+			$heading.text = "Hunkering "
 			match randi_range(1, 4): #random heading text variation
 				1:
-					$heading.text = "Hunkering down"
+					$heading.text += "down"
 				2:
-					$heading.text = "Hunkering through"
+					$heading.text += "through"
 				3:
-					$heading.text = "Hunkering left"
+					$heading.text += "left"
 				4:
-					$heading.text = "Hunkering in"
+					$heading.text += "in"
 			var joySubtracted = randi_range(round(float(global.intellect)/10), 14 - round(float(global.intellect)/10))
-			$body.text = "You studied for " + str(max(2, round(float(global.intellect)/20))) + " hours.\n+ " + str(round(float(global.intellect)/7)) + " school performance, + " + str(round(float(global.intellect)/12) + 2) + " Intellect, - " + str(joySubtracted) + " Joy"
+			$body.text = "You studied for " + str(max(2, int(round(float(global.intellect)/20)))) + " hours.\n+ " + str(int(round(float(global.intellect)/7))) + " school performance, + " + str(int(round(float(global.intellect)/12)) + 2) + " Intellect, - " + str(joySubtracted) + " Joy"
 			global.schoolPerformance += round(float(global.intellect)/7)
 			global.intellect += round(float(global.intellect)/12) + 2
 			global.joy -= joySubtracted
 			global.history.append("study-harder")
 			$option1.text = "Okay"
 			optionRemover(2)
+			global.XPQueued += 2
+	elif global.revent[0] == "skip-class":
+		global.history.append("skip-class")
+		if global.cooldown("skip-class") >= randi_range(3, 4):
+			$heading.text = "Whoops"
+			$body.text = "You failed one of your classes after not attending for so long."
+			var classPerformanceDeducted = randi_range(7, 9)
+			var joyDeducted = randi_range(5, 11)
+			global.schoolPerformance -= classPerformanceDeducted
+			global.joy -= joyDeducted
+			$body.text += "\n- " + str(classPerformanceDeducted) + " performance, - " + str(joyDeducted) + " joy"
+		else:
+			$heading.text = "Skipping class"
+			const skippedClassTo = ["go bowling", "go skateboarding", "get lunch", "get ice cream", "go to the movie theatre", "go shopping"]
+			$body.text = "You skipped class to " + skippedClassTo[randi_range(0, skippedClassTo.size() - 1)] + " instead."
+			var classPerformanceDeducted = randi_range(7, 9)
+			var intellectDeducted = randi_range(3, 4)
+			var joyGained = randi_range(5, 11)
+			global.schoolPerformance -= classPerformanceDeducted
+			global.intellect -= intellectDeducted
+			global.joy += joyGained
+			$body.text += "\n- " + str(classPerformanceDeducted) + " performance, - " + str(intellectDeducted) + " intellect, + " + str(joyGained) + " joy"
+		global.XPQueued += 3
+		$option1.text = "Okay"
+		optionRemover(2)
 
 
 func _on_option_1_pressed() -> void: #on option 1 selected
@@ -360,7 +387,7 @@ func _on_option_1_pressed() -> void: #on option 1 selected
 	if global.revent[0] == "toddler-0" || global.revent[0] == "child-0" || global.revent[0] == "child-friend" || global.revent[0] == "toddler-friend" || global.revent[0] == "child-friend" || global.revent[0] == "teenager-friend" || global.revent[0] == "adult-friend" || global.revent[0] == "elder-friend" || global.revent[0] == "change-save-management-mode-to-delete" || global.revent[0] == "university-degree-picked" || global.revent[0] == "university-degree-picked-o2-refused" || global.revent[0] == "university-degree-picked-o4-rejected":
 		outcome(global.revent[0] + "-o1")
 	#confirmation - option 1 will be the only button available when the event's purpose is only to display information. Generally, the button will say "Okay".
-	elif global.revent[0] == "toddler-0-o1" || global.revent[0] == "toddler-0-o2" || global.revent[0] == "toddler-0-o3" || global.revent[0] == "child-0-o1" || global.revent[0] == "child-0-o2" || global.revent[0] == "child-0-o3" || global.revent[0] == "child-0-o4" || global.revent[0] == "toddler-friend-o1" || global.revent[0] == "toddler-friend-o2" || global.revent[0] == "child-friend-o1" || global.revent[0] == "child-friend-o2" || global.revent[0] == "teenager-friend-o1" || global.revent[0] == "teenager-friend-o2" || global.revent[0] == "teenager-friend-o3" || global.revent[0] == "adult-friend-o1" || global.revent[0] == "adult-friend-o2" || global.revent[0] == "adult-friend-o3" || global.revent[0] == "elder-friend-o1" || global.revent[0] == "elder-friend-o2" || global.revent[0] == "elder-friend-o3" || global.revent[0] == "child-labour-is-outlawed" || global.revent[0] == "enrolled-in-primary-school" || global.revent[0] == "enrolled-in-high-school" || global.revent[0] == "graduated-high-school" || global.revent[0] == "study-harder" || global.revent[0] == "university-degree-picked-o1" || global.revent[0] == "university-degree-picked-o2" || global.revent[0] == "university-degree-picked-o3" || global.revent[0] == "university-degree-picked-o4" || global.revent[0] == "university-degree-picked-o2" || global.revent[0] == "graduated-university" || global.revent[0] == "compliment-relationship":
+	elif global.revent[0] == "toddler-0-o1" || global.revent[0] == "toddler-0-o2" || global.revent[0] == "toddler-0-o3" || global.revent[0] == "child-0-o1" || global.revent[0] == "child-0-o2" || global.revent[0] == "child-0-o3" || global.revent[0] == "child-0-o4" || global.revent[0] == "toddler-friend-o1" || global.revent[0] == "toddler-friend-o2" || global.revent[0] == "child-friend-o1" || global.revent[0] == "child-friend-o2" || global.revent[0] == "teenager-friend-o1" || global.revent[0] == "teenager-friend-o2" || global.revent[0] == "teenager-friend-o3" || global.revent[0] == "adult-friend-o1" || global.revent[0] == "adult-friend-o2" || global.revent[0] == "adult-friend-o3" || global.revent[0] == "elder-friend-o1" || global.revent[0] == "elder-friend-o2" || global.revent[0] == "elder-friend-o3" || global.revent[0] == "child-labour-is-outlawed" || global.revent[0] == "enrolled-in-primary-school" || global.revent[0] == "enrolled-in-high-school" || global.revent[0] == "graduated-high-school" || global.revent[0] == "study-harder" || global.revent[0] == "university-degree-picked-o1" || global.revent[0] == "university-degree-picked-o2" || global.revent[0] == "university-degree-picked-o3" || global.revent[0] == "university-degree-picked-o4" || global.revent[0] == "university-degree-picked-o2" || global.revent[0] == "graduated-university" || global.revent[0] == "compliment-relationship" || global.revent[0] == "skip-class":
 		goHome()
 
 
@@ -452,6 +479,7 @@ func option1outcomes(): #option 1 has been picked
 			$body.text += "25000"
 		$option1.text = "Okay"
 		optionRemover(2)
+		global.XPQueued += 50
 		global.schoolLevel = 3 #moves you up to tertiary schooling
 		global.schoolName = global.lastNames[randi_range(0, global.lastNames.size() - 1)] #gives the university a random name
 		match randi_range(1,3): #gives the university name a random appendix
@@ -582,6 +610,7 @@ func option2outcomes(): #option 2 has been picked
 					global.schoolName += " College"
 				3:
 					global.schoolName += " University"
+			global.XPQueued += 40
 		else: #if your parents refuse to pay for it
 			$heading.text = "I guess you just don't love me then"
 			$body.text = "Your " + str(parentNoun) + " refused to pay for your University tuition."
@@ -643,6 +672,7 @@ func option3outcomes(): #option 3 has been picked
 			global.loans.append(25000) #takes out the $25,000 loan
 			global.loanInterest.append(8) #8% annual interest
 			global.loanPaybackDuration.append(20) #pay it back over the course of 20 years
+		global.XPQueued += 30
 		$option1.text = "Okay"
 		optionRemover(2)
 
@@ -673,6 +703,7 @@ func option4outcomes(): #option 4 has been picked
 				3:
 					global.schoolName += " University"
 			$option1.text = "Hooray"
+			global.XPQueued += 60
 		else: #if your school performance isn't really good
 			$heading.text = "NOT a scholar"
 			$body.text = "Your application for a scholarship was rejected."

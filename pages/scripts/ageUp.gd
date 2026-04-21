@@ -4,10 +4,10 @@ extends Node2D #author(s): Ethan Scott
 func basicStatChanges():
 	global.age += 1 #the actual aging up
 	print("age is now " + str(global.age))
-	global.joy += randi_range(-8, 8) #randomly tweaks joy levels. can add anywhere from -8 (subtracts 8) to 8 (adds 8).
-	global.health += randi_range(-8, 8)
-	global.intellect += randi_range(-8, 8)
-	global.looks += randi_range(-8, 8)
+	global.joy += randi_range(-6, 6) #randomly tweaks joy levels. can add anywhere from -6 (subtracts 6) to 6 (adds 6).
+	global.health += randi_range(-6, 6)
+	global.intellect += randi_range(-4, 4)
+	global.looks += randi_range(-6, 6)
 	#over-timers
 	global.joyOverTime.append(global.joy)
 	global.healthOverTime.append(global.health)
@@ -26,8 +26,11 @@ func basicStatChanges():
 func school():
 	if global.schoolLevel != -1 && global.schoolLevel != 0: #if you have not not entered school yet and have not graduated yet (i.e. you are in school)
 		global.workExperience.append("school-" + str(global.schoolLevel)) #adds schooling as work experience - this is used and removed only when you graduated
-		global.schoolPerformance = global.intellect + randi_range(-6, 6) #you are doing as well in school as you are intelligent (with a little bit of random variation)
+		if global.schoolPerformance < global.intellect: #if you're not doing as well as your functional maximum
+			global.schoolPerformance = min(global.intellect, global.schoolPerformance + float(global.intellect / 10)) #you work towards it
+		global.schoolPerformance += randi_range(-5, 5)
 		global.intellect += round(float(global.schoolPerformance) / 12) + randi_range(-3, 3) #if you're doing well in school, you're getting smarter
+		global.XPQueued += 3
 	#primary school
 	if (global.age == 4 && global.schoolLevel == -1 && randi_range(1,2) == 1) || (global.age == 5 && global.schoolLevel == -1): #if you're 4 years old and aren't in school yet, there's a 1 in 2 chance of you getting put in primary school early, and if you're 5 and not in school yet, you automatically get put in no matter what
 		global.schoolLevel = 1 #you get put in primary school
@@ -74,6 +77,7 @@ func school():
 				workExpDupe.append(global.workExperience[i])
 		global.workExperience = workExpDupe
 		print("graduated high school")
+		global.XPQueued += 20
 	#university enrollment happens in an event
 	#university graduation
 	elif global.workExperience.count("school-3") == 4: #if you've been in university for 4 years
@@ -87,6 +91,7 @@ func school():
 				workExpDupe.append(global.workExperience[i])
 		global.workExperience = workExpDupe
 		print("graduated university")
+		global.XPQueued += 50
 
 
 func loanHandler():
@@ -144,7 +149,7 @@ func randomDeathChance():
 	if global.age >= 50: #if you're old enough to randomly die (not super realistic, but as it turns out, it is NOT fun dying for no reason at age 2)
 		print("1 in " + str(max(1, 4 + global.health * 3 - global.age * 2)) + " chance of death")
 		if randi_range(1, max(1, 4 + global.health * 3 - global.age * 2)) == 1:
-			global.causeOfDeath = "You died of natural causes"
+			global.causeOfDeath = "You died of complications associated with advanced age"
 			get_tree().change_scene_to_file("res://pages/death.tscn") #kills you
 			return #ceases function of this function so nothing below this runs and it takes you to the new page
 

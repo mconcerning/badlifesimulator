@@ -8,7 +8,7 @@ var versionNumber = ProjectSettings.get_setting("application/config/version") #c
 var windowSize = [360, 640] #9:16 ratio - 360 x 640 is the default window size
 var revent = [] #event IDs (can store multiple). begins with an age identifier (toddler, child, teenager, adult, elder, or "na" for not applicable) and ends with a unique number.
 var currentLife = ""
-var IDClicked = -1 #used to identify which relationship you're interacting with
+var IDClicked : int = -1 #used to identify which relationship you're interacting with
 var IDClickedType = "" #used to identify what type of relationship you're interacting with; can be either "family" or "misc"
 
 
@@ -35,13 +35,13 @@ var schoolName = ""
 var schoolLevel = -1 # -1 before you go to school, 0 if you've graduated school, 1 for primary, 2 for secondary (high school), 3 for tertiary. middle school, if implemented, would be 1.5.
 var degrees = []
 var fullTimeJob = ""
-var fullTimeSalary = 0 #how much money you make annually from your full-time job
+var fullTimeSalary : int = 0 #how much money you make annually from your full-time job
 var partTimeJob = ""
-var partTimeSalary = 0 #how much money you make annually from your part-time job
+var partTimeSalary : int = 0 #how much money you make annually from your part-time job
 var workExperience = [] #every year you work a job or go to school, it is appended to this array. The number of times it appears is then used to calculate how many years of experience you have working a certain job or going to a certain school.
-var schoolPerformance = 0 #how well are you doing at school? from 1 - 100
-var partTimePerformance = 0
-var fullTimePerformance = 0
+var schoolPerformance : int = 0 #how well are you doing at school? from 1 - 100
+var partTimePerformance : int = 0
+var fullTimePerformance : int = 0
 var loans = [] #uh oh - can hold multiple loans at once - holds the total amount in dollars you owe
 var loanPaybackDuration = [] #in how many years must the loan at its same index be fully paid back? Used to calculate how much you owe at the start of every year. The amount owed is then automatically deducted from your money total.
 var loanInterest = [] #the percentage interest you owe on top of what you would pay back on your loans
@@ -87,7 +87,7 @@ var healthOverTime = []
 var intellectOverTime = []
 var looksOverTime = []
 var causeOfDeath = ""
-var XPQueued = 0 #the amount of XP that needs to be awarded when you die
+var XPQueued : int = 0 #the amount of XP that needs to be awarded when you die
 var history = [] #keeps a log of what activities you've done this year. Cleared when aging up.
 
 
@@ -96,9 +96,9 @@ var RAUE = true #RAUE is an acronym for Random Age Up Events. When true, events 
 
 
 #inter-life variables (non-life specific, saved into the game save file, persists across all lives)
-var XP = 0
-var level = 1 #increments when you reach the amount of XP you need to level up
-var XPRequired = 500 #the amount of XP you need total to level up. Increases by 500 every level.
+var XP : int = 0
+var level : int = 1 #increments when you reach the amount of XP you need to level up
+var XPRequired : int = 500 #the amount of XP you need total to level up. Increases by 500 every level.
 
 
 func statClamper(): #if stats are out of bounds (above or below their max/min value, usually 0/100 respectively), clamp them
@@ -159,8 +159,6 @@ func statClamper(): #if stats are out of bounds (above or below their max/min va
 func cooldown(activity): #returns how many times you've done a certain thing this year already. This number can then be used to create a cooldown of sorts; if you've done something a million times this year, make it ineffective for once.
 	var timesActivityAppeared = 0
 	for i in history.size(): #runs through everything you've done this year
-		print(i)
-		print(history.size())
 		if history[i] == activity: #if it's the activity we're looking for
 			timesActivityAppeared += 1 #it has appeared one more time
 	return timesActivityAppeared
@@ -206,6 +204,7 @@ func NPCCreator(NPCsex, NPCfirstName, NPClastName, NPCage, NPCrelationship, NPCt
 		personStats.append([randi_range(0, 100)])
 	personUIDs.append(personUIDsUsed)
 	personUIDsUsed += 1
+	global.XPQueued += 10
 
 func NPCKiller(type, index): #kills an NPC. type can be either "kill" or "remove"
 	#archival
@@ -216,6 +215,7 @@ func NPCKiller(type, index): #kills an NPC. type can be either "kill" or "remove
 		global.deadPersonTypes.append(global.personTypes[index])
 		global.deadPersonAges.append(global.personAges[index])
 		global.deadPersonSexes.append(global.personSexes[index])
+		global.XPQueued += 10
 	#removal
 	global.personFirstNames.remove_at(index)
 	global.personLastNames.remove_at(index)
@@ -225,6 +225,7 @@ func NPCKiller(type, index): #kills an NPC. type can be either "kill" or "remove
 	global.personSexes.remove_at(index)
 	global.personStats.remove_at(index)
 	global.personUIDs.remove_at(index)
+	global.XPQueued += 5
 
 
 #savegame stuff

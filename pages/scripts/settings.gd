@@ -20,7 +20,6 @@ func _on_display_pressed() -> void:
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	if OS.get_name() == "Web":
-		$saveFiles.disabled = true
 		$importExportSaveFiles.disabled = true
 		$display.disabled = true
 	elif OS.get_name() == "Android" || OS.get_name() == "iOS":
