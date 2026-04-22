@@ -51,6 +51,7 @@ func cleanLife(): #resets your existing life (if any) and generates new stats
 	global.loans = []
 	global.loanPaybackDuration = []
 	global.loanInterest = []
+	global.prisonSentence = 0
 	#NPCs
 	global.personFirstNames = []
 	global.personLastNames = []
@@ -132,6 +133,8 @@ func familyGenerator(): #HELP I DON'T WANT TO MAKE THIS SCRIPT FOR A THIRD TIME 
 			global.personTypes.append("Father") #appends father
 		global.personCategories.append("family")
 		global.personStats.append([randi_range(0, 100)]) #gives them random stats (see global.gd)
+		global.personUIDs.append(global.personUIDsUsed)
+		global.personUIDsUsed += 1
 		howManyGrandparents = randi_range(0, 2) #how many grandparents do you have
 	else: #if you have TWO parents
 		howManyParents = 2 #you have two parents

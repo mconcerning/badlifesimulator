@@ -1,0 +1,160 @@
+[gd_scene format=3 uid="uid://bunugpstt0ah0"]
+
+[ext_resource type="Script" uid="uid://bv38gja62gk22" path="res://pages/scripts/prison.gd" id="1_kfsc2"]
+[ext_resource type="Texture2D" uid="uid://bfmevwmcg3jko" path="res://assets/grey-bg.png" id="2_kfsc2"]
+[ext_resource type="LabelSettings" uid="uid://bst31irnyaguk" path="res://styles/text/subheading.tres" id="3_7r7vg"]
+[ext_resource type="FontFile" uid="uid://jc7d7o5eghs1" path="res://assets/fonts/poppins/Poppins-Bold.ttf" id="4_cy2ie"]
+[ext_resource type="PackedScene" uid="uid://cnln4k2n2uldd" path="res://objects/circular_button.tscn" id="4_pmyl4"]
+[ext_resource type="Texture2D" uid="uid://i1sobtkpdvcs" path="res://assets/plus-white.png" id="5_i2cdr"]
+[ext_resource type="Texture2D" uid="uid://di3wdmdrsyafk" path="res://assets/egg-cracked-full-used-rotated.png" id="6_h8xuj"]
+[ext_resource type="Texture2D" uid="uid://dem3xsw7xi24n" path="res://assets/egg-cracked.png" id="7_qs6gy"]
+[ext_resource type="LabelSettings" uid="uid://dl6sog5hfkb6u" path="res://styles/text/body.tres" id="8_1cpv2"]
+[ext_resource type="LabelSettings" uid="uid://pehp7xsrxr1l" path="res://styles/text/money.tres" id="9_3strd"]
+[ext_resource type="LabelSettings" uid="uid://yi5vjum7s3is" path="res://styles/text/body_bold.tres" id="10_nmi45"]
+[ext_resource type="Texture2D" uid="uid://b8pyfvnrq1ykp" path="res://assets/prison.png" id="12_cy2ie"]
+
+[sub_resource type="LabelSettings" id="LabelSettings_c1qy7"]
+font = ExtResource("4_cy2ie")
+font_size = 50
+font_color = Color(0, 0, 0, 1)
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_qyc5l"]
+texture = ExtResource("6_h8xuj")
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_smqxy"]
+texture = ExtResource("7_qs6gy")
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_27i3a"]
+texture = ExtResource("6_h8xuj")
+
+[sub_resource type="Theme" id="Theme_bqpvg"]
+Button/styles/hover = SubResource("StyleBoxTexture_qyc5l")
+Button/styles/normal = SubResource("StyleBoxTexture_smqxy")
+Button/styles/pressed = SubResource("StyleBoxTexture_27i3a")
+
+[node name="prison" type="Node2D" unique_id=1681199249]
+script = ExtResource("1_kfsc2")
+
+[node name="background" type="TextureRect" parent="." unique_id=305944048]
+offset_right = 1080.0
+offset_bottom = 1920.0
+texture = ExtResource("2_kfsc2")
+metadata/_edit_use_anchors_ = true
+metadata/_edit_lock_ = true
+
+[node name="name" type="Label" parent="." unique_id=674454806]
+offset_left = 100.0
+offset_top = 50.0
+offset_right = 980.0
+offset_bottom = 132.0
+text = "Name Johnson"
+label_settings = ExtResource("3_7r7vg")
+horizontal_alignment = 1
+autowrap_mode = 3
+
+[node name="prison" type="Label" parent="." unique_id=1507969302]
+offset_left = 100.0
+offset_top = 150.0
+offset_right = 980.0
+offset_bottom = 2062.0
+text = "Prison"
+label_settings = SubResource("LabelSettings_c1qy7")
+horizontal_alignment = 1
+autowrap_mode = 2
+
+[node name="ageUpButton" parent="." unique_id=509130995 instance=ExtResource("4_pmyl4")]
+offset_left = 440.0
+offset_top = 980.0
+offset_right = 640.0
+offset_bottom = 1180.0
+
+[node name="plus" type="Sprite2D" parent="ageUpButton" unique_id=1068915531]
+position = Vector2(100, 100)
+scale = Vector2(0.25, 0.25)
+texture = ExtResource("5_i2cdr")
+
+[node name="newGameEgg" type="Button" parent="." unique_id=1188804162]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = 20.0
+offset_top = 20.0
+offset_right = 120.0
+offset_bottom = 120.0
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset = Vector2(50, 50)
+theme = SubResource("Theme_bqpvg")
+
+[node name="logs" type="Label" parent="." unique_id=505672089]
+offset_top = 550.0
+offset_right = 1080.0
+offset_bottom = 822.0
+text = "Logs will go here."
+label_settings = ExtResource("8_1cpv2")
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="money" type="Label" parent="." unique_id=744660011]
+offset_top = 1300.0
+offset_right = 1080.0
+offset_bottom = 1360.0
+text = "Money: $N/A"
+label_settings = ExtResource("9_3strd")
+horizontal_alignment = 1
+
+[node name="age" type="Label" parent="." unique_id=1513164279]
+offset_top = 1400.0
+offset_right = 1080.0
+offset_bottom = 1460.0
+text = "Age: x"
+label_settings = ExtResource("10_nmi45")
+horizontal_alignment = 1
+
+[node name="joy" type="Label" parent="." unique_id=1646613292]
+offset_top = 1475.0
+offset_right = 1080.0
+offset_bottom = 1535.0
+text = "Joy: x"
+label_settings = ExtResource("8_1cpv2")
+horizontal_alignment = 1
+
+[node name="health" type="Label" parent="." unique_id=370618692]
+offset_top = 1550.0
+offset_right = 1080.0
+offset_bottom = 1610.0
+text = "Health: x"
+label_settings = ExtResource("8_1cpv2")
+horizontal_alignment = 1
+
+[node name="intellect" type="Label" parent="." unique_id=964933205]
+offset_top = 1625.0
+offset_right = 1080.0
+offset_bottom = 1685.0
+text = "Intellect: x"
+label_settings = ExtResource("8_1cpv2")
+horizontal_alignment = 1
+
+[node name="looks" type="Label" parent="." unique_id=1746060993]
+offset_top = 1700.0
+offset_right = 1080.0
+offset_bottom = 1760.0
+text = "Looks: x"
+label_settings = ExtResource("8_1cpv2")
+horizontal_alignment = 1
+
+[node name="activities" type="TextureButton" parent="." unique_id=490609811]
+offset_left = 260.0
+offset_top = 1010.0
+offset_right = 410.0
+offset_bottom = 1160.0
+texture_normal = ExtResource("12_cy2ie")
+ignore_texture_size = true
+stretch_mode = 0
+
+[connection signal="pressed" from="ageUpButton" to="." method="_on_age_up_button_pressed"]
+[connection signal="mouse_entered" from="newGameEgg" to="." method="_on_new_game_egg_mouse_entered"]
+[connection signal="mouse_exited" from="newGameEgg" to="." method="_on_new_game_egg_mouse_exited"]
+[connection signal="pressed" from="newGameEgg" to="." method="_on_new_game_egg_pressed"]

@@ -27,7 +27,7 @@ func school():
 	if global.schoolLevel != -1 && global.schoolLevel != 0: #if you have not not entered school yet and have not graduated yet (i.e. you are in school)
 		global.workExperience.append("school-" + str(global.schoolLevel)) #adds schooling as work experience - this is used and removed only when you graduated
 		if global.schoolPerformance < global.intellect: #if you're not doing as well as your functional maximum
-			global.schoolPerformance = min(global.intellect, global.schoolPerformance + float(global.intellect / 10)) #you work towards it
+			global.schoolPerformance = min(global.intellect, global.schoolPerformance + float(global.intellect) / 10) #you work towards it
 		global.schoolPerformance += randi_range(-5, 5)
 		global.intellect += round(float(global.schoolPerformance) / 12) + randi_range(-3, 3) #if you're doing well in school, you're getting smarter
 		global.XPQueued += 3
@@ -151,7 +151,6 @@ func randomDeathChance():
 		if randi_range(1, max(1, 4 + global.health * 3 - global.age * 2)) == 1:
 			global.causeOfDeath = "You died of complications associated with advanced age"
 			get_tree().change_scene_to_file("res://pages/death.tscn") #kills you
-			return #ceases function of this function so nothing below this runs and it takes you to the new page
 
 
 # Called when the node enters the scene tree for the first time.
@@ -164,6 +163,8 @@ func _ready() -> void:
 	rareAgeUpEvents()
 	randomDeathChance()
 	#runs events if they're queued
+	if get_tree() == null: #if the scene tree DOESN'T exist (true if you're dying)
+		return #don't do the below
 	if global.revent.size() > 0: #if there are random events slated to appear
 		get_tree().change_scene_to_file("res://pages/event.tscn") #goes to the event page
 	else: #if there aren't random events slated to appear

@@ -90,3 +90,21 @@ func _on_set_last_name_pressed() -> void:
 	global.lastName = str($input.text)
 	$confirmation.text = "Successfully set last name!"
 	print("set last name to " + str(global.lastName))
+
+func _on_set_school_level_pressed() -> void:
+	global.schoolLevel = int($input.text)
+	print("set school level to " + str(global.schoolLevel))
+	if global.schoolLevel == 1 || global.schoolLevel == 2 || global.schoolLevel == 3:
+		global.schoolName = "Institute of Developer Mode"
+		global.schoolPerformance = global.intellect + randi_range(-6, 6)
+		print("successfully enrolled in school")
+
+func _on_trigger_event_pressed() -> void:
+	global.revent.append(str($input.text))
+	print("appended " + $input.text + " to global.revent")
+	get_tree().change_scene_to_file("res://pages/event.tscn")
+
+func _on_imprison_pressed() -> void:
+	global.prisonSentence = 999
+	print("imprisoning...")
+	get_tree().change_scene_to_file("res://pages/game_menu.tscn")

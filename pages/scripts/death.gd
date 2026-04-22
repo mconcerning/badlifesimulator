@@ -25,7 +25,7 @@ func _on_100ms_timeout() -> void: #every 0.1s
 	if timerRuns == 0:
 		$statsTop.text += global.causeOfDeath
 	elif timerRuns == 1:
-		$statsTop.text += "\nAge at death: " + str(global.age)
+		$statsLeft.text += "\nAge at death: " + str(global.age)
 	elif timerRuns == 2: #first left-justified stat
 		$statsLeft.text += "Average Joy: " + str(averageFinder(global.joyOverTime))
 	elif timerRuns == 3:
@@ -47,7 +47,7 @@ func _on_100ms_timeout() -> void: #every 0.1s
 	elif timerRuns == 11:
 		$statsLeft.text += "\nXP earned: " + str(XPThatWasQueued)
 	elif timerRuns == 12:
-		$statsLeft.text += "\nLevel " + str(global.level)
+		$statsRight.text += "\nLevel " + str(global.level)
 	elif timerRuns == 13: #first right-justified stat
 		$statsRight.text += "You need " + str(global.XPRequired - global.XP) + " more XP to level up"
 	elif timerRuns == 14:
@@ -70,6 +70,9 @@ func _on_home_pressed() -> void:
 
 #when you die
 func _ready() -> void:
+	if global.firstName == "Immortal" && global.lastName == "Guy":
+		get_tree().change_scene_to_file("res://pages/game_menu.tscn")
+		return
 	if FileAccess.file_exists("user://spycarsinc/bls/lives/" + global.currentLife + ".bls") == true: #if a save file for this life exists
 		DirAccess.remove_absolute("user://spycarsinc/bls/lives/" + global.currentLife + ".bls") #deletes the save file for this life
 		print("successfully deleted save file for " + global.currentLife)

@@ -96,7 +96,7 @@ theme = ExtResource("6_llmlx")
 text = "RAUE"
 
 [node name="RAUECheck" parent="scrollContainer/centerContainer/vBoxContainer" unique_id=124453344 instance=ExtResource("8_4vx13")]
-position = Vector2(458, 676)
+position = Vector2(358, 676)
 
 [node name="setEvality" type="Button" parent="scrollContainer/centerContainer/vBoxContainer" unique_id=851334678]
 layout_mode = 2
@@ -146,6 +146,24 @@ size_flags_horizontal = 4
 theme = ExtResource("6_llmlx")
 text = "Set last name"
 
+[node name="setSchoolLevel" type="Button" parent="scrollContainer/centerContainer/vBoxContainer" unique_id=1351802246]
+layout_mode = 2
+size_flags_horizontal = 4
+theme = ExtResource("6_llmlx")
+text = "Set school level"
+
+[node name="triggerEvent" type="Button" parent="scrollContainer/centerContainer/vBoxContainer" unique_id=1384562500]
+layout_mode = 2
+size_flags_horizontal = 4
+theme = ExtResource("6_llmlx")
+text = "Trigger event"
+
+[node name="imprison" type="Button" parent="scrollContainer/centerContainer/vBoxContainer" unique_id=1493556922]
+layout_mode = 2
+size_flags_horizontal = 4
+theme = ExtResource("6_llmlx")
+text = "Imprison"
+
 [node name="saveGame" type="TextureButton" parent="." unique_id=1317964170]
 offset_left = 960.0
 offset_top = 20.0
@@ -170,4 +188,7 @@ stretch_mode = 0
 [connection signal="pressed" from="scrollContainer/centerContainer/vBoxContainer/setLevel" to="." method="_on_set_level_pressed"]
 [connection signal="pressed" from="scrollContainer/centerContainer/vBoxContainer/setFirstName" to="." method="_on_set_first_name_pressed"]
 [connection signal="pressed" from="scrollContainer/centerContainer/vBoxContainer/setLastName" to="." method="_on_set_last_name_pressed"]
+[connection signal="pressed" from="scrollContainer/centerContainer/vBoxContainer/setSchoolLevel" to="." method="_on_set_school_level_pressed"]
+[connection signal="pressed" from="scrollContainer/centerContainer/vBoxContainer/triggerEvent" to="." method="_on_trigger_event_pressed"]
+[connection signal="pressed" from="scrollContainer/centerContainer/vBoxContainer/imprison" to="." method="_on_imprison_pressed"]
 [connection signal="pressed" from="saveGame" to="." method="_on_save_game_pressed"]

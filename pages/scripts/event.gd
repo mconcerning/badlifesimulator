@@ -99,12 +99,14 @@ func repositionResize(): #repositions and resizes the nodes on-screen
 
 func outcome(reventID):
 	global.revent[0] = reventID
+	await get_tree().process_frame
 	get_tree().reload_current_scene()
 	return
 
 
 func goHome():
 	global.revent.pop_front()
+	await get_tree().process_frame
 	get_tree().change_scene_to_file("res://pages/game_menu.tscn")
 	return
 
@@ -179,6 +181,10 @@ func teenagehood(): #teenage base events - prefix is "teenager-"
 		$option3.text = "Leave " + global.pronounGenerator("him", global.eventPersonSex) + " alone"
 		optionRemover(4)
 		$credit.text = "mconcerning"
+	elif global.revent[0] == "teenager-0":
+		if global.schoolLevel != 1 && global.schoolLevel != 2: #if you're not in primary or high school
+			goHome() #don't show the event
+		#add event here
 
 
 func adulthood(): #adult base events - prefix is "adult-"
@@ -287,6 +293,20 @@ func relationships(): #specialised relationship events
 				$body.text += "\n+ " + str(relationshipGained) + " relationship."
 		$option1.text = "Okay"
 		optionRemover(2)
+
+
+func prison(): #specialised prison events
+	if global.revent[0] == "arrested": #"arrested" when you encounter police randomly, "arrested-caught" when you get caught in the middle of committing a crime.
+		if global.revent[0] == "arrested":
+			$heading.text = "Long arm of the law"
+			if global.crimeSeverityCalculator() >= 200:
+				$body.text = "While at home, a barrage of uniformed officers break down your door and run inside."
+			elif global.crimeSeverityCalculator() >= 50 && global.crimeSeverityCalculator() < 200:
+				$body.text = "While out in public, a group of uniformed police officers approach you and start asking questions."
+			elif global.crimeSeverityCalculator() >= 10 && global.crimeSeverityCalculator() < 50:
+				$body.text = "While out in public, a police officer approaches you and starts asking questions."
+			else:
+				goHome()
 
 
 func confirmation(): #non-random confirmation events that tell you that something just happened
@@ -648,21 +668,10 @@ func option3outcomes(): #option 3 has been picked
 		for i in global.personTypes.size(): #runs through every family member to check for parents
 			if global.personTypes[i] == "Mother" || global.personTypes[i] == "Father": #if family member at the index we're checking is a parent
 				parents.append(i)
-		if parents.size() > 1: #if you have more than one parent
-			$body.text = "Your parents scold you for being unappreciative.\n- 8 relationship with your " + global.personTypes[relativeOfChoice].to_lower() + ", " + global.personFirstNames[relativeOfChoice] + ", -8 relationship with your parents, - 12 Joy"
-		else: #if you only have one parent
-			#finds parent
-			var whatParent = ""
-			if global.parents.find("Mother") != -1: #if you have only a mother
-				whatParent = "mother"
-			elif global.parents.find("Father") != -1: #if you have only a father
-				whatParent = "mather"
-			$body.text = "Your " + whatParent + " scolds you for being unappreciative.\n- 8 relationship with your " + global.personTypes[relativeOfChoice].to_lower() + ", " + global.personFirstNames[relativeOfChoice] + ", -8 relationship with your " + whatParent + ", - 12 Joy"
+		$body.text = "Your get scolded for being unappreciative.\n- 8 relationship with your " + global.personTypes[relativeOfChoice].to_lower() + ", " + global.personFirstNames[relativeOfChoice] + ", - 12 Joy"
 		$option1.text = "Okay"
 		optionRemover(2)
 		global.personRelationships[relativeOfChoice] -= 8 #deduct 8 relationship with gifter
-		for i in parents.size(): #runs through every parent
-				global.personRelationships[parents[i]] -= 8 #deducts 8 relationship from the parent at the index of parents[i] (parents stores indexes, so the parents at position i in the parents array could have a different index to themself in the other family arrays.
 		global.joy -= 12
 	elif global.revent[0] == "university-degree-picked-o3":
 		$heading.text = "Student loans"
@@ -725,6 +734,7 @@ func eventer(): #runs all the functions
 	multiAgeRange()
 	specialised()
 	relationships()
+	prison()
 	confirmation()
 	option1outcomes()
 	option2outcomes()

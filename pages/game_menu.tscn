@@ -42,7 +42,7 @@ offset_bottom = 1962.0
 text = "Name Johnson"
 label_settings = ExtResource("7_qyc5l")
 horizontal_alignment = 1
-autowrap_mode = 2
+autowrap_mode = 3
 
 [node name="ageUpButton" parent="." unique_id=509130995 instance=ExtResource("2_jhx4l")]
 offset_left = 440.0
