@@ -1,6 +1,6 @@
 extends Node #author(s): Ethan Scott
 
-#this is this game's global script. It is accessible from any script at any point. If you need to access or change a variable from here, for instance, firstName, in a different script, type "global." before the variable name: "global.firstName".
+#this is this game's global script. It is accessible from any script at any point. If you need to access or change a variable from here, for instance, firstName, in a different script, type "" before the variable name: "firstName".
 
 
 #engine
@@ -90,6 +90,7 @@ var looksOverTime = []
 var causeOfDeath = ""
 var XPQueued : int = 0 #the amount of XP that needs to be awarded when you die
 var history = [] #keeps a log of what activities you've done this year. Cleared when aging up.
+var intellectAtTimeOfCrime = []
 
 
 #testing variables - used in developer mode
@@ -205,36 +206,51 @@ func NPCCreator(NPCsex, NPCfirstName, NPClastName, NPCage, NPCrelationship, NPCt
 		personStats.append([randi_range(0, 100)])
 	personUIDs.append(personUIDsUsed)
 	personUIDsUsed += 1
-	global.XPQueued += 10
+	XPQueued += 10
 
 func NPCKiller(type, index): #kills an NPC. type can be either "kill" or "remove"
 	#archival
 	if type == "kill":
-		global.deadPersonFirstNames.append(global.personFirstNames[index])
-		global.deadPersonLastNames.append(global.personLastNames[index])
-		global.deadPersonRelationships.append(global.personRelationships[index])
-		global.deadPersonTypes.append(global.personTypes[index])
-		global.deadPersonAges.append(global.personAges[index])
-		global.deadPersonSexes.append(global.personSexes[index])
-		global.XPQueued += 10
+		deadPersonFirstNames.append(personFirstNames[index])
+		deadPersonLastNames.append(personLastNames[index])
+		deadPersonRelationships.append(personRelationships[index])
+		deadPersonTypes.append(personTypes[index])
+		deadPersonAges.append(personAges[index])
+		deadPersonSexes.append(personSexes[index])
+		XPQueued += 10
 	#removal
-	global.personFirstNames.remove_at(index)
-	global.personLastNames.remove_at(index)
-	global.personRelationships.remove_at(index)
-	global.personTypes.remove_at(index)
-	global.personAges.remove_at(index)
-	global.personSexes.remove_at(index)
-	global.personStats.remove_at(index)
-	global.personUIDs.remove_at(index)
-	global.XPQueued += 5
+	personFirstNames.remove_at(index)
+	personLastNames.remove_at(index)
+	personRelationships.remove_at(index)
+	personTypes.remove_at(index)
+	personAges.remove_at(index)
+	personSexes.remove_at(index)
+	personStats.remove_at(index)
+	personUIDs.remove_at(index)
+	XPQueued += 5
+
+
+func commitCrime(crime : String, severity : int):
+	crimes.append(crime)
+	crimesSeverity.append(severity)
+	intellectAtTimeOfCrime.append(intellect)
 
 
 func crimeSeverityCalculator():
 	var totalCrimeSeverity = 0
-	for i in global.crimesSeverity:
-		totalCrimeSeverity += global.crimesSeverity[i]
-	print("total crime severity: " + str(totalCrimeSeverity))
+	for i in crimesSeverity.size():
+		totalCrimeSeverity += crimesSeverity[i]
 	return totalCrimeSeverity
+
+
+func averageFinder(array): #finds the mean average of all integer elements in any array
+	var combinedTotal = 0
+	var allInts = []
+	for i in array.size():
+		if type_string(typeof(array[i])) == "int": #if this element is an integer
+			allInts.append(array[i])
+			combinedTotal += array[i]
+	return round(combinedTotal / allInts.size())
 
 
 #savegame stuff

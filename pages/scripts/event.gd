@@ -296,6 +296,7 @@ func relationships(): #specialised relationship events
 
 
 func prison(): #specialised prison events
+	push_warning("you should probably finish all the prison() events")
 	if global.revent[0] == "arrested": #"arrested" when you encounter police randomly, "arrested-caught" when you get caught in the middle of committing a crime.
 		if global.revent[0] == "arrested":
 			$heading.text = "Long arm of the law"

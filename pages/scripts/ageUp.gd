@@ -94,6 +94,15 @@ func school():
 		global.XPQueued += 50
 
 
+func imprisonment(): #handles your chances of being arrested
+	print("average intellect at times of criminal activity: " + str(global.averageFinder(global.intellectAtTimeOfCrime)))
+	if global.crimeSeverityCalculator() >= 10: #if you've committed serious enough crimes to warrant being arrested for them
+		if randi_range(1,2) == 1:
+			if randi_range(20,100) >= global.averageFinder(global.intellectAtTimeOfCrime):
+				print("uh oh spaghetti-o... go directly to jail")
+	push_warning("add stuff for getting arrested on age up")
+
+
 func loanHandler():
 	if global.loans.size() > 0: #if you have loans taken out
 		for i in global.loans.size(): #runs through every loan you need to pay back and pays back the amount you owe
@@ -162,6 +171,7 @@ func _ready() -> void:
 	ageUpEventHandler()
 	rareAgeUpEvents()
 	randomDeathChance()
+	imprisonment()
 	#runs events if they're queued
 	if get_tree() == null: #if the scene tree DOESN'T exist (true if you're dying)
 		return #don't do the below

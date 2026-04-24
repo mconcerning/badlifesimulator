@@ -105,6 +105,28 @@ func _on_trigger_event_pressed() -> void:
 	get_tree().change_scene_to_file("res://pages/event.tscn")
 
 func _on_imprison_pressed() -> void:
-	global.prisonSentence = 999
+	if global.crimes.size() == 0: #if you haven't really committed any crimes
+		global.prisonSentence = 999
 	print("imprisoning...")
 	get_tree().change_scene_to_file("res://pages/game_menu.tscn")
+
+func _on_set_crimes_pressed() -> void:
+	global.crimes = Array($input.text.split(","))
+	$confirmation.text = "Successfully set crimes!"
+	print("set crimes")
+
+func _on_set_crimes_severity_pressed() -> void:
+	var crimesSeverityTemp = Array($input.text.split(","))
+	for i in crimesSeverityTemp.size():
+		crimesSeverityTemp[i] = int(crimesSeverityTemp[i])
+	global.crimesSeverity = crimesSeverityTemp
+	$confirmation.text = "Successfully set crime severities!"
+	print("set crimes severity")
+
+func _on_set_avg_intellect_crime_pressed() -> void:
+	var avgIntellectTemp = Array($input.text.split(","))
+	for i in avgIntellectTemp.size():
+		avgIntellectTemp[i] = int(avgIntellectTemp[i])
+	global.intellectAtTimeOfCrime = avgIntellectTemp
+	$confirmation.text = "Successfully set intellectAtTimeOfCrime!"
+	print("set intellect at time of crime")
