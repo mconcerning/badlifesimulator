@@ -100,10 +100,12 @@ func imprisonment(): #handles your chances of being arrested
 		if randi_range(1,2) == 1:
 			if randi_range(20,100) >= global.averageFinder(global.intellectAtTimeOfCrime):
 				print("uh oh spaghetti-o... go directly to jail")
+				global.revent.append("arrested")
 	push_warning("add stuff for getting arrested on age up")
 
 
 func loanHandler():
+	push_warning("fix university loan")
 	if global.loans.size() > 0: #if you have loans taken out
 		for i in global.loans.size(): #runs through every loan you need to pay back and pays back the amount you owe
 			print("paying back " + str(global.loan[i] / global.loanPaybackDuration[i] / global.loan[i] * 100) + "% of your $" + str(global.loan[i]) + " loan (due in " + str(global.loanPaybackDuration[i] - 1) + " year(s))")

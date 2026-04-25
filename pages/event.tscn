@@ -76,8 +76,24 @@ theme = ExtResource("6_tadka")
 text = ""
 metadata/_edit_use_anchors_ = true
 
+[node name="cancelEventTimer" type="Timer" parent="." unique_id=1520415924]
+wait_time = 0.5
+one_shot = true
+autostart = true
+
+[node name="cancelEvent" parent="." unique_id=2090909426 instance=ExtResource("5_1lnki")]
+offset_left = 238.0
+offset_top = 2200.0
+offset_right = 729.0
+offset_bottom = 2284.0
+theme = ExtResource("6_tadka")
+text = "Cancel event spawn"
+metadata/_edit_use_anchors_ = true
+
 [connection signal="pressed" from="option1" to="." method="_on_option_1_pressed"]
 [connection signal="pressed" from="option2" to="." method="_on_option_2_pressed"]
 [connection signal="pressed" from="option3" to="." method="_on_option_3_pressed"]
 [connection signal="pressed" from="option4" to="." method="_on_option_4_pressed"]
 [connection signal="pressed" from="option5" to="." method="_on_option_5_pressed"]
+[connection signal="timeout" from="cancelEventTimer" to="." method="_on_cancel_event_timer_timeout"]
+[connection signal="pressed" from="cancelEvent" to="." method="_on_cancel_event_pressed"]

@@ -250,7 +250,10 @@ func averageFinder(array): #finds the mean average of all integer elements in an
 		if type_string(typeof(array[i])) == "int": #if this element is an integer
 			allInts.append(array[i])
 			combinedTotal += array[i]
-	return round(combinedTotal / allInts.size())
+	if allInts.size() > 0:
+		return round(combinedTotal / allInts.size())
+	else:
+		return 0
 
 
 #savegame stuff
@@ -328,6 +331,7 @@ func lifeSerialiser(): #serialises every life-specific variable we need to save 
 
 func gameSerialiser(): #serialises every NON-life-specific variable we need to save into a dictionary and then returns it
 	var cambridgeDictionary = {
+		"versionNumber" : versionNumber,
 		"windowSize" : windowSize,
 		"currentLife" : currentLife,
 		"XP" : XP,

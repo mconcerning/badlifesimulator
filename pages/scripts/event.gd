@@ -3,6 +3,7 @@ extends Node2D #author(s): Ethan Scott
 
 
 func optionRemover(optionXOnwards): #disables and changes the opacity to 0 of unused buttons (optionXOnwards is the button you want to disable. It and every button below it will be disabled)
+	$cancelEvent.queue_free() #having options means there is an event, which means you can't softlock your life by being here unless the options do nothing. nonetheless, you don't need this now.
 	if optionXOnwards <= 2:
 		$option2.disabled = true #disables the button
 		$option2.hide() #makes it invisible
@@ -298,16 +299,15 @@ func relationships(): #specialised relationship events
 func prison(): #specialised prison events
 	push_warning("you should probably finish all the prison() events")
 	if global.revent[0] == "arrested": #"arrested" when you encounter police randomly, "arrested-caught" when you get caught in the middle of committing a crime.
-		if global.revent[0] == "arrested":
-			$heading.text = "Long arm of the law"
-			if global.crimeSeverityCalculator() >= 200:
-				$body.text = "While at home, a barrage of uniformed officers break down your door and run inside."
-			elif global.crimeSeverityCalculator() >= 50 && global.crimeSeverityCalculator() < 200:
-				$body.text = "While out in public, a group of uniformed police officers approach you and start asking questions."
-			elif global.crimeSeverityCalculator() >= 10 && global.crimeSeverityCalculator() < 50:
-				$body.text = "While out in public, a police officer approaches you and starts asking questions."
-			else:
-				goHome()
+		$heading.text = "Long arm of the law"
+		if global.crimeSeverityCalculator() >= 200:
+			$body.text = "While at home, a barrage of uniformed officers break down your door and run inside."
+		elif global.crimeSeverityCalculator() >= 50 && global.crimeSeverityCalculator() < 200:
+			$body.text = "While out in public, a group of uniformed police officers approach you and start asking questions."
+		elif global.crimeSeverityCalculator() >= 10 && global.crimeSeverityCalculator() < 50:
+			$body.text = "While out in public, a police officer approaches you and starts asking questions."
+		else:
+			goHome()
 
 
 func confirmation(): #non-random confirmation events that tell you that something just happened
@@ -677,11 +677,16 @@ func option3outcomes(): #option 3 has been picked
 	elif global.revent[0] == "university-degree-picked-o3":
 		$heading.text = "Student loans"
 		$body.text = "You took out a "
+		print(global.degreePicked)
 		if global.degreePicked == "education":
+			print(global.degreePicked)
 			$body.text += "$25,000 student loan that needs to be paid back over 20 years with an interest rate of 8%."
 			global.loans.append(25000) #takes out the $25,000 loan
 			global.loanInterest.append(8) #8% annual interest
 			global.loanPaybackDuration.append(20) #pay it back over the course of 20 years
+			print("loans: " + str(global.loans))
+			print("loan interest: " + str(global.loanInterest))
+			print("loan payback duration: " + str(global.loanPaybackDuration))
 		global.XPQueued += 30
 		$option1.text = "Okay"
 		optionRemover(2)
@@ -755,3 +760,11 @@ func _ready() -> void:
 	await get_tree().process_frame #waits for frame to be processed first to avoid weirdness
 	eventer()
 	repositionResize()
+
+
+func _on_cancel_event_pressed() -> void:
+	goHome()
+
+func _on_cancel_event_timer_timeout() -> void:
+	if has_node("cancelEvent") == true: #if the button exists
+		$cancelEvent.position.y = 1356 #put it in the frame
