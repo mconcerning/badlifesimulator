@@ -343,18 +343,22 @@ func confirmation(): #non-random confirmation events that tell you that somethin
 		var dudStudyChance = round(float(global.intellect) / 2)
 		if global.intellect <= 20: #if you're so intelligent that you're more inclined to have a total dud of a study session
 			dudStudyChance = dudStudyChance / 4 #increases your chance of having a poor study session
-		if randi_range(1, max(1, dudStudyChance)) == 1 || global.cooldown("study-harder") > 3: #if you had a total dud of a study session; happens either at random (higher chance if you're less intelligent) or if you've already studied 3 or more times this year (you're burned out)
+		if randi_range(1, max(1, dudStudyChance)) == 1 || global.cooldown("study-harder") >= 3: #if you had a total dud of a study session; happens either at random (higher chance if you're less intelligent) or if you've already studied 3 or more times this year (you're burned out)
 			match randi_range(1,2): #random heading text variation
 				1:
 					$heading.text = "What"
 				2:
 					$heading.text = "Huh"
-			var intellectGained = randi_range(3, 5)
+			$body.text = "You tried to study for " + str(randi_range(2, 6)) + " hours, but absorbed next to no information."
 			var joySubtracted = randi_range(3, 10)
-			$body.text = "You tried to study for " + str(randi_range(2, 6)) + " hours, but absorbed next to no information.\n+ " + str(intellectGained) + " Intellect, - " + str(joySubtracted) + " Joy"
+			if global.cooldown("study-harder") >= 4: #if you've tried studying WAY too many times now
+				var intellectGained = randi_range(3, 5)
+				global.intellect += intellectGained
+				$body.text += "\n+ " + str(intellectGained) + " Intellect, - " + str(joySubtracted) + " Joy"
+			else:
+				$body.text += "\n- " + str(joySubtracted) + " Joy"
 			$option1.text = "Okay"
 			optionRemover(2)
-			global.intellect += intellectGained
 			global.joy -= joySubtracted
 			global.history.append("study-harder")
 		else:

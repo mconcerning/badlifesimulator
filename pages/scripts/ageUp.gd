@@ -97,10 +97,15 @@ func school():
 func imprisonment(): #handles your chances of being arrested
 	print("average intellect at times of criminal activity: " + str(global.averageFinder(global.intellectAtTimeOfCrime)))
 	if global.crimeSeverityCalculator() >= 10: #if you've committed serious enough crimes to warrant being arrested for them
-		if randi_range(1,2) == 1:
-			if randi_range(20,100) >= global.averageFinder(global.intellectAtTimeOfCrime):
-				print("uh oh spaghetti-o... go directly to jail")
-				global.revent.append("arrested")
+		if randi_range(1,3) == 1:
+			if randi_range(1,15) != 15: #14 in 15 chance
+				if randi_range(20,90) >= global.averageFinder(global.intellectAtTimeOfCrime):
+					print("uh oh spaghetti-o... go directly to jail")
+					global.revent.append("arrested")
+			else: #1 in 15 chance
+				if randi_range(10,100) >= global.crimeSeverityCalculator():
+					print("uh oh spaghetti-o... go directly to jail")
+					global.revent.append("arrested")
 	push_warning("add stuff for getting arrested on age up")
 
 
