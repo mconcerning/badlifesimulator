@@ -82,20 +82,13 @@ func repositionResize(): #repositions and resizes the nodes on-screen
 	$option3.position.y = $option2.position.y + $option2.get_minimum_size().y + 50
 	$option4.position.y = $option3.position.y + $option3.get_minimum_size().y + 50
 	$option5.position.y = $option4.position.y + $option4.get_minimum_size().y + 50
-	@warning_ignore("integer_division")
-	$heading.position.x = 1080 / 2 - ($heading.size.x / 2) #centres heading text horizontally on the screen
-	@warning_ignore("integer_division")
-	$body.position.x = 1080 / 2 - ($body.size.x / 2)
-	@warning_ignore("integer_division")
-	$option1.position.x = 1080 / 2 - ($option1.size.x / 2) #centres button horizontally on the screen
-	@warning_ignore("integer_division")
-	$option2.position.x = 1080 / 2 - ($option2.size.x / 2)
-	@warning_ignore("integer_division")
-	$option3.position.x = 1080 / 2 - ($option3.size.x / 2)
-	@warning_ignore("integer_division")
-	$option4.position.x = 1080 / 2 - ($option4.size.x / 2)
-	@warning_ignore("integer_division")
-	$option5.position.x = 1080 / 2 - ($option5.size.x / 2)
+	$heading.position.x = round(540 - (float($heading.size.x / 2))) #centres heading text horizontally on the screen
+	$body.position.x = round(540 - (float($body.size.x / 2)))
+	$option1.position.x = round(540 - (float($option1.size.x / 2))) #centres button horizontally on the screen
+	$option2.position.x = round(540 - (float($option2.size.x / 2)))
+	$option3.position.x = round(540 - (float($option3.size.x / 2)))
+	$option4.position.x = round(540 - (float($option4.size.x / 2)))
+	$option5.position.x = round(540 - (float($option5.size.x / 2)))
 
 
 func outcome(reventID):
@@ -182,10 +175,6 @@ func teenagehood(): #teenage base events - prefix is "teenager-"
 		$option3.text = "Leave " + global.pronounGenerator("him", global.eventPersonSex) + " alone"
 		optionRemover(4)
 		$credit.text = "mconcerning"
-	elif global.revent[0] == "teenager-0":
-		if global.schoolLevel != 1 && global.schoolLevel != 2: #if you're not in primary or high school
-			goHome() #don't show the event
-		#add event here
 
 
 func adulthood(): #adult base events - prefix is "adult-"
@@ -302,12 +291,51 @@ func prison(): #specialised prison events
 		$heading.text = "Long arm of the law"
 		if global.crimeSeverityCalculator() >= 200:
 			$body.text = "While at home, a barrage of uniformed officers break down your door and run inside."
+			$option2.text = "Surrender arrest"
 		elif global.crimeSeverityCalculator() >= 50 && global.crimeSeverityCalculator() < 200:
 			$body.text = "While out in public, a group of uniformed police officers approach you and start asking questions."
+			$option2.text = "Confess"
 		elif global.crimeSeverityCalculator() >= 10 && global.crimeSeverityCalculator() < 50:
 			$body.text = "While out in public, a police officer approaches you and starts asking questions."
+			$option2.text = "Confess"
 		else:
 			goHome()
+		$option1.text = "Try to flee"
+		optionRemover(3)
+	elif global.revent[0] == "pre-court-trial-o1" || global.revent[0] == "court-trial" || global.revent[0] == "arrested-o2": #they are identical, but one is assigned directly and the other two are assigned as a result of choosing an option in another event ("arrested-o1" & "arrested" respectively)
+		$heading.text = "Court trial"
+		global.revent[0] = "court-trial"
+		var crimesDeduplicated = []
+		var crimesCount = []
+		for i in global.crimes.size(): #runs through all your crimes
+			if crimesDeduplicated.find(global.crimes[i]) != -1: #if this specific crime is already in the deduplicated array
+				crimesCount[crimesDeduplicated.find(global.crimes[i])] += 1 #it has appeared once more
+			else: #if it has not appeared in the deduplicated array
+				crimesDeduplicated.append(global.crimes[i])
+				crimesCount.append(1) #appeared for the very first time
+		$body.text = "You are being charged with "
+		for i in crimesDeduplicated.size(): #runs through all your unique crimes (duplicates removed)
+			var countCountsText = ""
+			if crimesCount[i] == 1:
+				countCountsText = "count"
+			else:
+				countCountsText = "counts"
+			if crimesDeduplicated.size() >= 2:
+				if i == crimesDeduplicated.size() - 1: #if this is the last one
+					if crimesDeduplicated.size() >= 3: #if there's at least 3 crimes, use oxford comma
+						$body.text += ", "
+					elif crimesDeduplicated.size() == 2: #if there's not, don't
+						$body.text += " "
+					$body.text += "and " + str(crimesCount[i]) + " " + countCountsText + " of " + crimesDeduplicated[i] + "." #append the rest
+				elif i != 0 && i <= crimesDeduplicated.size() - 2: #if this is between the first one and second-last one (not applicable if size is under 3)
+					$body.text += ", " + str(crimesCount[i]) + " " + countCountsText + " of " + crimesDeduplicated[i]
+			if i == 0: #if this is the first one (applicable even if size is 1)
+				$body.text += str(crimesCount[i]) + " " + countCountsText + " of " + crimesDeduplicated[i]
+				if crimesDeduplicated.size() == 1:
+					$body.text += "."
+		$option1.text = "Go to court"
+		$option2.text = "Don't go to court"
+		optionRemover(3)
 
 
 func confirmation(): #non-random confirmation events that tell you that something just happened
@@ -409,10 +437,10 @@ func confirmation(): #non-random confirmation events that tell you that somethin
 
 func _on_option_1_pressed() -> void: #on option 1 selected
 	#event - option 1 will be an actual option
-	if global.revent[0] == "toddler-0" || global.revent[0] == "child-0" || global.revent[0] == "child-friend" || global.revent[0] == "toddler-friend" || global.revent[0] == "child-friend" || global.revent[0] == "teenager-friend" || global.revent[0] == "adult-friend" || global.revent[0] == "elder-friend" || global.revent[0] == "change-save-management-mode-to-delete" || global.revent[0] == "university-degree-picked" || global.revent[0] == "university-degree-picked-o2-refused" || global.revent[0] == "university-degree-picked-o4-rejected":
+	if global.revent[0] == "toddler-0" || global.revent[0] == "child-0" || global.revent[0] == "child-friend" || global.revent[0] == "toddler-friend" || global.revent[0] == "child-friend" || global.revent[0] == "teenager-friend" || global.revent[0] == "adult-friend" || global.revent[0] == "elder-friend" || global.revent[0] == "change-save-management-mode-to-delete" || global.revent[0] == "university-degree-picked" || global.revent[0] == "university-degree-picked-o2-refused" || global.revent[0] == "university-degree-picked-o4-rejected" || global.revent[0] == "arrested" || global.revent[0] == "pre-court-trial" || global.revent[0] == "arrested-o1-failed" || global.revent[0] == "arrested-o1-curb":
 		outcome(global.revent[0] + "-o1")
 	#confirmation - option 1 will be the only button available when the event's purpose is only to display information. Generally, the button will say "Okay".
-	elif global.revent[0] == "toddler-0-o1" || global.revent[0] == "toddler-0-o2" || global.revent[0] == "toddler-0-o3" || global.revent[0] == "child-0-o1" || global.revent[0] == "child-0-o2" || global.revent[0] == "child-0-o3" || global.revent[0] == "child-0-o4" || global.revent[0] == "toddler-friend-o1" || global.revent[0] == "toddler-friend-o2" || global.revent[0] == "child-friend-o1" || global.revent[0] == "child-friend-o2" || global.revent[0] == "teenager-friend-o1" || global.revent[0] == "teenager-friend-o2" || global.revent[0] == "teenager-friend-o3" || global.revent[0] == "adult-friend-o1" || global.revent[0] == "adult-friend-o2" || global.revent[0] == "adult-friend-o3" || global.revent[0] == "elder-friend-o1" || global.revent[0] == "elder-friend-o2" || global.revent[0] == "elder-friend-o3" || global.revent[0] == "child-labour-is-outlawed" || global.revent[0] == "enrolled-in-primary-school" || global.revent[0] == "enrolled-in-high-school" || global.revent[0] == "graduated-high-school" || global.revent[0] == "study-harder" || global.revent[0] == "university-degree-picked-o1" || global.revent[0] == "university-degree-picked-o2" || global.revent[0] == "university-degree-picked-o3" || global.revent[0] == "university-degree-picked-o4" || global.revent[0] == "university-degree-picked-o2" || global.revent[0] == "graduated-university" || global.revent[0] == "compliment-relationship" || global.revent[0] == "skip-class":
+	elif global.revent[0] == "toddler-0-o1" || global.revent[0] == "toddler-0-o2" || global.revent[0] == "toddler-0-o3" || global.revent[0] == "child-0-o1" || global.revent[0] == "child-0-o2" || global.revent[0] == "child-0-o3" || global.revent[0] == "child-0-o4" || global.revent[0] == "toddler-friend-o1" || global.revent[0] == "toddler-friend-o2" || global.revent[0] == "child-friend-o1" || global.revent[0] == "child-friend-o2" || global.revent[0] == "teenager-friend-o1" || global.revent[0] == "teenager-friend-o2" || global.revent[0] == "teenager-friend-o3" || global.revent[0] == "adult-friend-o1" || global.revent[0] == "adult-friend-o2" || global.revent[0] == "adult-friend-o3" || global.revent[0] == "elder-friend-o1" || global.revent[0] == "elder-friend-o2" || global.revent[0] == "elder-friend-o3" || global.revent[0] == "child-labour-is-outlawed" || global.revent[0] == "enrolled-in-primary-school" || global.revent[0] == "enrolled-in-high-school" || global.revent[0] == "graduated-high-school" || global.revent[0] == "study-harder" || global.revent[0] == "university-degree-picked-o1" || global.revent[0] == "university-degree-picked-o2" || global.revent[0] == "university-degree-picked-o3" || global.revent[0] == "university-degree-picked-o4" || global.revent[0] == "university-degree-picked-o2" || global.revent[0] == "graduated-university" || global.revent[0] == "compliment-relationship" || global.revent[0] == "skip-class" || global.revent[0] == "arrested-o1-success" || global.revent[0] == "court-trial-o2":
 		goHome()
 
 
@@ -514,6 +542,27 @@ func option1outcomes(): #option 1 has been picked
 				global.schoolName += " College"
 			3:
 				global.schoolName += " University"
+	elif global.revent[0] == "arrested-o1":
+		if global.health >= randi_range(65, 85) && randi_range(1,2) == 1:
+			$heading.text = "Short arm of the law"
+			$body.text = "You managed to run and escape from the police!"
+			global.revent[0] = "arrested-o1-success"
+		elif global.health > 1:
+			$heading.text = "Whoops"
+			$body.text = "You attempt to escape, but you get tackled and placed under arrest."
+			global.revent[0] = "pre-court-trial"
+		else: #if your health is ONE (or zero)
+			$heading.text = "Aw man"
+			$body.text = "You tried to escape, but on the way, you tripped on a curb and fell over."
+			global.revent[0] = "arrested-o1-curb"
+		global.commitCrime("Evading arrest", 30, max(1, round(float(global.crimeSeverityCalculator() / 12)))) #how much time you have to do for evading arrest depends on how severe your other crimes are
+		$option1.text = "Okay"
+		optionRemover(2)
+	elif global.revent[0] == "arrested-o1-curb-o1":
+		global.causeOfDeath = "You died of blood loss and subsequent shock after a devastating accident."
+		get_tree().change_scene_to_file("res://pages/death.tscn") #kills you
+	elif global.revent[0] == "court-trial-o1":
+		push_warning("add court-trial-o1")
 
 
 func option2outcomes(): #option 2 has been picked
@@ -561,8 +610,7 @@ func option2outcomes(): #option 2 has been picked
 		$option1.text = "Okay"
 		optionRemover(2)
 	elif global.revent[0] == "elder-friend-o2":
-		@warning_ignore("integer_division")
-		if randi_range(1, round(36 - global.looks / 4) - 3) == 1: #if you're more physically attractive, you have a higher chance of being accepted. You have lower chances either way though since you're older.
+		if randi_range(1, round(36 - float(global.looks) / 4) - 3) == 1: #if you're more physically attractive, you have a higher chance of being accepted. You have lower chances either way though since you're older.
 			$heading.text = "Better late than never"
 			$body.text = "You ask " + global.pronounGenerator("him", global.eventPersonSex) + " out on a date, and " + global.pronounGenerator("he", global.eventPersonSex) + " says yes.\nJoy + 15"
 			global.joy += 15
@@ -642,6 +690,12 @@ func option2outcomes(): #option 2 has been picked
 			global.revent[0] = "university-degree-picked-o2-refused" #this sends you back to the start of the original event asking how you would like to pay tuition, but with the option to ask your parents to pay disabled, since you already tried that and it didn't work
 		$option1.text = "Okay"
 		optionRemover(2)
+	elif global.revent[0] == "court-trial-o2":
+		$heading.text = "Gone like the wind"
+		$body.text = "You decided not to attend your court trial."
+		global.commitCrime("Failing to appear", round(float(global.crimeSeverityCalculator()) / 4), max(1, round(float(global.crimeSeverityCalculator() / 12)))) #the more of a criminal you are, the more severe it is that you didn't show up
+		$option1.text = "Sweet"
+		optionRemover(2)
 
 
 func option3outcomes(): #option 3 has been picked
@@ -705,9 +759,8 @@ func option4outcomes(): #option 4 has been picked
 		optionRemover(2)
 		#stat effects
 		global.intellect = 100
+		global.commitCrime("Second degree homicide", 95, "Life")
 		global.NPCKiller("kill", relativeOfChoice) #kills uncle
-		global.crimes.append("Second degree homicide")
-		global.crimesSeverity.append(95)
 	elif global.revent[0] == "university-degree-picked-o4":
 		if global.schoolPerformance >= 80: #if you did really well at your last school (usually highschool, unless you're going for a second degree)
 			$heading.text = "What a scholar"

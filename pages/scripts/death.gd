@@ -25,9 +25,9 @@ func _on_100ms_timeout() -> void: #every 0.1s
 	if timerRuns == 0:
 		$statsTop.text += global.causeOfDeath
 	elif timerRuns == 1:
-		$statsLeft.text += "\nAge at death: " + str(global.age)
+		$statsLeft.text += "Age at death: " + str(global.age)
 	elif timerRuns == 2: #first left-justified stat
-		$statsLeft.text += "Average Joy: " + str(averageFinder(global.joyOverTime))
+		$statsLeft.text += "\n\nAverage Joy: " + str(averageFinder(global.joyOverTime))
 	elif timerRuns == 3:
 		$statsLeft.text += "\nJoy at death: " + str(global.joy)
 	elif timerRuns == 4:
@@ -47,9 +47,9 @@ func _on_100ms_timeout() -> void: #every 0.1s
 	elif timerRuns == 11:
 		$statsLeft.text += "\nXP earned: " + str(XPThatWasQueued)
 	elif timerRuns == 12:
-		$statsRight.text += "\nLevel " + str(global.level)
+		$statsRight.text += "Level " + str(global.level)
 	elif timerRuns == 13: #first right-justified stat
-		$statsRight.text += "You need " + str(global.XPRequired - global.XP) + " more XP to level up"
+		$statsRight.text += "\n\nYou need " + str(global.XPRequired - global.XP) + " more XP to level up"
 	elif timerRuns == 14:
 		if didLevelUp == true: #if you levelled up
 			$levelUp.text = "Level up"
@@ -80,16 +80,16 @@ func _ready() -> void:
 	#last-minute extra XP calculations
 	global.XPQueued += global.age #gives you your age in XP
 	var XPFromStats = 0
-	XPFromStats += round(global.joy / 2) #gives you half of all your main stats' values upon death in XP
-	XPFromStats += round(global.health / 2)
-	XPFromStats += round(global.intellect / 2)
-	XPFromStats += round(global.looks / 2)
+	XPFromStats += round(float(global.joy) / 2) #gives you half of all your main stats' values upon death in XP
+	XPFromStats += round(float(global.health) / 2)
+	XPFromStats += round(float(global.intellect) / 2)
+	XPFromStats += round(float(global.looks) / 2)
 	XPFromStats += round(averageFinder(global.joyOverTime) / 2) #gives half you all your average stats' values in XP upon death
 	XPFromStats += round(averageFinder(global.healthOverTime) / 2)
 	XPFromStats += round(averageFinder(global.intellectOverTime) / 2)
 	XPFromStats += round(averageFinder(global.looksOverTime) / 2)
 	XPFromStats = round(XPFromStats / 100 * global.age) #how old you are directly affects how much XP you earn from having high stats so you can't just farm XP by spawning a bunch of lives and immediately dying over and over again. Also, your stats aren't worth much in XP. That's by design to discourage overprioritising them during your life.
-	global.XPQueued += round(global.money / 1000) #gives you a 1000th of your money upon death in XP
+	global.XPQueued += round(float(global.money) / 1000) #gives you a 1000th of your money upon death in XP
 	#the rest of everything
 	global.XP += global.XPQueued #adds the XP you are owed to your XP
 	XPThatWasQueued = global.XPQueued

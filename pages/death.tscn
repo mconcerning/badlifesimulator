@@ -90,8 +90,9 @@ horizontal_alignment = 1
 metadata/_edit_use_anchors_ = true
 
 [node name="statsTop" type="Label" parent="." unique_id=1587067014]
+offset_left = 40.0
 offset_top = 320.0
-offset_right = 1080.0
+offset_right = 1040.0
 offset_bottom = 443.0
 label_settings = ExtResource("6_ohchq")
 horizontal_alignment = 1
@@ -118,10 +119,10 @@ autowrap_mode = 3
 metadata/_edit_use_anchors_ = true
 
 [node name="levelUp" type="Label" parent="." unique_id=344290959]
-offset_left = 268.0
-offset_top = 1515.0
-offset_right = 512.0
-offset_bottom = 1597.0
+offset_left = 117.0
+offset_top = 1555.0001
+offset_right = 361.0
+offset_bottom = 1637.0001
 rotation = -0.065294705
 label_settings = ExtResource("5_16vjf")
 metadata/_edit_use_anchors_ = true

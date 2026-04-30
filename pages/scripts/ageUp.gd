@@ -1,6 +1,9 @@
 extends Node2D #author(s): Ethan Scott
 
 
+var isDying = false
+
+
 func basicStatChanges():
 	global.age += 1 #the actual aging up
 	print("age is now " + str(global.age))
@@ -95,18 +98,9 @@ func school():
 
 
 func imprisonment(): #handles your chances of being arrested
-	print("average intellect at times of criminal activity: " + str(global.averageFinder(global.intellectAtTimeOfCrime)))
 	if global.crimeSeverityCalculator() >= 10: #if you've committed serious enough crimes to warrant being arrested for them
-		if randi_range(1,3) == 1:
-			if randi_range(1,15) != 15: #14 in 15 chance
-				if randi_range(20,90) >= global.averageFinder(global.intellectAtTimeOfCrime):
-					print("uh oh spaghetti-o... go directly to jail")
-					global.revent.append("arrested")
-			else: #1 in 15 chance
-				if randi_range(10,100) >= global.crimeSeverityCalculator():
-					print("uh oh spaghetti-o... go directly to jail")
-					global.revent.append("arrested")
-	push_warning("add stuff for getting arrested on age up")
+		if randi_range(10,96) >= global.averageFinder(global.intellectAtTimeOfCrime) && randi_range(10,120) <= global.crimeSeverityCalculator():
+				global.revent.append("arrested")
 
 
 func loanHandler():
@@ -166,6 +160,7 @@ func randomDeathChance():
 		print("1 in " + str(max(1, 4 + global.health * 3 - global.age * 2)) + " chance of death")
 		if randi_range(1, max(1, 4 + global.health * 3 - global.age * 2)) == 1:
 			global.causeOfDeath = "You died of complications associated with advanced age"
+			isDying = true
 			get_tree().change_scene_to_file("res://pages/death.tscn") #kills you
 
 
@@ -180,7 +175,7 @@ func _ready() -> void:
 	randomDeathChance()
 	imprisonment()
 	#runs events if they're queued
-	if get_tree() == null: #if the scene tree DOESN'T exist (true if you're dying)
+	if isDying == true: #if you're dying
 		return #don't do the below
 	if global.revent.size() > 0: #if there are random events slated to appear
 		get_tree().change_scene_to_file("res://pages/event.tscn") #goes to the event page

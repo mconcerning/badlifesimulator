@@ -40,6 +40,8 @@ func cleanLife(): #resets your existing life (if any) and generates new stats
 	#rest-of-life-related
 	global.crimes = []
 	global.crimesSeverity = []
+	global.intellectAtTimeOfCrime = []
+	global.crimeTime = []
 	global.schoolName = ""
 	global.schoolLevel = -1
 	global.degrees = []

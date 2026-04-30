@@ -31,6 +31,7 @@ var sexuality = "" #stored definitively, not relative to the sex of the player, 
 #rest-of-life-related
 var crimes = []
 var crimesSeverity = []
+var crimeTime = [] #how many years in prison is each crime worth?
 var prisonSentence = 0
 var schoolName = ""
 var schoolLevel = -1 # -1 before you go to school, 0 if you've graduated school, 1 for primary, 2 for secondary (high school), 3 for tertiary. middle school, if implemented, would be 1.5.
@@ -230,10 +231,11 @@ func NPCKiller(type, index): #kills an NPC. type can be either "kill" or "remove
 	XPQueued += 5
 
 
-func commitCrime(crime : String, severity : int):
+func commitCrime(crime : String, severity : int, time):
 	crimes.append(crime)
 	crimesSeverity.append(severity)
 	intellectAtTimeOfCrime.append(intellect)
+	crimeTime.append(time)
 
 
 func crimeSeverityCalculator():
@@ -279,6 +281,8 @@ func lifeSerialiser(): #serialises every life-specific variable we need to save 
 		#rest-of-life-related
 		"crimes" : crimes,
 		"crimesSeverity" : crimesSeverity,
+		"intellectAtTimeOfCrime" : intellectAtTimeOfCrime,
+		"crimeTime" : crimeTime,
 		"prisonSentence" : prisonSentence,
 		"schoolName" : schoolName,
 		"schoolLevel" : schoolLevel,
@@ -423,6 +427,8 @@ func loadLife(): #does the actual LIFE loading
 			#rest-of-life-related
 			crimes = dictionary["crimes"]
 			crimesSeverity = dictionary["crimesSeverity"]
+			intellectAtTimeOfCrime = dictionary["intellectAtTimeOfCrime"]
+			crimeTime = dictionary["crimeTime"]
 			prisonSentence = dictionary["prisonSentence"]
 			schoolName = dictionary["schoolName"]
 			schoolLevel = dictionary["schoolLevel"]
