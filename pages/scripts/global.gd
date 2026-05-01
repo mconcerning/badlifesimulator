@@ -32,9 +32,13 @@ var sexuality = "" #stored definitively, not relative to the sex of the player, 
 var crimes = []
 var crimesSeverity = []
 var crimeTime = [] #how many years in prison is each crime worth?
-var prisonSentence = 0
+var prisonSentence : int = 0
+var lawyers = [] #three laywers generated every new life that will be presented to you as options to hire if you ever go on a court trial. This array contains the names of the law firms. The lawyers here are in ascending order of quality and their indexes correspond with their respective matches in the lawyer array(s) below.
+var lawyerCostMultiplier = [] #used to deduce the cost of hiring a certain lawyer -> global.crimeSeverityCalculator() * this[lawyerIndex]. The cost multiplier (this) goes up with e
+var lawyerTierPicked : int = 0 #used to deduce quality of lawyer service provided
+var multiplicativeArrestChance : float = 1 #a modifier to your chance of being arrested randomly for your crimes. 1 by default. Higher is a higher chance and lower is a lower chance, but your chances can never be lower than 0.1. Increased by 0.25 every year it's lower than 2 (if you have committed a crime).
 var schoolName = ""
-var schoolLevel = -1 # -1 before you go to school, 0 if you've graduated school, 1 for primary, 2 for secondary (high school), 3 for tertiary. middle school, if implemented, would be 1.5.
+var schoolLevel : int = -1 # -1 before you go to school, 0 if you've graduated school, 1 for primary, 2 for secondary (high school), 3 for tertiary. middle school, if implemented, would be 1.5.
 var degrees = []
 var fullTimeJob = ""
 var fullTimeSalary : int = 0 #how much money you make annually from your full-time job
@@ -55,7 +59,7 @@ var personTypes = []
 var personAges = []
 var personSexes = []
 var personRelationships = []
-var personUIDsUsed = 0
+var personUIDsUsed : int = 0
 var personUIDs = [] #stores unique ID numbers for each NPC. Used when we have to keep track of EXACTLY the same person. Differs from their INDEX, accessed through other arrays, which can change if NPCs are removed. This stays consistent per person throughout their entire life. Each person's UID is entirely unique. personUIDsUsed is set to 0 at the start of a new life, and appended here before being incremented whenever a new person is added. A person's UID is popped upon their removal from other arrays, but their UID will never be used again. Use only when using indexes is insufficient. Most times it is fine, and in some cases even preferable, to simply use those.
 var personStats = [] #a 2D array, meaning this is an array that contains other arrays. each element in this array is another array whose index corresponds to an NPC. Each element inside each nested array is a stat, whose element in that array corresponds to a definition in the personStatsDictionary.
 var personStatsDictionary = ["joy"] #relationship stats dictionary - the types match the index of their respective values.
@@ -104,6 +108,16 @@ var level : int = 1 #increments when you reach the amount of XP you need to leve
 var XPRequired : int = 500 #the amount of XP you need total to level up. Increases by 500 every level.
 
 
+func isBetween(x, floor, ceil, inclusive): #checks if any variable (x) is between two values (floor is the lowest it will accept, ceil is the highest). If inclusive, if x is equal to the floor or ceil, it will still return true, if it is false, it will not.
+	if inclusive == true:
+		if x >= floor && x <= ceil:
+			return true
+	elif inclusive == false:
+		if x > floor && x < ceil:
+			return true
+	return false #if true hasn't been returned yet, it's not between the two values
+
+
 func statClamper(): #if stats are out of bounds (above or below their max/min value, usually 0/100 respectively), clamp them
 	#personal
 	if joy > 100:
@@ -132,6 +146,10 @@ func statClamper(): #if stats are out of bounds (above or below their max/min va
 		evality = 0
 	int(evality)
 	#rest-of-life-related
+	if multiplicativeArrestChance > 2:
+		multiplicativeArrestChance = 2
+	elif multiplicativeArrestChance < 0.1:
+		multiplicativeArrestChance = 0.1
 	if schoolPerformance > 100:
 		schoolPerformance = 100
 	elif schoolPerformance < 0:
@@ -284,6 +302,10 @@ func lifeSerialiser(): #serialises every life-specific variable we need to save 
 		"intellectAtTimeOfCrime" : intellectAtTimeOfCrime,
 		"crimeTime" : crimeTime,
 		"prisonSentence" : prisonSentence,
+		"lawyers" : lawyers,
+		"lawyerCostMultiplier" : lawyerCostMultiplier,
+		"lawyerTierPicked" : lawyerTierPicked,
+		"multiplicativeArrestChance" : multiplicativeArrestChance,
 		"schoolName" : schoolName,
 		"schoolLevel" : schoolLevel,
 		"degrees" : degrees,
@@ -430,6 +452,10 @@ func loadLife(): #does the actual LIFE loading
 			intellectAtTimeOfCrime = dictionary["intellectAtTimeOfCrime"]
 			crimeTime = dictionary["crimeTime"]
 			prisonSentence = dictionary["prisonSentence"]
+			lawyers = dictionary["lawyers"]
+			lawyerCostMultiplier = dictionary["lawyerCostMultiplier"]
+			lawyerTierPicked = dictionary["lawyerTierPicked"]
+			multiplicativeArrestChance = dictionary["multiplicativeArrestChance"]
 			schoolName = dictionary["schoolName"]
 			schoolLevel = dictionary["schoolLevel"]
 			degrees = dictionary["degrees"]

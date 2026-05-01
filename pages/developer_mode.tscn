@@ -182,6 +182,12 @@ size_flags_horizontal = 4
 theme = ExtResource("6_llmlx")
 text = "Set intellect at time of crime"
 
+[node name="setCrimeTime" type="Button" parent="scrollContainer/centerContainer/vBoxContainer" unique_id=880532855]
+layout_mode = 2
+size_flags_horizontal = 4
+theme = ExtResource("6_llmlx")
+text = "Set crime time"
+
 [node name="saveGame" type="TextureButton" parent="." unique_id=1317964170]
 offset_left = 960.0
 offset_top = 20.0
@@ -212,4 +218,5 @@ stretch_mode = 0
 [connection signal="pressed" from="scrollContainer/centerContainer/vBoxContainer/setCrimes" to="." method="_on_set_crimes_pressed"]
 [connection signal="pressed" from="scrollContainer/centerContainer/vBoxContainer/setCrimesSeverity" to="." method="_on_set_crimes_severity_pressed"]
 [connection signal="pressed" from="scrollContainer/centerContainer/vBoxContainer/setAvgIntellectCrime" to="." method="_on_set_avg_intellect_crime_pressed"]
+[connection signal="pressed" from="scrollContainer/centerContainer/vBoxContainer/setCrimeTime" to="." method="_on_set_crime_time_pressed"]
 [connection signal="pressed" from="saveGame" to="." method="_on_save_game_pressed"]

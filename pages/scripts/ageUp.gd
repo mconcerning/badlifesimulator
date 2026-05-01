@@ -22,6 +22,11 @@ func basicStatChanges():
 		for x in stats.size(): #runs through all their stats
 			if global.personStatsDictionary[x] == "joy":
 				stats[x] += randi_range(-6, 6)
+	if global.crimes.size() >= 1: #if you have committed a crime
+		if global.multiplicativeArrestChance <= 1.75:
+			global.multiplicativeArrestChance += 0.25
+		elif global.isBetween(global.multiplicativeArrestChance, 1.75, 2, false) == true: #if your chance is between 1.75 and 2
+			global.multiplicativeArrestChance = 2
 	global.statClamper() #clamps stats if they're below 0 or above 100
 	global.history = [] #clears activity history
 
@@ -99,7 +104,7 @@ func school():
 
 func imprisonment(): #handles your chances of being arrested
 	if global.crimeSeverityCalculator() >= 10: #if you've committed serious enough crimes to warrant being arrested for them
-		if randi_range(10,96) >= global.averageFinder(global.intellectAtTimeOfCrime) && randi_range(10,120) <= global.crimeSeverityCalculator():
+		if (randi_range(10,96) / global.multiplicativeArrestChance) >= global.averageFinder(global.intellectAtTimeOfCrime) && (randi_range(10,120) / global.multiplicativeArrestChance) <= global.crimeSeverityCalculator():
 				global.revent.append("arrested")
 
 

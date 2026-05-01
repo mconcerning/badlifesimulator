@@ -138,9 +138,9 @@ func childhood(): #childhood base events - prefix is "child-"
 		$heading.text = "New friend?"
 		EGPGenerator(3, 0) #generates an event person to use
 		if randi_range(1,2) == 1: #random body text variation
-			$body.text = "While out and about with your " + str(global.personTypes[0]).to_lower() +  ", you strike up a conversation with a random kid and you two seem to get along pretty well.\n("
+			$body.text = "While out and about with your " + str(global.personTypes[0]).to_lower() + ", you strike up a conversation with a random kid and you two seem to get along pretty well.\n("
 		else: #random body text variation
-			$body.text = "While out and about with your " + str(global.personTypes[0]).to_lower() +  ", you strike up a conversation with a random kid and you two seem to get along pretty well.\n("
+			$body.text = "While out and about with your " + str(global.personTypes[0]).to_lower() + ", you strike up a conversation with a random kid and you two seem to get along pretty well.\n("
 		$body.text = $body.text + global.eventPersonFirstName + " " + global.eventPersonLastName + ", " + global.eventPersonSex + ", " + str(global.eventPersonAge) + " years old)" #appends EGP details to the end of the body text
 		$option1.text = "Befriend " + global.pronounGenerator("him", global.eventPersonSex)
 		$option2.text = "Ignore " + global.pronounGenerator("him", global.eventPersonSex)
@@ -437,7 +437,7 @@ func confirmation(): #non-random confirmation events that tell you that somethin
 
 func _on_option_1_pressed() -> void: #on option 1 selected
 	#event - option 1 will be an actual option
-	if global.revent[0] == "toddler-0" || global.revent[0] == "child-0" || global.revent[0] == "child-friend" || global.revent[0] == "toddler-friend" || global.revent[0] == "child-friend" || global.revent[0] == "teenager-friend" || global.revent[0] == "adult-friend" || global.revent[0] == "elder-friend" || global.revent[0] == "change-save-management-mode-to-delete" || global.revent[0] == "university-degree-picked" || global.revent[0] == "university-degree-picked-o2-refused" || global.revent[0] == "university-degree-picked-o4-rejected" || global.revent[0] == "arrested" || global.revent[0] == "pre-court-trial" || global.revent[0] == "arrested-o1-failed" || global.revent[0] == "arrested-o1-curb":
+	if global.revent[0] == "toddler-0" || global.revent[0] == "child-0" || global.revent[0] == "child-friend" || global.revent[0] == "toddler-friend" || global.revent[0] == "child-friend" || global.revent[0] == "teenager-friend" || global.revent[0] == "adult-friend" || global.revent[0] == "elder-friend" || global.revent[0] == "change-save-management-mode-to-delete" || global.revent[0] == "university-degree-picked" || global.revent[0] == "university-degree-picked-o2-refused" || global.revent[0] == "university-degree-picked-o4-rejected" || global.revent[0] == "arrested" || global.revent[0] == "pre-court-trial" || global.revent[0] == "court-trial" || global.revent[0] == "arrested-o1-failed" || global.revent[0] == "arrested-o1-curb":
 		outcome(global.revent[0] + "-o1")
 	#confirmation - option 1 will be the only button available when the event's purpose is only to display information. Generally, the button will say "Okay".
 	elif global.revent[0] == "toddler-0-o1" || global.revent[0] == "toddler-0-o2" || global.revent[0] == "toddler-0-o3" || global.revent[0] == "child-0-o1" || global.revent[0] == "child-0-o2" || global.revent[0] == "child-0-o3" || global.revent[0] == "child-0-o4" || global.revent[0] == "toddler-friend-o1" || global.revent[0] == "toddler-friend-o2" || global.revent[0] == "child-friend-o1" || global.revent[0] == "child-friend-o2" || global.revent[0] == "teenager-friend-o1" || global.revent[0] == "teenager-friend-o2" || global.revent[0] == "teenager-friend-o3" || global.revent[0] == "adult-friend-o1" || global.revent[0] == "adult-friend-o2" || global.revent[0] == "adult-friend-o3" || global.revent[0] == "elder-friend-o1" || global.revent[0] == "elder-friend-o2" || global.revent[0] == "elder-friend-o3" || global.revent[0] == "child-labour-is-outlawed" || global.revent[0] == "enrolled-in-primary-school" || global.revent[0] == "enrolled-in-high-school" || global.revent[0] == "graduated-high-school" || global.revent[0] == "study-harder" || global.revent[0] == "university-degree-picked-o1" || global.revent[0] == "university-degree-picked-o2" || global.revent[0] == "university-degree-picked-o3" || global.revent[0] == "university-degree-picked-o4" || global.revent[0] == "university-degree-picked-o2" || global.revent[0] == "graduated-university" || global.revent[0] == "compliment-relationship" || global.revent[0] == "skip-class" || global.revent[0] == "arrested-o1-success" || global.revent[0] == "court-trial-o2":
@@ -460,7 +460,7 @@ func _on_option_4_pressed() -> void: #on option 4 selected
 
 
 func _on_option_5_pressed() -> void: #on option 5 selected
-	pass # Replace with function body.
+	outcome(global.revent[0] + "-o5")
 
 
 func option1outcomes(): #option 1 has been picked
@@ -562,7 +562,28 @@ func option1outcomes(): #option 1 has been picked
 		global.causeOfDeath = "You died of blood loss and subsequent shock after a devastating accident."
 		get_tree().change_scene_to_file("res://pages/death.tscn") #kills you
 	elif global.revent[0] == "court-trial-o1":
-		push_warning("add court-trial-o1")
+		$heading.text = "Court trial"
+		var totalSentence = 0
+		for i in global.crimeTime.size():
+			if global.crimeTime[i] is int && totalSentence is int: #if it's not a life sentence yet and this crime doesn't warrant a life sentence
+				totalSentence += global.crimeTime[i]
+			elif global.crimeTime[i] == "Life" && str(totalSentence) != "Life": #if it's not a life sentence yet but the crime being checked does warrant a life sentence
+				totalSentence = "life"
+			#otherwise, you already have a life sentence, and there's no need to add to it
+		if totalSentence is int:
+			totalSentence = str(totalSentence) + " years"
+		$body.text = "You are facing up to " + totalSentence + " in prison for your "
+		if global.crimes.size() == 1: #if you've only ever committed one crime
+			$body.text += "crime."
+		else:
+			$body.text += str(global.crimes.size()) + " crimes."
+		$body.text += "\n\nWould you like to pick a lawyer to represent you in court?"
+		$option1.text = "I am my own lawyer"
+		$option2.text = "Public defender ($0)"
+		$option3.text = global.lawyers[0] + " ($" + str(global.crimeSeverityCalculator() * global.lawyerCostMultiplier[0]) + ")"
+		$option4.text = global.lawyers[1] + " ($" + str(global.crimeSeverityCalculator() * global.lawyerCostMultiplier[1]) + ")"
+		$option5.text = global.lawyers[2] + " ($" + str(global.crimeSeverityCalculator() * global.lawyerCostMultiplier[2]) + ")"
+		optionRemover(6)
 
 
 func option2outcomes(): #option 2 has been picked
@@ -573,8 +594,7 @@ func option2outcomes(): #option 2 has been picked
 		optionRemover(2)
 		global.evality += 4 #i mean, it was kind of rude...
 	if global.revent[0] == "teenager-friend-o2":
-		@warning_ignore("integer_division")
-		if randi_range(1, round((36 - global.looks / 4) / 2) - 3) == 1: #if you're more physically attractive, you have a higher chance of being accepted
+		if randi_range(1, round((36 - float(global.looks) / 4) / 2) - 3) == 1: #if you're more physically attractive, you have a higher chance of being accepted
 			$heading.text = "What's your number?"
 			$body.text = "You ask " + global.pronounGenerator("him", global.eventPersonSex) + " out on a date, and " + global.pronounGenerator("he", global.eventPersonSex) + " says yes.\nJoy + 15"
 			global.joy += 15
@@ -593,8 +613,7 @@ func option2outcomes(): #option 2 has been picked
 		optionRemover(2)
 	elif global.revent[0] == "adult-friend-o2":
 		$heading.text = "You wanna go out sometime?"
-		@warning_ignore("integer_division")
-		if randi_range(1, round((36 - global.looks / 4) / 2) - 3) == 1: #if you're more physically attractive, you have a higher chance of being accepted
+		if randi_range(1, round((36 - float(global.looks) / 4) / 2) - 3) == 1: #if you're more physically attractive, you have a higher chance of being accepted
 			$body.text = "You ask " + global.pronounGenerator("him", global.eventPersonSex) + " out on a date, and " + global.pronounGenerator("he", global.eventPersonSex) + " says yes.\nJoy + 15"
 			global.joy += 15
 			#if you already have an S/O, break up with (removes) them

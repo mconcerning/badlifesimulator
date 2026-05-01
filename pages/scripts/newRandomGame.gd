@@ -42,6 +42,25 @@ func cleanLife(): #resets your existing life (if any) and generates new stats
 	global.crimesSeverity = []
 	global.intellectAtTimeOfCrime = []
 	global.crimeTime = []
+	global.prisonSentence = 0
+	global.lawyers = []
+	for i in 3: #generates a name for every law firm
+			var uniqueName = ""
+			var nameType = randi_range(1,4)
+			var lawCompanyAppendices = ["Ruby", "Gold", "Platinum", "LA", "NY", "USA", "International", "Silver", "Emerald"]
+			match nameType:
+				1:
+					uniqueName = global.lastNames[randi_range(0, global.lastNames.size())] + " & " + global.lastNames[randi_range(0, global.lastNames.size())]
+				2:
+					uniqueName = global.lastNames[randi_range(0, global.lastNames.size())] + " Criminal & Civil Lawyers"
+				3:
+					uniqueName = lawCompanyAppendices[randi_range(0, lawCompanyAppendices.size() - 1)] + " Law"
+				4:
+					uniqueName = global.lastNames[randi_range(0, global.lastNames.size())] + " & Co."
+			global.lawyers.append(uniqueName)
+	global.lawyerCostMultiplier = [randi_range(940, 1050), randi_range(1400, 1520), randi_range(2200, 2450)]
+	global.lawyerTierPicked = 0
+	global.multiplicativeArrestChance = 1
 	global.schoolName = ""
 	global.schoolLevel = -1
 	global.degrees = []
@@ -328,7 +347,6 @@ func familyGenerator(): #HELP I DON'T WANT TO MAKE THIS SCRIPT FOR A THIRD TIME 
 	print(global.personTypes)
 	print(global.personRelationships)
 	print(global.personStats)
-	print(global.personUIDs)
 	print("in total, you have " + str(global.personTypes.size()) + " family members")
 
 
