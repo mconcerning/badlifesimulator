@@ -136,12 +136,12 @@ func _on_set_crime_time_pressed() -> void:
 	for i in timeTemp.size():
 		if int(timeTemp[i]) != 0: #if it's not a weird string that can't be converted into a valid int, e.g. if this element is "Life"
 			timeTemp[i] = int(timeTemp[i])
+			global.crimeTime = timeTemp
 		else:
 			timeTemp = ["Life"]
 			global.crimeTime = timeTemp
 			$confirmation.text = "Successfully set crimeTime!"
 			print("set crime time")
 			return #stop- don't- stop-
-	global.crimeTime = timeTemp
 	$confirmation.text = "Successfully set crimeTime!"
 	print("set crime time")

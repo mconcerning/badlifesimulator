@@ -92,6 +92,7 @@ func repositionResize(): #repositions and resizes the nodes on-screen
 
 
 func outcome(reventID):
+	print("outcome")
 	global.revent[0] = reventID
 	await get_tree().process_frame
 	get_tree().reload_current_scene()
@@ -99,6 +100,7 @@ func outcome(reventID):
 
 
 func goHome():
+	print("goHome")
 	global.revent.pop_front()
 	await get_tree().process_frame
 	get_tree().change_scene_to_file("res://pages/game_menu.tscn")
@@ -336,6 +338,63 @@ func prison(): #specialised prison events
 		$option1.text = "Go to court"
 		$option2.text = "Don't go to court"
 		optionRemover(3)
+	elif global.revent[0] == "court-trial-o1":
+		global.revent[0] = "court-trial-lawyer-pick"
+		$heading.text = "Court trial"
+		var totalSentence = 0
+		for i in global.crimeTime.size():
+			if global.crimeTime[i] is int && totalSentence is int: #if it's not a life sentence yet and this crime doesn't warrant a life sentence
+				totalSentence += global.crimeTime[i]
+			elif str(global.crimeTime[i]) == "Life" && str(totalSentence) != "Life": #if it's not a life sentence yet but the crime being checked does warrant a life sentence
+				totalSentence = "life"
+			#otherwise, you already have a life sentence, and there's no need to add to it
+		if totalSentence is int:
+			totalSentence = str(totalSentence) + " years"
+		$body.text = "You are facing up to " + totalSentence + " in prison for your "
+		if global.crimes.size() == 1: #if you've only ever committed one crime
+			$body.text += "crime."
+		else:
+			$body.text += str(global.crimes.size()) + " crimes."
+		$body.text += "\n\nWould you like to pick a lawyer to represent you in court?"
+		$option1.text = "I am my own lawyer"
+		$option2.text = "Public defender ($0)"
+		$option3.text = global.lawyers[0] + " ($" + str(global.crimeSeverityCalculator() * global.lawyerCostMultiplier[0]) + ")"
+		if global.money < global.crimeSeverityCalculator() * global.lawyerCostMultiplier[0]:
+			$option3.disabled = true
+		$option4.text = global.lawyers[1] + " ($" + str(global.crimeSeverityCalculator() * global.lawyerCostMultiplier[1]) + ")"
+		if global.money < global.crimeSeverityCalculator() * global.lawyerCostMultiplier[1]:
+			$option4.disabled = true
+		$option5.text = global.lawyers[2] + " ($" + str(global.crimeSeverityCalculator() * global.lawyerCostMultiplier[2]) + ")"
+		if global.money < global.crimeSeverityCalculator() * global.lawyerCostMultiplier[2]:
+			$option5.disabled = true
+		optionRemover(6)
+	elif global.revent[0] == "court-trial-lawyer-pick-o1" || global.revent[0] == "court-trial-lawyer-pick-o2" || global.revent[0] == "court-trial-lawyer-pick-o3" || global.revent[0] == "court-trial-lawyer-pick-o4" || global.revent[0] == "court-trial-lawyer-pick-o5":
+		match global.revent[0]:
+			"court-trial-lawyer-pick-o1":
+				if global.degrees.find("Law") == -1: #if you are NOT qualified to be a lawyer
+					$heading.text = "I know some laws"
+				else: #if you ARE qualified to be a lawyer
+					$heading.text = "Slight conflict of interest"
+				$body.text = "You chose yourself to represent you in court."
+			"court-trial-lawyer-pick-o2":
+				$heading.text = "Bottom-notch"
+				$body.text = "You chose a public defender to represent you in court."
+			"court-trial-lawyer-pick-o3":
+				$heading.text = "External representation"
+				$body.text = "You chose " + global.lawyers[0] + " to represent you in court for $" + str(global.crimeSeverityCalculator() * global.lawyerCostMultiplier[0]) + "."
+				global.money -= global.crimeSeverityCalculator() * global.lawyerCostMultiplier[0]
+			"court-trial-lawyer-pick-o4":
+				$heading.text = "External representation"
+				$body.text = "You chose " + global.lawyers[1] + " to represent you in court for $" + str(global.crimeSeverityCalculator() * global.lawyerCostMultiplier[1]) + "."
+				global.money -= global.crimeSeverityCalculator() * global.lawyerCostMultiplier[1]
+			"court-trial-lawyer-pick-o5":
+				$heading.text = "Top-notch"
+				$body.text = "You chose " + global.lawyers[2] + " to represent you in court for $" + str(global.crimeSeverityCalculator() * global.lawyerCostMultiplier[2]) + "."
+				global.money -= global.crimeSeverityCalculator() * global.lawyerCostMultiplier[2]
+		$body.text += "\n\nYou have the opportunity to plead guilty before the judge. If you plead guilty, there's a chance you can get a lower sentence."
+		$option1.text = "Guilty"
+		$option2.text = "Not guilty"
+		optionRemover(3)
 
 
 func confirmation(): #non-random confirmation events that tell you that something just happened
@@ -437,7 +496,7 @@ func confirmation(): #non-random confirmation events that tell you that somethin
 
 func _on_option_1_pressed() -> void: #on option 1 selected
 	#event - option 1 will be an actual option
-	if global.revent[0] == "toddler-0" || global.revent[0] == "child-0" || global.revent[0] == "child-friend" || global.revent[0] == "toddler-friend" || global.revent[0] == "child-friend" || global.revent[0] == "teenager-friend" || global.revent[0] == "adult-friend" || global.revent[0] == "elder-friend" || global.revent[0] == "change-save-management-mode-to-delete" || global.revent[0] == "university-degree-picked" || global.revent[0] == "university-degree-picked-o2-refused" || global.revent[0] == "university-degree-picked-o4-rejected" || global.revent[0] == "arrested" || global.revent[0] == "pre-court-trial" || global.revent[0] == "court-trial" || global.revent[0] == "arrested-o1-failed" || global.revent[0] == "arrested-o1-curb":
+	if global.revent[0] == "toddler-0" || global.revent[0] == "child-0" || global.revent[0] == "child-friend" || global.revent[0] == "toddler-friend" || global.revent[0] == "child-friend" || global.revent[0] == "teenager-friend" || global.revent[0] == "adult-friend" || global.revent[0] == "elder-friend" || global.revent[0] == "change-save-management-mode-to-delete" || global.revent[0] == "university-degree-picked" || global.revent[0] == "university-degree-picked-o2-refused" || global.revent[0] == "university-degree-picked-o4-rejected" || global.revent[0] == "arrested" || global.revent[0] == "pre-court-trial" || global.revent[0] == "court-trial" || global.revent[0] == "arrested-o1-failed" || global.revent[0] == "arrested-o1-curb" || global.revent[0] == "court-trial-lawyer-pick":
 		outcome(global.revent[0] + "-o1")
 	#confirmation - option 1 will be the only button available when the event's purpose is only to display information. Generally, the button will say "Okay".
 	elif global.revent[0] == "toddler-0-o1" || global.revent[0] == "toddler-0-o2" || global.revent[0] == "toddler-0-o3" || global.revent[0] == "child-0-o1" || global.revent[0] == "child-0-o2" || global.revent[0] == "child-0-o3" || global.revent[0] == "child-0-o4" || global.revent[0] == "toddler-friend-o1" || global.revent[0] == "toddler-friend-o2" || global.revent[0] == "child-friend-o1" || global.revent[0] == "child-friend-o2" || global.revent[0] == "teenager-friend-o1" || global.revent[0] == "teenager-friend-o2" || global.revent[0] == "teenager-friend-o3" || global.revent[0] == "adult-friend-o1" || global.revent[0] == "adult-friend-o2" || global.revent[0] == "adult-friend-o3" || global.revent[0] == "elder-friend-o1" || global.revent[0] == "elder-friend-o2" || global.revent[0] == "elder-friend-o3" || global.revent[0] == "child-labour-is-outlawed" || global.revent[0] == "enrolled-in-primary-school" || global.revent[0] == "enrolled-in-high-school" || global.revent[0] == "graduated-high-school" || global.revent[0] == "study-harder" || global.revent[0] == "university-degree-picked-o1" || global.revent[0] == "university-degree-picked-o2" || global.revent[0] == "university-degree-picked-o3" || global.revent[0] == "university-degree-picked-o4" || global.revent[0] == "university-degree-picked-o2" || global.revent[0] == "graduated-university" || global.revent[0] == "compliment-relationship" || global.revent[0] == "skip-class" || global.revent[0] == "arrested-o1-success" || global.revent[0] == "court-trial-o2":
@@ -561,29 +620,6 @@ func option1outcomes(): #option 1 has been picked
 	elif global.revent[0] == "arrested-o1-curb-o1":
 		global.causeOfDeath = "You died of blood loss and subsequent shock after a devastating accident."
 		get_tree().change_scene_to_file("res://pages/death.tscn") #kills you
-	elif global.revent[0] == "court-trial-o1":
-		$heading.text = "Court trial"
-		var totalSentence = 0
-		for i in global.crimeTime.size():
-			if global.crimeTime[i] is int && totalSentence is int: #if it's not a life sentence yet and this crime doesn't warrant a life sentence
-				totalSentence += global.crimeTime[i]
-			elif global.crimeTime[i] == "Life" && str(totalSentence) != "Life": #if it's not a life sentence yet but the crime being checked does warrant a life sentence
-				totalSentence = "life"
-			#otherwise, you already have a life sentence, and there's no need to add to it
-		if totalSentence is int:
-			totalSentence = str(totalSentence) + " years"
-		$body.text = "You are facing up to " + totalSentence + " in prison for your "
-		if global.crimes.size() == 1: #if you've only ever committed one crime
-			$body.text += "crime."
-		else:
-			$body.text += str(global.crimes.size()) + " crimes."
-		$body.text += "\n\nWould you like to pick a lawyer to represent you in court?"
-		$option1.text = "I am my own lawyer"
-		$option2.text = "Public defender ($0)"
-		$option3.text = global.lawyers[0] + " ($" + str(global.crimeSeverityCalculator() * global.lawyerCostMultiplier[0]) + ")"
-		$option4.text = global.lawyers[1] + " ($" + str(global.crimeSeverityCalculator() * global.lawyerCostMultiplier[1]) + ")"
-		$option5.text = global.lawyers[2] + " ($" + str(global.crimeSeverityCalculator() * global.lawyerCostMultiplier[2]) + ")"
-		optionRemover(6)
 
 
 func option2outcomes(): #option 2 has been picked
