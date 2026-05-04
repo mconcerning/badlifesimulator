@@ -92,19 +92,21 @@ func repositionResize(): #repositions and resizes the nodes on-screen
 
 
 func outcome(reventID):
-	print("outcome")
 	global.revent[0] = reventID
 	await get_tree().process_frame
 	get_tree().reload_current_scene()
-	return
 
 
 func goHome():
-	print("goHome")
 	global.revent.pop_front()
 	await get_tree().process_frame
 	get_tree().change_scene_to_file("res://pages/game_menu.tscn")
-	return
+
+
+func goToPrison(): #you need to manually set prisonSentence and do everything else
+	global.revent.pop_front()
+	await get_tree().process_frame
+	get_tree().change_scene_to_file("res://pages/prison.tscn")
 
 
 func goToSpecific(page):
@@ -341,14 +343,8 @@ func prison(): #specialised prison events
 	elif global.revent[0] == "court-trial-o1":
 		global.revent[0] = "court-trial-lawyer-pick"
 		$heading.text = "Court trial"
-		var totalSentence = 0
-		for i in global.crimeTime.size():
-			if global.crimeTime[i] is int && totalSentence is int: #if it's not a life sentence yet and this crime doesn't warrant a life sentence
-				totalSentence += global.crimeTime[i]
-			elif str(global.crimeTime[i]) == "Life" && str(totalSentence) != "Life": #if it's not a life sentence yet but the crime being checked does warrant a life sentence
-				totalSentence = "life"
-			#otherwise, you already have a life sentence, and there's no need to add to it
-		if totalSentence is int:
+		var totalSentence = global.crimeTimeCalculator()
+		if totalSentence is int: #if you're not facing life in prison
 			totalSentence = str(totalSentence) + " years"
 		$body.text = "You are facing up to " + totalSentence + " in prison for your "
 		if global.crimes.size() == 1: #if you've only ever committed one crime
@@ -391,7 +387,8 @@ func prison(): #specialised prison events
 				$heading.text = "Top-notch"
 				$body.text = "You chose " + global.lawyers[2] + " to represent you in court for $" + str(global.crimeSeverityCalculator() * global.lawyerCostMultiplier[2]) + "."
 				global.money -= global.crimeSeverityCalculator() * global.lawyerCostMultiplier[2]
-		$body.text += "\n\nYou have the opportunity to plead guilty before the judge. If you plead guilty, there's a chance you can get a lower sentence."
+		global.revent[0] = "court-trial-plead"
+		$body.text += "\n\nYou have the opportunity to plead guilty or not guilty before the judge. If you plead guilty, there's a chance you can get a lower sentence."
 		$option1.text = "Guilty"
 		$option2.text = "Not guilty"
 		optionRemover(3)

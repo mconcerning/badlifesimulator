@@ -263,6 +263,17 @@ func crimeSeverityCalculator():
 	return totalCrimeSeverity
 
 
+func crimeTimeCalculator():
+	var totalSentence = 0
+	for i in global.crimeTime.size():
+		if global.crimeTime[i] is int && totalSentence is int: #if it's not a life sentence yet and this crime doesn't warrant a life sentence
+			totalSentence += global.crimeTime[i]
+		elif str(global.crimeTime[i]) == "Life" && str(totalSentence) != "Life": #if it's not a life sentence yet but the crime being checked does warrant a life sentence
+			totalSentence = "life"
+		#otherwise, you already have a life sentence, and there's no need to add to it
+	return totalSentence
+
+
 func averageFinder(array): #finds the mean average of all integer elements in any array
 	var combinedTotal = 0
 	var allInts = []
