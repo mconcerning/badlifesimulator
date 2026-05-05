@@ -10,6 +10,7 @@ var revent = [] #event IDs (can store multiple). begins with an age identifier (
 var currentLife = ""
 var IDClicked : int = -1 #used to identify which relationship you're interacting with
 var IDClickedType = "" #used to identify what type of relationship you're interacting with; can be either "family" or "misc"
+var importLegacySave = "" #you are sent to newRandomGame to import and load a legacy save. if, after all life variables are filled in, this does not equal "" (i.e. there is a path here), it will load the legacy save from the path provided.
 
 
 #personal
@@ -55,7 +56,7 @@ var loanInterest = [] #the percentage interest you owe on top of what you would 
 #NPC relationships
 var personFirstNames = []
 var personLastNames = []
-var personTypes = []
+var personTypes = [] #mother/father/brother/sister/friend/girlfriend/boyfriend etc
 var personAges = []
 var personSexes = []
 var personRelationships = []
@@ -169,7 +170,7 @@ func statClamper(): #if stats are out of bounds (above or below their max/min va
 		elif personRelationships[i] < 0:
 			personRelationships[i] = 0
 		for x in personStats[i].size(): #runs through all of their stats
-			var stats = personStats[i]
+			var stats = personStats[x]
 			if personStatsDictionary[x] == "joy":
 				if stats[x] > 100:
 					stats[x] = 100

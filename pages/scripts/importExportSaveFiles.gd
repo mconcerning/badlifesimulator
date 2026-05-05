@@ -5,39 +5,13 @@ func legacyLoad(path): #when you pick a legacy save file. I'm gonna be 100% hone
 	print("selected file for legacy loading: " + path)
 	if FileAccess.file_exists(path) == true: #if the file actually exists (don't know how you would have picked it if it didn't but, y'know. Crash prevention. You know how it is. Yes you do.
 		var file = FileAccess.open(path, FileAccess.READ) #opens the file to read
-		if file: #if the file is valid
-			var data = JSON.parse_string(file.get_as_text()) #saves a parsed version of a text version of the save file
-			#parses the data into variables
-			print(path.get_file())
-			if path.get_file() == "bob.bls": #special exceptions that I will not elaborate on
-				global.firstName = "Bob"
-				global.lastName = "Legacy"
-			else:
-				global.firstName = "Legacy"
-				global.lastName = "Man" #names just weren't implemented in the original, I guess, because I can't find it in the code at all
-			global.age = int(data["Age"])
-			global.money = int(data["Money"])
-			global.joy = int(data["Joy"])
-			global.intellect = int(data["Intellect"])
-			global.health = int(data["Health"])
-			global.looks = int(data["Looks"])
-			global.evality = int(data["Evality"])
-			var degreesPacked = data["Degree"].split(",") #the string needs to be turned into a packedStringArray first by seperating the elements
-			global.degrees = Array(degreesPacked) #the packedStringArray needs to be turned into a regular array
-			global.fullTimeJob = data["Job"]
-			global.fullTimePerformance = int(data["JobPerformance"])
-			global.fullTimeSalary = int(data["Salary"])
-			global.partTimeJob = data["PartTimeJob"]
-			global.partTimePerformance = int(data["PartTimePerformance"])
-			global.currentLife = global.getSaveLifeFileName() #sets the currentLife variable to a unique file name
-			global.saveGame() #saves so you can continue it right away
-			print(global.currentLife)
-			print("k done")
+		if file != null: #if the file is valid (NOT null)
+			global.importLegacySave = path
+			get_tree().change_scene_to_file("res://pages/new_random_game.tscn") #goes
 		else:
 			print("it failed dawg. what nightmare fuel did you just try to load")
 			$confirmation.text = "it failed dawg. what nightmare fuel did you just try to load"
 		file.close() #closes the file so it doesn't stay open and do anything weird
-		get_tree().change_scene_to_file("res://pages/game_menu.tscn")
 
 
 func _on_back_pressed() -> void: #go back

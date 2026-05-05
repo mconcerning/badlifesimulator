@@ -350,6 +350,64 @@ func familyGenerator(): #HELP I DON'T WANT TO MAKE THIS SCRIPT FOR A THIRD TIME 
 	print("in total, you have " + str(global.personTypes.size()) + " family members")
 
 
+func legacySaveImport(path):
+	var file = FileAccess.open(path, FileAccess.READ) #opens the file to read
+	var data = JSON.parse_string(file.get_as_text()) #saves a parsed version of a text version of the save file
+	#parses the data into variables
+	print(path.get_file())
+	if path.get_file() == "bob.bls": #special exceptions that I will not elaborate on
+		global.firstName = "Bob"
+		global.lastName = "Legacy"
+	else:
+		global.firstName = "Legacy"
+		global.lastName = "Man" #names just weren't implemented in the original, I guess, because I can't find it in the code at all
+		global.age = int(data["Age"])
+		global.money = int(data["Money"])
+		global.joy = int(data["Joy"])
+		global.intellect = int(data["Intellect"])
+		global.health = int(data["Health"])
+		global.looks = int(data["Looks"])
+		global.evality = int(data["Evality"])
+		global.degrees = Array(JSON.parse_string(data["Degree"])) #the string needs to be turned into a packedStringArray first by seperating the elements, then that packedStringArray needs to be turned into a regular array
+		global.fullTimeJob = data["Job"]
+		global.fullTimePerformance = int(data["JobPerformance"])
+		global.fullTimeSalary = int(data["Salary"])
+		global.partTimeJob = data["PartTimeJob"]
+		global.partTimePerformance = int(data["PartTimePerformance"])
+		global.personSexes = Array(JSON.parse_string(data["PersonSexes"]))
+		#names - in the original game, relationship names are NOT seperated by first and last name. There is ONE array called "personNames" and it contains elements in a format like this: "Jane Doe". Therefore, we need to split it at the space into two seperate names. However, this will break on names with one or more middle names, i.e. "Neil Patrick Harris". This would split into 3 or more elements where you only need two. This is why we need the middle name fixer (see below), which turns a full name with 3 or more individual names into 2.
+		var firstNamesLegacy = []
+		var lastNamesLegacy = []
+		var allNamesLegacy = Array(JSON.parse_string(data["PersonNames"]))
+		for i in allNamesLegacy.size(): #runs through every complete name from the save file ("Jane Doe")
+			var thisNameSplit = Array(allNamesLegacy[i].split(" ")) #splits this FULL name into a first and last name
+			#middle name fixer
+			while thisNameSplit.size() >= 3: #runs indefinitely if there are 3 or more names in this ONE name until there are only two
+				thisNameSplit[1] += " " + thisNameSplit[2] #appends the third name onto the second/last name. Before: ["Neil", "Patrick", "Harris"], after: ["Neil", "Patrick Harris", "Harris"] (the third name still needs to be removed)
+				thisNameSplit.pop_at(2) #pops the third name ["Neil", "Patrick Harris"]
+			firstNamesLegacy.append(thisNameSplit[0])
+			lastNamesLegacy.append(thisNameSplit[1])
+		global.personFirstNames = firstNamesLegacy #we're now done. makes permanent changes
+		global.personLastNames = lastNamesLegacy
+		global.personTypes = Array(JSON.parse_string(data["PersonSexes"]))
+		for i in global.personTypes.size(): #generates person CATEGORIES (family or misc)
+			if global.personTypes[i] == "Mother" || global.personTypes[i] == "Father" || global.personTypes[i] == "Brother" || global.personTypes[i] == "Sister" || global.personTypes[i] == "Aunt" || global.personTypes[i] == "Uncle" || global.personTypes[i] == "Cousin" || global.personTypes[i] == "Grandmother" || global.personTypes[i] == "Grandfather":
+				global.personCategories.append("family")
+			else:
+				global.personCategories.append("misc")
+		global.personAges = Array(JSON.parse_string(data["PersonAges"]))
+		for i in global.personAges.size(): #turns all elements in personAges into an integer
+			global.personAges[i] = int(global.personAges[i])
+		global.personRelationships = Array(JSON.parse_string(data["PersonRelationships"]))
+		for i in global.personRelationships.size(): #turns all elements in personRelationships into an integer
+			global.personRelationships[i] = int(global.personRelationships[i])
+		global.currentLife = global.getSaveLifeFileName() #sets the currentLife variable to a unique file name
+		global.saveGame() #saves so you can continue it right away
+		print(global.currentLife)
+	file.close() #closes the file so it doesn't stay open and do anything weird
+	global.importLegacySave = "" #resets the path so it doesn't automatically load next time
+
+
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	await get_tree().process_frame #waits until the frame is fully loaded. Without this, the screen sometimes flashes gray while on this scene
@@ -359,4 +417,6 @@ func _ready() -> void:
 	epicStatChanges()
 	familyGenerator() #:sob:
 	print("life generated. starting...")
+	if global.importLegacySave != "": #if there is a legacy save file we should load before beginning this new life
+		legacySaveImport(global.importLegacySave)
 	get_tree().change_scene_to_file("res://pages/game_menu.tscn") #transport to main game page once loading is finished
