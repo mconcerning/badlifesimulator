@@ -41,6 +41,7 @@ func school():
 		global.schoolPerformance += randi_range(-5, 5)
 		global.intellect += round(float(global.schoolPerformance) / 12) + randi_range(-3, 3) #if you're doing well in school, you're getting smarter
 		global.XPQueued += 3
+		global.schoolPerformanceTracker.append(global.schoolPerformance)
 	#primary school
 	if (global.age == 4 && global.schoolLevel == -1 && randi_range(1,2) == 1) || (global.age == 5 && global.schoolLevel == -1): #if you're 4 years old and aren't in school yet, there's a 1 in 2 chance of you getting put in primary school early, and if you're 5 and not in school yet, you automatically get put in no matter what
 		global.schoolLevel = 1 #you get put in primary school
@@ -54,6 +55,7 @@ func school():
 				global.schoolName += " Primary School"
 		global.revent.append("enrolled-in-primary-school")
 		global.schoolPerformance = global.intellect + randi_range(-6, 6) #you are doing as well in school as you are intelligent, with a little bit of random variation (sets your performance for the first time so it's not immediately blank)
+		global.schoolPerformanceTracker = []
 		print("you are now attending " + global.schoolName + ", a level " + str(global.schoolLevel) + " school")
 	#high school
 	if global.workExperience.count("school-1") == 7: #if you've already been attending primary school for 7 years
@@ -68,6 +70,8 @@ func school():
 				global.schoolName += " High School"
 		global.revent.append("enrolled-in-high-school")
 		global.degrees.append("primary-school") #congratulations! you now have... a primary school degree...
+		global.degreeProficiency.append(global.averageFinder(global.schoolPerformanceTracker))
+		global.schoolPerformanceTracker = []
 		#duplicates the workExperience array but without primary school experience since we will never need it for anything ever again, then replaces global.workExperience with the smaller duplicate
 		var workExpDupe = []
 		for i in global.workExperience.size():
@@ -80,6 +84,8 @@ func school():
 		global.schoolLevel = 0 #officially graduates you; you're out of school now
 		global.revent.append("graduated-high-school")
 		global.degrees.append("high-school")
+		global.degreeProficiency.append(global.averageFinder(global.schoolPerformanceTracker))
+		global.schoolPerformanceTracker = []
 		#duplicates the workExperience array but without high school experience since we will never need it for anything ever again, then replaces global.workExperience with the smaller duplicate
 		var workExpDupe = []
 		for i in global.workExperience.size():
@@ -94,6 +100,8 @@ func school():
 		global.schoolLevel = 0 #officially graduates you
 		global.revent.append("graduated-university")
 		global.degrees.append(global.degreePicked)
+		global.degreeProficiency.append(global.averageFinder(global.schoolPerformanceTracker))
+		global.schoolPerformanceTracker = []
 		#rids work experience of school-3
 		var workExpDupe = []
 		for i in global.workExperience.size():

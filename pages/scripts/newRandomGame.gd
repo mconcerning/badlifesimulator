@@ -58,12 +58,15 @@ func cleanLife(): #resets your existing life (if any) and generates new stats
 				4:
 					uniqueName = global.lastNames[randi_range(0, global.lastNames.size())] + " & Co."
 			global.lawyers.append(uniqueName)
-	global.lawyerCostMultiplier = [randi_range(940, 1050), randi_range(1400, 1520), randi_range(2200, 2450)]
+	global.lawyerCostMultiplier = [int(round(float(randi_range(940, 1050)) / 2)), int(round(float(randi_range(1400, 1520)) / 2)), int(round(float(randi_range(2200, 2450)) / 2))] #fix this abomination at some point, probably
+	print(global.lawyerCostMultiplier)
 	global.lawyerTierPicked = 0
 	global.multiplicativeArrestChance = 1
 	global.schoolName = ""
 	global.schoolLevel = -1
+	global.schoolPerformanceTracker = []
 	global.degrees = []
+	global.degreeProficiency = []
 	global.fullTimeJob = ""
 	global.fullTimeSalary = 0
 	global.partTimeJob = ""

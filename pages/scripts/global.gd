@@ -40,7 +40,9 @@ var lawyerTierPicked : int = 0 #used to deduce quality of lawyer service provide
 var multiplicativeArrestChance : float = 1 #a modifier to your chance of being arrested randomly for your crimes. 1 by default. Higher is a higher chance and lower is a lower chance, but your chances can never be lower than 0.1. Increased by 0.25 every year it's lower than 2 (if you have committed a crime).
 var schoolName = ""
 var schoolLevel : int = -1 # -1 before you go to school, 0 if you've graduated school, 1 for primary, 2 for secondary (high school), 3 for tertiary. middle school, if implemented, would be 1.5.
+var schoolPerformanceTracker = []
 var degrees = []
+var degreeProficiency = [] #how good of work you did to get the degree with the matching index. This the average of your school performance per year you did the degree, from 0 - 100 (info from schoolPerformanceTracker).
 var fullTimeJob = ""
 var fullTimeSalary : int = 0 #how much money you make annually from your full-time job
 var partTimeJob = ""
@@ -109,12 +111,12 @@ var level : int = 1 #increments when you reach the amount of XP you need to leve
 var XPRequired : int = 500 #the amount of XP you need total to level up. Increases by 500 every level.
 
 
-func isBetween(x, floor, ceil, inclusive): #checks if any variable (x) is between two values (floor is the lowest it will accept, ceil is the highest). If inclusive, if x is equal to the floor or ceil, it will still return true, if it is false, it will not.
+func isBetween(x, minimum, maximum, inclusive): #checks if any variable (x) is between two values (floor is the lowest it will accept, ceil is the highest). If inclusive, if x is equal to the floor or ceil, it will still return true, if it is false, it will not.
 	if inclusive == true:
-		if x >= floor && x <= ceil:
+		if x >= minimum && x <= maximum:
 			return true
 	elif inclusive == false:
-		if x > floor && x < ceil:
+		if x > minimum && x < maximum:
 			return true
 	return false #if true hasn't been returned yet, it's not between the two values
 
@@ -275,6 +277,10 @@ func crimeTimeCalculator():
 	return totalSentence
 
 
+func prisonPreparer(sentenceLength): #does everything you need to prepare the player for prison; you still have to be physically sent there manually
+	global.prisonSentence = sentenceLength
+
+
 func averageFinder(array): #finds the mean average of all integer elements in any array
 	var combinedTotal = 0
 	var allInts = []
@@ -320,7 +326,9 @@ func lifeSerialiser(): #serialises every life-specific variable we need to save 
 		"multiplicativeArrestChance" : multiplicativeArrestChance,
 		"schoolName" : schoolName,
 		"schoolLevel" : schoolLevel,
+		"schoolPerformanceTracker" : schoolPerformanceTracker,
 		"degrees" : degrees,
+		"degreeProficiency" : degreeProficiency,
 		"fullTimeJob" : fullTimeJob,
 		"fullTimeSalary" : fullTimeSalary,
 		"partTimeJob" : partTimeJob,
@@ -470,7 +478,9 @@ func loadLife(): #does the actual LIFE loading
 			multiplicativeArrestChance = dictionary["multiplicativeArrestChance"]
 			schoolName = dictionary["schoolName"]
 			schoolLevel = dictionary["schoolLevel"]
+			schoolPerformanceTracker = dictionary["schoolPerformanceTracker"]
 			degrees = dictionary["degrees"]
+			degreeProficiency = dictionary["degreeProficiency"]
 			fullTimeJob = dictionary["fullTimeJob"]
 			fullTimeSalary = dictionary["fullTimeSalary"]
 			partTimeJob = dictionary["partTimeJob"]

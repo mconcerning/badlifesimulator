@@ -291,7 +291,7 @@ func relationships(): #specialised relationship events
 
 func prison(): #specialised prison events
 	push_warning("you should probably finish all the prison() events")
-	if global.revent[0] == "arrested": #"arrested" when you encounter police randomly, "arrested-caught" when you get caught in the middle of committing a crime.
+	if global.revent[0] == "arrested" || global.revent[0] == "court-trial-o2-failed-o1": #"arrested" when you encounter police randomly, "arrested-caught" when you get caught in the middle of committing a crime.
 		$heading.text = "Long arm of the law"
 		if global.crimeSeverityCalculator() >= 200:
 			$body.text = "While at home, a barrage of uniformed officers break down your door and run inside."
@@ -340,7 +340,7 @@ func prison(): #specialised prison events
 		$option1.text = "Go to court"
 		$option2.text = "Don't go to court"
 		optionRemover(3)
-	elif global.revent[0] == "court-trial-o1":
+	elif global.revent[0] == "court-trial-o1" || global.revent[0] == "court-trial-o2-prison-o1":
 		global.revent[0] = "court-trial-lawyer-pick"
 		$heading.text = "Court trial"
 		var totalSentence = global.crimeTimeCalculator()
@@ -372,26 +372,166 @@ func prison(): #specialised prison events
 				else: #if you ARE qualified to be a lawyer
 					$heading.text = "Slight conflict of interest"
 				$body.text = "You chose yourself to represent you in court."
+				global.revent[0] = "court-trial-o1-results"
 			"court-trial-lawyer-pick-o2":
 				$heading.text = "Bottom-notch"
 				$body.text = "You chose a public defender to represent you in court."
+				global.revent[0] = "court-trial-o2-results"
 			"court-trial-lawyer-pick-o3":
 				$heading.text = "External representation"
 				$body.text = "You chose " + global.lawyers[0] + " to represent you in court for $" + str(global.crimeSeverityCalculator() * global.lawyerCostMultiplier[0]) + "."
 				global.money -= global.crimeSeverityCalculator() * global.lawyerCostMultiplier[0]
+				global.revent[0] = "court-trial-o3-results"
 			"court-trial-lawyer-pick-o4":
 				$heading.text = "External representation"
 				$body.text = "You chose " + global.lawyers[1] + " to represent you in court for $" + str(global.crimeSeverityCalculator() * global.lawyerCostMultiplier[1]) + "."
 				global.money -= global.crimeSeverityCalculator() * global.lawyerCostMultiplier[1]
+				global.revent[0] = "court-trial-o4-results"
 			"court-trial-lawyer-pick-o5":
 				$heading.text = "Top-notch"
 				$body.text = "You chose " + global.lawyers[2] + " to represent you in court for $" + str(global.crimeSeverityCalculator() * global.lawyerCostMultiplier[2]) + "."
 				global.money -= global.crimeSeverityCalculator() * global.lawyerCostMultiplier[2]
+				global.revent[0] = "court-trial-o5-results"
 		global.revent[0] = "court-trial-plead"
 		$body.text += "\n\nYou have the opportunity to plead guilty or not guilty before the judge. If you plead guilty, there's a chance you can get a lower sentence."
 		$option1.text = "Guilty"
 		$option2.text = "Not guilty"
 		optionRemover(3)
+	elif global.revent[0] == "court-trial-o1-results-o1" || global.revent[0] == "court-trial-o2-results-o1" || global.revent[0] == "court-trial-o3-results-o1" || global.revent[0] == "court-trial-o4-results-o1" || global.revent[0] == "court-trial-o5-results-o1":
+		match global.revent[0]:
+			"court-trial-o1-results-o1": #self-defence
+				if global.degrees.find("Law") == -1: #if you are NOT a qualified lawyer
+					if global.intellect >= 95 && global.crimeSeverityCalculator() <= global.intellect:
+						$heading.text = "And everybody clapped"
+						$body.text = "Even though you don't have a law degree, you managed to successfully defend yourself in court and have been found not guilty of all charges."
+						$option1.text = "Awesome"
+						global.crimes = [] #no more crimes, you're free to go
+						global.crimesSeverity = []
+						global.crimeTime = []
+						global.intellectAtTimeOfCrime = []
+						global.revent[0] = "dont-go-to-prison"
+					else:
+						$heading.text = "Being a lawyer is all about big speeches"
+						$body.text = "You couldn't manage to properly defend yourself in court. You have been sentenced to "
+						if str(global.crimeTimeCalculator()) == "Life":
+							$body.text += "Life"
+						elif global.crimeTimeCalculator() is int:
+							$body.text += str(global.crimeTimeCalculator()) + " years"
+						$body.text += " in prison."
+						$option1.text = "Dang it"
+						global.prisonPreparer(global.crimeTimeCalculator())
+						global.revent[0] = "go-to-prison"
+				else: #if you ARE a qualified lawyer
+					if (global.degreeProficiency[global.degrees.find("Law")] >= max(global.crimesSeverity) - randi_range(1, 15) && global.intellect >= max(60, global.averageFinder(global.intellectAtTimeOfCrime)) && global.crimeSeverityCalculator() <= 400) || randi_range(1, 25) == 1: #if your proficiency is greater than the severity of your worst crime, and you're smarter than you were when you committed most of your crimes, AND you're not some super-criminal. There is a small (1 in 25) chance you win even if you don't meet these requirements.
+						$heading.text = "Self-defence GOAT"
+						$body.text = "You successfully represented yourself in court and have been found not guilty of all charges."
+						$option1.text = "Awesome"
+						global.crimes = [] #no more crimes, you're free to go
+						global.crimesSeverity = []
+						global.crimeTime = []
+						global.intellectAtTimeOfCrime = []
+						global.revent[0] = "dont-go-to-prison"
+					else: #if you're a qualified lawyer but you still failed
+						$heading.text = "YOU let you down"
+						$body.text = "Even though you have a law degree, you failed to clear your name in court. You have been sentenced to "
+						if str(global.crimeTimeCalculator()) == "Life":
+							$body.text += "Life"
+						elif global.crimeTimeCalculator() is int:
+							$body.text += str(global.crimeTimeCalculator()) + " years"
+						$body.text += " in prison."
+						$option1.text = "Dang it"
+						global.prisonPreparer(global.crimeTimeCalculator())
+						global.revent[0] = "go-to-prison"
+			"court-trial-o2-results-o1": #public defender
+				if (randi_range(25, 50) >= global.crimeSeverityCalculator() && randi_range(75, 95) <= global.averageFinder(global.intellectAtTimeOfCrime)) || randi_range(1, 25) == 1: #if your public defender is successful in publicly defending you. i.e. if you are a) NOT a very severe criminal, and b) were VERY intelligent when you committed your crime(s). 1 in 25 chance you win even if you don't meet these requirements.
+					if global.crimes.find("Tax evasion") == -1: #if you don't evade your taxes
+						$heading.text = "I'm so glad I paid taxes"
+					else: #if you HAVE committed tax evasion
+						$heading.text = "I'm glad SOMEONE was paying taxes"
+					$body.text = "Your public defender successfully cleared your name in court. You have been found not guilty of all charges."
+					$option1.text = "Hooray"
+					global.crimes = [] #no more crimes, you're free to go
+					global.crimesSeverity = []
+					global.crimeTime = []
+					global.intellectAtTimeOfCrime = []
+					global.revent[0] = "dont-go-to-prison"
+				else: #if your public defender sucks
+					$heading.text = "Great use of taxpayer money"
+					$body.text = "Your public defender failed to clear your name in court. You have been found guilty of all charges and are being sentenced to "
+					if str(global.crimeTimeCalculator()) == "Life":
+						$body.text += "Life"
+					elif global.crimeTimeCalculator() is int:
+						$body.text += str(global.crimeTimeCalculator()) + " years"
+					$body.text += " in prison."
+					$option1.text = "Dang it"
+					global.prisonPreparer(global.crimeTimeCalculator())
+					global.revent[0] = "go-to-prison"
+			"court-trial-o3-results-o1":
+				if (randi_range(40, 55) >= global.crimeSeverityCalculator() && randi_range(60, 70) <= global.averageFinder(global.intellectAtTimeOfCrime)) || randi_range(1, 20) == 1: #defence success - see public defender. Basically the same formula, just with some variables changed to give you better chances.
+					$heading.text = "$3 an hour well spent"
+					$body.text = global.lawyers[0] + ", a tier 1 lawyer, successfully cleared your name in court. You have been found not guilty of all charges."
+					$option1.text = "Sweet"
+					global.crimes = [] #no more crimes, you're free to go
+					global.crimesSeverity = []
+					global.crimeTime = []
+					global.intellectAtTimeOfCrime = []
+					global.revent[0] = "dont-go-to-prison"
+				else: #defence failure
+					$heading.text = "A penny saved is a penny earned, and I will be earning no pennies in prison"
+					$body.text = global.lawyers[0] + ", a tier 1 lawyer, failed to clear your name in court. You have been found guilty of all charges and are being sentenced to "
+					if str(global.crimeTimeCalculator()) == "Life":
+						$body.text += "Life"
+					elif global.crimeTimeCalculator() is int:
+						$body.text += str(global.crimeTimeCalculator()) + " years"
+					$body.text += " in prison."
+					$option1.text = "Dang it"
+					global.prisonPreparer(global.crimeTimeCalculator())
+					global.revent[0] = "go-to-prison"
+			"court-trial-o4-results-o1":
+				if (randi_range(80, 150) >= global.crimeSeverityCalculator() && randi_range(40, 50) <= global.averageFinder(global.intellectAtTimeOfCrime)) || randi_range(1, 14) == 1: #defence success - see public defender. Basically the same formula, just with some variables changed to give you better chances.
+					$heading.text = "Money well spent"
+					$body.text = global.lawyers[1] + ", a tier 2 lawyer, successfully cleared your name in court. You have been found not guilty of all charges."
+					$option1.text = "Incredible"
+					global.crimes = [] #no more crimes, you're free to go
+					global.crimesSeverity = []
+					global.crimeTime = []
+					global.intellectAtTimeOfCrime = []
+					global.revent[0] = "dont-go-to-prison"
+				else: #defence failed
+					$heading.text = "Whatever, I didn't even want to be found not guilty anyway"
+					$body.text = global.lawyers[1] + ", a tier 2 lawyer, failed to clear your name in court. You have been found guilty of all charges and are being sentenced to "
+					if str(global.crimeTimeCalculator()) == "Life":
+						$body.text += "Life"
+					elif global.crimeTimeCalculator() is int:
+						$body.text += str(global.crimeTimeCalculator()) + " years"
+					$body.text += " in prison."
+					$option1.text = "Dang it"
+					global.prisonPreparer(global.crimeTimeCalculator())
+					global.revent[0] = "go-to-prison"
+			"court-trial-o5-results-o1":
+				if (randi_range(150, 350) >= global.crimeSeverityCalculator() && randi_range(25, 40) <= global.averageFinder(global.intellectAtTimeOfCrime)) || randi_range(1, 7) == 1: #defence success - see public defender. Basically the same formula, just with some variables changed to give you better chances.
+					$heading.text = "It's only expensive if you lose"
+					if (randi_range(25, 50) >= global.crimeSeverityCalculator() && randi_range(75, 95) <= global.averageFinder(global.intellectAtTimeOfCrime)) || randi_range(1, 25) == 1: #if your crimes were already so minor that a public defender could have resolved them
+						$heading.text = "Perhaps I went a little bit overboard"
+					$body.text = global.lawyers[2] + ", a tier 3 lawyer, successfully cleared your name in court. You have been found not guilty of all charges."
+					$option1.text = "Amazing"
+					global.crimes = [] #no more crimes, you're free to go
+					global.crimesSeverity = []
+					global.crimeTime = []
+					global.intellectAtTimeOfCrime = []
+					global.revent[0] = "dont-go-to-prison"
+				else: #defence failed
+					$heading.text = "What the hell am I paying YOU for?"
+					$body.text = global.lawyers[2] + ", a tier 3 lawyer, failed to clear your name in court, despite costing $" + str(global.crimeSeverityCalculator() * global.lawyerCostMultiplier[2]) + ". You have been found guilty of all charges and are being sentenced to "
+					if str(global.crimeTimeCalculator()) == "Life":
+						$body.text += "Life"
+					elif global.crimeTimeCalculator() is int:
+						$body.text += str(global.crimeTimeCalculator()) + " years"
+					$body.text += " in prison."
+					$option1.text = "WHAT"
+					global.prisonPreparer(global.crimeTimeCalculator())
+					global.revent[0] = "go-to-prison"
+		optionRemover(2)
 
 
 func confirmation(): #non-random confirmation events that tell you that something just happened
@@ -492,12 +632,17 @@ func confirmation(): #non-random confirmation events that tell you that somethin
 
 
 func _on_option_1_pressed() -> void: #on option 1 selected
-	#event - option 1 will be an actual option
-	if global.revent[0] == "toddler-0" || global.revent[0] == "child-0" || global.revent[0] == "child-friend" || global.revent[0] == "toddler-friend" || global.revent[0] == "child-friend" || global.revent[0] == "teenager-friend" || global.revent[0] == "adult-friend" || global.revent[0] == "elder-friend" || global.revent[0] == "change-save-management-mode-to-delete" || global.revent[0] == "university-degree-picked" || global.revent[0] == "university-degree-picked-o2-refused" || global.revent[0] == "university-degree-picked-o4-rejected" || global.revent[0] == "arrested" || global.revent[0] == "pre-court-trial" || global.revent[0] == "court-trial" || global.revent[0] == "arrested-o1-failed" || global.revent[0] == "arrested-o1-curb" || global.revent[0] == "court-trial-lawyer-pick":
-		outcome(global.revent[0] + "-o1")
 	#confirmation - option 1 will be the only button available when the event's purpose is only to display information. Generally, the button will say "Okay".
-	elif global.revent[0] == "toddler-0-o1" || global.revent[0] == "toddler-0-o2" || global.revent[0] == "toddler-0-o3" || global.revent[0] == "child-0-o1" || global.revent[0] == "child-0-o2" || global.revent[0] == "child-0-o3" || global.revent[0] == "child-0-o4" || global.revent[0] == "toddler-friend-o1" || global.revent[0] == "toddler-friend-o2" || global.revent[0] == "child-friend-o1" || global.revent[0] == "child-friend-o2" || global.revent[0] == "teenager-friend-o1" || global.revent[0] == "teenager-friend-o2" || global.revent[0] == "teenager-friend-o3" || global.revent[0] == "adult-friend-o1" || global.revent[0] == "adult-friend-o2" || global.revent[0] == "adult-friend-o3" || global.revent[0] == "elder-friend-o1" || global.revent[0] == "elder-friend-o2" || global.revent[0] == "elder-friend-o3" || global.revent[0] == "child-labour-is-outlawed" || global.revent[0] == "enrolled-in-primary-school" || global.revent[0] == "enrolled-in-high-school" || global.revent[0] == "graduated-high-school" || global.revent[0] == "study-harder" || global.revent[0] == "university-degree-picked-o1" || global.revent[0] == "university-degree-picked-o2" || global.revent[0] == "university-degree-picked-o3" || global.revent[0] == "university-degree-picked-o4" || global.revent[0] == "university-degree-picked-o2" || global.revent[0] == "graduated-university" || global.revent[0] == "compliment-relationship" || global.revent[0] == "skip-class" || global.revent[0] == "arrested-o1-success" || global.revent[0] == "court-trial-o2":
+	if global.revent[0] == "toddler-0-o1" || global.revent[0] == "toddler-0-o2" || global.revent[0] == "toddler-0-o3" || global.revent[0] == "child-0-o1" || global.revent[0] == "child-0-o2" || global.revent[0] == "child-0-o3" || global.revent[0] == "child-0-o4" || global.revent[0] == "toddler-friend-o1" || global.revent[0] == "toddler-friend-o2" || global.revent[0] == "child-friend-o1" || global.revent[0] == "child-friend-o2" || global.revent[0] == "teenager-friend-o1" || global.revent[0] == "teenager-friend-o2" || global.revent[0] == "teenager-friend-o3" || global.revent[0] == "adult-friend-o1" || global.revent[0] == "adult-friend-o2" || global.revent[0] == "adult-friend-o3" || global.revent[0] == "elder-friend-o1" || global.revent[0] == "elder-friend-o2" || global.revent[0] == "elder-friend-o3" || global.revent[0] == "child-labour-is-outlawed" || global.revent[0] == "enrolled-in-primary-school" || global.revent[0] == "enrolled-in-high-school" || global.revent[0] == "graduated-high-school" || global.revent[0] == "study-harder" || global.revent[0] == "university-degree-picked-o1" || global.revent[0] == "university-degree-picked-o2" || global.revent[0] == "university-degree-picked-o3" || global.revent[0] == "university-degree-picked-o4" || global.revent[0] == "university-degree-picked-o2" || global.revent[0] == "graduated-university" || global.revent[0] == "compliment-relationship" || global.revent[0] == "skip-class" || global.revent[0] == "arrested-o1-success" || global.revent[0] == "court-trial-o2" || global.revent[0] == "dont-go-to-prison":
 		goHome()
+	#special exceptions
+	elif global.revent[0] == "go-to-prison":
+		goToPrison() #sends you to prison
+	elif global.revent[0] == "arrested-o1-curb":
+		get_tree().change_scene_to_file("res://pages/death.tscn") #kills you
+	#event - option 1 will be an actual option
+	else:
+		outcome(global.revent[0] + "-o1")
 
 
 func _on_option_2_pressed() -> void: #on option 2 selected
@@ -509,9 +654,6 @@ func _on_option_3_pressed() -> void: #on option 3 selected
 
 
 func _on_option_4_pressed() -> void: #on option 4 selected
-	if global.revent[0] == "child-0":
-		if global.evality >= 90: #if you meet the requirements to access this option
-			outcome(global.revent[0] + "-o4")
 	outcome(global.revent[0] + "-o4")
 
 
@@ -611,12 +753,10 @@ func option1outcomes(): #option 1 has been picked
 			$heading.text = "Aw man"
 			$body.text = "You tried to escape, but on the way, you tripped on a curb and fell over."
 			global.revent[0] = "arrested-o1-curb"
+			global.causeOfDeath = "You died of blood loss and subsequent shock after a devastating accident."
 		global.commitCrime("Evading arrest", 30, max(1, round(float(global.crimeSeverityCalculator() / 12)))) #how much time you have to do for evading arrest depends on how severe your other crimes are
 		$option1.text = "Okay"
 		optionRemover(2)
-	elif global.revent[0] == "arrested-o1-curb-o1":
-		global.causeOfDeath = "You died of blood loss and subsequent shock after a devastating accident."
-		get_tree().change_scene_to_file("res://pages/death.tscn") #kills you
 
 
 func option2outcomes(): #option 2 has been picked
@@ -743,10 +883,18 @@ func option2outcomes(): #option 2 has been picked
 		$option1.text = "Okay"
 		optionRemover(2)
 	elif global.revent[0] == "court-trial-o2":
-		$heading.text = "Gone like the wind"
-		$body.text = "You decided not to attend your court trial."
-		global.commitCrime("Failing to appear", round(float(global.crimeSeverityCalculator()) / 4), max(1, round(float(global.crimeSeverityCalculator() / 12)))) #the more of a criminal you are, the more severe it is that you didn't show up
-		$option1.text = "Sweet"
+		if global.crimeSeverityCalculator() <= 30:
+			$heading.text = "Gone like the wind"
+			$body.text = "You decided not to attend your court trial."
+			$option1.text = "Sweet"
+			if randi_range(1,2) == 1:
+				global.revent[0] = "court-trial-o2-failed" #it secretly failed and you're about to be re-arrested
+			global.commitCrime("Failing to appear", round(float(global.crimeSeverityCalculator()) / 4), max(1, round(float(global.crimeSeverityCalculator() / 12)))) #the more of a criminal you are, the more severe it is that you didn't show up (or tried not to)
+		else:
+			$heading.text = "Whattt"
+			$body.text = "Your crimes are so severe that you are being held in prison until your hearing.\n\nYou cannot skip court."
+			$option1.text = "Oh"
+			global.revent[0] = "court-trial-o2-prison"
 		optionRemover(2)
 
 
