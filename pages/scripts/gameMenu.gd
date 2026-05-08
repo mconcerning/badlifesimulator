@@ -10,7 +10,6 @@ func _ready() -> void:
 	#stat text setting
 	$name.text = str(global.firstName) + " " + str(global.lastName)
 	$logs.text = str(global.logs)
-	$money.text = "Money: $" + str(global.money)
 	$age.text = "Age: " + str(global.age)
 	$joy.text = "Joy: " + str(global.joy)
 	$health.text = "Health: " + str(global.health)

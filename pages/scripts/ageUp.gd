@@ -113,8 +113,8 @@ func school():
 
 
 func imprisonment(): #handles your chances of being arrested
-	if global.crimeSeverityCalculator() >= 10: #if you've committed serious enough crimes to warrant being arrested for them
-		if (randi_range(10,96) * global.multiplicativeArrestChance) >= global.averageFinder(global.intellectAtTimeOfCrime) && (randi_range(10,120) / global.multiplicativeArrestChance) <= global.crimeSeverityCalculator():
+	if global.sumCalculator(global.crimesSeverity) >= 10: #if you've committed serious enough crimes to warrant being arrested for them
+		if (randi_range(10,96) * global.multiplicativeArrestChance) >= global.averageFinder(global.intellectAtTimeOfCrime) && (randi_range(10,120) / global.multiplicativeArrestChance) <= global.sumCalculator(global.crimesSeverity):
 				global.revent.append("arrested")
 
 

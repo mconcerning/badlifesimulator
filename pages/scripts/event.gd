@@ -269,7 +269,7 @@ func relationships(): #specialised relationship events
 			possibleCompliments.pop_at(possibleCompliments.find("incredibly attractive"))
 			badCompliments.append("incredibly attractive") #calling them hot is now negative
 		var complimentSelected = possibleCompliments[randi_range(0, possibleCompliments.size() - 1)] #picks a compliment to give
-		if randi_range(1, max(1, round(float(global.intellect) / 2))) == 1: #if you accidently forget to compliment them (higher change if you're less intelligent)
+		if randi_range(1, max(1, roundi(float(global.intellect) / 2))) == 1: #if you accidently forget to compliment them (higher change if you're less intelligent)
 			complimentSelected = badCompliments[randi_range(0, badCompliments.size() - 1)] #picks a "compliment" to give
 		if global.cooldown("compliment-relationship-" + str(global.personUIDs[global.IDClicked])) >= 3: #if you've complimented them too much recently
 			$heading.text = "Whatever you say"
@@ -293,13 +293,13 @@ func prison(): #specialised prison events
 	push_warning("you should probably finish all the prison() events")
 	if global.revent[0] == "arrested" || global.revent[0] == "court-trial-o2-failed-o1": #"arrested" when you encounter police randomly, "arrested-caught" when you get caught in the middle of committing a crime.
 		$heading.text = "Long arm of the law"
-		if global.crimeSeverityCalculator() >= 200:
+		if global.sumCalculator(global.crimesSeverity) >= 200:
 			$body.text = "While at home, a barrage of uniformed officers break down your door and run inside."
 			$option2.text = "Surrender arrest"
-		elif global.crimeSeverityCalculator() >= 50 && global.crimeSeverityCalculator() < 200:
+		elif global.sumCalculator(global.crimesSeverity) >= 50 && global.sumCalculator(global.crimesSeverity) < 200:
 			$body.text = "While out in public, a group of uniformed police officers approach you and start asking questions."
 			$option2.text = "Confess"
-		elif global.crimeSeverityCalculator() >= 10 && global.crimeSeverityCalculator() < 50:
+		elif global.sumCalculator(global.crimesSeverity) >= 10 && global.sumCalculator(global.crimesSeverity) < 50:
 			$body.text = "While out in public, a police officer approaches you and starts asking questions."
 			$option2.text = "Confess"
 		else:
@@ -354,14 +354,14 @@ func prison(): #specialised prison events
 		$body.text += "\n\nWould you like to pick a lawyer to represent you in court?"
 		$option1.text = "I am my own lawyer"
 		$option2.text = "Public defender ($0)"
-		$option3.text = global.lawyers[0] + " ($" + str(global.crimeSeverityCalculator() * global.lawyerCostMultiplier[0]) + ")"
-		if global.money < global.crimeSeverityCalculator() * global.lawyerCostMultiplier[0]:
+		$option3.text = global.lawyers[0] + " ($" + str(global.sumCalculator(global.crimesSeverity) * global.lawyerCostMultiplier[0]) + ")"
+		if global.money < global.sumCalculator(global.crimesSeverity) * global.lawyerCostMultiplier[0]:
 			$option3.disabled = true
-		$option4.text = global.lawyers[1] + " ($" + str(global.crimeSeverityCalculator() * global.lawyerCostMultiplier[1]) + ")"
-		if global.money < global.crimeSeverityCalculator() * global.lawyerCostMultiplier[1]:
+		$option4.text = global.lawyers[1] + " ($" + str(global.sumCalculator(global.crimesSeverity) * global.lawyerCostMultiplier[1]) + ")"
+		if global.money < global.sumCalculator(global.crimesSeverity) * global.lawyerCostMultiplier[1]:
 			$option4.disabled = true
-		$option5.text = global.lawyers[2] + " ($" + str(global.crimeSeverityCalculator() * global.lawyerCostMultiplier[2]) + ")"
-		if global.money < global.crimeSeverityCalculator() * global.lawyerCostMultiplier[2]:
+		$option5.text = global.lawyers[2] + " ($" + str(global.sumCalculator(global.crimesSeverity) * global.lawyerCostMultiplier[2]) + ")"
+		if global.money < global.sumCalculator(global.crimesSeverity) * global.lawyerCostMultiplier[2]:
 			$option5.disabled = true
 		optionRemover(6)
 	elif global.revent[0] == "court-trial-lawyer-pick-o1" || global.revent[0] == "court-trial-lawyer-pick-o2" || global.revent[0] == "court-trial-lawyer-pick-o3" || global.revent[0] == "court-trial-lawyer-pick-o4" || global.revent[0] == "court-trial-lawyer-pick-o5":
@@ -379,29 +379,71 @@ func prison(): #specialised prison events
 				global.revent[0] = "court-trial-o2-results"
 			"court-trial-lawyer-pick-o3":
 				$heading.text = "External representation"
-				$body.text = "You chose " + global.lawyers[0] + " to represent you in court for $" + str(global.crimeSeverityCalculator() * global.lawyerCostMultiplier[0]) + "."
-				global.money -= global.crimeSeverityCalculator() * global.lawyerCostMultiplier[0]
+				$body.text = "You chose " + global.lawyers[0] + " to represent you in court for $" + str(global.sumCalculator(global.crimesSeverity) * global.lawyerCostMultiplier[0]) + "."
+				global.money -= global.sumCalculator(global.crimesSeverity) * global.lawyerCostMultiplier[0]
 				global.revent[0] = "court-trial-o3-results"
 			"court-trial-lawyer-pick-o4":
 				$heading.text = "External representation"
-				$body.text = "You chose " + global.lawyers[1] + " to represent you in court for $" + str(global.crimeSeverityCalculator() * global.lawyerCostMultiplier[1]) + "."
-				global.money -= global.crimeSeverityCalculator() * global.lawyerCostMultiplier[1]
+				$body.text = "You chose " + global.lawyers[1] + " to represent you in court for $" + str(global.sumCalculator(global.crimesSeverity) * global.lawyerCostMultiplier[1]) + "."
+				global.money -= global.sumCalculator(global.crimesSeverity) * global.lawyerCostMultiplier[1]
 				global.revent[0] = "court-trial-o4-results"
 			"court-trial-lawyer-pick-o5":
 				$heading.text = "Top-notch"
-				$body.text = "You chose " + global.lawyers[2] + " to represent you in court for $" + str(global.crimeSeverityCalculator() * global.lawyerCostMultiplier[2]) + "."
-				global.money -= global.crimeSeverityCalculator() * global.lawyerCostMultiplier[2]
+				$body.text = "You chose " + global.lawyers[2] + " to represent you in court for $" + str(global.sumCalculator(global.crimesSeverity) * global.lawyerCostMultiplier[2]) + "."
+				global.money -= global.sumCalculator(global.crimesSeverity) * global.lawyerCostMultiplier[2]
 				global.revent[0] = "court-trial-o5-results"
-		global.revent[0] = "court-trial-plead"
 		$body.text += "\n\nYou have the opportunity to plead guilty or not guilty before the judge. If you plead guilty, there's a chance you can get a lower sentence."
 		$option1.text = "Guilty"
 		$option2.text = "Not guilty"
 		optionRemover(3)
-	elif global.revent[0] == "court-trial-o1-results-o1" || global.revent[0] == "court-trial-o2-results-o1" || global.revent[0] == "court-trial-o3-results-o1" || global.revent[0] == "court-trial-o4-results-o1" || global.revent[0] == "court-trial-o5-results-o1":
+	elif global.revent[0] == "court-trial-o1-results-o1" || global.revent[0] == "court-trial-o2-results-o1" || global.revent[0] == "court-trial-o3-results-o1" || global.revent[0] == "court-trial-o4-results-o1" || global.revent[0] == "court-trial-o5-results-o1": #plead guilty
+		$body.text = "You pleaded guilty to all charges.\n\n"
+		$option1.text = "Okay"
+		global.revent[0] = "go-to-prison"
 		match global.revent[0]:
 			"court-trial-o1-results-o1": #self-defence
+				$heading.text = "Putting the I in guilty"
 				if global.degrees.find("Law") == -1: #if you are NOT a qualified lawyer
-					if global.intellect >= 95 && global.crimeSeverityCalculator() <= global.intellect:
+					if global.intellect >= 95 && global.sumCalculator(global.crimesSeverity) <= global.intellect:
+						if global.crimeTimeCalculator() is int && global.crimeTimeCalculator() > 1:
+							var sentenceLoweredBy = randi_range(1, min(3, global.crimeTimeCalculator() - 1)) #lowers your potential sentence
+							$body.text += "Even though you don't have a law degree, you successfully managed to lower your sentence by " + sentenceLoweredBy + "year"
+							if sentenceLoweredBy > 1:
+								$body.text += "s"
+							$body.text += "."
+							global.prisonPreparer(global.crimeTimeCalculator() - sentenceLoweredBy)
+							global.revent[0] = "go-to-prison"
+						elif global.crimeTimeCalculator() == 1:
+							var fine = randi_range(25, max(28, global.sumCalculator(global.criminalRecordSeverity))) * 100
+							$body.text += "Since you were only facing a potential 1-year prison sentence, you managed to talk it down to a $" + str(fine) + " fine."
+							global.money -= fine
+							global.revent[0] = "dont-go-to-prison"
+							for i in global.crimes.size():
+								global.criminalRecord.append(global.crimes[i])
+								global.criminalRecordSeverity.append(global.crimesSeverity[i])
+							global.crimes = []
+							global.crimesSeverity = []
+							global.crimeTime = []
+							global.intellectAtTimeOfCrime = []
+						elif global.crimeTimeCalculator() == "Life":
+							var newSentence = max(40, global.sumCalculator(global.crimeTime))
+							$body.text += "You managed to talk down your Life sentence to a " + str(newSentence) + " year sentence."
+							global.prisonPreparer(newSentence)
+					else: #if you are NOT good enough to win AND you're not a qualified lawyer
+						$body.text += "You failed to negotiate a lower sentence for yourself and have been sentenced to "
+						if str(global.crimeTimeCalculator()) == "Life":
+							$body.text += "Life"
+						elif global.crimeTimeCalculator() is int:
+							$body.text += str(global.crimeTimeCalculator()) + " years"
+						$body.text += " in prison."
+						global.prisonPreparer(global.prisonSentence)
+				elif global.degrees.find("Law") != -1: #if you ARE a qualified lawyer
+					pass
+	elif global.revent[0] == "court-trial-o1-results-o2" || global.revent[0] == "court-trial-o2-results-o2" || global.revent[0] == "court-trial-o3-results-o2" || global.revent[0] == "court-trial-o4-results-o2" || global.revent[0] == "court-trial-o5-results-o2": #plead not guilty
+		match global.revent[0]:
+			"court-trial-o1-results-o2": #self-defence
+				if global.degrees.find("Law") == -1: #if you are NOT a qualified lawyer
+					if global.intellect >= 95 && global.sumCalculator(global.crimesSeverity) <= global.intellect:
 						$heading.text = "And everybody clapped"
 						$body.text = "Even though you don't have a law degree, you managed to successfully defend yourself in court and have been found not guilty of all charges."
 						$option1.text = "Awesome"
@@ -422,7 +464,7 @@ func prison(): #specialised prison events
 						global.prisonPreparer(global.crimeTimeCalculator())
 						global.revent[0] = "go-to-prison"
 				else: #if you ARE a qualified lawyer
-					if (global.degreeProficiency[global.degrees.find("Law")] >= max(global.crimesSeverity) - randi_range(1, 15) && global.intellect >= max(60, global.averageFinder(global.intellectAtTimeOfCrime)) && global.crimeSeverityCalculator() <= 400) || randi_range(1, 25) == 1: #if your proficiency is greater than the severity of your worst crime, and you're smarter than you were when you committed most of your crimes, AND you're not some super-criminal. There is a small (1 in 25) chance you win even if you don't meet these requirements.
+					if (global.degreeProficiency[global.degrees.find("Law")] >= max(global.crimesSeverity) - randi_range(1, 15) && global.intellect >= max(60, global.averageFinder(global.intellectAtTimeOfCrime)) && global.sumCalculator(global.crimesSeverity) <= 400) || randi_range(1, 25) == 1: #if your proficiency is greater than the severity of your worst crime, and you're smarter than you were when you committed most of your crimes, AND you're not some super-criminal. There is a small (1 in 25) chance you win even if you don't meet these requirements.
 						$heading.text = "Self-defence GOAT"
 						$body.text = "You successfully represented yourself in court and have been found not guilty of all charges."
 						$option1.text = "Awesome"
@@ -442,8 +484,8 @@ func prison(): #specialised prison events
 						$option1.text = "Dang it"
 						global.prisonPreparer(global.crimeTimeCalculator())
 						global.revent[0] = "go-to-prison"
-			"court-trial-o2-results-o1": #public defender
-				if (randi_range(25, 50) >= global.crimeSeverityCalculator() && randi_range(75, 95) <= global.averageFinder(global.intellectAtTimeOfCrime)) || randi_range(1, 25) == 1: #if your public defender is successful in publicly defending you. i.e. if you are a) NOT a very severe criminal, and b) were VERY intelligent when you committed your crime(s). 1 in 25 chance you win even if you don't meet these requirements.
+			"court-trial-o2-results-o2": #public defender
+				if (randi_range(25, 50) >= global.sumCalculator(global.crimesSeverity) && randi_range(75, 95) <= global.averageFinder(global.intellectAtTimeOfCrime)) || randi_range(1, 25) == 1: #if your public defender is successful in publicly defending you. i.e. if you are a) NOT a very severe criminal, and b) were VERY intelligent when you committed your crime(s). 1 in 25 chance you win even if you don't meet these requirements.
 					if global.crimes.find("Tax evasion") == -1: #if you don't evade your taxes
 						$heading.text = "I'm so glad I paid taxes"
 					else: #if you HAVE committed tax evasion
@@ -466,8 +508,8 @@ func prison(): #specialised prison events
 					$option1.text = "Dang it"
 					global.prisonPreparer(global.crimeTimeCalculator())
 					global.revent[0] = "go-to-prison"
-			"court-trial-o3-results-o1":
-				if (randi_range(40, 55) >= global.crimeSeverityCalculator() && randi_range(60, 70) <= global.averageFinder(global.intellectAtTimeOfCrime)) || randi_range(1, 20) == 1: #defence success - see public defender. Basically the same formula, just with some variables changed to give you better chances.
+			"court-trial-o3-results-o2":
+				if (randi_range(40, 55) >= global.sumCalculator(global.crimesSeverity) && randi_range(60, 70) <= global.averageFinder(global.intellectAtTimeOfCrime)) || randi_range(1, 20) == 1: #defence success - see public defender. Basically the same formula, just with some variables changed to give you better chances.
 					$heading.text = "$3 an hour well spent"
 					$body.text = global.lawyers[0] + ", a tier 1 lawyer, successfully cleared your name in court. You have been found not guilty of all charges."
 					$option1.text = "Sweet"
@@ -487,8 +529,8 @@ func prison(): #specialised prison events
 					$option1.text = "Dang it"
 					global.prisonPreparer(global.crimeTimeCalculator())
 					global.revent[0] = "go-to-prison"
-			"court-trial-o4-results-o1":
-				if (randi_range(80, 150) >= global.crimeSeverityCalculator() && randi_range(40, 50) <= global.averageFinder(global.intellectAtTimeOfCrime)) || randi_range(1, 14) == 1: #defence success - see public defender. Basically the same formula, just with some variables changed to give you better chances.
+			"court-trial-o4-results-o2":
+				if (randi_range(80, 150) >= global.sumCalculator(global.crimesSeverity) && randi_range(40, 50) <= global.averageFinder(global.intellectAtTimeOfCrime)) || randi_range(1, 14) == 1: #defence success - see public defender. Basically the same formula, just with some variables changed to give you better chances.
 					$heading.text = "Money well spent"
 					$body.text = global.lawyers[1] + ", a tier 2 lawyer, successfully cleared your name in court. You have been found not guilty of all charges."
 					$option1.text = "Incredible"
@@ -508,10 +550,10 @@ func prison(): #specialised prison events
 					$option1.text = "Dang it"
 					global.prisonPreparer(global.crimeTimeCalculator())
 					global.revent[0] = "go-to-prison"
-			"court-trial-o5-results-o1":
-				if (randi_range(150, 350) >= global.crimeSeverityCalculator() && randi_range(25, 40) <= global.averageFinder(global.intellectAtTimeOfCrime)) || randi_range(1, 7) == 1: #defence success - see public defender. Basically the same formula, just with some variables changed to give you better chances.
+			"court-trial-o5-results-o2":
+				if (randi_range(150, 350) >= global.sumCalculator(global.crimesSeverity) && randi_range(25, 40) <= global.averageFinder(global.intellectAtTimeOfCrime)) || randi_range(1, 7) == 1: #defence success - see public defender. Basically the same formula, just with some variables changed to give you better chances.
 					$heading.text = "It's only expensive if you lose"
-					if (randi_range(25, 50) >= global.crimeSeverityCalculator() && randi_range(75, 95) <= global.averageFinder(global.intellectAtTimeOfCrime)) || randi_range(1, 25) == 1: #if your crimes were already so minor that a public defender could have resolved them
+					if (randi_range(25, 50) >= global.sumCalculator(global.crimesSeverity) && randi_range(75, 95) <= global.averageFinder(global.intellectAtTimeOfCrime)) || randi_range(1, 25) == 1: #if your crimes were already so minor that a public defender could have resolved them
 						$heading.text = "Perhaps I went a little bit overboard"
 					$body.text = global.lawyers[2] + ", a tier 3 lawyer, successfully cleared your name in court. You have been found not guilty of all charges."
 					$option1.text = "Amazing"
@@ -522,7 +564,7 @@ func prison(): #specialised prison events
 					global.revent[0] = "dont-go-to-prison"
 				else: #defence failed
 					$heading.text = "What the hell am I paying YOU for?"
-					$body.text = global.lawyers[2] + ", a tier 3 lawyer, failed to clear your name in court, despite costing $" + str(global.crimeSeverityCalculator() * global.lawyerCostMultiplier[2]) + ". You have been found guilty of all charges and are being sentenced to "
+					$body.text = global.lawyers[2] + ", a tier 3 lawyer, failed to clear your name in court, despite costing $" + str(global.sumCalculator(global.crimesSeverity) * global.lawyerCostMultiplier[2]) + ". You have been found guilty of all charges and are being sentenced to "
 					if str(global.crimeTimeCalculator()) == "Life":
 						$body.text += "Life"
 					elif global.crimeTimeCalculator() is int:
@@ -564,7 +606,7 @@ func confirmation(): #non-random confirmation events that tell you that somethin
 		$option1.text = "Take some time off"
 		optionRemover(2)
 	elif global.revent[0] == "study-harder":
-		var dudStudyChance = round(float(global.intellect) / 2)
+		var dudStudyChance = roundi(float(global.intellect) / 2)
 		if global.intellect <= 20: #if you're so intelligent that you're more inclined to have a total dud of a study session
 			dudStudyChance = dudStudyChance / 4 #increases your chance of having a poor study session
 		if randi_range(1, max(1, dudStudyChance)) == 1 || global.cooldown("study-harder") >= 3: #if you had a total dud of a study session; happens either at random (higher chance if you're less intelligent) or if you've already studied 3 or more times this year (you're burned out)
@@ -596,10 +638,10 @@ func confirmation(): #non-random confirmation events that tell you that somethin
 					$heading.text += "left"
 				4:
 					$heading.text += "in"
-			var joySubtracted = randi_range(round(float(global.intellect)/10), 14 - round(float(global.intellect)/10))
-			$body.text = "You studied for " + str(max(2, int(round(float(global.intellect)/20)))) + " hours.\n+ " + str(int(round(float(global.intellect)/7))) + " school performance, + " + str(int(round(float(global.intellect)/12)) + 2) + " Intellect, - " + str(joySubtracted) + " Joy"
-			global.schoolPerformance += round(float(global.intellect)/7)
-			global.intellect += round(float(global.intellect)/12) + 2
+			var joySubtracted = randi_range(roundi(float(global.intellect)/10), 14 - roundi(float(global.intellect)/10))
+			$body.text = "You studied for " + str(max(2, int(roundi(float(global.intellect)/20)))) + " hours.\n+ " + str(int(roundi(float(global.intellect)/7))) + " school performance, + " + str(int(roundi(float(global.intellect)/12)) + 2) + " Intellect, - " + str(joySubtracted) + " Joy"
+			global.schoolPerformance += roundi(float(global.intellect)/7)
+			global.intellect += roundi(float(global.intellect)/12) + 2
 			global.joy -= joySubtracted
 			global.history.append("study-harder")
 			$option1.text = "Okay"
@@ -754,7 +796,9 @@ func option1outcomes(): #option 1 has been picked
 			$body.text = "You tried to escape, but on the way, you tripped on a curb and fell over."
 			global.revent[0] = "arrested-o1-curb"
 			global.causeOfDeath = "You died of blood loss and subsequent shock after a devastating accident."
-		global.commitCrime("Evading arrest", 30, max(1, round(float(global.crimeSeverityCalculator() / 12)))) #how much time you have to do for evading arrest depends on how severe your other crimes are
+		global.commitCrime("Evading arrest", roundi(float(global.sumCalculator(global.crimesSeverity)) / 3), max(1, roundi(float(global.sumCalculator(global.crimesSeverity) / 12)))) #how much time you have to do for evading arrest depends on how severe your other crimes are
+		print(global.crimesSeverity)
+		print(global.crimeTime)
 		$option1.text = "Okay"
 		optionRemover(2)
 
@@ -883,13 +927,13 @@ func option2outcomes(): #option 2 has been picked
 		$option1.text = "Okay"
 		optionRemover(2)
 	elif global.revent[0] == "court-trial-o2":
-		if global.crimeSeverityCalculator() <= 30:
+		if global.sumCalculator(global.crimesSeverity) <= 30:
 			$heading.text = "Gone like the wind"
 			$body.text = "You decided not to attend your court trial."
 			$option1.text = "Sweet"
 			if randi_range(1,2) == 1:
 				global.revent[0] = "court-trial-o2-failed" #it secretly failed and you're about to be re-arrested
-			global.commitCrime("Failing to appear", round(float(global.crimeSeverityCalculator()) / 4), max(1, round(float(global.crimeSeverityCalculator() / 12)))) #the more of a criminal you are, the more severe it is that you didn't show up (or tried not to)
+			global.commitCrime("Failing to appear", roundi(float(global.sumCalculator(global.crimesSeverity)) / 3), max(1, roundi(float(global.sumCalculator(global.crimesSeverity) / 12)))) #the more of a criminal you are, the more severe it is that you didn't show up (or tried not to)
 		else:
 			$heading.text = "Whattt"
 			$body.text = "Your crimes are so severe that you are being held in prison until your hearing.\n\nYou cannot skip court."

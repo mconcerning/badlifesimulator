@@ -52,6 +52,11 @@ func _on_raue_pressed() -> void:
 		$confirmation.text = "Successfully set RAUE to true!"
 	print("set RAUE to " + str(global.RAUE))
 
+func _on_set_money_pressed() -> void:
+	global.money = int($input.text)
+	$confirmation.text = "Successfully set money!"
+	print("set money to " + str(global.money))
+
 func _on_set_evality_pressed() -> void:
 	global.evality = int($input.text)
 	$confirmation.text = "Successfully set evality!"

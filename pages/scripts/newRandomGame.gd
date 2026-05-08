@@ -42,6 +42,8 @@ func cleanLife(): #resets your existing life (if any) and generates new stats
 	global.crimesSeverity = []
 	global.intellectAtTimeOfCrime = []
 	global.crimeTime = []
+	global.criminalRecord = []
+	global.criminalRecordSeverity = []
 	global.prisonSentence = 0
 	global.lawyers = []
 	for i in 3: #generates a name for every law firm
@@ -59,7 +61,6 @@ func cleanLife(): #resets your existing life (if any) and generates new stats
 					uniqueName = global.lastNames[randi_range(0, global.lastNames.size())] + " & Co."
 			global.lawyers.append(uniqueName)
 	global.lawyerCostMultiplier = [int(round(float(randi_range(940, 1050)) / 2)), int(round(float(randi_range(1400, 1520)) / 2)), int(round(float(randi_range(2200, 2450)) / 2))] #fix this abomination at some point, probably
-	print(global.lawyerCostMultiplier)
 	global.lawyerTierPicked = 0
 	global.multiplicativeArrestChance = 1
 	global.schoolName = ""

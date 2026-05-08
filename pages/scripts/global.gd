@@ -33,9 +33,11 @@ var sexuality = "" #stored definitively, not relative to the sex of the player, 
 var crimes = []
 var crimesSeverity = []
 var crimeTime = [] #how many years in prison is each crime worth?
+var criminalRecord = []
+var criminalRecordSeverity = []
 var prisonSentence : int = 0
 var lawyers = [] #three laywers generated every new life that will be presented to you as options to hire if you ever go on a court trial. This array contains the names of the law firms. The lawyers here are in ascending order of quality and their indexes correspond with their respective matches in the lawyer array(s) below.
-var lawyerCostMultiplier = [] #used to deduce the cost of hiring a certain lawyer -> global.crimeSeverityCalculator() * this[lawyerIndex]. The cost multiplier (this) goes up with e
+var lawyerCostMultiplier = [] #used to deduce the cost of hiring a certain lawyer -> crimeSeverityCalculator() * this[lawyerIndex]. The cost multiplier (this) goes up with e
 var lawyerTierPicked : int = 0 #used to deduce quality of lawyer service provided
 var multiplicativeArrestChance : float = 1 #a modifier to your chance of being arrested randomly for your crimes. 1 by default. Higher is a higher chance and lower is a lower chance, but your chances can never be lower than 0.1. Increased by 0.25 every year it's lower than 2 (if you have committed a crime).
 var schoolName = ""
@@ -259,26 +261,36 @@ func commitCrime(crime : String, severity : int, time):
 	crimeTime.append(time)
 
 
-func crimeSeverityCalculator():
-	var totalCrimeSeverity = 0
-	for i in crimesSeverity.size():
-		totalCrimeSeverity += crimesSeverity[i]
-	return totalCrimeSeverity
+func sumCalculator(numbers): #calculates the sum of all the elements in any array
+	var sum = 0
+	for i in numbers.size():
+		if numbers[i] is int:
+			sum += numbers[i]
+	return sum
+
+
+func commaiser(number): #seperates big numbers by commas every 3 characters from the right
+	var regex = RegEx.new()
+	regex.compile("(?<=\\d)(?=(\\d{3})+(?!\\d))") #finds the spot between every 3 digits
+	return regex.sub(str(number), ",", true)
 
 
 func crimeTimeCalculator():
 	var totalSentence = 0
-	for i in global.crimeTime.size():
-		if global.crimeTime[i] is int && totalSentence is int: #if it's not a life sentence yet and this crime doesn't warrant a life sentence
-			totalSentence += global.crimeTime[i]
-		elif str(global.crimeTime[i]) == "Life" && str(totalSentence) != "Life": #if it's not a life sentence yet but the crime being checked does warrant a life sentence
+	for i in crimeTime.size():
+		if crimeTime[i] is int && totalSentence is int: #if it's not a life sentence yet and this crime doesn't warrant a life sentence
+			totalSentence += crimeTime[i]
+		elif str(crimeTime[i]) == "Life" && str(totalSentence) != "Life": #if it's not a life sentence yet but the crime being checked does warrant a life sentence
 			totalSentence = "life"
 		#otherwise, you already have a life sentence, and there's no need to add to it
 	return totalSentence
 
 
 func prisonPreparer(sentenceLength): #does everything you need to prepare the player for prison; you still have to be physically sent there manually
-	global.prisonSentence = sentenceLength
+	prisonSentence = sentenceLength
+	for i in crimes.size():
+		criminalRecord.append(crimes[i])
+		criminalRecordSeverity.append(crimesSeverity[i])
 
 
 func averageFinder(array): #finds the mean average of all integer elements in any array
@@ -319,6 +331,8 @@ func lifeSerialiser(): #serialises every life-specific variable we need to save 
 		"crimesSeverity" : crimesSeverity,
 		"intellectAtTimeOfCrime" : intellectAtTimeOfCrime,
 		"crimeTime" : crimeTime,
+		"criminalRecord" : criminalRecord,
+		"criminalRecordSeverity" : criminalRecordSeverity,
 		"prisonSentence" : prisonSentence,
 		"lawyers" : lawyers,
 		"lawyerCostMultiplier" : lawyerCostMultiplier,
@@ -471,6 +485,8 @@ func loadLife(): #does the actual LIFE loading
 			crimesSeverity = dictionary["crimesSeverity"]
 			intellectAtTimeOfCrime = dictionary["intellectAtTimeOfCrime"]
 			crimeTime = dictionary["crimeTime"]
+			criminalRecord = dictionary["criminalRecord"]
+			criminalRecordSeverity = dictionary["criminalRecordSeverity"]
 			prisonSentence = dictionary["prisonSentence"]
 			lawyers = dictionary["lawyers"]
 			lawyerCostMultiplier = dictionary["lawyerCostMultiplier"]

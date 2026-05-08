@@ -1,0 +1,13 @@
+[gd_scene format=3 uid="uid://c7mtxc0kmsorg"]
+
+[ext_resource type="LabelSettings" uid="uid://pehp7xsrxr1l" path="res://styles/text/money.tres" id="1_nsgu7"]
+[ext_resource type="Script" uid="uid://bwfkife71k3sg" path="res://objects/scripts/money.gd" id="2_6o6fv"]
+
+[node name="money" type="Label" unique_id=91619562]
+offset_top = 1300.0
+offset_right = 1080.0
+offset_bottom = 1360.0
+text = "Money: $N/A"
+label_settings = ExtResource("1_nsgu7")
+horizontal_alignment = 1
+script = ExtResource("2_6o6fv")
