@@ -1167,9 +1167,7 @@ func option3outcomes(): #option 3 has been picked
 		if global.degreePicked == "education":
 			print(global.degreePicked)
 			$body.text += "$25,000 student loan that needs to be paid back over 20 years with an interest rate of 8%."
-			global.loans.append(25000) #takes out the $25,000 loan
-			global.loanInterest.append(8) #8% annual interest
-			global.loanPaybackDuration.append(20) #pay it back over the course of 20 years
+			global.takeOutLoan(25000, 8, 20) #takes out loan
 			print("loans: " + str(global.loans))
 			print("loan interest: " + str(global.loanInterest))
 			print("loan payback duration: " + str(global.loanPaybackDuration))

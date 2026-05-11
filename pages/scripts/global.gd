@@ -11,6 +11,7 @@ var currentLife = ""
 var IDClicked : int = -1 #used to identify which relationship you're interacting with
 var IDClickedType = "" #used to identify what type of relationship you're interacting with; can be either "family" or "misc"
 var importLegacySave = "" #you are sent to newRandomGame to import and load a legacy save. if, after all life variables are filled in, this does not equal "" (i.e. there is a path here), it will load the legacy save from the path provided.
+var developerModePassword = "" #once you enter it correctly, you won't have to do it every time. It is saved here and run automatically.
 
 
 #personal
@@ -54,6 +55,7 @@ var schoolPerformance : int = 0 #how well are you doing at school? from 1 - 100
 var partTimePerformance : int = 0
 var fullTimePerformance : int = 0
 var loans = [] #uh oh - can hold multiple loans at once - holds the total amount in dollars you owe
+var loanInitialValue = [] #stores the initial dollar amount of each current loan you've taken out
 var loanPaybackDuration = [] #in how many years must the loan at its same index be fully paid back? Used to calculate how much you owe at the start of every year. The amount owed is then automatically deducted from your money total.
 var loanInterest = [] #the percentage interest you owe on top of what you would pay back on your loans
 
@@ -286,6 +288,13 @@ func crimeTimeCalculator():
 	return totalSentence
 
 
+func takeOutLoan(amount : int, interest : int, paybackPeriod : int): #amount in dollars, interest as a percentage, and pacyback period in years
+	global.loans.append(amount) #takes out the loan
+	global.loanInitialValue.append(roundi(float(amount) / paybackPeriod))
+	global.loanInterest.append(interest) #percentage annual interest
+	global.loanPaybackDuration.append(paybackPeriod) #pay it back over the course of however many years
+
+
 func prisonPreparer(sentenceLength): #does everything you need to prepare the player for prison; you still have to be physically sent there manually
 	prisonSentence = sentenceLength
 	for i in crimes.size():
@@ -352,6 +361,7 @@ func lifeSerialiser(): #serialises every life-specific variable we need to save 
 		"partTimePerformance" : partTimePerformance,
 		"fullTimePerformance" : fullTimePerformance,
 		"loans" : loans,
+		"loanInitialValue" : loanInitialValue,
 		"loanPaybackDuration" : loanPaybackDuration,
 		"loanInterest" : loanInterest,
 		#NPC relationships
@@ -397,6 +407,7 @@ func gameSerialiser(): #serialises every NON-life-specific variable we need to s
 		"XP" : XP,
 		"level" : level,
 		"XPRequired" : XPRequired,
+		"developerModePassword" : developerModePassword,
 	}
 	return cambridgeDictionary
 
@@ -448,6 +459,7 @@ func loadGame(): #does the actual GAME loading
 			XP = dictionary["XP"]
 			level = dictionary["level"]
 			XPRequired = dictionary["XPRequired"]
+			developerModePassword = dictionary["developerModePassword"]
 			gameSaveFile.close() #closes file so it doesn't do anything weird
 			print("hoorah, game load successful")
 			print(currentLife)
@@ -506,6 +518,7 @@ func loadLife(): #does the actual LIFE loading
 			partTimePerformance = dictionary["partTimePerformance"]
 			fullTimePerformance = dictionary["fullTimePerformance"]
 			loans = dictionary["loans"]
+			loanInitialValue = dictionary["loanInitialValue"]
 			loanPaybackDuration = dictionary["loanPaybackDuration"]
 			loanInterest = dictionary["loanInterest"]
 			#NPC relationships

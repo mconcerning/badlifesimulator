@@ -150,3 +150,27 @@ func _on_set_crime_time_pressed() -> void:
 			return #stop- don't- stop-
 	$confirmation.text = "Successfully set crimeTime!"
 	print("set crime time")
+
+func _on_loans_pressed() -> void:
+	var loansTemp = Array($input.text.split(","))
+	for i in loansTemp.size():
+		loansTemp[i] = int(loansTemp[i])
+	global.loans = loansTemp
+	$confirmation.text = "Successfully set loans!"
+	print("set loans")
+
+func _on_loan_interest_pressed() -> void:
+	var loanInterestTemp = Array($input.text.split(","))
+	for i in loanInterestTemp.size():
+		loanInterestTemp[i] = int(loanInterestTemp[i])
+	global.loanInterest = loanInterestTemp
+	$confirmation.text = "Successfully set loan interest!"
+	print("set loan interest")
+
+func _on_loan_payback_duration_pressed() -> void:
+	var loanPaybackDurationTemp = Array($input.text.split(","))
+	for i in loanPaybackDurationTemp.size():
+		loanPaybackDurationTemp[i] = int(loanPaybackDurationTemp[i])
+	global.loanPaybackDuration = loanPaybackDurationTemp
+	$confirmation.text = "Successfully set loan payback duration!"
+	print("set loan payback duration")

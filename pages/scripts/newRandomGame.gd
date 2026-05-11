@@ -74,6 +74,7 @@ func cleanLife(): #resets your existing life (if any) and generates new stats
 	global.partTimeSalary = 0
 	global.workExperience = []
 	global.loans = []
+	global.loanInitialValue = []
 	global.loanPaybackDuration = []
 	global.loanInterest = []
 	global.prisonSentence = 0
@@ -393,7 +394,7 @@ func legacySaveImport(path):
 			lastNamesLegacy.append(thisNameSplit[1])
 		global.personFirstNames = firstNamesLegacy #we're now done. makes permanent changes
 		global.personLastNames = lastNamesLegacy
-		global.personTypes = Array(JSON.parse_string(data["PersonSexes"]))
+		global.personTypes = Array(JSON.parse_string(data["PersonRoles"]))
 		for i in global.personTypes.size(): #generates person CATEGORIES (family or misc)
 			if global.personTypes[i] == "Mother" || global.personTypes[i] == "Father" || global.personTypes[i] == "Brother" || global.personTypes[i] == "Sister" || global.personTypes[i] == "Aunt" || global.personTypes[i] == "Uncle" || global.personTypes[i] == "Cousin" || global.personTypes[i] == "Grandmother" || global.personTypes[i] == "Grandfather":
 				global.personCategories.append("family")
@@ -405,6 +406,13 @@ func legacySaveImport(path):
 		global.personRelationships = Array(JSON.parse_string(data["PersonRelationships"]))
 		for i in global.personRelationships.size(): #turns all elements in personRelationships into an integer
 			global.personRelationships[i] = int(global.personRelationships[i])
+		global.personStats = []
+		global.personUIDs = []
+		global.personUIDsUsed = 0
+		for i in global.personTypes.size(): #runs through every person
+			global.personStats.append([randi_range(0, 100)]) #gives them random stats (see global.gd)
+			global.personUIDs.append(global.personUIDsUsed)
+			global.personUIDsUsed += 1
 		global.currentLife = global.getSaveLifeFileName() #sets the currentLife variable to a unique file name
 		global.saveGame() #saves so you can continue it right away
 		print(global.currentLife)

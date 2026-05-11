@@ -118,21 +118,26 @@ func imprisonment(): #handles your chances of being arrested
 				global.revent.append("arrested")
 
 
-func loanHandler():
-	print("fix university loan")
+func loanHandler(): #i hate maths so much oh my god
 	if global.loans.size() > 0: #if you have loans taken out
-		for i in global.loans.size(): #runs through every loan you need to pay back and pays back the amount you owe
-			print("paying back " + str(global.loan[i] / global.loanPaybackDuration[i] / global.loan[i] * 100) + "% of your $" + str(global.loan[i]) + " loan (due in " + str(global.loanPaybackDuration[i] - 1) + " year(s))")
-			var amountOwed = global.loans[i] * (global.loanInterest[i] / 100 * (1 + global.loanInterest[i] / 100) ** global.loanPaybackDuration[i]) / ((1 + global.loanInterest[i] / 100) ** global.loanPaybackDuration[i] - 1) #calculates the amount of money you owe (I hate maths so much oh my god)
+		print("loans: " + str(global.loans))
+		var i = global.loans.size() - 1 #iterates backwards because we're removing elements
+		while i >= 0: #runs through every loan you need to pay back and pays back the amount you owe
+			global.loans[i] = roundi(float(global.loans[i]) * (1 + float(global.loanInterest[i]) / 100)) #adds interest
+			print("paying back " + str(float(global.loans[i]) / global.loanInterest[i] / global.loans[i] * 100) + "% of your $" + str(global.loans[i]) + " loan (due in " + str(global.loanPaybackDuration[i] - 1) + " year(s))")
+			var amountOwed = roundi(float(global.loans[i]) / global.loanPaybackDuration[i]) #calculates the amount of money you owe
 			global.money -= amountOwed #deducts the amount you owe from your balance
-			global.loan[i] -= amountOwed - (global.loan[i] * global.loanInterest[i] / 100) #you just paid back some of the loan, so the amount you owe is now smaller (although the interest makes it a little bit higher than it would be without it)
+			global.loans[i] -= amountOwed  #you just paid back some of the loan, so the amount you owe is now smaller (although the interest makes it a little bit higher than it would be without it)
 			global.loanPaybackDuration[i] -= 1 #one year has now passed, you have one less year to pay back the loan
+			print("paid some back. loan now $" + str(global.loans[i]))
 			if global.loans[i] <= 100: #if you owe less than $100 (I guess this could technically happen before a loan expires due to weird rounding, but it would also happen when you've fully paid a loan back (the amount you need to pay back would be 0))
 				global.money -= global.loans[i] #just pay back any more money you owe (or get a refund if this number is negative (probably technically possible due to rounding but I'm not doing that maths because it doesn't really matter if it is))
 				global.loans.pop_at(i) #*chanting* NO MORE LOAN!
+				global.loanInitialValue.pop_at(i) #NO MORE LOAN!
 				global.loanPaybackDuration.pop_at(i) #NO MORE LOAN!
 				global.loanInterest.pop_at(i) #NO MORE LOAN!
-				print("no more loan")
+				print("no more loan at index " + str(i))
+			i -= 1
 
 
 func ageUpEventHandler():
