@@ -114,12 +114,12 @@ func school():
 
 func imprisonment(): #handles your chances of being arrested
 	if global.sumCalculator(global.crimesSeverity) >= 10: #if you've committed serious enough crimes to warrant being arrested for them
-		if (randi_range(10,96) * global.multiplicativeArrestChance) >= global.averageFinder(global.intellectAtTimeOfCrime) && (randi_range(10,120) / global.multiplicativeArrestChance) <= global.sumCalculator(global.crimesSeverity):
+		if (randi_range(max(1, global.sumCalculator(global.crimesSeverity) - 20), global.sumCalculator(global.crimesSeverity) * (global.multiplicativeArrestChance / 2)) * global.multiplicativeArrestChance) >= global.averageFinder(global.intellectAtTimeOfCrime) && (randi_range(10,120) / global.multiplicativeArrestChance) <= global.sumCalculator(global.crimesSeverity):
 				global.revent.append("arrested")
 
 
 func loanHandler():
-	push_warning("fix university loan")
+	print("fix university loan")
 	if global.loans.size() > 0: #if you have loans taken out
 		for i in global.loans.size(): #runs through every loan you need to pay back and pays back the amount you owe
 			print("paying back " + str(global.loan[i] / global.loanPaybackDuration[i] / global.loan[i] * 100) + "% of your $" + str(global.loan[i]) + " loan (due in " + str(global.loanPaybackDuration[i] - 1) + " year(s))")

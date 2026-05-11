@@ -15,6 +15,9 @@
 [ext_resource type="Texture2D" uid="uid://clp2stmtuu3hu" path="res://assets/shopping-bag.png" id="13_q0b0c"]
 [ext_resource type="Texture2D" uid="uid://bjetevdv5fljh" path="res://assets/briefcase.png" id="14_lw86i"]
 
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_q0b0c"]
+texture = ExtResource("5_ec2j7")
+
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_qyc5l"]
 texture = ExtResource("4_4h7a2")
 
@@ -25,6 +28,7 @@ texture = ExtResource("5_ec2j7")
 texture = ExtResource("4_4h7a2")
 
 [sub_resource type="Theme" id="Theme_bqpvg"]
+Button/styles/disabled = SubResource("StyleBoxTexture_q0b0c")
 Button/styles/hover = SubResource("StyleBoxTexture_qyc5l")
 Button/styles/normal = SubResource("StyleBoxTexture_smqxy")
 Button/styles/pressed = SubResource("StyleBoxTexture_27i3a")

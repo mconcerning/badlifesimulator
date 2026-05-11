@@ -3,7 +3,7 @@ extends Node2D #author(s): Ethan Scott
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
-	if global.prisonSentence > 0: #if you're supposed to be in prison
+	if str(global.prisonSentence) == "Life" || int(global.prisonSentence) > 0: #if you're supposed to be in prison
 		get_tree().change_scene_to_file("res://pages/prison.tscn")
 		return
 	global.statClamper()

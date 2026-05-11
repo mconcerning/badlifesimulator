@@ -35,7 +35,7 @@ var crimesSeverity = []
 var crimeTime = [] #how many years in prison is each crime worth?
 var criminalRecord = []
 var criminalRecordSeverity = []
-var prisonSentence : int = 0
+var prisonSentence = 0
 var lawyers = [] #three laywers generated every new life that will be presented to you as options to hire if you ever go on a court trial. This array contains the names of the law firms. The lawyers here are in ascending order of quality and their indexes correspond with their respective matches in the lawyer array(s) below.
 var lawyerCostMultiplier = [] #used to deduce the cost of hiring a certain lawyer -> crimeSeverityCalculator() * this[lawyerIndex]. The cost multiplier (this) goes up with e
 var lawyerTierPicked : int = 0 #used to deduce quality of lawyer service provided
@@ -281,7 +281,7 @@ func crimeTimeCalculator():
 		if crimeTime[i] is int && totalSentence is int: #if it's not a life sentence yet and this crime doesn't warrant a life sentence
 			totalSentence += crimeTime[i]
 		elif str(crimeTime[i]) == "Life" && str(totalSentence) != "Life": #if it's not a life sentence yet but the crime being checked does warrant a life sentence
-			totalSentence = "life"
+			totalSentence = "Life"
 		#otherwise, you already have a life sentence, and there's no need to add to it
 	return totalSentence
 
