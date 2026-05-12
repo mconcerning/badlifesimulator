@@ -1,0 +1,39 @@
+[gd_scene format=3 uid="uid://bfk1mnumy5rq2"]
+
+[ext_resource type="Script" uid="uid://bcy4trl8eiopg" path="res://pages/scripts/logs.gd" id="1_1dsrh"]
+[ext_resource type="PackedScene" uid="uid://pmo8e2dmbkfm" path="res://objects/background.tscn" id="1_je12w"]
+[ext_resource type="PackedScene" uid="uid://cjnbhqp8obehv" path="res://objects/back_button.tscn" id="2_g33oe"]
+[ext_resource type="PackedScene" uid="uid://b7bfib5vbcvk6" path="res://objects/heading.tscn" id="3_1dsrh"]
+[ext_resource type="LabelSettings" uid="uid://dl6sog5hfkb6u" path="res://styles/text/body.tres" id="4_g33oe"]
+
+[node name="logs" type="Node2D" unique_id=1802791475]
+script = ExtResource("1_1dsrh")
+
+[node name="background" parent="." unique_id=515720348 instance=ExtResource("1_je12w")]
+
+[node name="back" parent="." unique_id=17962498 instance=ExtResource("2_g33oe")]
+
+[node name="heading" parent="." unique_id=33655322 instance=ExtResource("3_1dsrh")]
+text = "Journal"
+
+[node name="scrollContainer" type="ScrollContainer" parent="." unique_id=772684877]
+offset_left = 50.0
+offset_top = 300.0
+offset_right = 1040.0
+offset_bottom = 1800.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="vBoxContainer" type="VBoxContainer" parent="scrollContainer" unique_id=1993317141]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="logs" type="Label" parent="scrollContainer/vBoxContainer" unique_id=101254809]
+custom_minimum_size = Vector2(930, 60)
+layout_mode = 2
+label_settings = ExtResource("4_g33oe")
+vertical_alignment = 2
+autowrap_mode = 3
+
+[connection signal="pressed" from="back" to="." method="_on_back_pressed"]

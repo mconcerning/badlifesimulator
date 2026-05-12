@@ -95,8 +95,8 @@ size_flags_horizontal = 4
 theme = ExtResource("6_llmlx")
 text = "RAUE"
 
-[node name="RAUECheck" parent="scrollContainer/centerContainer/vBoxContainer" unique_id=124453344 instance=ExtResource("8_4vx13")]
-position = Vector2(558, 676)
+[node name="RAUECheck" parent="scrollContainer/centerContainer/vBoxContainer/RAUE" unique_id=124453344 instance=ExtResource("8_4vx13")]
+position = Vector2(212, 6)
 
 [node name="setMoney" type="Button" parent="scrollContainer/centerContainer/vBoxContainer" unique_id=1354825902]
 layout_mode = 2
@@ -212,6 +212,15 @@ size_flags_horizontal = 4
 theme = ExtResource("6_llmlx")
 text = "Set loan payback duration"
 
+[node name="DMRP" type="Button" parent="scrollContainer/centerContainer/vBoxContainer" unique_id=1189263513]
+layout_mode = 2
+size_flags_horizontal = 4
+theme = ExtResource("6_llmlx")
+text = "DM always req. pass"
+
+[node name="DMRPCheck" parent="scrollContainer/centerContainer/vBoxContainer/DMRP" unique_id=791303976 instance=ExtResource("8_4vx13")]
+position = Vector2(671, 8)
+
 [node name="saveGame" type="TextureButton" parent="." unique_id=1317964170]
 offset_left = 960.0
 offset_top = 20.0
@@ -247,4 +256,5 @@ stretch_mode = 0
 [connection signal="pressed" from="scrollContainer/centerContainer/vBoxContainer/loans" to="." method="_on_loans_pressed"]
 [connection signal="pressed" from="scrollContainer/centerContainer/vBoxContainer/loanInterest" to="." method="_on_loan_interest_pressed"]
 [connection signal="pressed" from="scrollContainer/centerContainer/vBoxContainer/loanPaybackDuration" to="." method="_on_loan_payback_duration_pressed"]
+[connection signal="pressed" from="scrollContainer/centerContainer/vBoxContainer/DMRP" to="." method="_on_DM_password_pressed"]
 [connection signal="pressed" from="saveGame" to="." method="_on_save_game_pressed"]

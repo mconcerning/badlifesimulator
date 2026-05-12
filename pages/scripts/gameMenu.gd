@@ -9,12 +9,13 @@ func _ready() -> void:
 	global.statClamper()
 	#stat text setting
 	$name.text = str(global.firstName) + " " + str(global.lastName)
-	$logs.text = str(global.logs)
 	$age.text = "Age: " + str(global.age)
 	$joy.text = "Joy: " + str(global.joy)
 	$health.text = "Health: " + str(global.health)
 	$intellect.text = "Intellect: " + str(global.intellect)
 	$looks.text = "Looks: " + str(global.looks)
+	if global.logs.size() == 0: #if there aren't logs to show
+		$logsMenu.hide() #hides the logs menu button
 	if global.revent.size() != 0: #if there are random events queued
 		get_tree().change_scene_to_file("res://pages/event.tscn")
 	global.saveGame() #saves both life and game files (does not need to go before the line above as saveGame() is run when the event.gd script is initialised anyway)
@@ -32,6 +33,11 @@ func _on_new_game_egg_pressed() -> void: #on new game egg button clicked
 
 func _on_age_up_button_pressed() -> void: #on age up button pressed
 	get_tree().change_scene_to_file("res://pages/age_up.tscn") #age up
+
+
+func _on_logs_menu_pressed() -> void:
+	if global.logs.size() > 0: #if you have logs to show
+		get_tree().change_scene_to_file("res://pages/logs.tscn")
 
 
 func _on_occupation_pressed() -> void:

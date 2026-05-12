@@ -6,7 +6,7 @@ func _ready() -> void:
 	global.statClamper()
 	#stat text setting
 	$name.text = str(global.firstName) + " " + str(global.lastName)
-	$logs.text = str(global.logs)
+	$logs.text = str(global.logs[global.logs.size() - 1]) #sets log displayed to the most recent one
 	$age.text = "Age: " + str(global.age)
 	$joy.text = "Joy: " + str(global.joy)
 	$health.text = "Health: " + str(global.health)

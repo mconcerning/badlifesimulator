@@ -3,9 +3,13 @@ extends Node2D #author(s): Ethan Scott
 
 func _ready() -> void:
 	if global.RAUE == true:
-		$scrollContainer/centerContainer/vBoxContainer/RAUECheck.frame = 1
+		$scrollContainer/centerContainer/vBoxContainer/RAUE/RAUECheck.frame = 1
 	else: #if global.RAUE == false
-		$scrollContainer/centerContainer/vBoxContainer/RAUECheck.frame = 0
+		$scrollContainer/centerContainer/vBoxContainer/RAUE/RAUECheck.frame = 0
+	if global.developerModePassword == "AlwaysRequirePassword":
+		$scrollContainer/centerContainer/vBoxContainer/DMRP/DMRPCheck.frame = 1
+	else:
+		$scrollContainer/centerContainer/vBoxContainer/DMRP/DMRPCheck.frame = 0
 
 
 func _on_exit_pressed() -> void:
@@ -43,11 +47,11 @@ func _on_set_looks_pressed() -> void:
 
 func _on_raue_pressed() -> void:
 	if global.RAUE == true:
-		$scrollContainer/centerContainer/vBoxContainer/RAUECheck.frame = 0
+		$scrollContainer/centerContainer/vBoxContainer/RAUE/RAUECheck.frame = 0
 		global.RAUE = false
 		$confirmation.text = "Successfully set RAUE to false!"
 	else: #if false
-		$scrollContainer/centerContainer/vBoxContainer/RAUECheck.frame = 1
+		$scrollContainer/centerContainer/vBoxContainer/RAUE/RAUECheck.frame = 1
 		global.RAUE = true
 		$confirmation.text = "Successfully set RAUE to true!"
 	print("set RAUE to " + str(global.RAUE))
@@ -174,3 +178,14 @@ func _on_loan_payback_duration_pressed() -> void:
 	global.loanPaybackDuration = loanPaybackDurationTemp
 	$confirmation.text = "Successfully set loan payback duration!"
 	print("set loan payback duration")
+
+func _on_DM_password_pressed() -> void:
+	if global.developerModePassword != "AlwaysRequirePassword":
+		$scrollContainer/centerContainer/vBoxContainer/DMRP/DMRPCheck.frame = 1
+		global.developerModePassword = "AlwaysRequirePassword"
+		$confirmation.text = "Successfully set always req DM password to true!"
+	else: #if you DON'T require password after clicking this
+		$scrollContainer/centerContainer/vBoxContainer/DMRP/DMRPCheck.frame = 0
+		global.developerModePassword = "opensesame"
+		$confirmation.text = "Successfully set always req DM password to false!"
+	print("set always require developer mode password to " + str(global.developerModePassword))

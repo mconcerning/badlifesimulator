@@ -43,17 +43,19 @@ func _on_100ms_timeout() -> void: #every 0.1s
 	elif timerRuns == 9:
 		$statsLeft.text += "\nLooks at death: " + str(global.looks)
 	elif timerRuns == 10:
-		$statsLeft.text += "\n\nXP: " + str(global.XP)
+		$statsLeft.text += "\n\nXP: " + global.commaiser(global.XP)
 	elif timerRuns == 11:
-		$statsLeft.text += "\nXP earned: " + str(XPThatWasQueued)
-	elif timerRuns == 12:
-		$statsRight.text += "Level " + str(global.level)
-	elif timerRuns == 13: #first right-justified stat
-		$statsRight.text += "\n\nYou need " + str(global.XPRequired - global.XP) + " more XP to level up"
+		$statsLeft.text += "\nXP earned: " + global.commaiser(XPThatWasQueued)
+	elif timerRuns == 12: #first right-justified stat
+		$statsRight.text += "Level " + global.commaiser(global.level)
+	elif timerRuns == 13:
+		$statsRight.text += "\n\nYou need " + global.commaiser(global.XPRequired - global.XP) + " more XP to level up"
 	elif timerRuns == 14:
+		$statsRight.text += "\n\nMoney at death: $" + global.commaiser(global.money)
+	elif timerRuns == 15:
 		if didLevelUp == true: #if you levelled up
 			$levelUp.text = "Level up"
-	elif timerRuns == 15:
+	elif timerRuns == 16:
 		$home.position.x = 402 #puts the home button on-screen
 		$"100ms".queue_free() #this is the last thing the timer has to take care of, and so it can safely be combusted in the name of (ever so slightly) improving performance
 		$backgroundRed.queue_free() #also deletes the background, because even though it would be invisible at this point, I think it interferes with you interacting with anything on-screen (i.e. the button) because it's drawn on top
@@ -78,19 +80,23 @@ func _ready() -> void:
 		print("successfully deleted save file for " + global.currentLife)
 	global.currentLife = "" #no more currentLife
 	#last-minute extra XP calculations
-	global.XPQueued += global.age #gives you your age in XP
+	global.XPQueued += roundi(float(global.age) / 4) #gives you a quarter of your age in XP
 	var XPFromStats = 0
-	XPFromStats += round(float(global.joy) / 2) #gives you half of all your main stats' values upon death in XP
-	XPFromStats += round(float(global.health) / 2)
-	XPFromStats += round(float(global.intellect) / 2)
-	XPFromStats += round(float(global.looks) / 2)
-	XPFromStats += round(averageFinder(global.joyOverTime) / 2) #gives half you all your average stats' values in XP upon death
-	XPFromStats += round(averageFinder(global.healthOverTime) / 2)
-	XPFromStats += round(averageFinder(global.intellectOverTime) / 2)
-	XPFromStats += round(averageFinder(global.looksOverTime) / 2)
-	XPFromStats = round(XPFromStats / 100 * global.age) #how old you are directly affects how much XP you earn from having high stats so you can't just farm XP by spawning a bunch of lives and immediately dying over and over again. Also, your stats aren't worth much in XP. That's by design to discourage overprioritising them during your life.
-	global.XPQueued += round(float(global.money) / 1000) #gives you a 1000th of your money upon death in XP
+	XPFromStats += roundi(float(global.joy) / 3) #gives you a quarter of all your main stats' values upon death in XP
+	XPFromStats += roundi(float(global.health) / 4)
+	XPFromStats += roundi(float(global.intellect) / 4)
+	XPFromStats += roundi(float(global.looks) / 4)
+	XPFromStats += roundi(averageFinder(global.joyOverTime) / 3) #gives a third of all your average stats' values in XP upon death
+	XPFromStats += roundi(averageFinder(global.healthOverTime) / 3)
+	XPFromStats += roundi(averageFinder(global.intellectOverTime) / 3)
+	XPFromStats += roundi(averageFinder(global.looksOverTime) / 3)
+	XPFromStats = roundi(float(XPFromStats) / 100 * global.age) #how old you are directly affects how much XP you earn from having high stats so you can't just farm XP by spawning a bunch of lives and immediately dying over and over again. Also, your stats aren't worth much in XP. That's by design to discourage overprioritising them during your life.
+	if global.age <= 25: #if you're really young and die, nerf the XP you get AGAIN to prevent effortless farming
+		XPFromStats = roundi(float(XPFromStats) / 50 * global.age * 2)
+	if global.money > 0: #if you're not in debt (so you can't lose XP for having negative money)
+		global.XPQueued += min(10000, roundi(float(global.money) / (10000.0 / float(global.level) / 2))) #gives you a 10,000th of your money upon death in XP, up to 10,000
 	#the rest of everything
+	global.XPQueued += XPFromStats
 	global.XP += global.XPQueued #adds the XP you are owed to your XP
 	XPThatWasQueued = global.XPQueued
 	global.XPQueued = 0 #you are no longer owed XP

@@ -34,7 +34,7 @@ func cleanLife(): #resets your existing life (if any) and generates new stats
 	global.age = 0
 	global.firstName = ""
 	global.lastName = ""
-	global.logs = ""
+	global.logs = []
 	global.money = 0
 	global.evality = 0
 	#rest-of-life-related

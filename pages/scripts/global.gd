@@ -23,7 +23,7 @@ var joy : int = 0
 var health : int = 0
 var intellect : int = 0
 var looks : int = 0
-var logs = ""
+var logs : Array = []
 var money : int = 0
 #hidden stats - not shown to the player
 var evality : int = 0 #on a scale from 0 - 100, how evil are you? i.e. how much joy do you derive from doing bad things, and what bad things are you capable of? higher is more.
@@ -218,6 +218,16 @@ func pronounGenerator(type, selectedSex): #returns pronouns so you don't have to
 			return "guy"
 		else: #if female
 			return "girl"
+	elif type == "he's":
+		if selectedSex == "M": #if male
+			return "he's"
+		else: #if female
+			return "she's"
+	elif type == "man":
+		if selectedSex == "M": #if male
+			return "man"
+		else: #if female
+			return "woman"
 
 
 func NPCCreator(NPCsex, NPCfirstName, NPClastName, NPCage, NPCrelationship, NPCtype, NPCcategory, NPCstats): #creates an NPC from several custom perameters

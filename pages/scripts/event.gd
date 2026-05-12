@@ -278,6 +278,7 @@ func relationships(): #specialised relationship events
 			global.XPQueued += 3
 			$heading.text = "How tertiary"
 			$body.text = "You told your " + global.personTypes[global.IDClicked].to_lower() + ", " + global.personFirstNames[global.IDClicked] + ", that " + global.pronounGenerator("he", global.personSexes[global.IDClicked]) + "'s " + complimentSelected + "."
+			global.logs.append("I told my " + global.personTypes[global.IDClicked] + ", " + global.personFirstNames[global.IDClicked] + ", that " + global.pronounGenerator("he's", global.personSexes[global.IDClicked]) + " " + complimentSelected + ".")
 			if complimentSelected == "racist" || (complimentSelected == "incredibly attractive" && global.personCategories[global.IDClicked] == "family"): #if you accidentally didn't compliment them
 				$heading.text = "...Thanks."
 				global.personRelationships[global.IDClicked] -= randi_range(5, 20)
@@ -304,7 +305,7 @@ func prison(): #specialised prison events
 		else:
 			goHome()
 		$option1.text = "Try to flee"
-		global.XPQueued += 12
+		global.XPQueued += max(8, roundi(float(global.sumCalculator(global.crimesSeverity)) / 12)) #gives you XP
 		optionRemover(3)
 	elif global.revent[0] == "pre-court-trial-o1" || global.revent[0] == "court-trial" || global.revent[0] == "arrested-o2": #they are identical, but one is assigned directly and the other two are assigned as a result of choosing an option in another event ("arrested-o1" & "arrested" respectively)
 		$heading.text = "Court trial"
@@ -893,6 +894,7 @@ func option1outcomes(): #option 1 has been picked
 		$body.text = "You befriended " + global.eventPersonFirstName + " " + global.eventPersonLastName + "!"
 		$option1.text = "Hooray"
 		optionRemover(2)
+		global.logs.append("I befriended a " + str(global.eventPersonAge) + "-year-old " + global.pronounGenerator("boy", global.eventPersonSex) + " named " + global.eventPersonFirstName + " " + global.eventPersonLastName + ".")
 		#adds the EGP to your relationships array
 		global.NPCCreator(global.eventPersonSex, global.eventPersonFirstName, global.eventPersonLastName, global.eventPersonAge, randi_range(20, 50), "Friend", "misc", "random")
 	elif global.revent[0] == "teenager-friend-o1":
@@ -900,6 +902,7 @@ func option1outcomes(): #option 1 has been picked
 			$heading.text = "That's awkward..."
 			$body.text = "You try to befriend " + global.pronounGenerator("him", global.eventPersonSex) + ", but " + global.pronounGenerator("he", global.eventPersonSex) + " rejects you."
 			$option1.text = "Dang"
+			global.logs.append("I tried to befriend a " + str(global.eventPersonAge) + "-year-old " + global.pronounGenerator("guy", global.eventPersonSex) + " named " + global.eventPersonFirstName + " " + global.eventPersonLastName + ", but they rejected me.")
 		else: #if they agree to be your friend
 			$heading.text = "Sweet"
 			$body.text = "You befriended " + global.eventPersonFirstName + " " + global.eventPersonLastName + "."
@@ -912,18 +915,21 @@ func option1outcomes(): #option 1 has been picked
 			global.personTypes.append("Friend")
 			global.personCategories.append("misc")
 			$option1.text = "Okay"
+			global.logs.append("I befriended a " + str(global.eventPersonAge) + "-year-old " + global.pronounGenerator("guy", global.eventPersonSex) + " named " + global.eventPersonFirstName + " " + global.eventPersonLastName + ".")
 		optionRemover(2)
 	elif global.revent[0] == "adult-friend-o1" || global.revent[0] == "elder-friend-o1":
 		if randi_range(1,2) == 1: #if they refuse to be your friend
 			$heading.text = "Okay..."
 			$body.text = "You try to befriend " + global.pronounGenerator("him", global.eventPersonSex) + ", but " + global.pronounGenerator("he", global.eventPersonSex) + " rejects you."
 			$option1.text = "Dang"
+			global.logs.append("I tried to befriend a " + str(global.eventPersonAge) + "-year-old " + global.pronounGenerator("guy", global.eventPersonSex) + " named " + global.eventPersonFirstName + " " + global.eventPersonLastName + ", but they rejected me.")
 		else: #if they agree to be your friend
 			$heading.text = "A blossoming friendship"
 			$body.text = "You befriended " + global.eventPersonFirstName + " " + global.eventPersonLastName + "."
 			#adds the EGP to your relationships array
 			global.NPCCreator(global.eventPersonSex, global.eventPersonFirstName, global.eventPersonLastName, global.eventPersonAge, randi_range(20, 50), "Friend", "misc", "random")
 			$option1.text = "Okay"
+			global.logs.append("I befriended a " + str(global.eventPersonAge) + "-year-old " + global.pronounGenerator("man", global.eventPersonSex) + " named " + global.eventPersonFirstName + " " + global.eventPersonLastName + ".")
 		optionRemover(2)
 	elif global.revent[0] == "toddler-0-o1":
 		$heading.text = "Nooo"
@@ -994,6 +1000,7 @@ func option2outcomes(): #option 2 has been picked
 		$option1.text = "Okay"
 		optionRemover(2)
 		global.evality += 4 #i mean, it was kind of rude...
+		global.logs.append("I ignored a random kid named " + global.eventPersonFirstName + " " + global.eventPersonLastName + ".")
 	if global.revent[0] == "teenager-friend-o2":
 		if randi_range(1, round((36 - float(global.looks) / 4) / 2) - 3) == 1: #if you're more physically attractive, you have a higher chance of being accepted
 			$heading.text = "What's your number?"
@@ -1132,9 +1139,11 @@ func option3outcomes(): #option 3 has been picked
 			$heading.text = "Can you go away"
 			$body.text = "You stop talking to " + global.pronounGenerator("him", global.eventPersonSex) + " and " + global.pronounGenerator("he", global.eventPersonSex) + " eventually goes away."
 			global.evality += 5
+			global.logs.append("I ignored a random person named " + global.eventPersonFirstName + " " + global.eventPersonLastName + ".")
 		else:
 			$heading.text = "Alright, bye"
 			$body.text = "You finish talking to " + global.pronounGenerator("him", global.eventPersonSex) + " and you go your seperate ways."
+			global.logs.append("I met a " + global.pronounGenerator("guy", global.eventPersonSex) + " named " + global.eventPersonFirstName + " " + global.eventPersonLastName + ".")
 		$option1.text = "Okay"
 		optionRemover(2)
 	elif global.revent[0] == "toddler-0-o3":

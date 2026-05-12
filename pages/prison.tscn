@@ -9,6 +9,7 @@
 [ext_resource type="Texture2D" uid="uid://di3wdmdrsyafk" path="res://assets/egg-cracked-full-used-rotated.png" id="6_h8xuj"]
 [ext_resource type="Texture2D" uid="uid://dem3xsw7xi24n" path="res://assets/egg-cracked.png" id="7_qs6gy"]
 [ext_resource type="LabelSettings" uid="uid://dl6sog5hfkb6u" path="res://styles/text/body.tres" id="8_1cpv2"]
+[ext_resource type="Texture2D" uid="uid://bm5sed1rbuhij" path="res://assets/notebook.png" id="9_c1qy7"]
 [ext_resource type="PackedScene" uid="uid://c7mtxc0kmsorg" path="res://objects/money.tscn" id="10_cy2ie"]
 [ext_resource type="LabelSettings" uid="uid://yi5vjum7s3is" path="res://styles/text/body_bold.tres" id="10_nmi45"]
 [ext_resource type="Texture2D" uid="uid://b8pyfvnrq1ykp" path="res://assets/prison.png" id="12_cy2ie"]
@@ -51,6 +52,7 @@ text = "Name Johnson"
 label_settings = ExtResource("3_7r7vg")
 horizontal_alignment = 1
 autowrap_mode = 3
+metadata/_edit_use_anchors_ = true
 
 [node name="prison" type="Label" parent="." unique_id=1507969302]
 offset_left = 100.0
@@ -61,12 +63,14 @@ text = "Prison"
 label_settings = SubResource("LabelSettings_c1qy7")
 horizontal_alignment = 1
 autowrap_mode = 2
+metadata/_edit_use_anchors_ = true
 
 [node name="ageUpButton" parent="." unique_id=509130995 instance=ExtResource("4_pmyl4")]
 offset_left = 440.0
 offset_top = 980.0
 offset_right = 640.0
 offset_bottom = 1180.0
+metadata/_edit_use_anchors_ = true
 
 [node name="plus" type="Sprite2D" parent="ageUpButton" unique_id=1068915531]
 position = Vector2(100, 100)
@@ -87,17 +91,19 @@ grow_horizontal = 2
 grow_vertical = 2
 pivot_offset = Vector2(50, 50)
 theme = SubResource("Theme_bqpvg")
+metadata/_edit_use_anchors_ = true
 
-[node name="logs" type="Label" parent="." unique_id=505672089]
-offset_top = 550.0
-offset_right = 1080.0
-offset_bottom = 822.0
-text = "Logs will go here."
-label_settings = ExtResource("8_1cpv2")
-horizontal_alignment = 1
-vertical_alignment = 1
+[node name="logsMenu" type="TextureButton" parent="." unique_id=1114739777]
+offset_left = 960.0
+offset_top = 20.0
+offset_right = 1060.0
+offset_bottom = 120.0
+texture_normal = ExtResource("9_c1qy7")
+ignore_texture_size = true
+stretch_mode = 0
 
 [node name="money" parent="." unique_id=91619562 instance=ExtResource("10_cy2ie")]
+metadata/_edit_use_anchors_ = true
 
 [node name="age" type="Label" parent="." unique_id=1513164279]
 offset_top = 1400.0
@@ -106,6 +112,7 @@ offset_bottom = 1460.0
 text = "Age: x"
 label_settings = ExtResource("10_nmi45")
 horizontal_alignment = 1
+metadata/_edit_use_anchors_ = true
 
 [node name="joy" type="Label" parent="." unique_id=1646613292]
 offset_top = 1475.0
@@ -114,6 +121,7 @@ offset_bottom = 1535.0
 text = "Joy: x"
 label_settings = ExtResource("8_1cpv2")
 horizontal_alignment = 1
+metadata/_edit_use_anchors_ = true
 
 [node name="health" type="Label" parent="." unique_id=370618692]
 offset_top = 1550.0
@@ -122,6 +130,7 @@ offset_bottom = 1610.0
 text = "Health: x"
 label_settings = ExtResource("8_1cpv2")
 horizontal_alignment = 1
+metadata/_edit_use_anchors_ = true
 
 [node name="intellect" type="Label" parent="." unique_id=964933205]
 offset_top = 1625.0
@@ -130,6 +139,7 @@ offset_bottom = 1685.0
 text = "Intellect: x"
 label_settings = ExtResource("8_1cpv2")
 horizontal_alignment = 1
+metadata/_edit_use_anchors_ = true
 
 [node name="looks" type="Label" parent="." unique_id=1746060993]
 offset_top = 1700.0
@@ -138,6 +148,7 @@ offset_bottom = 1760.0
 text = "Looks: x"
 label_settings = ExtResource("8_1cpv2")
 horizontal_alignment = 1
+metadata/_edit_use_anchors_ = true
 
 [node name="activities" type="TextureButton" parent="." unique_id=490609811]
 offset_left = 260.0
@@ -147,6 +158,7 @@ offset_bottom = 1160.0
 texture_normal = ExtResource("12_cy2ie")
 ignore_texture_size = true
 stretch_mode = 0
+metadata/_edit_use_anchors_ = true
 
 [connection signal="pressed" from="ageUpButton" to="." method="_on_age_up_button_pressed"]
 [connection signal="mouse_entered" from="newGameEgg" to="." method="_on_new_game_egg_mouse_entered"]
