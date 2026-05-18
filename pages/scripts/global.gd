@@ -218,16 +218,12 @@ func pronounGenerator(type, selectedSex): #returns pronouns so you don't have to
 			return "guy"
 		else: #if female
 			return "girl"
-	elif type == "he's":
-		if selectedSex == "M": #if male
-			return "he's"
-		else: #if female
-			return "she's"
 	elif type == "man":
 		if selectedSex == "M": #if male
 			return "man"
 		else: #if female
 			return "woman"
+	return "what" #usually you can't get here unless there's an error
 
 
 func NPCCreator(NPCsex, NPCfirstName, NPClastName, NPCage, NPCrelationship, NPCtype, NPCcategory, NPCstats): #creates an NPC from several custom perameters

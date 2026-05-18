@@ -3,14 +3,14 @@ extends Node2D #author(s): Ethan Scott
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
+	if global.logs.size() == 0:
+		$scrollContainer/vBoxContainer/logs.text += "Nothing here :("
 	for i in global.logs.size(): #writes all logs
 		if global.logs[i] != "": #if the log isn't blank
-			if i > 0: #if there are logs to show
+			if i > 0: #if this isn't the first log
 				$scrollContainer/vBoxContainer/logs.text += "\n"
 			$scrollContainer/vBoxContainer/logs.text += global.logs[i]
 	$scrollContainer.set_deferred("scroll_vertical", 99999999999)
-	await get_tree().process_frame
-	print($scrollContainer.scroll_vertical)
 
 
 func _on_back_pressed() -> void:

@@ -36,6 +36,9 @@ func _on_set_health_pressed() -> void:
 	print("set health to " + str(global.health))
 
 func _on_set_intellect_pressed() -> void:
+	if $input.text == "π":
+		global.firstName = "Jesse"
+		$input.text = str(3.14159265358979)
 	global.intellect = int($input.text)
 	$confirmation.text = "Successfully set intellect!"
 	print("set intellect to " + str(global.intellect))
