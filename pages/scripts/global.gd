@@ -12,6 +12,8 @@ var IDClicked : int = -1 #used to identify which relationship you're interacting
 var IDClickedType = "" #used to identify what type of relationship you're interacting with; can be either "family" or "misc"
 var importLegacySave = "" #you are sent to newRandomGame to import and load a legacy save. if, after all life variables are filled in, this does not equal "" (i.e. there is a path here), it will load the legacy save from the path provided.
 var developerModePassword = "" #once you enter it correctly, you won't have to do it every time. It is saved here and run automatically.
+var keyboardShortcutsEnabled = false #whether or not keyboard shortcuts are enabled. Only works on devices with a physical keyboard attatched. Disabled by default. This can be changed in settings.
+var eventMemory = [] #a 2D array that holds more arrays that contain any extraneous data that events need to remember between several pages, isn't significant enough to warrant its own dedicated global variables, and too complex to be stored in the event ID.
 
 
 #personal
@@ -282,6 +284,28 @@ func commaiser(number): #seperates big numbers by commas every 3 characters from
 	regex.compile("(?<=\\d)(?=(\\d{3})+(?!\\d))") #finds the spot between every 3 digits
 	return regex.sub(str(number), ",", true)
 
+func anIser(undoctoredProceedingWord): #an-iser. Returns "n " to be appended to "a" if the word you give it starts with a vowel, and " " if it doesn't. Useful in events where the word following "a" will vary; use this so you don't accidentally say "a electrician" or something dumb. There are some small exceptions: for example, if you feed this the word "one" it will flag it as needing an "an" before it, which it obviously doesn't. If you need this to be able to handle a special exception, please add it to the special exceptions or special negative exceptions array. Add it to the special exceptions if it doesn't start with a vowel and needs an "an", and add it to special negative exceptions if it DOES start with a vowel but only needs an "a".
+	undoctoredProceedingWord = str(undoctoredProceedingWord) #turns the word we're working with into a string in case it's a number or something weird
+	var proceedingWord = undoctoredProceedingWord.to_lower() #decapitalises the word you're testing, then saves it to a new variable so we can still use the original version later
+	#first, check for words that DO start with vowels but still only need an "a"
+	var specialNegativeExceptions = ["one"] #if the word starts with a vowel, but still shouldn't be prefixed with an "an", like "one"
+	for i in specialNegativeExceptions.size(): #check for matches
+		if proceedingWord == specialNegativeExceptions[i]:
+			return "a " + undoctoredProceedingWord #gives you the correct grammar AND the proceeding word WITH unaltered capitalisation (the way you entered it into the function)
+	#checks for words that start DO with vowels AND require an "an"
+	var firstLetter = proceedingWord[0] #saves the first character in the word you're testing to a variable
+	var trueIfFirstLetterIs = ["a", "e", "i", "o", "u", "8"]
+	for i in trueIfFirstLetterIs.size(): #runs through every first character that would require an "an"
+		if firstLetter == trueIfFirstLetterIs[i]: #checks if they do
+			return "an " + undoctoredProceedingWord #if they do, return
+	#last, checks for words that don't start with vowels, but still do require an "an" due to how they're pronounced
+	var specialExceptions = ["18"] #if the word doesn't start with a vowel, check it against any special exceptions that still require an "an", like 18
+	for i in specialExceptions.size(): #checks if any of them are a match
+		if proceedingWord == specialExceptions[i]: #if it IS a match
+			return "an " + undoctoredProceedingWord #return
+	#if you made it here, no vowel pronounciation weirdness, normal word, return "a" :)
+	return "a " + undoctoredProceedingWord
+
 
 func crimeTimeCalculator():
 	var totalSentence = 0
@@ -328,6 +352,7 @@ func lifeSerialiser(): #serialises every life-specific variable we need to save 
 		"versionNumber" : versionNumber,
 		"revent" : revent,
 		"RAUE" : RAUE,
+		"eventMemory" : eventMemory,
 		#personal
 		"firstName" : firstName,
 		"lastName" : lastName,
@@ -414,6 +439,7 @@ func gameSerialiser(): #serialises every NON-life-specific variable we need to s
 		"level" : level,
 		"XPRequired" : XPRequired,
 		"developerModePassword" : developerModePassword,
+		"keyboardShortcutsEnabled" : keyboardShortcutsEnabled,
 	}
 	return cambridgeDictionary
 
@@ -466,6 +492,7 @@ func loadGame(): #does the actual GAME loading
 			level = dictionary["level"]
 			XPRequired = dictionary["XPRequired"]
 			developerModePassword = dictionary["developerModePassword"]
+			keyboardShortcutsEnabled = dictionary["keyboardShortcutsEnabled"]
 			gameSaveFile.close() #closes file so it doesn't do anything weird
 			print("hoorah, game load successful")
 			print(currentLife)
@@ -485,6 +512,7 @@ func loadLife(): #does the actual LIFE loading
 			#engine
 			revent = dictionary["revent"]
 			RAUE = dictionary["RAUE"]
+			eventMemory = dictionary["eventMemory"]
 			#personal
 			firstName = dictionary["firstName"]
 			lastName = dictionary["lastName"]

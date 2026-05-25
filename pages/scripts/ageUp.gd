@@ -38,7 +38,12 @@ func school():
 		global.workExperience.append("school-" + str(global.schoolLevel)) #adds schooling as work experience - this is used and removed only when you graduated
 		if global.schoolPerformance < global.intellect: #if you're not doing as well as your functional maximum
 			global.schoolPerformance = min(global.intellect, global.schoolPerformance + float(global.intellect) / 10) #you work towards it
-		global.schoolPerformance += randi_range(-5, 5)
+		elif global.schoolPerformance > global.intellect: #if you're less intelligent than your school performance
+			if randi_range(1,3) == 1: #if you lose performance (1 in 3 chance)
+				global.schoolPerformance = max(global.intellect, global.schoolPerformance - roundi(float(global.intellect) / 10)) #lose some performance
+			else: #if you gain intellect instead (2 in 3 chance)
+				global.intellect += roundi(float(global.schoolPerformance) / 10)
+		global.schoolPerformance += randi_range(-4, 4)
 		global.intellect += round(float(global.schoolPerformance) / 12) + randi_range(-3, 3) #if you're doing well in school, you're getting smarter
 		global.XPQueued += 3
 		global.schoolPerformanceTracker.append(global.schoolPerformance)

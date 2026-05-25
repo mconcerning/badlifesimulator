@@ -46,3 +46,13 @@ func _on_occupation_pressed() -> void:
 
 func _on_relationships_pressed() -> void:
 	get_tree().change_scene_to_file("res://pages/relationships.tscn")
+
+
+#keyboard shortcuts
+func _unhandled_input(event: InputEvent) -> void: #if you make an input that godot isn't handling
+	if event.is_action_pressed("gamemenu_occupation"):
+		_on_occupation_pressed()
+	elif event.is_action_pressed("gamemenu_relationships"):
+		_on_relationships_pressed()
+	elif event.is_action_pressed("ui_accept"): #if enter is pressed
+		_on_age_up_button_pressed()

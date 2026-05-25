@@ -24,7 +24,7 @@ func _on_legacy_import_file_selected(path: String) -> void: #when you pick a leg
 	legacyLoad(path)
 
 func _on_export_save_pressed() -> void:
-	$export.visible = true
+	$export.visible = true #opens file picker
 
 func _on_export_dir_selected(dir: String) -> void: #opens the file picker to pick an export location
 	print("exporting to " + dir)
@@ -44,4 +44,4 @@ func _on_import_file_selected(path: String) -> void:
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	if global.currentLife == "": #if you have no life to export
-		$exportSave.disabled = true #you can't export it
+		$exportLife.disabled = true #you can't export it

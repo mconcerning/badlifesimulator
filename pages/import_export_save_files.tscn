@@ -17,26 +17,26 @@ script = ExtResource("1_xe645")
 [node name="heading" parent="." unique_id=33655322 instance=ExtResource("3_xe645")]
 text = "Import/export"
 
-[node name="importSave" parent="." unique_id=1544237965 instance=ExtResource("5_c6kya")]
+[node name="importLife" parent="." unique_id=1544237965 instance=ExtResource("5_c6kya")]
 offset_left = 361.0
 offset_top = 300.0
 offset_right = 720.0
 offset_bottom = 384.0
-text = "Import save"
+text = "Import life"
 
-[node name="exportSave" parent="." unique_id=264704563 instance=ExtResource("5_c6kya")]
+[node name="exportLife" parent="." unique_id=264704563 instance=ExtResource("5_c6kya")]
 offset_left = 369.0
 offset_top = 450.0
 offset_right = 711.0
 offset_bottom = 534.0
-text = "Export save"
+text = "Export life"
 
-[node name="importLegacySave" parent="." unique_id=1071910472 instance=ExtResource("5_c6kya")]
+[node name="importLegacyLife" parent="." unique_id=1071910472 instance=ExtResource("5_c6kya")]
 offset_left = 251.0
 offset_top = 600.0
 offset_right = 829.0
 offset_bottom = 684.0
-text = "Import legacy save"
+text = "Import legacy life"
 
 [node name="confirmation" type="Label" parent="." unique_id=1547871535]
 offset_left = 40.0
@@ -75,9 +75,9 @@ filters = PackedStringArray("*.bls", "*.bls.json")
 use_native_dialog = true
 
 [connection signal="pressed" from="back" to="." method="_on_back_pressed"]
-[connection signal="pressed" from="importSave" to="." method="_on_import_save_pressed"]
-[connection signal="pressed" from="exportSave" to="." method="_on_export_save_pressed"]
-[connection signal="pressed" from="importLegacySave" to="." method="_on_import_legacy_save_pressed"]
+[connection signal="pressed" from="importLife" to="." method="_on_import_save_pressed"]
+[connection signal="pressed" from="exportLife" to="." method="_on_export_save_pressed"]
+[connection signal="pressed" from="importLegacyLife" to="." method="_on_import_legacy_save_pressed"]
 [connection signal="file_selected" from="legacyImport" to="." method="_on_legacy_import_file_selected"]
 [connection signal="dir_selected" from="export" to="." method="_on_export_dir_selected"]
 [connection signal="file_selected" from="import" to="." method="_on_import_file_selected"]
