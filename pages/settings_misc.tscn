@@ -1,0 +1,34 @@
+[gd_scene format=3 uid="uid://dop2w7dmqv1k5"]
+
+[ext_resource type="Script" uid="uid://desthyk41cfcg" path="res://pages/scripts/settingsMisc.gd" id="1_fcerb"]
+[ext_resource type="PackedScene" uid="uid://pmo8e2dmbkfm" path="res://objects/background.tscn" id="2_gpqpm"]
+[ext_resource type="PackedScene" uid="uid://cjnbhqp8obehv" path="res://objects/back_button.tscn" id="3_flqkp"]
+[ext_resource type="PackedScene" uid="uid://b7bfib5vbcvk6" path="res://objects/heading.tscn" id="4_rxi18"]
+[ext_resource type="PackedScene" uid="uid://ck7ra4cupjjkm" path="res://objects/button_default.tscn" id="5_q6vhn"]
+[ext_resource type="PackedScene" uid="uid://cil46lqksrpuy" path="res://objects/checkbox.tscn" id="6_gpqpm"]
+
+[node name="misc" type="Node2D" unique_id=1974988509]
+script = ExtResource("1_fcerb")
+
+[node name="background" parent="." unique_id=132212067 instance=ExtResource("2_gpqpm")]
+
+[node name="back" parent="." unique_id=17962498 instance=ExtResource("3_flqkp")]
+
+[node name="heading" parent="." unique_id=33655322 instance=ExtResource("4_rxi18")]
+text = "Misc"
+
+[node name="vBoxContainer" type="VBoxContainer" parent="." unique_id=337752013]
+offset_top = 300.0
+offset_right = 1080.0
+offset_bottom = 1380.0
+theme_override_constants/separation = 50
+
+[node name="enableKeyboardShortcuts" parent="vBoxContainer" unique_id=1523501262 instance=ExtResource("5_q6vhn")]
+layout_mode = 2
+text = "Keyboard shortcuts"
+
+[node name="checkbox" parent="vBoxContainer/enableKeyboardShortcuts" unique_id=124453344 instance=ExtResource("6_gpqpm")]
+position = Vector2(645, 0)
+
+[connection signal="pressed" from="back" to="." method="_on_back_pressed"]
+[connection signal="pressed" from="vBoxContainer/enableKeyboardShortcuts" to="." method="_on_enable_keyboard_shortcuts_pressed"]

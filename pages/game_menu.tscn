@@ -76,10 +76,12 @@ pivot_offset = Vector2(50, 50)
 theme = SubResource("Theme_bqpvg")
 
 [node name="logsMenu" type="TextureButton" parent="." unique_id=1332141739]
+visible = false
 offset_left = 960.0
 offset_top = 20.0
 offset_right = 1060.0
 offset_bottom = 120.0
+disabled = true
 texture_normal = ExtResource("8_lw86i")
 ignore_texture_size = true
 stretch_mode = 0

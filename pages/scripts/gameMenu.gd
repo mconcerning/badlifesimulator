@@ -50,6 +50,8 @@ func _on_relationships_pressed() -> void:
 
 #keyboard shortcuts
 func _unhandled_input(event: InputEvent) -> void: #if you make an input that godot isn't handling
+	if global.keyboardShortcutsEnabled == false:
+		return #end the running of the function here
 	if event.is_action_pressed("gamemenu_occupation"):
 		_on_occupation_pressed()
 	elif event.is_action_pressed("gamemenu_relationships"):

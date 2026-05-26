@@ -11,6 +11,7 @@ func basicStatChanges():
 	global.health += randi_range(-6, 6)
 	global.intellect += randi_range(-4, 4)
 	global.looks += randi_range(-6, 6)
+	global.money += global.fullTimeSalary + global.partTimeSalary
 	#over-timers
 	global.joyOverTime.append(global.joy)
 	global.healthOverTime.append(global.health)

@@ -16,36 +16,35 @@ script = ExtResource("1_kbnjn")
 [node name="heading" parent="." unique_id=33655322 instance=ExtResource("4_kbnjn")]
 text = "Settings"
 
-[node name="credits" parent="." unique_id=1544237965 instance=ExtResource("5_w6vqt")]
-offset_left = 433.0
+[node name="vBoxContainer" type="VBoxContainer" parent="." unique_id=337752013]
 offset_top = 300.0
-offset_right = 647.0
-offset_bottom = 384.0
+offset_right = 1080.0
+offset_bottom = 1380.0
+theme_override_constants/separation = 50
+
+[node name="credits" parent="vBoxContainer" unique_id=1544237965 instance=ExtResource("5_w6vqt")]
+layout_mode = 2
 text = "Credits"
 
-[node name="saveFiles" parent="." unique_id=262623303 instance=ExtResource("5_w6vqt")]
-offset_left = 400.0
-offset_top = 450.0
-offset_right = 681.0
-offset_bottom = 534.0
+[node name="saveFiles" parent="vBoxContainer" unique_id=262623303 instance=ExtResource("5_w6vqt")]
+layout_mode = 2
 text = "Save files"
 
-[node name="importExportSaveFiles" parent="." unique_id=1741305996 instance=ExtResource("5_w6vqt")]
-offset_left = 185.0
-offset_top = 600.0
-offset_right = 895.0
-offset_bottom = 684.0
+[node name="importExportSaveFiles" parent="vBoxContainer" unique_id=1741305996 instance=ExtResource("5_w6vqt")]
+layout_mode = 2
 text = "Import/export save files"
 
-[node name="display" parent="." unique_id=233950039 instance=ExtResource("5_w6vqt")]
-offset_left = 431.0
-offset_top = 750.0
-offset_right = 649.0
-offset_bottom = 834.0
+[node name="display" parent="vBoxContainer" unique_id=233950039 instance=ExtResource("5_w6vqt")]
+layout_mode = 2
 text = "Display"
 
+[node name="misc" parent="vBoxContainer" unique_id=1523501262 instance=ExtResource("5_w6vqt")]
+layout_mode = 2
+text = "Misc"
+
 [connection signal="pressed" from="back" to="." method="_on_back_pressed"]
-[connection signal="pressed" from="credits" to="." method="_on_credits_pressed"]
-[connection signal="pressed" from="saveFiles" to="." method="_on_save_files_pressed"]
-[connection signal="pressed" from="importExportSaveFiles" to="." method="_on_import_export_save_files_pressed"]
-[connection signal="pressed" from="display" to="." method="_on_display_pressed"]
+[connection signal="pressed" from="vBoxContainer/credits" to="." method="_on_credits_pressed"]
+[connection signal="pressed" from="vBoxContainer/saveFiles" to="." method="_on_save_files_pressed"]
+[connection signal="pressed" from="vBoxContainer/importExportSaveFiles" to="." method="_on_import_export_save_files_pressed"]
+[connection signal="pressed" from="vBoxContainer/display" to="." method="_on_display_pressed"]
+[connection signal="pressed" from="vBoxContainer/misc" to="." method="_on_misc_pressed"]

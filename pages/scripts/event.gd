@@ -263,9 +263,6 @@ func specialised(): #runs any miscellanious specialised, non-age-up events
 			$option3.text = "Take out the loan"
 			$option4.text = "Apply for a scholarship"
 			optionRemover(5)
-			if global.eventMemory.has("application-log") == false: #if you applying for University hasn't been logged yet
-				global.logs.append("I decided to apply for University.") #log it
-				global.eventMemory.append("application-log") #remember that we logged it
 			if global.eventMemory.has("university-degree-picked-o2-refused"): #if your parents already refused to pay for your tuition
 				$option2.disabled = true #you can't just keep pestering them until they cave
 			if global.eventMemory.has("university-degree-picked-o4-rejected"): #if your application for a scholarship was already denied
@@ -287,12 +284,10 @@ func relationships(): #specialised relationship events
 		if global.cooldown("compliment-relationship-" + str(global.personUIDs[global.IDClicked])) >= 3: #if you've complimented them too much recently
 			$heading.text = "Whatever you say"
 			$body.text = "Your " + global.personTypes[global.IDClicked].to_lower() + ", " + global.personFirstNames[global.IDClicked] + ", said " + global.pronounGenerator("he", global.personSexes[global.IDClicked]) + "'s sick of you trying to compliment " + global.pronounGenerator("him", global.personSexes[global.IDClicked]) + " so much and you need to calm down."
-			global.logs.append("I tried to compliment my " + global.personTypes[global.IDClicked].to_lower() + ", " + global.personFirstNames[global.IDClicked] + ", but " + global.pronounGenerator("he", global.personSexes[global.IDClicked]) + " told me " + global.pronounGenerator("he", global.personSexes[global.IDClicked]) + "'s sick of me trying to compliment " + global.pronounGenerator("him", global.personSexes[global.IDClicked]) + " so much and I need to calm down.")
 		else: #if you haven't complimented them 3 or more times already this year
 			global.XPQueued += 3
 			$heading.text = "How tertiary"
 			$body.text = "You told your " + global.personTypes[global.IDClicked].to_lower() + ", " + global.personFirstNames[global.IDClicked] + ", that " + global.pronounGenerator("he", global.personSexes[global.IDClicked]) + "'s " + complimentSelected + "."
-			global.logs.append("I told my " + global.personTypes[global.IDClicked].to_lower() + ", " + global.personFirstNames[global.IDClicked] + ", that " + global.pronounGenerator("he", global.personSexes[global.IDClicked]) + "'s " + complimentSelected + ".")
 			if complimentSelected == "racist" || (complimentSelected == "incredibly attractive" && global.personCategories[global.IDClicked] == "family"): #if you accidentally didn't compliment them
 				$heading.text = "...Thanks."
 				global.personRelationships[global.IDClicked] -= randi_range(5, 20)
@@ -300,7 +295,6 @@ func relationships(): #specialised relationship events
 				var relationshipGained = randi_range(4, 7)
 				global.personRelationships[global.IDClicked] += relationshipGained
 				$body.text += "\n+ " + str(relationshipGained) + " relationship."
-			global.logs.append("I told my " + global.personTypes[global.IDClicked].to_lower() + ", " + global.personFirstNames[global.IDClicked] + ", that " + global.pronounGenerator("he", global.personSexes[global.IDClicked]) + "'s " + complimentSelected + ".")
 		$option1.text = "Okay"
 		optionRemover(2)
 
@@ -380,7 +374,6 @@ func prison(): #specialised prison events
 		if global.money < global.sumCalculator(global.crimesSeverity) * global.lawyerCostMultiplier[2]:
 			$option5.disabled = true
 		optionRemover(6)
-		global.logs.append("I am facing up to " + totalSentence + " in prison.")
 	elif global.revent[0] == "court-trial-lawyer-pick-o1" || global.revent[0] == "court-trial-lawyer-pick-o2" || global.revent[0] == "court-trial-lawyer-pick-o3" || global.revent[0] == "court-trial-lawyer-pick-o4" || global.revent[0] == "court-trial-lawyer-pick-o5":
 		match global.revent[0]:
 			"court-trial-lawyer-pick-o1":
@@ -528,7 +521,6 @@ func prison(): #specialised prison events
 					$body.text += " in prison."
 					global.prisonPreparer(global.prisonSentence)
 					global.revent[0] = "go-to-prison"
-					global.logs.append("My lawyer couldn't manage to talk down my sentence.")
 			"court-trial-o3-results-o1": #tier 1 lawyer
 				$heading.text = "That's no public defence"
 				if global.evality <= 40 && global.crimes.size() <= randi_range(3,4) && global.sumCalculator(global.criminalRecordSeverity) < 60: #if you're not very evil, you haven't committed many crimes, and you aren't re-offending much (i.e. you CAN get a lower sentence)
@@ -566,7 +558,6 @@ func prison(): #specialised prison events
 					$body.text += " in prison."
 					global.prisonPreparer(global.prisonSentence)
 					global.revent[0] = "go-to-prison"
-					global.logs.append("My lawyer couldn't manage to talk down my sentence.")
 			"court-trial-o4-results-o1": #tier 2 lawyer
 				$heading.text = "That's a private defence if I've ever seen one"
 				if global.evality <= 55 && global.crimes.size() <= randi_range(5,6) && global.sumCalculator(global.criminalRecordSeverity) < 85: #if you're not very evil, you haven't committed many crimes, and you aren't re-offending much (i.e. you CAN get a lower sentence)
@@ -604,7 +595,6 @@ func prison(): #specialised prison events
 					$body.text += " in prison."
 					global.prisonPreparer(global.prisonSentence)
 					global.revent[0] = "go-to-prison"
-					global.logs.append("My lawyer couldn't manage to talk down my sentence.")
 			"court-trial-o5-results-o1": #tier 3 lawyer
 				$heading.text = "Bottom of the top of the barrel"
 				if global.evality <= 80 && global.crimes.size() <= randi_range(6,7) && global.sumCalculator(global.criminalRecordSeverity) < 140: #if you're not incredibly evil, you haven't committed too many crimes, and you aren't re-offending more than your lawyer can defend (i.e. you CAN get a lower sentence)
@@ -633,7 +623,6 @@ func prison(): #specialised prison events
 						$body.text += "Your laywer, " + global.lawyers[2] + ", managed to talk your Life sentence down to " + global.anIser(str(newSentence)) + " year sentence."
 						global.prisonPreparer(newSentence)
 						global.revent[0] = "go-to-prison"
-						global.logs.append("My lawyer managed to negotiate my sentence down to " + global.anIser(str(newSentence)) + " years in prison.")
 				else: #if your lawyer failed to defend you in court
 					$body.text += "Your lawyer, " + global.lawyers[2] + ", failed to negotiate for a lower sentence and you have been sentenced to "
 					if str(global.crimeTimeCalculator()) == "Life":
@@ -643,7 +632,6 @@ func prison(): #specialised prison events
 					$body.text += " in prison."
 					global.prisonPreparer(global.prisonSentence)
 					global.revent[0] = "go-to-prison"
-					global.logs.append("My lawyer couldn't manage to talk down my sentence.")
 		optionRemover(2)
 	elif global.revent[0] == "court-trial-o1-results-o2" || global.revent[0] == "court-trial-o2-results-o2" || global.revent[0] == "court-trial-o3-results-o2" || global.revent[0] == "court-trial-o4-results-o2" || global.revent[0] == "court-trial-o5-results-o2": #plead not guilty
 		match global.revent[0]:
@@ -658,7 +646,6 @@ func prison(): #specialised prison events
 						global.crimeTime = []
 						global.intellectAtTimeOfCrime = []
 						global.revent[0] = "dont-go-to-prison"
-						global.logs.append("I was found not guilty.")
 					else:
 						$heading.text = "Being a lawyer is all about big speeches"
 						$body.text = "You couldn't manage to properly defend yourself in court. You have been sentenced to "
@@ -670,7 +657,6 @@ func prison(): #specialised prison events
 						$option1.text = "Dang it"
 						global.prisonPreparer(global.crimeTimeCalculator())
 						global.revent[0] = "go-to-prison"
-						global.logs.append("I was found guilty and have been sent to prison.")
 				else: #if you ARE a qualified lawyer
 					if (global.degreeProficiency[global.degrees.find("Law")] >= max(global.crimesSeverity) - randi_range(1, 15) && global.intellect >= max(60, global.averageFinder(global.intellectAtTimeOfCrime)) && global.sumCalculator(global.crimesSeverity) <= 400) || randi_range(1, 25) == 1: #if your proficiency is greater than the severity of your worst crime, and you're smarter than you were when you committed most of your crimes, AND you're not some super-criminal. There is a small (1 in 25) chance you win even if you don't meet these requirements.
 						$heading.text = "Self-defence GOAT"
@@ -681,7 +667,6 @@ func prison(): #specialised prison events
 						global.crimeTime = []
 						global.intellectAtTimeOfCrime = []
 						global.revent[0] = "dont-go-to-prison"
-						global.logs.append("I was found not guilty.")
 					else: #if you're a qualified lawyer but you still failed
 						$heading.text = "YOU let you down"
 						$body.text = "Even though you have a law degree, you failed to clear your name in court. You have been sentenced to "
@@ -693,7 +678,6 @@ func prison(): #specialised prison events
 						$option1.text = "Dang it"
 						global.prisonPreparer(global.crimeTimeCalculator())
 						global.revent[0] = "go-to-prison"
-						global.logs.append("I was found guilty and have been sent to prison.")
 			"court-trial-o2-results-o2": #public defender
 				if (randi_range(25, 50) >= global.sumCalculator(global.crimesSeverity) && randi_range(75, 95) <= global.averageFinder(global.intellectAtTimeOfCrime)) || randi_range(1, 25) == 1: #if your public defender is successful in publicly defending you. i.e. if you are a) NOT a very severe criminal, and b) were VERY intelligent when you committed your crime(s). 1 in 25 chance you win even if you don't meet these requirements.
 					if global.crimes.find("Tax evasion") == -1: #if you don't evade your taxes
@@ -707,7 +691,6 @@ func prison(): #specialised prison events
 					global.crimeTime = []
 					global.intellectAtTimeOfCrime = []
 					global.revent[0] = "dont-go-to-prison"
-					global.logs.append("I was found not guilty.")
 				else: #if your public defender sucks
 					$heading.text = "Great use of taxpayer money"
 					$body.text = "Your public defender failed to clear your name in court. You have been found guilty of all charges and are being sentenced to "
@@ -719,7 +702,6 @@ func prison(): #specialised prison events
 					$option1.text = "Dang it"
 					global.prisonPreparer(global.crimeTimeCalculator())
 					global.revent[0] = "go-to-prison"
-					global.logs.append("I was found guilty and have been sent to prison.")
 			"court-trial-o3-results-o2":
 				if (randi_range(40, 55) >= global.sumCalculator(global.crimesSeverity) && randi_range(60, 70) <= global.averageFinder(global.intellectAtTimeOfCrime)) || randi_range(1, 20) == 1: #defence success - see public defender. Basically the same formula, just with some variables changed to give you better chances.
 					$heading.text = "$3 an hour well spent"
@@ -730,7 +712,6 @@ func prison(): #specialised prison events
 					global.crimeTime = []
 					global.intellectAtTimeOfCrime = []
 					global.revent[0] = "dont-go-to-prison"
-					global.logs.append("I was found not guilty.")
 				else: #defence failure
 					$heading.text = "A penny saved is a penny earned, and I will be earning no pennies in prison"
 					$body.text = global.lawyers[0] + ", a tier 1 lawyer, failed to clear your name in court. You have been found guilty of all charges and are being sentenced to "
@@ -742,7 +723,6 @@ func prison(): #specialised prison events
 					$option1.text = "Dang it"
 					global.prisonPreparer(global.crimeTimeCalculator())
 					global.revent[0] = "go-to-prison"
-					global.logs.append("I was found guilty and have been sent to prison.")
 			"court-trial-o4-results-o2":
 				if (randi_range(80, 150) >= global.sumCalculator(global.crimesSeverity) && randi_range(40, 50) <= global.averageFinder(global.intellectAtTimeOfCrime)) || randi_range(1, 14) == 1: #defence success - see public defender. Basically the same formula, just with some variables changed to give you better chances.
 					$heading.text = "Money well spent"
@@ -753,7 +733,6 @@ func prison(): #specialised prison events
 					global.crimeTime = []
 					global.intellectAtTimeOfCrime = []
 					global.revent[0] = "dont-go-to-prison"
-					global.logs.append("I was found not guilty.")
 				else: #defence failed
 					$heading.text = "Whatever, I didn't even want to be found not guilty anyway"
 					$body.text = global.lawyers[1] + ", a tier 2 lawyer, failed to clear your name in court. You have been found guilty of all charges and are being sentenced to "
@@ -765,7 +744,6 @@ func prison(): #specialised prison events
 					$option1.text = "Dang it"
 					global.prisonPreparer(global.crimeTimeCalculator())
 					global.revent[0] = "go-to-prison"
-					global.logs.append("I was found guilty and have been sent to prison.")
 			"court-trial-o5-results-o2":
 				if (randi_range(150, 350) >= global.sumCalculator(global.crimesSeverity) && randi_range(25, 40) <= global.averageFinder(global.intellectAtTimeOfCrime)) || randi_range(1, 7) == 1: #defence success - see public defender. Basically the same formula, just with some variables changed to give you better chances.
 					$heading.text = "It's only expensive if you lose"
@@ -778,7 +756,6 @@ func prison(): #specialised prison events
 					global.crimeTime = []
 					global.intellectAtTimeOfCrime = []
 					global.revent[0] = "dont-go-to-prison"
-					global.logs.append("I was found not guilty.")
 				else: #defence failed
 					$heading.text = "What the hell am I paying YOU for?"
 					$body.text = global.lawyers[2] + ", a tier 3 lawyer, failed to clear your name in court, despite costing $" + global.commaiser(global.sumCalculator(global.crimesSeverity) * global.lawyerCostMultiplier[2]) + ". You have been found guilty of all charges and are being sentenced to "
@@ -790,7 +767,6 @@ func prison(): #specialised prison events
 					$option1.text = "WHAT"
 					global.prisonPreparer(global.crimeTimeCalculator())
 					global.revent[0] = "go-to-prison"
-					global.logs.append("I was found guilty and have been sent to prison.")
 		optionRemover(2)
 
 
@@ -929,7 +905,6 @@ func option1outcomes(): #option 1 has been picked
 		$body.text = "You befriended " + global.eventPersonFirstName + " " + global.eventPersonLastName + "!"
 		$option1.text = "Hooray"
 		optionRemover(2)
-		global.logs.append("I befriended " + global.anIser(str(global.eventPersonAge)) + "-year-old " + global.pronounGenerator("boy", global.eventPersonSex) + " named " + global.eventPersonFirstName + " " + global.eventPersonLastName + ".")
 		#adds the EGP to your relationships array
 		global.NPCCreator(global.eventPersonSex, global.eventPersonFirstName, global.eventPersonLastName, global.eventPersonAge, randi_range(20, 50), "Friend", "misc", "random")
 	elif global.revent[0] == "teenager-friend-o1":
@@ -937,7 +912,6 @@ func option1outcomes(): #option 1 has been picked
 			$heading.text = "That's awkward..."
 			$body.text = "You try to befriend " + global.pronounGenerator("him", global.eventPersonSex) + ", but " + global.pronounGenerator("he", global.eventPersonSex) + " rejects you."
 			$option1.text = "Dang"
-			global.logs.append("I tried to befriend " + global.anIser(str(global.eventPersonAge)) + "-year-old " + global.pronounGenerator("guy", global.eventPersonSex) + " named " + global.eventPersonFirstName + " " + global.eventPersonLastName + ", but they rejected me.")
 		else: #if they agree to be your friend
 			$heading.text = "Sweet"
 			$body.text = "You befriended " + global.eventPersonFirstName + " " + global.eventPersonLastName + "."
@@ -950,21 +924,18 @@ func option1outcomes(): #option 1 has been picked
 			global.personTypes.append("Friend")
 			global.personCategories.append("misc")
 			$option1.text = "Okay"
-			global.logs.append("I befriended " + global.anIser(str(global.eventPersonAge)) + "-year-old " + global.pronounGenerator("guy", global.eventPersonSex) + " named " + global.eventPersonFirstName + " " + global.eventPersonLastName + ".")
 		optionRemover(2)
 	elif global.revent[0] == "adult-friend-o1" || global.revent[0] == "elder-friend-o1":
 		if randi_range(1,2) == 1: #if they refuse to be your friend
 			$heading.text = "Okay..."
 			$body.text = "You try to befriend " + global.pronounGenerator("him", global.eventPersonSex) + ", but " + global.pronounGenerator("he", global.eventPersonSex) + " rejects you."
 			$option1.text = "Dang"
-			global.logs.append("I tried to befriend " + global.anIser(str(global.eventPersonAge)) + "-year-old " + global.pronounGenerator("guy", global.eventPersonSex) + " named " + global.eventPersonFirstName + " " + global.eventPersonLastName + ", but they rejected me.")
 		else: #if they agree to be your friend
 			$heading.text = "A blossoming friendship"
 			$body.text = "You befriended " + global.eventPersonFirstName + " " + global.eventPersonLastName + "."
 			#adds the EGP to your relationships array
 			global.NPCCreator(global.eventPersonSex, global.eventPersonFirstName, global.eventPersonLastName, global.eventPersonAge, randi_range(20, 50), "Friend", "misc", "random")
 			$option1.text = "Okay"
-			global.logs.append("I befriended " + global.anIser(str(global.eventPersonAge)) + "-year-old " + global.pronounGenerator("man", global.eventPersonSex) + " named " + global.eventPersonFirstName + " " + global.eventPersonLastName + ".")
 		optionRemover(2)
 	elif global.revent[0] == "toddler-0-o1":
 		$heading.text = "Nooo"
@@ -975,7 +946,6 @@ func option1outcomes(): #option 1 has been picked
 		$option1.text = "Okay"
 		optionRemover(2)
 		global.joy -= 10 #deducts 10 joy
-		global.logs.append("I asked my " + global.personTypes[parent] + " for an ice cream, but " + global.pronounGenerator("he", global.personTypes[parent]) + " said no.")
 	elif global.revent[0] == "child-0-o1":
 		var relativeOfChoice = global.personRelationships.find(global.personRelationships.min()) #gets the index of the gifter
 		$heading.text = "Wow... It's just... Wow."
@@ -988,7 +958,6 @@ func option1outcomes(): #option 1 has been picked
 		optionRemover(2)
 		global.personRelationships[relativeOfChoice] += 5 #adds 5 to the relationship you have with the gifter
 		global.evality += 3 #since you did something semi-bad, you become slightly desensitised to doing bad things
-		global.logs.append("I pretended that I appreciated a gift from my " + global.personTypes[relativeOfChoice].to_lower() + ", " + global.personFirstNames[relativeOfChoice] + ", when I really didn't.")
 	elif global.revent[0] == "university-degree-picked-o1":
 		$heading.text = "Well educated"
 		$body.text = "You are now enrolled in University for a degree in " + global.degreePicked + ".\n- $"
@@ -1007,7 +976,6 @@ func option1outcomes(): #option 1 has been picked
 				global.schoolName += " College"
 			3:
 				global.schoolName += " University"
-		global.logs.append("I paid for a University degree in " + global.degreePicked + ".")
 	elif global.revent[0] == "arrested-o1":
 		var fleeChance = 0
 		if global.sumCalculator(global.crimesSeverity) <= 50:
@@ -1018,18 +986,15 @@ func option1outcomes(): #option 1 has been picked
 			$heading.text = "Short arm of the law"
 			$body.text = "You managed to run and escape from the police!"
 			global.revent[0] = "arrested-o1-success"
-			global.logs.append("I managed to outrun the police after almost being placed under arrest")
 		elif global.health > 1:
 			$heading.text = "Whoops"
 			$body.text = "You attempt to escape, but you get tackled and placed under arrest."
 			global.revent[0] = "pre-court-trial"
-			global.logs.append("I tried to run from the police, but I got tackled and placed under arrest.")
 		else: #if your health is ONE (or zero)
 			$heading.text = "Aw man"
 			$body.text = "You tried to escape, but on the way, you tripped on a curb and fell over."
 			global.revent[0] = "arrested-o1-curb"
 			global.causeOfDeath = "You died of blood loss and subsequent shock after a devastating accident."
-			global.logs.append("I tried to run from the police, but I tripped over a curb and fell.") #you will literally never see this due to you immediately dying
 		global.commitCrime("Evading arrest", roundi(float(global.sumCalculator(global.crimesSeverity)) / 3), max(1, roundi(float(global.sumCalculator(global.crimesSeverity) / 12)))) #how much time you have to do for evading arrest depends on how severe your other crimes are
 		print(global.crimesSeverity)
 		print(global.crimeTime)
@@ -1044,7 +1009,6 @@ func option2outcomes(): #option 2 has been picked
 		$option1.text = "Okay"
 		optionRemover(2)
 		global.evality += 4 #i mean, it was kind of rude...
-		global.logs.append("I ignored a random kid named " + global.eventPersonFirstName + " " + global.eventPersonLastName + ".")
 	if global.revent[0] == "teenager-friend-o2":
 		if randi_range(1, round((36 - float(global.looks) / 4) / 2) - 3) == 1: #if you're more physically attractive, you have a higher chance of being accepted
 			$heading.text = "What's your number?"
@@ -1057,12 +1021,10 @@ func option2outcomes(): #option 2 has been picked
 				#for loops automatically increase the variable they use (in this case, i) so no need to manually increment it
 			#adds them to your relationships
 			global.NPCCreator(global.eventPersonSex, global.eventPersonFirstName, global.eventPersonLastName, global.eventPersonAge, randi_range(20, 50), global.pronounGenerator("boy", global.eventPersonSex).capitalize() + "friend", "misc", "random")
-			global.logs.append("I started dating a random " + global.pronounGenerator("boy", global.eventPersonSex) + " named " + global.eventPersonFirstName + " " + global.eventPersonLastName + ".")
 		else: #they DON'T want to date you
 			$heading.text = "..."
 			$body.text = "You ask " + global.pronounGenerator("him", global.eventPersonSex) + " out, but " + global.pronounGenerator("he", global.eventPersonSex) + " rejects you.\nJoy - 15"
 			global.joy -= 15
-			global.logs.append("I asked a random " + global.pronounGenerator("boy", global.eventPersonSex) + " if " + global.pronounGenerator("he", global.eventPersonSex) + " wanted to go out some time, but " + global.pronounGenerator("he", global.eventPersonSex) + " rejected me.")
 		$option1.text = "Okay"
 		optionRemover(2)
 	elif global.revent[0] == "adult-friend-o2":
@@ -1077,11 +1039,9 @@ func option2outcomes(): #option 2 has been picked
 				#for loops automatically increase the variable they use (in this case, i) so no need to manually increment it
 			#adds them to your relationships
 			global.NPCCreator(global.eventPersonSex, global.eventPersonFirstName, global.eventPersonLastName, global.eventPersonAge, randi_range(40, 80), global.pronounGenerator("boy", global.eventPersonSex).capitalize() + "friend", "misc", "random")
-			global.logs.append("I started dating a random " + eventPronoun("guy") + " named " + global.eventPersonFirstName + " " + global.eventPersonLastName + ".")
 		else: #they DON'T want to date you
 			$body.text = "You ask " + global.pronounGenerator("him", global.eventPersonSex) + " out, but " + global.pronounGenerator("he", global.eventPersonSex) + " rejects you.\nJoy - 15"
 			global.joy -= 15
-			global.logs.append("I asked a random " + eventPronoun("guy") + " if " + eventPronoun("he") + " wanted to go out some time, but " + eventPronoun("he") + " said no.")
 		$option1.text = "Okay"
 		optionRemover(2)
 	elif global.revent[0] == "elder-friend-o2":
@@ -1096,12 +1056,10 @@ func option2outcomes(): #option 2 has been picked
 				#for loops automatically increase the variable they use (in this case, i) so no need to manually increment it
 			#adds them to your relationships
 			global.NPCCreator(global.eventPersonSex, global.eventPersonFirstName, global.eventPersonLastName, global.eventPersonAge, randi_range(20, 50), global.pronounGenerator("boy", global.eventPersonSex).capitalize() + "friend", "misc", "random")
-			global.logs.append("I started dating a random " + eventPronoun("guy") + " named " + global.eventPersonFirstName + " " + global.eventPersonlastName + ".")
 		else: #they DON'T want to date you
 			$heading.text = str(global.age) + " and still unmarried"
 			$body.text = "You ask " + global.pronounGenerator("him", global.eventPersonSex) + " out on a date, but " + global.pronounGenerator("he", global.eventPersonSex) + " rejects you.\nJoy - 15"
 			global.joy -= 15
-			global.logs.append("I asked a random " + eventPronoun("guy") + " out on a date, but " + eventPronoun("he") + " rejected me.")
 		$option1.text = "Okay"
 		optionRemover(2)
 	elif global.revent[0] == "toddler-0-o2":
@@ -1116,7 +1074,6 @@ func option2outcomes(): #option 2 has been picked
 		optionRemover(2)
 		global.joy += 5
 		global.evality += 4
-		global.logs.append("I screamed for ice cream.")
 	elif global.revent[0] == "child-0-o2":
 		var relativeOfChoice = global.personRelationships.find(global.personRelationships.min()) #gets the index of the gifter
 		$heading.text = "Wow! It's just... Wow!"
@@ -1130,7 +1087,6 @@ func option2outcomes(): #option 2 has been picked
 		global.personRelationships[relativeOfChoice] += 8
 		global.money += 50
 		global.evality += 4 #since you did something bad, you become slightly desensitised to doing bad things
-		global.logs.append("I pretended that I appreciated a gift from my " + global.personTypes[relativeOfChoice].to_lower() + ", " + global.personFirstNames[relativeOfChoice] + ", when I really didn't.")
 	elif global.revent[0] == "change-save-management-mode-to-delete-o2":
 		goToSpecific("res://pages/life_save_files.tscn")
 	elif global.revent[0] == "graduated-high-school-o2":
@@ -1163,12 +1119,10 @@ func option2outcomes(): #option 2 has been picked
 				3:
 					global.schoolName += " University"
 			global.XPQueued += 40
-			global.logs.append("My " + parentNoun + " agreed to pay for my tuition in " + global.degreePicked + ".")
 		else: #if your parents refuse to pay for it
 			$heading.text = "I guess you just don't love me then"
 			$body.text = "Your " + parentNoun + " refused to pay for your University tuition."
 			global.revent[0] = "university-degree-picked-o2-refused" #this sends you back to the start of the original event asking how you would like to pay tuition
-			global.logs.append("My " + parentNoun + " refused to pay for my tuition.")
 			global.eventMemory.append("university-degree-picked-o2-refused") #this lets the original event know to disable the option to ask your parents to pay, since you already tried that and it didn't work. This information can't simply be stored in the event ID since it would be too complex to keep track of due to asking for a scholarship also requiring memory.
 		$option1.text = "Okay"
 		optionRemover(2)
@@ -1180,7 +1134,6 @@ func option2outcomes(): #option 2 has been picked
 			if randi_range(1,2) == 1:
 				global.revent[0] = "court-trial-o2-failed" #it secretly failed and you're about to be re-arrested
 			global.commitCrime("Failing to appear", roundi(float(global.sumCalculator(global.crimesSeverity)) / 3), max(1, roundi(float(global.sumCalculator(global.crimesSeverity) / 12)))) #the more of a criminal you are, the more severe it is that you didn't show up (or tried not to)
-			global.logs.append("I didn't attend my court trial.")
 		else:
 			$heading.text = "Whattt"
 			$body.text = "Your crimes are so severe that you are being held in prison until your hearing.\n\nYou cannot skip court."
@@ -1195,11 +1148,9 @@ func option3outcomes(): #option 3 has been picked
 			$heading.text = "Can you go away"
 			$body.text = "You stop talking to " + global.pronounGenerator("him", global.eventPersonSex) + " and " + global.pronounGenerator("he", global.eventPersonSex) + " eventually goes away."
 			global.evality += 5
-			global.logs.append("I ignored a random person named " + global.eventPersonFirstName + " " + global.eventPersonLastName + ".")
 		else:
 			$heading.text = "Alright, bye"
 			$body.text = "You finish talking to " + global.pronounGenerator("him", global.eventPersonSex) + " and you go your seperate ways."
-			global.logs.append("I met a " + global.pronounGenerator("boy", global.eventPersonSex) + " named " + global.eventPersonFirstName + " " + global.eventPersonLastName + ".")
 		$option1.text = "Okay"
 		optionRemover(2)
 	elif global.revent[0] == "toddler-0-o3":
@@ -1207,11 +1158,9 @@ func option3outcomes(): #option 3 has been picked
 		if global.personTypes.has("Mother"):
 			$body.text = "Your mother points to the shop and asks you if you want to get one. You go on to have a great day out together.\nJoy + 10, relationship with mother + 10"
 			global.personRelationships[global.personTypes.find("Mother")] += 10
-			global.logs.append("I had ice cream with my mother.")
 		elif global.personTypes.has("Father"):
 			$body.text = "Your father points to the shop and asks you if you want to get one. You go on to have a great day out together.\nJoy + 10, relationship with father + 10"
 			global.personRelationships[global.personTypes.find("Father")] += 10
-			global.logs.append("I had ice cream with my father.")
 		$option1.text = "Okay"
 		optionRemover(2)
 		global.joy += 10
@@ -1227,7 +1176,6 @@ func option3outcomes(): #option 3 has been picked
 		optionRemover(2)
 		global.personRelationships[relativeOfChoice] -= 8 #deduct 8 relationship with gifter
 		global.joy -= 12
-		global.logs.append("I was scolded for being unappreciative for a gift I recieved.")
 	elif global.revent[0] == "university-degree-picked-o3":
 		$heading.text = "Student loans"
 		$body.text = "You took out a "
@@ -1242,7 +1190,6 @@ func option3outcomes(): #option 3 has been picked
 		global.XPQueued += 30
 		$option1.text = "Okay"
 		optionRemover(2)
-		global.logs.append("I took out a student loan to pay for my tuition.")
 
 
 func option4outcomes(): #option 4 has been picked
@@ -1271,13 +1218,11 @@ func option4outcomes(): #option 4 has been picked
 					global.schoolName += " University"
 			$option1.text = "Hooray"
 			global.XPQueued += 60
-			global.logs.append("I was accepted for a scholarship.")
 		else: #if your school performance isn't really good
 			$heading.text = "NOT a scholar"
 			$body.text = "Your application for a scholarship was rejected."
 			global.revent[0] = "university-degree-picked-o4-rejected"
 			$option1.text = "Okay"
-			global.logs.append("My scholarship application was rejected.")
 			global.eventMemory.append("university-degree-picked-o4-rejected")
 		optionRemover(2)
 

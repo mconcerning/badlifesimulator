@@ -2,6 +2,7 @@
 
 [ext_resource type="Texture2D" uid="uid://xcm3wprxxtpf" path="res://assets/checkbox-unchecked.png" id="1_ajqa5"]
 [ext_resource type="Texture2D" uid="uid://d236rh3g60sa7" path="res://assets/checkbox-checked.png" id="2_vr5ee"]
+[ext_resource type="Texture2D" uid="uid://d2mv5gm1vfh8n" path="res://assets/checkbox-disabled.png" id="3_vr5ee"]
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_j3k1o"]
 animations = [{
@@ -11,6 +12,9 @@ animations = [{
 }, {
 "duration": 1.0,
 "texture": ExtResource("2_vr5ee")
+}, {
+"duration": 1.0,
+"texture": ExtResource("3_vr5ee")
 }],
 "loop": false,
 "name": &"default",
@@ -18,6 +22,6 @@ animations = [{
 }]
 
 [node name="checkbox" type="AnimatedSprite2D" unique_id=124453344]
-scale = Vector2(0.14, 0.14)
+scale = Vector2(0.168, 0.168)
 sprite_frames = SubResource("SpriteFrames_j3k1o")
 centered = false

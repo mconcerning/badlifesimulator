@@ -18,23 +18,23 @@ script = ExtResource("1_xe645")
 text = "Import/export"
 
 [node name="importLife" parent="." unique_id=1544237965 instance=ExtResource("5_c6kya")]
-offset_left = 361.0
+offset_left = 389.0
 offset_top = 300.0
-offset_right = 720.0
+offset_right = 691.0
 offset_bottom = 384.0
 text = "Import life"
 
 [node name="exportLife" parent="." unique_id=264704563 instance=ExtResource("5_c6kya")]
-offset_left = 369.0
+offset_left = 398.0
 offset_top = 450.0
-offset_right = 711.0
+offset_right = 683.0
 offset_bottom = 534.0
 text = "Export life"
 
 [node name="importLegacyLife" parent="." unique_id=1071910472 instance=ExtResource("5_c6kya")]
-offset_left = 251.0
+offset_left = 280.0
 offset_top = 600.0
-offset_right = 829.0
+offset_right = 801.0
 offset_bottom = 684.0
 text = "Import legacy life"
 
