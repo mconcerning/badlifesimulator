@@ -5,7 +5,6 @@
 [ext_resource type="PackedScene" uid="uid://cjnbhqp8obehv" path="res://objects/back_button.tscn" id="2_755jd"]
 [ext_resource type="PackedScene" uid="uid://b7bfib5vbcvk6" path="res://objects/heading.tscn" id="3_xe645"]
 [ext_resource type="PackedScene" uid="uid://ck7ra4cupjjkm" path="res://objects/button_default.tscn" id="5_c6kya"]
-[ext_resource type="PackedScene" uid="uid://b3nrc0n5eeris" path="res://objects/subheading.tscn" id="5_tt2n1"]
 [ext_resource type="LabelSettings" uid="uid://dl6sog5hfkb6u" path="res://styles/text/body.tres" id="6_504qj"]
 
 [node name="importExportSaveFiles" type="Node2D" unique_id=209033438]
@@ -18,45 +17,46 @@ script = ExtResource("1_xe645")
 [node name="heading" parent="." unique_id=33655322 instance=ExtResource("3_xe645")]
 text = "Import/export"
 
-[node name="vBoxContainer" type="VBoxContainer" parent="." unique_id=1129182658]
+[node name="importLife" parent="." unique_id=1544237965 instance=ExtResource("5_c6kya")]
+offset_left = 389.0
 offset_top = 300.0
-offset_right = 1080.0
-offset_bottom = 1770.0
-theme_override_constants/separation = 50
-
-[node name="subheadingToFile" parent="vBoxContainer" unique_id=1227387029 instance=ExtResource("5_tt2n1")]
-layout_mode = 2
-text = "To file"
-
-[node name="importLife" parent="vBoxContainer" unique_id=1544237965 instance=ExtResource("5_c6kya")]
-layout_mode = 2
+offset_right = 691.0
+offset_bottom = 384.0
 text = "Import life"
 
-[node name="exportLife" parent="vBoxContainer" unique_id=264704563 instance=ExtResource("5_c6kya")]
-layout_mode = 2
+[node name="exportLife" parent="." unique_id=264704563 instance=ExtResource("5_c6kya")]
+offset_left = 398.0
+offset_top = 450.0
+offset_right = 683.0
+offset_bottom = 534.0
 text = "Export life"
 
-[node name="importLegacyLife" parent="vBoxContainer" unique_id=1071910472 instance=ExtResource("5_c6kya")]
-layout_mode = 2
+[node name="importLegacyLife" parent="." unique_id=1071910472 instance=ExtResource("5_c6kya")]
+offset_left = 280.0
+offset_top = 600.0
+offset_right = 801.0
+offset_bottom = 684.0
 text = "Import legacy life"
 
-[node name="subheadingToEmail" parent="vBoxContainer" unique_id=2115814093 instance=ExtResource("5_tt2n1")]
-layout_mode = 2
-text = "To email or clipboard"
-
-[node name="exportLifeToClipboard" parent="vBoxContainer" unique_id=777736080 instance=ExtResource("5_c6kya")]
-layout_mode = 2
+[node name="exportLifeToClipboard" parent="." unique_id=777736080 instance=ExtResource("5_c6kya")]
+offset_left = 207.0
+offset_top = 750.0
+offset_right = 873.0
+offset_bottom = 834.0
 text = "Export life to clipboard"
 
-[node name="importLifeFromClipboard" parent="vBoxContainer" unique_id=1719720302 instance=ExtResource("5_c6kya")]
-layout_mode = 2
+[node name="importLifeFromClipboard2" parent="." unique_id=1719720302 instance=ExtResource("5_c6kya")]
+offset_left = 158.0
+offset_top = 900.0
+offset_right = 923.0
+offset_bottom = 984.0
 text = "Import life from clipboard"
 
 [node name="confirmation" type="Label" parent="." unique_id=1547871535]
 offset_left = 40.0
-offset_top = 1820.0
+offset_top = 1200.0
 offset_right = 1040.0
-offset_bottom = 1880.0
+offset_bottom = 1260.0
 label_settings = ExtResource("6_504qj")
 horizontal_alignment = 1
 autowrap_mode = 3
@@ -89,11 +89,11 @@ filters = PackedStringArray("*.bls", "*.bls.json")
 use_native_dialog = true
 
 [connection signal="pressed" from="back" to="." method="_on_back_pressed"]
-[connection signal="pressed" from="vBoxContainer/importLife" to="." method="_on_import_save_pressed"]
-[connection signal="pressed" from="vBoxContainer/exportLife" to="." method="_on_export_save_pressed"]
-[connection signal="pressed" from="vBoxContainer/importLegacyLife" to="." method="_on_import_legacy_save_pressed"]
-[connection signal="pressed" from="vBoxContainer/exportLifeToClipboard" to="." method="_on_export_life_to_clipboard_pressed"]
-[connection signal="pressed" from="vBoxContainer/importLifeFromClipboard" to="." method="_on_import_life_from_clipboard_pressed"]
+[connection signal="pressed" from="importLife" to="." method="_on_import_save_pressed"]
+[connection signal="pressed" from="exportLife" to="." method="_on_export_save_pressed"]
+[connection signal="pressed" from="importLegacyLife" to="." method="_on_import_legacy_save_pressed"]
+[connection signal="pressed" from="exportLifeToClipboard" to="." method="_on_export_life_to_clipboard_pressed"]
+[connection signal="pressed" from="importLifeFromClipboard2" to="." method="_on_import_life_from_clipboard_2_pressed"]
 [connection signal="file_selected" from="legacyImport" to="." method="_on_legacy_import_file_selected"]
 [connection signal="dir_selected" from="export" to="." method="_on_export_dir_selected"]
 [connection signal="file_selected" from="import" to="." method="_on_import_file_selected"]

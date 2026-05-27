@@ -500,98 +500,107 @@ func loadGame(): #does the actual GAME loading
 	else: #file does not exist
 		print("no game save file, will create a brand new one...")
 
-func loadLife(): #does the actual LIFE loading
-	var path = "user://spycarsinc/bls/lives/" + currentLife + ".bls"
-	if customLifeImportDir != "": #if you have a custom file you would like to import from (see again importExportSaveFiles.gd)
-		path = customLifeImportDir
-		customLifeImportDir = ""
-	if FileAccess.file_exists(path) == true: #if the life save file exists, continue and load
-		var lifeSaveFile = FileAccess.open(path, FileAccess.READ) #opens file to read
-		if lifeSaveFile: #if the file is valid
-			var dictionary = lifeSaveFile.get_var()
-			#engine
-			revent = dictionary["revent"]
-			RAUE = dictionary["RAUE"]
-			eventMemory = dictionary["eventMemory"]
-			#personal
-			firstName = dictionary["firstName"]
-			lastName = dictionary["lastName"]
-			age = dictionary["age"]
-			sex = dictionary["sex"]
-			joy = dictionary["joy"]
-			health = dictionary["health"]
-			intellect = dictionary["intellect"]
-			looks = dictionary["looks"]
-			logs = dictionary["logs"]
-			money = dictionary["money"]
-			evality = dictionary["evality"]
-			sexuality = dictionary["sexuality"]
-			#rest-of-life-related
-			crimes = dictionary["crimes"]
-			crimesSeverity = dictionary["crimesSeverity"]
-			intellectAtTimeOfCrime = dictionary["intellectAtTimeOfCrime"]
-			crimeTime = dictionary["crimeTime"]
-			criminalRecord = dictionary["criminalRecord"]
-			criminalRecordSeverity = dictionary["criminalRecordSeverity"]
-			prisonSentence = dictionary["prisonSentence"]
-			lawyers = dictionary["lawyers"]
-			lawyerCostMultiplier = dictionary["lawyerCostMultiplier"]
-			lawyerTierPicked = dictionary["lawyerTierPicked"]
-			multiplicativeArrestChance = dictionary["multiplicativeArrestChance"]
-			schoolName = dictionary["schoolName"]
-			schoolLevel = dictionary["schoolLevel"]
-			schoolPerformanceTracker = dictionary["schoolPerformanceTracker"]
-			degrees = dictionary["degrees"]
-			degreeProficiency = dictionary["degreeProficiency"]
-			fullTimeJob = dictionary["fullTimeJob"]
-			fullTimeSalary = dictionary["fullTimeSalary"]
-			partTimeJob = dictionary["partTimeJob"]
-			partTimeSalary = dictionary["partTimeSalary"]
-			workExperience = dictionary["workExperience"]
-			schoolPerformance = dictionary["schoolPerformance"]
-			partTimePerformance = dictionary["partTimePerformance"]
-			fullTimePerformance = dictionary["fullTimePerformance"]
-			loans = dictionary["loans"]
-			loanInitialValue = dictionary["loanInitialValue"]
-			loanPaybackDuration = dictionary["loanPaybackDuration"]
-			loanInterest = dictionary["loanInterest"]
-			#NPC relationships
-			personFirstNames = dictionary["personFirstNames"]
-			personLastNames = dictionary["personLastNames"]
-			personTypes = dictionary["personTypes"]
-			personAges = dictionary["personAges"]
-			personSexes = dictionary["personSexes"]
-			personRelationships = dictionary["personRelationships"]
-			personUIDsUsed = dictionary["personUIDsUsed"]
-			personUIDs = dictionary["personUIDs"]
-			personStats = dictionary["personStats"]
-			personCategories = dictionary["personCategories"]
-			#dead NPCs
-			deadPersonFirstNames = dictionary["deadPersonFirstNames"]
-			deadPersonLastNames = dictionary["deadPersonLastNames"]
-			deadPersonTypes = dictionary["deadPersonTypes"]
-			deadPersonAges = dictionary["deadPersonAges"]
-			deadPersonSexes = dictionary["deadPersonSexes"]
-			deadPersonRelationships = dictionary["deadPersonRelationships"]
-			deadPersonCategories = dictionary["deadPersonCategories"]
-			#misc
-			eventPersonFirstName = dictionary["eventPersonFirstName"]
-			eventPersonLastName = dictionary["eventPersonLastName"]
-			eventPersonAge = dictionary["eventPersonAge"]
-			eventPersonSex = dictionary["eventPersonSex"]
-			degreePicked = dictionary["degreePicked"]
-			#keeping track
-			joyOverTime = dictionary["joyOverTime"]
-			healthOverTime = dictionary["healthOverTime"]
-			intellectOverTime = dictionary["intellectOverTime"]
-			looksOverTime = dictionary["looksOverTime"]
-			XPQueued = dictionary["XPQueued"]
-			history = dictionary["history"]
-			lifeSaveFile.close() #closes file so it doesn't do anything weird
-			print("hoorah, life load successful")
-			get_tree().change_scene_to_file("res://pages/game_menu.tscn")
-	else: #file does not exist
-		print("no life save file... how did you even run this function if there's no... i-")
+func loadLife(takeHome = true, base64life = ""): #does the actual LIFE loading
+	var path = ""
+	var dictionary = {}
+	var lifeSaveFile
+	if base64life == "": #if you're not loading from a base64 dictionary (see importLifeFromClipboard.gd)
+		path = "user://spycarsinc/bls/lives/" + currentLife + ".bls"
+		if customLifeImportDir != "": #if you have a custom file you would like to import from (see again importExportSaveFiles.gd)
+			path = customLifeImportDir
+			customLifeImportDir = ""
+		if FileAccess.file_exists(path) == true: #if the life save file exists, continue and load
+			lifeSaveFile = FileAccess.open(path, FileAccess.READ) #opens file to read
+			if lifeSaveFile: #if the file is valid
+				dictionary = lifeSaveFile.get_var()
+		else: #file does not exist
+			print("no life save file... how did you even run this function if there's no... i-")
+			return "failed"
+	else: #if you ARE loading from a base64 dictionary instead of a file (again, see importLifeFromClipboard.gd)
+		dictionary = JSON.parse_string(Marshalls.base64_to_utf8(base64life)) #creates a dictionary of the de-encoded base64 save file to use below:
+	#engine
+	revent = dictionary["revent"]
+	RAUE = dictionary["RAUE"]
+	eventMemory = dictionary["eventMemory"]
+	#personal
+	firstName = dictionary["firstName"]
+	lastName = dictionary["lastName"]
+	age = dictionary["age"]
+	sex = dictionary["sex"]
+	joy = dictionary["joy"]
+	health = dictionary["health"]
+	intellect = dictionary["intellect"]
+	looks = dictionary["looks"]
+	logs = dictionary["logs"]
+	money = dictionary["money"]
+	evality = dictionary["evality"]
+	sexuality = dictionary["sexuality"]
+	#rest-of-life-related
+	crimes = dictionary["crimes"]
+	crimesSeverity = dictionary["crimesSeverity"]
+	intellectAtTimeOfCrime = dictionary["intellectAtTimeOfCrime"]
+	crimeTime = dictionary["crimeTime"]
+	criminalRecord = dictionary["criminalRecord"]
+	criminalRecordSeverity = dictionary["criminalRecordSeverity"]
+	prisonSentence = dictionary["prisonSentence"]
+	lawyers = dictionary["lawyers"]
+	lawyerCostMultiplier = dictionary["lawyerCostMultiplier"]
+	lawyerTierPicked = dictionary["lawyerTierPicked"]
+	multiplicativeArrestChance = dictionary["multiplicativeArrestChance"]
+	schoolName = dictionary["schoolName"]
+	schoolLevel = dictionary["schoolLevel"]
+	schoolPerformanceTracker = dictionary["schoolPerformanceTracker"]
+	degrees = dictionary["degrees"]
+	degreeProficiency = dictionary["degreeProficiency"]
+	fullTimeJob = dictionary["fullTimeJob"]
+	fullTimeSalary = dictionary["fullTimeSalary"]
+	partTimeJob = dictionary["partTimeJob"]
+	partTimeSalary = dictionary["partTimeSalary"]
+	workExperience = dictionary["workExperience"]
+	schoolPerformance = dictionary["schoolPerformance"]
+	partTimePerformance = dictionary["partTimePerformance"]
+	fullTimePerformance = dictionary["fullTimePerformance"]
+	loans = dictionary["loans"]
+	loanInitialValue = dictionary["loanInitialValue"]
+	loanPaybackDuration = dictionary["loanPaybackDuration"]
+	loanInterest = dictionary["loanInterest"]
+	#NPC relationships
+	personFirstNames = dictionary["personFirstNames"]
+	personLastNames = dictionary["personLastNames"]
+	personTypes = dictionary["personTypes"]
+	personAges = dictionary["personAges"]
+	personSexes = dictionary["personSexes"]
+	personRelationships = dictionary["personRelationships"]
+	personUIDsUsed = dictionary["personUIDsUsed"]
+	personUIDs = dictionary["personUIDs"]
+	personStats = dictionary["personStats"]
+	personCategories = dictionary["personCategories"]
+	#dead NPCs
+	deadPersonFirstNames = dictionary["deadPersonFirstNames"]
+	deadPersonLastNames = dictionary["deadPersonLastNames"]
+	deadPersonTypes = dictionary["deadPersonTypes"]
+	deadPersonAges = dictionary["deadPersonAges"]
+	deadPersonSexes = dictionary["deadPersonSexes"]
+	deadPersonRelationships = dictionary["deadPersonRelationships"]
+	deadPersonCategories = dictionary["deadPersonCategories"]
+	#misc
+	eventPersonFirstName = dictionary["eventPersonFirstName"]
+	eventPersonLastName = dictionary["eventPersonLastName"]
+	eventPersonAge = dictionary["eventPersonAge"]
+	eventPersonSex = dictionary["eventPersonSex"]
+	degreePicked = dictionary["degreePicked"]
+	#keeping track
+	joyOverTime = dictionary["joyOverTime"]
+	healthOverTime = dictionary["healthOverTime"]
+	intellectOverTime = dictionary["intellectOverTime"]
+	looksOverTime = dictionary["looksOverTime"]
+	XPQueued = dictionary["XPQueued"]
+	history = dictionary["history"]
+	print("hoorah, life load successful")
+	if base64life == "": #if you had to open a file to load this
+		lifeSaveFile.close() #closes file so it doesn't do anything weird
+	if takeHome == true: #if you're supposed to be taken home after this (true by default)
+		get_tree().change_scene_to_file("res://pages/game_menu.tscn")
 
 
 func loadList(path, splitter): #loads list of anything from a seperate file :) used mainly for names. thanks to GrayyGray for using this method originally in a fork

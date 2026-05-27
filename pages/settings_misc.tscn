@@ -28,7 +28,7 @@ layout_mode = 2
 text = "Keyboard shortcuts"
 
 [node name="checkbox" parent="vBoxContainer/enableKeyboardShortcuts" unique_id=124453344 instance=ExtResource("6_gpqpm")]
-position = Vector2(645, 0)
+position = Vector2(650, 0)
 
 [connection signal="pressed" from="back" to="." method="_on_back_pressed"]
 [connection signal="pressed" from="vBoxContainer/enableKeyboardShortcuts" to="." method="_on_enable_keyboard_shortcuts_pressed"]

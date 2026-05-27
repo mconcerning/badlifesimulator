@@ -52,13 +52,13 @@ func cleanLife(): #resets your existing life (if any) and generates new stats
 			var lawCompanyAppendices = ["Ruby", "Gold", "Platinum", "LA", "NY", "USA", "International", "Silver", "Emerald"]
 			match nameType:
 				1:
-					uniqueName = global.lastNames[randi_range(0, global.lastNames.size())] + " & " + global.lastNames[randi_range(0, global.lastNames.size())]
+					uniqueName = global.lastNames[randi_range(0, global.lastNames.size()) - 1] + " & " + global.lastNames[randi_range(0, global.lastNames.size()) - 1]
 				2:
-					uniqueName = global.lastNames[randi_range(0, global.lastNames.size())] + " Criminal & Civil Lawyers"
+					uniqueName = global.lastNames[randi_range(0, global.lastNames.size()) - 1] + " Criminal & Civil Lawyers"
 				3:
 					uniqueName = lawCompanyAppendices[randi_range(0, lawCompanyAppendices.size() - 1)] + " Law"
 				4:
-					uniqueName = global.lastNames[randi_range(0, global.lastNames.size())] + " & Co."
+					uniqueName = global.lastNames[randi_range(0, global.lastNames.size()) - 1] + " & Co."
 			global.lawyers.append(uniqueName)
 	global.lawyerCostMultiplier = [int(round(float(randi_range(940, 1050)) / 2)), int(round(float(randi_range(1400, 1520)) / 2)), int(round(float(randi_range(2200, 2450)) / 2))] #fix this abomination at some point, probably
 	global.lawyerTierPicked = 0

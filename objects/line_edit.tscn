@@ -1,0 +1,10 @@
+[gd_scene format=3 uid="uid://b5fbvau05tjc7"]
+
+[ext_resource type="Theme" uid="uid://dshdkxfve2nxr" path="res://styles/input/text_single_line_input.tres" id="1_cr7ps"]
+
+[node name="lineEdit" type="LineEdit" unique_id=299363301]
+offset_right = 600.0
+offset_bottom = 59.0
+theme = ExtResource("1_cr7ps")
+placeholder_text = "Placeholder text"
+caret_blink = true

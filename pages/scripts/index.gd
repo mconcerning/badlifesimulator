@@ -3,7 +3,7 @@ extends Node2D #author(s): Ethan Scott
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	await get_tree().process_frame #must wait until the scene fully loads or else godot throws an error trying to change scene - also it flashes the default godot background colour (godot) and it's kind of jarring
-	global.loadGame() #tells global.gd to load game save file
+	global.loadGame() #tells global.gd to load the game save file
 	if OS.get_name() == "Windows" || OS.get_name() == "Linux" || OS.get_name() == "macOS": #checks if you're running windows, linux, or mac
 		print("you're running windows, linux, or mac")
 		var _screenResolution: Vector2i = DisplayServer.screen_get_size(DisplayServer.window_get_current_screen()) #gets resolution of screen and saves it as a vector to a variable.

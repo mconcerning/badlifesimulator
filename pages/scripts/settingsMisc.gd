@@ -6,11 +6,11 @@ func _ready() -> void:
 	if OS.get_name() == "Android" || OS.get_name() == "iOS": #if you're on mobile
 		$vBoxContainer/enableKeyboardShortcuts.disabled = true
 		$vBoxContainer/enableKeyboardShortcuts/checkbox.frame = 2 #show it's disabled
-	#checkboxes
-	if global.keyboardShortcutsEnabled == true:
-		$vBoxContainer/enableKeyboardShortcuts/checkbox.frame = 1 #show it's enabled
-	else:
-		$vBoxContainer/enableKeyboardShortcuts/checkbox.frame = 0 #show it's disabled
+	else: #if the option isn't unavaibable, checkboxes
+		if global.keyboardShortcutsEnabled == true:
+			$vBoxContainer/enableKeyboardShortcuts/checkbox.frame = 1 #show it's enabled
+		else:
+			$vBoxContainer/enableKeyboardShortcuts/checkbox.frame = 0 #show it's disabled
 
 
 func _on_back_pressed() -> void:

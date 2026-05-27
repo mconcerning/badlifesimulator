@@ -219,7 +219,7 @@ theme = ExtResource("6_llmlx")
 text = "DM always req. pass"
 
 [node name="DMRPCheck" parent="scrollContainer/centerContainer/vBoxContainer/DMRP" unique_id=99608944 instance=ExtResource("8_4vx13")]
-position = Vector2(671, 0)
+position = Vector2(674, 0)
 
 [node name="saveGame" type="TextureButton" parent="." unique_id=1317964170]
 offset_left = 960.0
