@@ -53,7 +53,7 @@ func _on_copy_and_email_pressed() -> void: #i want to copy this to clipboard AND
 		clipboard = "Turns out your data was actually really big, so it couldn't be given directly to your email service. It has still been copied to your clipboard, though. Please delete this message and paste it here."
 	emailAttemptCounter += 1
 	if emailAttemptCounter >= 3: #if you've tried emailing this 3 or more times in a row
-		$confirmation.text = "Copied. Running into errors? Try setting Gmail to your mailto client, and use a modern browser like Chrome or Firefox."
+		$confirmation.text = "Copied. Running into errors? Try setting Gmail to your mailto client, and, on desktop, use a modern browser like Chrome or Firefox."
 	var possibleEmailSubjects = ["About the dog...", "FREE MICROSOFT GIFT CARD!! CLICK HERE", "I know where you live", "Ambiguous string of gibberish", "Dear Recipient,", "Im-port? Sorry, the borders are closed", "I am sending you this email whether you like it or not", "I wonder how Apple Intelligence would summarise this", "To Mr. Beast", "I think it's pretty clear what this email is about;"] #this is just for fun: random email subjects. No need to worry about making the text url-compatible, that is done automatically via .uri_encode() below.
 	OS.shell_open("mailto:?subject=" + str(possibleEmailSubjects[randi_range(0, possibleEmailSubjects.size() - 1)]).uri_encode() + "&body=" + clipboard.uri_encode()) #craft an email containing the data using mailto
 	#OS.shell_open("mailto:?" + str(randomRecipientGenerator()).uri_encode() + "subject=" + str(possibleEmailSubjects[randi_range(0, possibleEmailSubjects.size() - 1)]).uri_encode() + "&body=" + clipboard) #not used, but it can be if you want.

@@ -6,6 +6,8 @@ func _ready() -> void:
 	if global.currentLife == "": #if you have no life to export
 		$vBoxContainer/exportLife.disabled = true #you can't export it
 		$vBoxContainer/exportLifeToClipboard.disabled = true #again, you have no life, you can't export the thing that you don't have
+	if OS.get_name() == "Android" || OS.get_name() == "iOS" || OS.get_name() == "Web": #if you're on mobile
+		$vBoxContainer/exportLife.disabled = true
 
 
 func legacyLoad(path): #when you pick a legacy save file. I'm gonna be 100% honest, this feature is completely NOT necessary, but you know... It's the little things that count.

@@ -307,6 +307,13 @@ func anIser(undoctoredProceedingWord): #an-iser. Returns "n " to be appended to 
 	return "a " + undoctoredProceedingWord
 
 
+func intIser(theArray): #turns array elements into integers
+	var intTheArray = []
+	for i in theArray.size():
+		intTheArray.append(int(theArray[i]))
+	return intTheArray
+
+
 func crimeTimeCalculator():
 	var totalSentence = 0
 	for i in crimeTime.size():
@@ -537,21 +544,21 @@ func loadLife(takeHome = true, base64life = ""): #does the actual LIFE loading
 	sexuality = dictionary["sexuality"]
 	#rest-of-life-related
 	crimes = dictionary["crimes"]
-	crimesSeverity = dictionary["crimesSeverity"]
-	intellectAtTimeOfCrime = dictionary["intellectAtTimeOfCrime"]
-	crimeTime = dictionary["crimeTime"]
+	crimesSeverity = intIser(dictionary["crimesSeverity"])
+	intellectAtTimeOfCrime = intIser(dictionary["intellectAtTimeOfCrime"])
+	crimeTime = intIser(dictionary["crimeTime"])
 	criminalRecord = dictionary["criminalRecord"]
-	criminalRecordSeverity = dictionary["criminalRecordSeverity"]
+	criminalRecordSeverity = intIser(dictionary["criminalRecordSeverity"])
 	prisonSentence = dictionary["prisonSentence"]
 	lawyers = dictionary["lawyers"]
-	lawyerCostMultiplier = dictionary["lawyerCostMultiplier"]
+	lawyerCostMultiplier = intIser(dictionary["lawyerCostMultiplier"])
 	lawyerTierPicked = dictionary["lawyerTierPicked"]
 	multiplicativeArrestChance = dictionary["multiplicativeArrestChance"]
 	schoolName = dictionary["schoolName"]
 	schoolLevel = dictionary["schoolLevel"]
-	schoolPerformanceTracker = dictionary["schoolPerformanceTracker"]
+	schoolPerformanceTracker = intIser(dictionary["schoolPerformanceTracker"])
 	degrees = dictionary["degrees"]
-	degreeProficiency = dictionary["degreeProficiency"]
+	degreeProficiency = intIser(dictionary["degreeProficiency"])
 	fullTimeJob = dictionary["fullTimeJob"]
 	fullTimeSalary = dictionary["fullTimeSalary"]
 	partTimeJob = dictionary["partTimeJob"]
@@ -568,20 +575,20 @@ func loadLife(takeHome = true, base64life = ""): #does the actual LIFE loading
 	personFirstNames = dictionary["personFirstNames"]
 	personLastNames = dictionary["personLastNames"]
 	personTypes = dictionary["personTypes"]
-	personAges = dictionary["personAges"]
+	personAges = intIser(dictionary["personAges"])
 	personSexes = dictionary["personSexes"]
-	personRelationships = dictionary["personRelationships"]
+	personRelationships = intIser(dictionary["personRelationships"])
 	personUIDsUsed = dictionary["personUIDsUsed"]
-	personUIDs = dictionary["personUIDs"]
+	personUIDs = intIser(dictionary["personUIDs"])
 	personStats = dictionary["personStats"]
 	personCategories = dictionary["personCategories"]
 	#dead NPCs
 	deadPersonFirstNames = dictionary["deadPersonFirstNames"]
 	deadPersonLastNames = dictionary["deadPersonLastNames"]
 	deadPersonTypes = dictionary["deadPersonTypes"]
-	deadPersonAges = dictionary["deadPersonAges"]
+	deadPersonAges = intIser(dictionary["deadPersonAges"])
 	deadPersonSexes = dictionary["deadPersonSexes"]
-	deadPersonRelationships = dictionary["deadPersonRelationships"]
+	deadPersonRelationships = intIser(dictionary["deadPersonRelationships"])
 	deadPersonCategories = dictionary["deadPersonCategories"]
 	#misc
 	eventPersonFirstName = dictionary["eventPersonFirstName"]
@@ -590,10 +597,10 @@ func loadLife(takeHome = true, base64life = ""): #does the actual LIFE loading
 	eventPersonSex = dictionary["eventPersonSex"]
 	degreePicked = dictionary["degreePicked"]
 	#keeping track
-	joyOverTime = dictionary["joyOverTime"]
-	healthOverTime = dictionary["healthOverTime"]
-	intellectOverTime = dictionary["intellectOverTime"]
-	looksOverTime = dictionary["looksOverTime"]
+	joyOverTime = intIser(dictionary["joyOverTime"])
+	healthOverTime = intIser(dictionary["healthOverTime"])
+	intellectOverTime = intIser(dictionary["intellectOverTime"])
+	looksOverTime = intIser(dictionary["looksOverTime"])
 	XPQueued = dictionary["XPQueued"]
 	history = dictionary["history"]
 	print("hoorah, life load successful")
