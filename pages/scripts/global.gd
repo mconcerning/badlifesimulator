@@ -94,6 +94,8 @@ var eventPersonSex = ""
 var degreePicked = ""
 var customLifeSaveDir = ""
 var customLifeImportDir = ""
+var customGameSaveDir = ""
+var customGameImportDir = ""
 
 
 #keeping track (for achievements, use upon death, or otherwise)
@@ -482,7 +484,14 @@ func saveGame(): #does the actual saving
 		var lifeSaveFile = FileAccess.open(lifeSavePath, FileAccess.WRITE)
 		lifeSaveFile.store_var(lifeSerialiser()) #overwrites the life save file with collinsDictionary from the lifeSerialiser() function above.
 		lifeSaveFile.close() #closes file and saves changes
-	var gameSavePath  = "user://spycarsinc/bls/game.bls" #this save stores all of the non-life-specific stuff that does persist between lives (achievements, XP and levels, DNA, etc...)
+	var gameSavePath = "user://spycarsinc/bls/game.bls" #this save stores all of the non-life-specific stuff that does persist between lives (achievements, XP and levels, DNA, etc...)
+	if customGameSaveDir != "": #if you're saving your game to a custom directory
+		var antiOverwriteAppendix = 0 #this number is appended to the end of the file name. This makes it unique, avoiding overwrites of saves you wanted to keep.
+		gameSavePath = customGameSaveDir + "/bls-game-"
+		while FileAccess.file_exists(gameSavePath + str(antiOverwriteAppendix) + ".bls"): #if we're about to write to a file that already exists
+			antiOverwriteAppendix += 1 #add to the appendix number to try and make it unique, then repeat this check again
+		gameSavePath += str(antiOverwriteAppendix) + ".bls" #finalises the name once the above checks have passed and the name is unique
+		customGameSaveDir = "" #reset, that's all we need the custom directory for
 	var gameSaveFile = FileAccess.open(gameSavePath, FileAccess.WRITE)
 	#and now do the rest
 	gameSaveFile.store_var(gameSerialiser()) #overwrites the game save file with cambridgeDictionary from the gameSerialiser() function above.
@@ -490,7 +499,11 @@ func saveGame(): #does the actual saving
 
 func loadGame(): #does the actual GAME loading
 	if FileAccess.file_exists("user://spycarsinc/bls/game.bls") == true: #if the game save file exists, continue and load
-		var gameSaveFile = FileAccess.open("user://spycarsinc/bls/game.bls", FileAccess.READ) #opens file to read
+		var gameSavePath = "user://spycarsinc/bls/game.bls"
+		if customGameImportDir != "": #if you have a custom file you would like to import from (see again importExportSaveFiles.gd)
+			gameSavePath = customGameImportDir
+			customGameImportDir = "" #we no longer need this
+		var gameSaveFile = FileAccess.open(gameSavePath, FileAccess.READ) #opens file to read
 		if gameSaveFile:
 			var dictionary = gameSaveFile.get_var()
 			windowSize = dictionary["windowSize"]
@@ -506,6 +519,8 @@ func loadGame(): #does the actual GAME loading
 			return #cease function function
 	else: #file does not exist
 		print("no game save file, will create a brand new one...")
+		if not DirAccess.dir_exists_absolute("user://spycarsinc/bls/"): #if the folder we need does not exist, create it
+			DirAccess.make_dir_recursive_absolute("user://spycarsinc/bls/")
 
 func loadLife(takeHome = true, base64life = ""): #does the actual LIFE loading
 	var path = ""

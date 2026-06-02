@@ -95,6 +95,13 @@ func repositionResize(): #repositions and resizes the nodes on-screen
 	$option5.position.x = round(540 - (float($option5.size.x / 2)))
 
 
+##Event Memory Forget. Checks for an "forgets" (removes) elements from event memory.
+func emForget(elementToDelete):
+	var eleIndex = global.eventMemory.find(elementToDelete) #element index. Sets value to -1 if it can't find the element searched for.
+	if eleIndex != -1: #if it isn't not (if it is) present
+		global.eventMemory.remove_at(eleIndex) #get rid of it
+
+
 func outcome(reventID):
 	global.revent[0] = reventID
 	await get_tree().process_frame
@@ -103,24 +110,18 @@ func outcome(reventID):
 
 func goHome():
 	global.revent.pop_front()
-	if global.eventMemory.size() > 0: #if you have event memory stored, clear it. Remember, goHome() and its variants like goToPrison() and goToSpecific() run when an event is fully over, meaning it no longer needs to keep this temporary information stored.
-		global.eventMemory = []
 	await get_tree().process_frame
 	get_tree().change_scene_to_file("res://pages/game_menu.tscn")
 
 
 func goToPrison(): #you need to manually set prisonSentence and do everything else
 	global.revent.pop_front()
-	if global.eventMemory.size() > 0: #if you have event memory stored
-		global.eventMemory = [] #clears event memory
 	await get_tree().process_frame
 	get_tree().change_scene_to_file("res://pages/prison.tscn")
 
 
 func goToSpecific(page):
 	#global.revent.pop_front() doesn't run here - you'll need to do that on the page you're going to
-	if global.eventMemory.size() > 0: #if you have event memory stored
-		global.eventMemory = [] #clears event memory
 	await get_tree().process_frame
 	get_tree().change_scene_to_file(page)
 
@@ -233,6 +234,12 @@ func specialised(): #runs any miscellanious specialised, non-age-up events
 		$body.text = "Are you sure you want to enter delete mode?\nANY save file you press will be PERMANENTLY deleted. This action CANNOT be undone.\nPress the ''Load mode'' button above your save files to switch back to load mode at any time.\nYou cannot delete your MAIN game save here. Rest assured, no matter what, that will stay intact. You can, however, delete individual lives, including the one you're playing on currently."
 		$option1.text = "Nevermind, back to load mode"
 		$option2.text = "I understand, please let me delete stuff"
+		optionRemover(3)
+	elif global.revent[0] == "load-game-from-file-confirmation":
+		$heading.text = "Please confirm"
+		$body.text = "Are you sure you want to load your game progress from this a file?\nThis will PERMANENTLY overwrite your current progress with the one from the file, and you will LOSE this version of your save.\nPlease make sure you have backed up your progress and double-check you have selected the correct file to load.\nYou are loading from this directory:\n\n" + global.eventMemory[0]
+		$option1.text = "I understand, please overwrite"
+		$option2.text = "Cancel"
 		optionRemover(3)
 	elif global.revent[0] == "child-labour-is-outlawed":
 		$heading.text = "But why"
@@ -876,7 +883,7 @@ func _on_option_1_pressed() -> void: #on option 1 selected
 		goToPrison() #sends you to prison
 	elif global.revent[0] == "arrested-o1-curb":
 		goToSpecific("res://pages/death.tscn") #kills you
-	elif global.revent[0] == "change-save-management-mode-to-delete-o1":
+	elif global.revent[0] == "change-save-management-mode-to-delete":
 		goToSpecific("res://pages/life_save_files.tscn")
 	#event - option 1 will be an actual option
 	else:
@@ -976,6 +983,8 @@ func option1outcomes(): #option 1 has been picked
 				global.schoolName += " College"
 			3:
 				global.schoolName += " University"
+		emForget("university-degree-picked-o2-refused") #if your parents already refused to pay for your tuition, the event forgets about it
+		emForget("university-degree-picked-o4-rejected") #same with if your application for a scholarship has already been rejected
 	elif global.revent[0] == "arrested-o1":
 		var fleeChance = 0
 		if global.sumCalculator(global.crimesSeverity) <= 50:
@@ -1000,6 +1009,12 @@ func option1outcomes(): #option 1 has been picked
 		print(global.crimeTime)
 		$option1.text = "Okay"
 		optionRemover(2)
+	elif global.revent[0] == "load-game-from-file-confirmation-o1":
+		print("importing from " + global.eventMemory[0])
+		global.customGameImportDir = global.eventMemory[0]
+		global.loadGame()
+		global.eventMemory.pop_front()
+		goToSpecific("res://pages/import_export_save_files.tscn")
 
 
 func option2outcomes(): #option 2 has been picked
@@ -1119,6 +1134,8 @@ func option2outcomes(): #option 2 has been picked
 				3:
 					global.schoolName += " University"
 			global.XPQueued += 40
+			emForget("university-degree-picked-o2-refused")
+			emForget("university-degree-picked-o4-rejected")
 		else: #if your parents refuse to pay for it
 			$heading.text = "I guess you just don't love me then"
 			$body.text = "Your " + parentNoun + " refused to pay for your University tuition."
@@ -1140,6 +1157,10 @@ func option2outcomes(): #option 2 has been picked
 			$option1.text = "Oh"
 			global.revent[0] = "court-trial-o2-prison"
 		optionRemover(2)
+	elif global.revent[0] == "load-game-from-file-confirmation-o2":
+		print("cancelled import")
+		global.eventMemory.pop_front()
+		goToSpecific("res://pages/game_menu.tscn")
 
 
 func option3outcomes(): #option 3 has been picked
@@ -1190,6 +1211,8 @@ func option3outcomes(): #option 3 has been picked
 		global.XPQueued += 30
 		$option1.text = "Okay"
 		optionRemover(2)
+		emForget("university-degree-picked-o2-refused")
+		emForget("university-degree-picked-o4-rejected")
 
 
 func option4outcomes(): #option 4 has been picked
@@ -1218,6 +1241,8 @@ func option4outcomes(): #option 4 has been picked
 					global.schoolName += " University"
 			$option1.text = "Hooray"
 			global.XPQueued += 60
+			emForget("university-degree-picked-o2-refused")
+			emForget("university-degree-picked-o4-rejected")
 		else: #if your school performance isn't really good
 			$heading.text = "NOT a scholar"
 			$body.text = "Your application for a scholarship was rejected."

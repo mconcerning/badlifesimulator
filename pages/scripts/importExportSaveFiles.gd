@@ -6,8 +6,14 @@ func _ready() -> void:
 	if global.currentLife == "": #if you have no life to export
 		$vBoxContainer/exportLife.disabled = true #you can't export it
 		$vBoxContainer/exportLifeToClipboard.disabled = true #again, you have no life, you can't export the thing that you don't have
-	if OS.get_name() == "Android" || OS.get_name() == "iOS" || OS.get_name() == "Web": #if you're on mobile
+	if OS.get_name() == "Web": #if you're playing on the web
+		$vBoxContainer/importLife.disabled = true
 		$vBoxContainer/exportLife.disabled = true
+		$vBoxContainer/importLegacyLife.disabled = true
+		$vBoxContainer/exportProgress.disabled = true
+	if OS.get_name() == "Android" || OS.get_name() == "iOS": #if you're on mobile
+		$vBoxContainer/exportLife.disabled = true
+		$vBoxContainer/exportProgress.disabled = true
 
 
 func legacyLoad(path): #when you pick a legacy save file. I'm gonna be 100% honest, this feature is completely NOT necessary, but you know... It's the little things that count.
@@ -48,6 +54,23 @@ func _on_import_file_selected(path: String) -> void:
 	print("importing from " + path)
 	global.customLifeImportDir = path
 	global.loadLife()
+
+func _on_import_progress_pressed() -> void:
+	$importProgress.visible = true
+
+func _on_import_progress_file_selected(path: String) -> void:
+	global.revent.push_front("load-game-from-file-confirmation")
+	global.eventMemory.push_front(path)
+	get_tree().change_scene_to_file("res://pages/event.tscn")
+
+func _on_export_progress_pressed() -> void:
+	$exportProgress.visible = true
+
+func _on_export_progress_dir_selected(dir: String) -> void:
+	print("exporting to " + dir)
+	global.customGameSaveDir = dir
+	global.saveGame()
+	$confirmation.text = "File export successful."
 
 
 func _on_export_life_to_clipboard_pressed() -> void:

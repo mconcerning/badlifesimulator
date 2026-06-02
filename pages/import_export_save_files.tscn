@@ -40,6 +40,14 @@ text = "Export life"
 layout_mode = 2
 text = "Import legacy life"
 
+[node name="importProgress" parent="vBoxContainer" unique_id=269084695 instance=ExtResource("5_c6kya")]
+layout_mode = 2
+text = "Import progress"
+
+[node name="exportProgress" parent="vBoxContainer" unique_id=476708423 instance=ExtResource("5_c6kya")]
+layout_mode = 2
+text = "Export progress"
+
 [node name="subheadingToEmail" parent="vBoxContainer" unique_id=2115814093 instance=ExtResource("5_tt2n1")]
 layout_mode = 2
 text = "To email or clipboard"
@@ -88,12 +96,34 @@ access = 2
 filters = PackedStringArray("*.bls", "*.bls.json")
 use_native_dialog = true
 
+[node name="exportProgress" type="FileDialog" parent="." unique_id=320026016]
+oversampling_override = 1.0
+title = "Open a Directory"
+dialog_hide_on_ok = true
+file_mode = 2
+access = 2
+filters = PackedStringArray("*.bls")
+use_native_dialog = true
+
+[node name="importProgress" type="FileDialog" parent="." unique_id=379254049]
+oversampling_override = 1.0
+title = "Open a File"
+dialog_hide_on_ok = true
+file_mode = 0
+access = 2
+filters = PackedStringArray("*.bls", "*.bls.json")
+use_native_dialog = true
+
 [connection signal="pressed" from="back" to="." method="_on_back_pressed"]
 [connection signal="pressed" from="vBoxContainer/importLife" to="." method="_on_import_save_pressed"]
 [connection signal="pressed" from="vBoxContainer/exportLife" to="." method="_on_export_save_pressed"]
 [connection signal="pressed" from="vBoxContainer/importLegacyLife" to="." method="_on_import_legacy_save_pressed"]
+[connection signal="pressed" from="vBoxContainer/importProgress" to="." method="_on_import_progress_pressed"]
+[connection signal="pressed" from="vBoxContainer/exportProgress" to="." method="_on_export_progress_pressed"]
 [connection signal="pressed" from="vBoxContainer/exportLifeToClipboard" to="." method="_on_export_life_to_clipboard_pressed"]
 [connection signal="pressed" from="vBoxContainer/importLifeFromClipboard" to="." method="_on_import_life_from_clipboard_pressed"]
 [connection signal="file_selected" from="legacyImport" to="." method="_on_legacy_import_file_selected"]
 [connection signal="dir_selected" from="export" to="." method="_on_export_dir_selected"]
 [connection signal="file_selected" from="import" to="." method="_on_import_file_selected"]
+[connection signal="dir_selected" from="exportProgress" to="." method="_on_export_progress_dir_selected"]
+[connection signal="file_selected" from="importProgress" to="." method="_on_import_progress_file_selected"]

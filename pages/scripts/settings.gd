@@ -4,7 +4,6 @@ extends Node2D #author(s): Ethan Scott
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	if OS.get_name() == "Web":
-		$vBoxContainer/importExportSaveFiles.disabled = true
 		$vBoxContainer/display.disabled = true
 	elif OS.get_name() == "Android" || OS.get_name() == "iOS":
 		$vBoxContainer/display.disabled = true
