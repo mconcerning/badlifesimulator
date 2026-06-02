@@ -37,6 +37,7 @@ func _on_copy_to_clipboard_pressed() -> void:
 		return
 	var data = Marshalls.utf8_to_base64(JSON.stringify(global.lifeSerialiser()))
 	DisplayServer.clipboard_set(data) #copies life data, in base64, to clipboard (you can't cheat that easily (it's still pretty easy (all you have to know is what base64 is)))
+	await get_tree().process_frame
 	if DisplayServer.clipboard_get() == data: #if everything worked; you've copied the right data and we can see that
 		$confirmation.text = "Copy success!"
 	else: #if it didn't work for some reason

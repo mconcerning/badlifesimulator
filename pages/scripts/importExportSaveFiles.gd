@@ -61,6 +61,7 @@ func _on_import_progress_pressed() -> void:
 func _on_import_progress_file_selected(path: String) -> void:
 	global.revent.push_front("load-game-from-file-confirmation")
 	global.eventMemory.push_front(path)
+	print(global.eventMemory)
 	get_tree().change_scene_to_file("res://pages/event.tscn")
 
 func _on_export_progress_pressed() -> void:

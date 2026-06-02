@@ -121,7 +121,7 @@ func goToPrison(): #you need to manually set prisonSentence and do everything el
 
 
 func goToSpecific(page):
-	#global.revent.pop_front() doesn't run here - you'll need to do that on the page you're going to
+	#global.revent.pop_front() #doesn't run here due to issues with the rest of the script running after it - you'll need to pop on the page you're going to
 	await get_tree().process_frame
 	get_tree().change_scene_to_file(page)
 
@@ -885,6 +885,14 @@ func _on_option_1_pressed() -> void: #on option 1 selected
 		goToSpecific("res://pages/death.tscn") #kills you
 	elif global.revent[0] == "change-save-management-mode-to-delete":
 		goToSpecific("res://pages/life_save_files.tscn")
+	elif global.revent[0] == "load-game-from-file-confirmation":
+		print(global.eventMemory)
+		print("importing from " + global.eventMemory[0])
+		global.customGameImportDir = global.eventMemory[0]
+		global.eventMemory.pop_front() #get rid of it. We don't need it anymore. Doesn't use emForget() since the specific path stored in memory varies.
+		global.loadGame()
+		global.revent.pop_front()
+		goToSpecific("res://pages/main_menu.tscn")
 	#event - option 1 will be an actual option
 	else:
 		outcome(global.revent[0] + "-o1")
@@ -1009,12 +1017,6 @@ func option1outcomes(): #option 1 has been picked
 		print(global.crimeTime)
 		$option1.text = "Okay"
 		optionRemover(2)
-	elif global.revent[0] == "load-game-from-file-confirmation-o1":
-		print("importing from " + global.eventMemory[0])
-		global.customGameImportDir = global.eventMemory[0]
-		global.loadGame()
-		global.eventMemory.pop_front()
-		goToSpecific("res://pages/import_export_save_files.tscn")
 
 
 func option2outcomes(): #option 2 has been picked
@@ -1160,7 +1162,7 @@ func option2outcomes(): #option 2 has been picked
 	elif global.revent[0] == "load-game-from-file-confirmation-o2":
 		print("cancelled import")
 		global.eventMemory.pop_front()
-		goToSpecific("res://pages/game_menu.tscn")
+		goToSpecific("res://pages/import_export_save_files.tscn")
 
 
 func option3outcomes(): #option 3 has been picked

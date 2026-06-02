@@ -1,19 +1,19 @@
 extends Node #author(s): Ethan Scott
 
-#this is this game's global script. It is accessible from any script at any point. If you need to access or change a variable from here, for instance, firstName, in a different script, type "" before the variable name: "firstName".
+#this is this game's global script. It is accessible from any script at any point. If you need to access or change a variable from here, for instance, firstName, in a different script, type "global." before the variable name: "global.firstName".
 
 
 #engine
 var versionNumber = ProjectSettings.get_setting("application/config/version") #change this in settings when working on an update to the next version number :) go to project -> project settings -> application -> config
-var windowSize = [360, 640] #9:16 ratio - 360 x 640 is the default window size
-var revent = [] #event IDs (can store multiple). begins with an age identifier (toddler, child, teenager, adult, elder, or "na" for not applicable) and ends with a unique number.
+var windowSize = [360, 640] ##Stores the window dimensions the game should resize to fit when the game first loads. 9:16 ratio - 360 x 640 is the default window size.
+var revent = [] ##Event IDs (can store multiple). For random events, the ID begins with an age identifier (toddler, child, teenager, adult, elder, or "na" for not applicable) and ends with a unique number. For non-random events, the ID could be any name that is uniquely identifying. 
 var currentLife = ""
 var IDClicked : int = -1 #used to identify which relationship you're interacting with
 var IDClickedType = "" #used to identify what type of relationship you're interacting with; can be either "family" or "misc"
 var importLegacySave = "" #you are sent to newRandomGame to import and load a legacy save. if, after all life variables are filled in, this does not equal "" (i.e. there is a path here), it will load the legacy save from the path provided.
 var developerModePassword = "" #once you enter it correctly, you won't have to do it every time. It is saved here and run automatically.
 var keyboardShortcutsEnabled = false #whether or not keyboard shortcuts are enabled. Only works on devices with a physical keyboard attatched. Disabled by default. This can be changed in settings.
-var eventMemory = [] #a 2D array that holds more arrays that contain any extraneous data that events need to remember between several pages, isn't significant enough to warrant its own dedicated global variables, and too complex to be stored in the event ID.
+var eventMemory = [] #an array that holds any extraneous data that events need to remember between several pages, isn't significant enough to warrant its own dedicated global variables, and too complex to be stored in the event ID.
 
 
 #personal
