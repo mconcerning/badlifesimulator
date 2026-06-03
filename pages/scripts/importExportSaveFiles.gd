@@ -10,6 +10,7 @@ func _ready() -> void:
 		$vBoxContainer/importLife.disabled = true
 		$vBoxContainer/exportLife.disabled = true
 		$vBoxContainer/importLegacyLife.disabled = true
+		$vBoxContainer/importProgress.disabled = true
 		$vBoxContainer/exportProgress.disabled = true
 	if OS.get_name() == "Android" || OS.get_name() == "iOS": #if you're on mobile
 		$vBoxContainer/exportLife.disabled = true

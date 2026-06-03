@@ -4,6 +4,8 @@ extends Node2D #author(s): Ethan Scott
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	await get_tree().process_frame #must wait until the scene fully loads or else godot throws an error trying to change scene - also it flashes the default godot background colour (godot) and it's kind of jarring
+	#game initialisation
+	global.loadGame() #tells global.gd to load the game save file
 	#window resizing
 	if OS.get_name() == "Windows" || OS.get_name() == "Linux" || OS.get_name() == "macOS": #checks if you're running windows, linux, or mac
 		print("you're running windows, linux, or mac")
@@ -13,8 +15,7 @@ func _ready() -> void:
 		print("window size adjusted to " + str(global.windowSize))
 	#preloads
 	load("res://pages/scripts/event.gd")
-	#game initialisation
-	global.loadGame() #tells global.gd to load the game save file
+	#end
 	print("running version " + global.versionNumber)
 	get_tree().change_scene_to_file("res://pages/main_menu.tscn") #change scene to main menu
 	#requires a wait time otherwise the global script is busy loading and godot will throw an error when you try to change scene
