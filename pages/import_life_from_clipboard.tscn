@@ -14,7 +14,7 @@ font = ExtResource("5_g0xlu")
 font_size = 90
 font_color = Color(0, 0, 0, 1)
 
-[node name="importExportSaveFiles" type="Node2D" unique_id=209033438]
+[node name="importLifeFromClipboard" type="Node2D" unique_id=209033438]
 script = ExtResource("1_g0xlu")
 
 [node name="background" parent="." unique_id=1900420355 instance=ExtResource("2_g0xlu")]

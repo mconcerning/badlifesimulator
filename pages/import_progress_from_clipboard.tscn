@@ -1,0 +1,63 @@
+[gd_scene format=3 uid="uid://c8tgouf1yg0i3"]
+
+[ext_resource type="Script" uid="uid://df323j8e02vqq" path="res://pages/scripts/importProgressFromClipboard.gd" id="1_10ka5"]
+[ext_resource type="PackedScene" uid="uid://pmo8e2dmbkfm" path="res://objects/background.tscn" id="2_3efqb"]
+[ext_resource type="PackedScene" uid="uid://cjnbhqp8obehv" path="res://objects/back_button.tscn" id="3_7og2h"]
+[ext_resource type="PackedScene" uid="uid://b7bfib5vbcvk6" path="res://objects/heading.tscn" id="4_vh8me"]
+[ext_resource type="FontFile" uid="uid://jc7d7o5eghs1" path="res://assets/fonts/poppins/Poppins-Bold.ttf" id="5_v0xyv"]
+[ext_resource type="PackedScene" uid="uid://b5fbvau05tjc7" path="res://objects/line_edit.tscn" id="6_5pif7"]
+[ext_resource type="PackedScene" uid="uid://ck7ra4cupjjkm" path="res://objects/button_default.tscn" id="7_hbbrc"]
+[ext_resource type="LabelSettings" uid="uid://dl6sog5hfkb6u" path="res://styles/text/body.tres" id="8_qw00d"]
+
+[sub_resource type="LabelSettings" id="LabelSettings_y8u0w"]
+font = ExtResource("5_v0xyv")
+font_size = 90
+font_color = Color(0, 0, 0, 1)
+
+[node name="importLifeFromClipboard" type="Node2D" unique_id=209033438]
+script = ExtResource("1_10ka5")
+
+[node name="background" parent="." unique_id=1900420355 instance=ExtResource("2_3efqb")]
+
+[node name="back" parent="." unique_id=17962498 instance=ExtResource("3_7og2h")]
+
+[node name="heading" parent="." unique_id=33655322 instance=ExtResource("4_vh8me")]
+offset_top = 110.0
+offset_bottom = 250.0
+text = "Import prog from clip"
+label_settings = SubResource("LabelSettings_y8u0w")
+
+[node name="lineEdit" parent="." unique_id=299363301 instance=ExtResource("6_5pif7")]
+offset_left = 240.0
+offset_top = 350.0
+offset_right = 840.0
+offset_bottom = 409.0
+placeholder_text = "Put your encoded data here :)"
+secret = true
+
+[node name="pasteFromClipboard" parent="." unique_id=1544237965 instance=ExtResource("7_hbbrc")]
+offset_left = 226.0
+offset_top = 509.0
+offset_right = 855.0
+offset_bottom = 593.0
+text = "Paste from clipboard"
+
+[node name="loadLifeFromInput" parent="." unique_id=1110024699 instance=ExtResource("7_hbbrc")]
+offset_left = 304.0
+offset_top = 659.0
+offset_right = 777.0
+offset_bottom = 743.0
+text = "Load from input"
+
+[node name="confirmation" type="Label" parent="." unique_id=1547871535]
+offset_left = 40.0
+offset_top = 809.0
+offset_right = 1040.0
+offset_bottom = 869.0
+label_settings = ExtResource("8_qw00d")
+horizontal_alignment = 1
+autowrap_mode = 3
+
+[connection signal="pressed" from="back" to="." method="_on_back_pressed"]
+[connection signal="pressed" from="pasteFromClipboard" to="." method="_on_paste_from_clipboard_pressed"]
+[connection signal="pressed" from="loadLifeFromInput" to="." method="_on_load_life_from_input_pressed"]

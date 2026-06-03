@@ -1,0 +1,61 @@
+[gd_scene format=3 uid="uid://2l56uveexgcc"]
+
+[ext_resource type="Script" uid="uid://l2w8vi5g5iri" path="res://pages/scripts/exportProgressToClipboard.gd" id="1_oln65"]
+[ext_resource type="PackedScene" uid="uid://pmo8e2dmbkfm" path="res://objects/background.tscn" id="2_rlji4"]
+[ext_resource type="PackedScene" uid="uid://cjnbhqp8obehv" path="res://objects/back_button.tscn" id="3_1b47q"]
+[ext_resource type="PackedScene" uid="uid://b7bfib5vbcvk6" path="res://objects/heading.tscn" id="4_x5vwi"]
+[ext_resource type="PackedScene" uid="uid://dvna50i2k0geh" path="res://objects/body.tscn" id="5_pcjjm"]
+[ext_resource type="PackedScene" uid="uid://ck7ra4cupjjkm" path="res://objects/button_default.tscn" id="6_dtklk"]
+[ext_resource type="LabelSettings" uid="uid://dl6sog5hfkb6u" path="res://styles/text/body.tres" id="7_11dys"]
+
+[node name="exportProgressToClipboard" type="Node2D" unique_id=209033438]
+script = ExtResource("1_oln65")
+
+[node name="background" parent="." unique_id=1900420355 instance=ExtResource("2_rlji4")]
+
+[node name="back" parent="." unique_id=17962498 instance=ExtResource("3_1b47q")]
+metadata/_edit_use_anchors_ = true
+
+[node name="heading" parent="." unique_id=33655322 instance=ExtResource("4_x5vwi")]
+offset_top = 130.0
+offset_bottom = 270.0
+text = "Export prog to clip"
+metadata/_edit_use_anchors_ = true
+
+[node name="moreInfo" parent="." unique_id=1032932187 instance=ExtResource("5_pcjjm")]
+offset_left = 40.0
+offset_top = 350.0
+offset_right = 1040.0
+offset_bottom = 1229.0
+text = "This page exports your game save (progress) to your clipboard. There is also an option to send your save to yourself via email. See export life to clipboard for more information about how this works.
+
+Please keep in mind that what you copy here DOESN'T include your life, only your overall progress, so your level, XP, achievements, etc. Also please keep in mind that copying importing your life in place of your progress, or your progress in place of your life, will cause the game to crash. It's important to differentiate between these two."
+autowrap_mode = 3
+metadata/_edit_use_anchors_ = true
+
+[node name="copyToClipboard" parent="." unique_id=1544237965 instance=ExtResource("6_dtklk")]
+offset_left = 130.0
+offset_top = 1350.0
+offset_right = 950.0
+offset_bottom = 1434.0
+text = "Copy progress to clipboard"
+
+[node name="copyAndEmail" parent="." unique_id=1737801377 instance=ExtResource("6_dtklk")]
+offset_left = 218.0
+offset_top = 1500.0
+offset_right = 862.0
+offset_bottom = 1584.0
+text = "Copy and send email"
+
+[node name="confirmation" type="Label" parent="." unique_id=1547871535]
+offset_left = 40.0
+offset_top = 1650.0
+offset_right = 1040.0
+offset_bottom = 1710.0
+label_settings = ExtResource("7_11dys")
+horizontal_alignment = 1
+autowrap_mode = 3
+
+[connection signal="pressed" from="back" to="." method="_on_back_pressed"]
+[connection signal="pressed" from="copyToClipboard" to="." method="_on_copy_to_clipboard_pressed"]
+[connection signal="pressed" from="copyAndEmail" to="." method="_on_copy_and_email_pressed"]

@@ -79,4 +79,9 @@ func _on_export_life_to_clipboard_pressed() -> void:
 
 func _on_import_life_from_clipboard_pressed() -> void:
 	get_tree().change_scene_to_file("res://pages/import_life_from_clipboard.tscn")
-	#DisplayServer.clipboard_set(Marshalls.base64_to_utf8(DisplayServer.clipboard_get()))
+
+func _on_export_progress_to_clipboard_pressed() -> void:
+	get_tree().change_scene_to_file("res://pages/export_progress_to_clipboard.tscn")
+
+func _on_import_progress_from_clip_pressed() -> void:
+	get_tree().change_scene_to_file("res://pages/import_progress_from_clipboard.tscn")

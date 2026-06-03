@@ -41,7 +41,7 @@ func _on_copy_to_clipboard_pressed() -> void:
 	if DisplayServer.clipboard_get() == data: #if everything worked; you've copied the right data and we can see that
 		$confirmation.text = "Copy success!"
 	else: #if it didn't work for some reason
-		$confirmation.text = "Error writing to or reading from clipboard."
+		$confirmation.text = "Error writing to or reading from clipboard. Please wait a moment and then try again."
 
 
 func _on_copy_and_email_pressed() -> void: #i want to copy this to clipboard AND email the result

@@ -8,7 +8,7 @@
 [ext_resource type="PackedScene" uid="uid://dvna50i2k0geh" path="res://objects/body.tscn" id="6_sjx74"]
 [ext_resource type="LabelSettings" uid="uid://dl6sog5hfkb6u" path="res://styles/text/body.tres" id="7_1ykqm"]
 
-[node name="importExportSaveFiles" type="Node2D" unique_id=209033438]
+[node name="exportLifeToClipbaord" type="Node2D" unique_id=209033438]
 script = ExtResource("1_jp6e1")
 
 [node name="background" parent="." unique_id=1900420355 instance=ExtResource("2_3qumw")]

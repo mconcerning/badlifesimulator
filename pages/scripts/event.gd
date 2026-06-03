@@ -237,7 +237,20 @@ func specialised(): #runs any miscellanious specialised, non-age-up events
 		optionRemover(3)
 	elif global.revent[0] == "load-game-from-file-confirmation":
 		$heading.text = "Please confirm"
-		$body.text = "Are you sure you want to load your game progress from this a file?\nThis will PERMANENTLY overwrite your current progress with the one from the file, and you will LOSE this version of your save.\nPlease make sure you have backed up your progress and double-check you have selected the correct file to load.\nYou are loading from this directory:\n\n" + global.eventMemory[0]
+		$body.text = "Are you sure you want to load your game progress from this a file?\nThis will PERMANENTLY overwrite your current progress with the one from the file, and you will LOSE this version of your save.\n\nPlease make sure you have backed up your progress and double-check you have selected the correct file to load.\nYou are loading from this directory:\n\n" + global.eventMemory[0]
+		$option1.text = "I understand, please overwrite"
+		$option2.text = "Cancel"
+		optionRemover(3)
+	elif global.revent[0] == "load-game-from-clipboard-confirmation":
+		$heading.text = "Please confirm"
+		$body.text = "Are you sure you want to load your game progress from your clipboard?\nThis will PERMANENTLY overwrite your current progress with the one from your clipboard, and you will LOSE this version of your save.\n\nPlease make sure you have backed up your progress and double-check you have copied the right text.\n\nThis is what you have copied:\n"
+		var clipboardPreview = ""
+		var clipboard = global.eventMemory[0]
+		for i in min(clipboard.length(), 20):
+			clipboardPreview += clipboard[i]
+		if clipboard.length() > clipboardPreview.length(): #if the preview is a shortening of the full clipboard
+			clipboardPreview += "..."
+		$body.text += clipboardPreview
 		$option1.text = "I understand, please overwrite"
 		$option2.text = "Cancel"
 		optionRemover(3)
@@ -886,11 +899,16 @@ func _on_option_1_pressed() -> void: #on option 1 selected
 	elif global.revent[0] == "change-save-management-mode-to-delete":
 		goToSpecific("res://pages/life_save_files.tscn")
 	elif global.revent[0] == "load-game-from-file-confirmation":
-		print(global.eventMemory)
 		print("importing from " + global.eventMemory[0])
 		global.customGameImportDir = global.eventMemory[0]
 		global.eventMemory.pop_front() #get rid of it. We don't need it anymore. Doesn't use emForget() since the specific path stored in memory varies.
 		global.loadGame()
+		global.revent.pop_front()
+		goToSpecific("res://pages/main_menu.tscn")
+	elif global.revent[0] == "load-game-from-clipboard-confirmation":
+		print("importing from base64")
+		global.loadGame(global.eventMemory[0]) #loads progress from the base64 clipboard string
+		global.eventMemory.pop_front() #get rid of the memory. We don't need it anymore. Doesn't use emForget() since the specific data stored in memory varies.
 		global.revent.pop_front()
 		goToSpecific("res://pages/main_menu.tscn")
 	#event - option 1 will be an actual option
@@ -1163,6 +1181,10 @@ func option2outcomes(): #option 2 has been picked
 		print("cancelled import")
 		global.eventMemory.pop_front()
 		goToSpecific("res://pages/import_export_save_files.tscn")
+	elif global.revent[0] == "load-game-from-clipboard-confirmation-o2":
+		print("cancelled import")
+		global.eventMemory.pop_front()
+		goToSpecific("res://pages/import_progress_from_clipboard.tscn")
 
 
 func option3outcomes(): #option 3 has been picked

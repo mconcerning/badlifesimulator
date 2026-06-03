@@ -497,30 +497,37 @@ func saveGame(): #does the actual saving
 	gameSaveFile.store_var(gameSerialiser()) #overwrites the game save file with cambridgeDictionary from the gameSerialiser() function above.
 	gameSaveFile.close() #closes file and saves changes
 
-func loadGame(): #does the actual GAME loading
-	if FileAccess.file_exists("user://spycarsinc/bls/game.bls") == true: #if the game save file exists, continue and load
-		var gameSavePath = "user://spycarsinc/bls/game.bls"
-		if customGameImportDir != "": #if you have a custom file you would like to import from (see again importExportSaveFiles.gd)
-			gameSavePath = customGameImportDir
-			customGameImportDir = "" #we no longer need this
-		var gameSaveFile = FileAccess.open(gameSavePath, FileAccess.READ) #opens file to read
-		if gameSaveFile:
-			var dictionary = gameSaveFile.get_var()
-			windowSize = dictionary["windowSize"]
-			currentLife = dictionary["currentLife"]
-			XP = dictionary["XP"]
-			level = dictionary["level"]
-			XPRequired = dictionary["XPRequired"]
-			developerModePassword = dictionary["developerModePassword"]
-			keyboardShortcutsEnabled = dictionary["keyboardShortcutsEnabled"]
+func loadGame(base64game = ""): #does the actual GAME loading
+	var gameSavePath = "user://spycarsinc/bls/game.bls"
+	var gameSaveFile
+	var dictionary
+	if base64game == "": #if we're loading from a file and not clipboard (i.e. a base64 string) (see importProgressFromClipboard.gd)
+		if FileAccess.file_exists("user://spycarsinc/bls/game.bls") == true: #if the game save file exists, continue and load
+			if customGameImportDir != "": #if you have a custom file you would like to import from (see again importExportSaveFiles.gd)
+				gameSavePath = customGameImportDir
+				customGameImportDir = "" #we no longer need this
+			gameSaveFile = FileAccess.open(gameSavePath, FileAccess.READ) #opens file to read
+			dictionary = gameSaveFile.get_var()
+		else: #file does not exist
+			print("no game save file, will create a brand new one...")
+			if not DirAccess.dir_exists_absolute("user://spycarsinc/bls/"): #if the folder we need does not exist, create it
+				DirAccess.make_dir_recursive_absolute("user://spycarsinc/bls/")
+				gameSaveFile = FileAccess.open(gameSavePath, FileAccess.READ) #opens file to read
+	else: #if we're loading from base64
+		dictionary = JSON.parse_string(Marshalls.base64_to_utf8(base64game)) #creates a dictionary of the de-encoded base64 save file to use below:
+	if gameSaveFile != null || base64game != "": #if the file has data to load (WON'T be true upon first ever startup, which is good, we don't want to load from a file that has N O T H I N G) OR we're loading from base64
+		windowSize = dictionary["windowSize"]
+		currentLife = dictionary["currentLife"]
+		XP = dictionary["XP"]
+		level = dictionary["level"]
+		XPRequired = dictionary["XPRequired"]
+		developerModePassword = dictionary["developerModePassword"]
+		keyboardShortcutsEnabled = dictionary["keyboardShortcutsEnabled"]
+		if gameSaveFile != null: #if we're loading from a file, close it
 			gameSaveFile.close() #closes file so it doesn't do anything weird
-			print("hoorah, game load successful")
-			print(currentLife)
-			return #cease function function
-	else: #file does not exist
-		print("no game save file, will create a brand new one...")
-		if not DirAccess.dir_exists_absolute("user://spycarsinc/bls/"): #if the folder we need does not exist, create it
-			DirAccess.make_dir_recursive_absolute("user://spycarsinc/bls/")
+		print("hoorah, game load successful")
+		print(currentLife)
+		return #cease function function
 
 func loadLife(takeHome = true, base64life = ""): #does the actual LIFE loading
 	var path = ""

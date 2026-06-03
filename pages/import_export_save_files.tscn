@@ -60,6 +60,14 @@ text = "Export life to clipboard"
 layout_mode = 2
 text = "Import life from clipboard"
 
+[node name="exportProgressToClipboard" parent="vBoxContainer" unique_id=772505385 instance=ExtResource("5_c6kya")]
+layout_mode = 2
+text = "Export progress to clipboard"
+
+[node name="importProgressFromClip" parent="vBoxContainer" unique_id=1795573379 instance=ExtResource("5_c6kya")]
+layout_mode = 2
+text = "Import progress from clipboard"
+
 [node name="confirmation" type="Label" parent="." unique_id=1547871535]
 offset_left = 40.0
 offset_top = 1820.0
@@ -122,6 +130,8 @@ use_native_dialog = true
 [connection signal="pressed" from="vBoxContainer/exportProgress" to="." method="_on_export_progress_pressed"]
 [connection signal="pressed" from="vBoxContainer/exportLifeToClipboard" to="." method="_on_export_life_to_clipboard_pressed"]
 [connection signal="pressed" from="vBoxContainer/importLifeFromClipboard" to="." method="_on_import_life_from_clipboard_pressed"]
+[connection signal="pressed" from="vBoxContainer/exportProgressToClipboard" to="." method="_on_export_progress_to_clipboard_pressed"]
+[connection signal="pressed" from="vBoxContainer/importProgressFromClip" to="." method="_on_import_progress_from_clip_pressed"]
 [connection signal="file_selected" from="legacyImport" to="." method="_on_legacy_import_file_selected"]
 [connection signal="dir_selected" from="export" to="." method="_on_export_dir_selected"]
 [connection signal="file_selected" from="import" to="." method="_on_import_file_selected"]

@@ -1,5 +1,5 @@
 extends Node2D #author(s): Ethan Scott
-#THIS IS THE SCRIPT FOR THE LIFE SAVE FILES PAGE - NOT FOR LIFE SAVING AND LOADING IN GENERAL.
+#THIS IS THE SCRIPT FOR THE LIFE SAVE FILES PAGE - NOT FOR LIFE SAVING AND LOADING IN GENERAL. FOR THAT, GO TO GLOBAL.GD.
 
 
 var buttonAction = "load" #can be either load or delete; load by default
@@ -35,6 +35,7 @@ func buttonPressed(saveFile, buttonName):
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
+	$heading.label_settings.font_color = Color.from_rgba8(0, 0, 0, 255)
 	global.getSaveLifeFileName() #we don't actually need the life save file name, we just need to make sure the user://spycarsinc/bls/lives/ directory actually exists, and this function also happens to do that
 	var buttonPreload = preload("res://objects/button_default.tscn")
 	var path = "user://spycarsinc/bls/lives/"
@@ -69,6 +70,7 @@ func _ready() -> void:
 			buttonAction = "delete"
 			$modeIndicator.text = "You're in DELETE mode"
 			$changeMode.text = "Load mode"
+			$heading.label_settings.font_color = Color.from_rgba8(255, 0, 0, 255)
 		elif global.revent[0] == "change-save-management-mode-to-delete-o1": #if you've cancelled entering delete mode, stay in load mode
 			global.revent.pop_at(0) #gets rid of the event
 			if global.firstName != "": #if there IS a save file
@@ -89,3 +91,4 @@ func _on_change_mode_pressed() -> void:
 		buttonAction = "load"
 		$modeIndicator.text = "You're in load mode"
 		$changeMode.text = "Delete mode"
+		$heading.label_settings.font_color = Color.from_rgba8(0, 0, 0, 255)

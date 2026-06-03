@@ -4,8 +4,13 @@
 [ext_resource type="Script" uid="uid://jhwmawn34q8b" path="res://pages/scripts/lifeSaveFiles.gd" id="1_opkno"]
 [ext_resource type="LabelSettings" uid="uid://dl6sog5hfkb6u" path="res://styles/text/body.tres" id="3_e11vn"]
 [ext_resource type="PackedScene" uid="uid://cjnbhqp8obehv" path="res://objects/back_button.tscn" id="3_ptwqe"]
-[ext_resource type="PackedScene" uid="uid://b7bfib5vbcvk6" path="res://objects/heading.tscn" id="3_urobc"]
+[ext_resource type="FontFile" uid="uid://jc7d7o5eghs1" path="res://assets/fonts/poppins/Poppins-Bold.ttf" id="4_b8pn3"]
 [ext_resource type="PackedScene" uid="uid://ck7ra4cupjjkm" path="res://objects/button_default.tscn" id="6_b8pn3"]
+
+[sub_resource type="LabelSettings" id="LabelSettings_rykel"]
+font = ExtResource("4_b8pn3")
+font_size = 100
+font_color = Color(0, 0, 0, 1)
 
 [node name="lifeSaveFiles" type="Node2D" unique_id=1127518010]
 script = ExtResource("1_opkno")
@@ -14,8 +19,13 @@ script = ExtResource("1_opkno")
 
 [node name="back" parent="." unique_id=17962498 instance=ExtResource("3_ptwqe")]
 
-[node name="heading" parent="." unique_id=33655322 instance=ExtResource("3_urobc")]
+[node name="heading" type="Label" parent="." unique_id=33655322]
+offset_top = 80.0
+offset_right = 1080.0
+offset_bottom = 220.0
 text = "Saved lives"
+label_settings = SubResource("LabelSettings_rykel")
+horizontal_alignment = 1
 
 [node name="howManySavedLives" type="Label" parent="." unique_id=448534271]
 offset_left = 40.0

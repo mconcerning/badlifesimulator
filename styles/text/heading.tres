@@ -1,4 +1,4 @@
-[gd_resource type="LabelSettings" load_steps=2 format=3 uid="uid://c3r4rskc4jrad"]
+[gd_resource type="LabelSettings" format=3 uid="uid://c3r4rskc4jrad"]
 
 [ext_resource type="FontFile" uid="uid://jc7d7o5eghs1" path="res://assets/fonts/poppins/Poppins-Bold.ttf" id="1_mfam4"]
 
