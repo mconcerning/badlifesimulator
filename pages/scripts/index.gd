@@ -13,8 +13,10 @@ func _ready() -> void:
 		DisplayServer.window_set_size(Vector2i(global.windowSize[0], global.windowSize[1])) #sets window resolution to your preferred size (by default, 640 x 360, or 1/3 of the original size, 1080 x 1920). This makes the window managable on lower-resolution screens.
 		DisplayServer.window_set_position(Vector2i(100, 100)) #sets window position to the top-left of the screen. Without any repositioning, the window is by default clipping off the screen on PC displays with a resolution of 1080p or lower.
 		print("window size adjusted to " + str(global.windowSize))
-	#preloads
+	#preloads the biggest scripts
 	load("res://pages/scripts/event.gd")
+	load("res://pages/scripts/newRandomGame.gd")
+	load("res://pages/scripts/ageUp.gd")
 	#end
 	print("running version " + global.versionNumber)
 	get_tree().change_scene_to_file("res://pages/main_menu.tscn") #change scene to main menu

@@ -182,9 +182,9 @@ func rareAgeUpEvents():
 
 
 func randomDeathChance():
-	if global.age >= 50: #if you're old enough to randomly die (not super realistic, but as it turns out, it is NOT fun dying for no reason at age 2)
-		print("1 in " + str(max(1, 4 + global.health * 3 - global.age * 2)) + " chance of death")
-		if randi_range(1, max(1, 4 + global.health * 3 - global.age * 2)) == 1:
+	if global.age >= 65: #if you're old enough to randomly die (not super realistic, but as it turns out, it is NOT fun dying for no reason at age 2)
+		print("1 in " + str(max(1, 4 + global.health * 3 - (global.age - 10) * 2)) + " chance of death")
+		if randi_range(1, max(1, 4 + global.health * 3 - (global.age - 10) * 2)) == 1:
 			global.causeOfDeath = "You died of complications associated with advanced age"
 			isDying = true
 			get_tree().change_scene_to_file("res://pages/death.tscn") #kills you
@@ -200,9 +200,9 @@ func _ready() -> void:
 	rareAgeUpEvents()
 	randomDeathChance()
 	imprisonment()
-	#runs events if they're queued
 	if isDying == true: #if you're dying
-		return #don't do the below
+		return #don't do anything below
+	#runs events if they're queued
 	if global.revent.size() > 0: #if there are random events slated to appear
 		get_tree().change_scene_to_file("res://pages/event.tscn") #goes to the event page
 	else: #if there aren't random events slated to appear

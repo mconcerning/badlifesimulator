@@ -1,0 +1,10 @@
+[gd_scene format=3 uid="uid://dqm66t22vpofs"]
+
+[ext_resource type="LabelSettings" uid="uid://d2sr5rgpltp8f" path="res://styles/text/small_body.tres" id="1_5onmu"]
+
+[node name="microText" type="Label" unique_id=454720259]
+offset_right = 60.0
+offset_bottom = 40.0
+size_flags_horizontal = 4
+text = "Microtext goes here"
+label_settings = ExtResource("1_5onmu")

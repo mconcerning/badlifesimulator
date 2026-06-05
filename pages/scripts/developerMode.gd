@@ -14,6 +14,7 @@ func _ready() -> void:
 
 func _on_exit_pressed() -> void:
 	get_tree().change_scene_to_file("res://pages/new_game_confirmation.tscn") #go back
+	global.saveGame()
 
 
 func _on_save_game_pressed() -> void:
@@ -192,3 +193,33 @@ func _on_DM_password_pressed() -> void:
 		global.developerModePassword = "opensesame"
 		$confirmation.text = "Successfully set always req DM password to false!"
 	print("set always require developer mode password to " + str(global.developerModePassword))
+
+func _on_set_full_time_job_pressed() -> void:
+	global.fullTimeJob = str($input.text)
+	$confirmation.text = "Successfully set full time job!"
+	print("set full time job to " + str(global.fullTimeJob))
+
+func _on_set_full_time_job_salary_pressed() -> void:
+	global.fullTimeSalary = int($input.text)
+	$confirmation.text = "Successfully set full time salary!"
+	print("set full time salary to " + str(global.fullTimeSalary))
+
+func _on_set_full_time_job_performance_pressed() -> void:
+	global.fullTimePerformance = int($input.text)
+	$confirmation.text = "Successfully set full time performance!"
+	print("set full time performance to " + str(global.fullTimePerformance))
+
+func _on_set_part_time_job_pressed() -> void:
+	global.partTimeJob = str($input.text)
+	$confirmation.text = "Successfully set part time job!"
+	print("set part time job to " + str(global.partTimeJob))
+
+func _on_set_part_time_job_salary_pressed() -> void:
+	global.partTimeSalary = int($input.text)
+	$confirmation.text = "Successfully set part time salary!"
+	print("set part time salary to " + str(global.partTimeSalary))
+
+func _on_set_part_time_job_performance_pressed() -> void:
+	global.partTimePerformance = int($input.text)
+	$confirmation.text = "Successfully set part time performance!"
+	print("set part time performance to " + str(global.partTimePerformance))

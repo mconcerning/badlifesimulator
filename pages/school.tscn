@@ -5,6 +5,7 @@
 [ext_resource type="PackedScene" uid="uid://cjnbhqp8obehv" path="res://objects/back_button.tscn" id="3_fkmne"]
 [ext_resource type="LabelSettings" uid="uid://dl6sog5hfkb6u" path="res://styles/text/body.tres" id="4_f7717"]
 [ext_resource type="PackedScene" uid="uid://b3nrc0n5eeris" path="res://objects/subheading.tscn" id="4_fkmne"]
+[ext_resource type="PackedScene" uid="uid://moehuc8f6dgg" path="res://objects/exit.tscn" id="4_i7thp"]
 [ext_resource type="FontFile" uid="uid://bf7pfy6renkw4" path="res://assets/fonts/poppins/Poppins-Regular.ttf" id="6_pfe85"]
 [ext_resource type="PackedScene" uid="uid://ck7ra4cupjjkm" path="res://objects/button_default.tscn" id="7_j0g5h"]
 
@@ -19,6 +20,10 @@ script = ExtResource("1_ihrwm")
 [node name="background" parent="." unique_id=546064917 instance=ExtResource("2_vvy5g")]
 
 [node name="back" parent="." unique_id=17962498 instance=ExtResource("3_fkmne")]
+
+[node name="exit" parent="." unique_id=1865769784 instance=ExtResource("4_i7thp")]
+offset_left = 960.0
+offset_right = 1060.0
 
 [node name="schoolType" type="Label" parent="." unique_id=87329070]
 offset_top = 60.0
@@ -58,5 +63,6 @@ layout_mode = 2
 text = "Skip class"
 
 [connection signal="pressed" from="back" to="." method="_on_back_pressed"]
+[connection signal="pressed" from="exit" to="." method="_on_exit_pressed"]
 [connection signal="pressed" from="vBoxContainer/studyHarder" to="." method="_on_study_harder_pressed"]
 [connection signal="pressed" from="vBoxContainer/skipClass" to="." method="_on_skip_class_pressed"]

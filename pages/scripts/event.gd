@@ -273,10 +273,10 @@ func specialised(): #runs any miscellanious specialised, non-age-up events
 			if global.personTypes.count("Mother") + global.personTypes.count("Father") >= 2: #if you have two parents
 				$option2.text = "Ask your parents to pay"
 			elif global.personTypes.count("Mother") + global.personTypes.count("Father") == 1: #if you only have one parent
-				if global.personTypes.find("Mother") == -1: #if you only have a father
-					$option2.text = "Ask your father to pay"
-				else: #if you only have a mother
+				if global.personTypes.find("Mother") != -1: #if you only have a mother
 					$option2.text = "Ask your mother to pay"
+				else: #if you only have a father
+					$option2.text = "Ask your father to pay"
 			else: #if you have no parents
 				$option2.text = "Ask your parents to pay"
 				$option2.disabled = true #if you have no parents, you can't exactly ask them to pay for your tuition
@@ -889,7 +889,7 @@ func confirmation(): #non-random confirmation events that tell you that somethin
 
 func _on_option_1_pressed() -> void: #on option 1 selected
 	#confirmation - option 1 will be the only button available when the event's purpose is only to display information. Generally, the button will say "Okay".
-	if global.revent[0] == "toddler-0-o1" || global.revent[0] == "toddler-0-o2" || global.revent[0] == "toddler-0-o3" || global.revent[0] == "child-0-o1" || global.revent[0] == "child-0-o2" || global.revent[0] == "child-0-o3" || global.revent[0] == "child-0-o4" || global.revent[0] == "toddler-friend-o1" || global.revent[0] == "toddler-friend-o2" || global.revent[0] == "child-friend-o1" || global.revent[0] == "child-friend-o2" || global.revent[0] == "teenager-friend-o1" || global.revent[0] == "teenager-friend-o2" || global.revent[0] == "teenager-friend-o3" || global.revent[0] == "adult-friend-o1" || global.revent[0] == "adult-friend-o2" || global.revent[0] == "adult-friend-o3" || global.revent[0] == "elder-friend-o1" || global.revent[0] == "elder-friend-o2" || global.revent[0] == "elder-friend-o3" || global.revent[0] == "child-labour-is-outlawed" || global.revent[0] == "enrolled-in-primary-school" || global.revent[0] == "enrolled-in-high-school" || global.revent[0] == "graduated-high-school" || global.revent[0] == "study-harder" || global.revent[0] == "university-degree-picked-o1" || global.revent[0] == "university-degree-picked-o2" || global.revent[0] == "university-degree-picked-o3" || global.revent[0] == "university-degree-picked-o4" || global.revent[0] == "university-degree-picked-o2" || global.revent[0] == "graduated-university" || global.revent[0] == "compliment-relationship" || global.revent[0] == "skip-class" || global.revent[0] == "arrested-o1-success" || global.revent[0] == "court-trial-o2" || global.revent[0] == "dont-go-to-prison":
+	if global.revent[0] == "toddler-0-o1" || global.revent[0] == "toddler-0-o2" || global.revent[0] == "toddler-0-o3" || global.revent[0] == "child-0-o1" || global.revent[0] == "child-0-o2" || global.revent[0] == "child-0-o3" || global.revent[0] == "child-0-o4" || global.revent[0] == "toddler-friend-o1" || global.revent[0] == "toddler-friend-o2" || global.revent[0] == "child-friend-o1" || global.revent[0] == "child-friend-o2" || global.revent[0] == "teenager-friend-o1" || global.revent[0] == "teenager-friend-o2" || global.revent[0] == "teenager-friend-o3" || global.revent[0] == "adult-friend-o1" || global.revent[0] == "adult-friend-o2" || global.revent[0] == "adult-friend-o3" || global.revent[0] == "elder-friend-o1" || global.revent[0] == "elder-friend-o2" || global.revent[0] == "elder-friend-o3" || global.revent[0] == "child-labour-is-outlawed" || global.revent[0] == "enrolled-in-primary-school" || global.revent[0] == "enrolled-in-high-school" || global.revent[0] == "graduated-high-school" || global.revent[0] == "study-harder" || global.revent[0] == "university-degree-picked-o1" || global.revent[0] == "university-degree-picked-o2" || global.revent[0] == "university-degree-picked-o3" || global.revent[0] == "university-degree-picked-o4" || global.revent[0] == "graduated-university" || global.revent[0] == "compliment-relationship" || global.revent[0] == "skip-class" || global.revent[0] == "arrested-o1-success" || global.revent[0] == "court-trial-o2" || global.revent[0] == "dont-go-to-prison":
 		goHome()
 	#special exceptions
 	elif global.revent[0] == "go-to-prison":
@@ -1136,10 +1136,10 @@ func option2outcomes(): #option 2 has been picked
 		if global.personTypes.count("Mother") + global.personTypes.count("Father") >= 2: #if you have multiple parents
 			parentNoun = "parents"
 		elif global.personTypes.count("Mother") + global.personTypes.count("Father") == 1: #if you only have one parent
-			if parent == "Mother": #if you have only a mother
-				parentNoun = "Mother"
+			if global.personTypes[parent] == "Mother": #if you have only a mother
+				parentNoun = "mother"
 			else: #if you only have a father
-				parentNoun = "Father"
+				parentNoun = "father"
 		#if your parents actually do agree to pay for your tuition
 		if global.personRelationships[parent] >= 60 && randi_range(1,2) == 1: #if you have a good relationship with your parents AND your parents actually agree to pay for your tuition (1 in 2 chance)
 			$heading.text = "Nepo baby?"
@@ -1232,6 +1232,15 @@ func option3outcomes(): #option 3 has been picked
 			print("loans: " + str(global.loans))
 			print("loan interest: " + str(global.loanInterest))
 			print("loan payback duration: " + str(global.loanPaybackDuration))
+		global.schoolLevel = 3 #puts you in tertiary school
+		global.schoolName = global.lastNames[randi_range(0, global.lastNames.size() - 1)] #gives the university a random name
+		match randi_range(1,3): #gives the university name a random appendix
+			1:
+				global.schoolName += " Academy"
+			2:
+				global.schoolName += " College"
+			3:
+				global.schoolName += " University"
 		global.XPQueued += 30
 		$option1.text = "Okay"
 		optionRemover(2)

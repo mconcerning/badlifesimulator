@@ -23,7 +23,10 @@ func _ready() -> void:
 
 
 func _on_back_pressed() -> void:
-	get_tree().change_scene_to_file("res://pages/game_menu.tscn") #takes you back
+	get_tree().change_scene_to_file("res://pages/career_and_assets.tscn") #takes you back to careers and assets
+
+func _on_exit_pressed() -> void:
+	get_tree().change_scene_to_file("res://pages/game_menu.tscn") #takes you back to the game menu
 
 
 func _on_study_harder_pressed() -> void:

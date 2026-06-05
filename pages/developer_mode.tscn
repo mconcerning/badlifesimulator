@@ -43,9 +43,9 @@ horizontal_alignment = 1
 autowrap_mode = 3
 
 [node name="scrollContainer" type="ScrollContainer" parent="." unique_id=416486000]
-offset_left = -50.0
+offset_left = 20.0
 offset_top = 479.0
-offset_right = 1130.0
+offset_right = 1060.0
 offset_bottom = 1779.0
 size_flags_horizontal = 4
 size_flags_vertical = 0
@@ -221,6 +221,42 @@ text = "DM always req. pass"
 [node name="DMRPCheck" parent="scrollContainer/centerContainer/vBoxContainer/DMRP" unique_id=99608944 instance=ExtResource("8_4vx13")]
 position = Vector2(674, 0)
 
+[node name="setFullTimeJob" type="Button" parent="scrollContainer/centerContainer/vBoxContainer" unique_id=785008237]
+layout_mode = 2
+size_flags_horizontal = 4
+theme = ExtResource("6_llmlx")
+text = "Set full time job"
+
+[node name="setFullTimeJobSalary" type="Button" parent="scrollContainer/centerContainer/vBoxContainer" unique_id=68225248]
+layout_mode = 2
+size_flags_horizontal = 4
+theme = ExtResource("6_llmlx")
+text = "Set full time job salary"
+
+[node name="setFullTimeJobPerformance" type="Button" parent="scrollContainer/centerContainer/vBoxContainer" unique_id=1004585675]
+layout_mode = 2
+size_flags_horizontal = 4
+theme = ExtResource("6_llmlx")
+text = "Set full time job performance"
+
+[node name="setPartTimeJob" type="Button" parent="scrollContainer/centerContainer/vBoxContainer" unique_id=1939637017]
+layout_mode = 2
+size_flags_horizontal = 4
+theme = ExtResource("6_llmlx")
+text = "Set part time job"
+
+[node name="setPartTimeJobSalary" type="Button" parent="scrollContainer/centerContainer/vBoxContainer" unique_id=1421761104]
+layout_mode = 2
+size_flags_horizontal = 4
+theme = ExtResource("6_llmlx")
+text = "Set part time job salary"
+
+[node name="setPartTimeJobPerformance" type="Button" parent="scrollContainer/centerContainer/vBoxContainer" unique_id=689835306]
+layout_mode = 2
+size_flags_horizontal = 4
+theme = ExtResource("6_llmlx")
+text = "Set part time job performance"
+
 [node name="saveGame" type="TextureButton" parent="." unique_id=1317964170]
 offset_left = 960.0
 offset_top = 20.0
@@ -257,4 +293,10 @@ stretch_mode = 0
 [connection signal="pressed" from="scrollContainer/centerContainer/vBoxContainer/loanInterest" to="." method="_on_loan_interest_pressed"]
 [connection signal="pressed" from="scrollContainer/centerContainer/vBoxContainer/loanPaybackDuration" to="." method="_on_loan_payback_duration_pressed"]
 [connection signal="pressed" from="scrollContainer/centerContainer/vBoxContainer/DMRP" to="." method="_on_DM_password_pressed"]
+[connection signal="pressed" from="scrollContainer/centerContainer/vBoxContainer/setFullTimeJob" to="." method="_on_set_full_time_job_pressed"]
+[connection signal="pressed" from="scrollContainer/centerContainer/vBoxContainer/setFullTimeJobSalary" to="." method="_on_set_full_time_job_salary_pressed"]
+[connection signal="pressed" from="scrollContainer/centerContainer/vBoxContainer/setFullTimeJobPerformance" to="." method="_on_set_full_time_job_performance_pressed"]
+[connection signal="pressed" from="scrollContainer/centerContainer/vBoxContainer/setPartTimeJob" to="." method="_on_set_part_time_job_pressed"]
+[connection signal="pressed" from="scrollContainer/centerContainer/vBoxContainer/setPartTimeJobSalary" to="." method="_on_set_part_time_job_salary_pressed"]
+[connection signal="pressed" from="scrollContainer/centerContainer/vBoxContainer/setPartTimeJobPerformance" to="." method="_on_set_part_time_job_performance_pressed"]
 [connection signal="pressed" from="saveGame" to="." method="_on_save_game_pressed"]

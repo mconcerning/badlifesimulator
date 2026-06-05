@@ -1,0 +1,31 @@
+[gd_scene format=3 uid="uid://bmo83wbjt4bxb"]
+
+[ext_resource type="Script" uid="uid://ytndcu1rtxkr" path="res://pages/scripts/careerAndAssets.gd" id="1_fxp1q"]
+[ext_resource type="PackedScene" uid="uid://pmo8e2dmbkfm" path="res://objects/background.tscn" id="1_qh26k"]
+[ext_resource type="PackedScene" uid="uid://c7mtxc0kmsorg" path="res://objects/money.tscn" id="2_kr6au"]
+[ext_resource type="PackedScene" uid="uid://cjnbhqp8obehv" path="res://objects/back_button.tscn" id="3_g2kxk"]
+
+[node name="careerAndAssets" type="Node2D" unique_id=116935302]
+script = ExtResource("1_fxp1q")
+
+[node name="background" parent="." unique_id=1285032766 instance=ExtResource("1_qh26k")]
+
+[node name="back" parent="." unique_id=17962498 instance=ExtResource("3_g2kxk")]
+
+[node name="money" parent="." unique_id=91619562 instance=ExtResource("2_kr6au")]
+offset_top = 1750.0
+offset_bottom = 1810.0
+
+[node name="scrollContainer" type="ScrollContainer" parent="." unique_id=1978932549]
+offset_left = 40.0
+offset_top = 140.0
+offset_right = 1040.0
+offset_bottom = 1660.0
+
+[node name="vBoxContainer" type="VBoxContainer" parent="scrollContainer" unique_id=1629463277]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_constants/separation = 50
+
+[connection signal="pressed" from="back" to="." method="_on_back_pressed"]

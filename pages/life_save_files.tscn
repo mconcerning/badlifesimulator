@@ -53,9 +53,10 @@ offset_bottom = 444.0
 text = "Delete mode"
 
 [node name="scrollContainer" type="ScrollContainer" parent="." unique_id=679167767]
+offset_left = 20.0
 offset_top = 500.0
-offset_right = 1080.0
-offset_bottom = 1920.0
+offset_right = 1060.0
+offset_bottom = 1850.0
 horizontal_scroll_mode = 0
 
 [node name="centerContainer" type="CenterContainer" parent="scrollContainer" unique_id=690000734]

@@ -2,6 +2,8 @@ extends Node2D #author(s): Ethan Scott
 
 
 var emailAttemptCounter = 0
+var clipboard = ""
+var saveData = ""
 
 
 func _on_back_pressed() -> void:
@@ -12,17 +14,25 @@ func _on_copy_to_clipboard_pressed() -> void: #on copy game to clipboard
 	if global.gameSerialiser() == null: #if the savegame isn't working
 		$confirmation.text = "Error saving game."
 		return
-	var data = Marshalls.utf8_to_base64(JSON.stringify(global.gameSerialiser()))
-	DisplayServer.clipboard_set(data) #copies game progress data, in base64, to clipboard
-	await get_tree().process_frame
-	if DisplayServer.clipboard_get() == data: #if everything worked; you've copied the right data and we can see that
+	saveData = Marshalls.utf8_to_base64(JSON.stringify(global.gameSerialiser()))
+	DisplayServer.clipboard_set(saveData) #copies game progress data, in base64, to clipboard
+	$confirmation.text = "..."
+	$waitForClipboard.start()
+
+func _on_wait_for_clipboard_timeout() -> void:
+	if DisplayServer.clipboard_get() == saveData: #if everything worked; you've copied the right data and we can see that
 		$confirmation.text = "Copy success!"
 	else: #if it didn't work for some reason
 		$confirmation.text = "Error writing to or reading from clipboard. Please wait a moment and then try again."
 
+
 func _on_copy_and_email_pressed() -> void: #on copy and email clicked
 	_on_copy_to_clipboard_pressed() #emulates copying
-	var clipboard = DisplayServer.clipboard_get()
+	clipboard = DisplayServer.clipboard_get()
+	$confirmation.text = "..."
+	$waitForClipboardEmail.start() #wait 0.15s for the clipboard to copy
+
+func _on_wait_for_clipboard_email_timeout() -> void:
 	if clipboard == "" && $confirmation.text == "Copy success!": #if it successfully copied to clipboard, but now can't access what's there
 		$confirmation.text = "Error reading clipboard :( You might have tried too many times. Please wait a moment and try again."
 		return

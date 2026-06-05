@@ -1,0 +1,5 @@
+[gd_scene format=3 uid="uid://blo6ilrtfflnd"]
+
+[node name="blankBox" type="TextureRect" unique_id=46974659]
+offset_right = 40.0
+offset_bottom = 40.0

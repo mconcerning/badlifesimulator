@@ -56,6 +56,16 @@ label_settings = ExtResource("7_11dys")
 horizontal_alignment = 1
 autowrap_mode = 3
 
+[node name="waitForClipboard" type="Timer" parent="." unique_id=246357403]
+wait_time = 0.15
+one_shot = true
+
+[node name="waitForClipboardEmail" type="Timer" parent="." unique_id=1912266510]
+wait_time = 0.15
+one_shot = true
+
 [connection signal="pressed" from="back" to="." method="_on_back_pressed"]
 [connection signal="pressed" from="copyToClipboard" to="." method="_on_copy_to_clipboard_pressed"]
 [connection signal="pressed" from="copyAndEmail" to="." method="_on_copy_and_email_pressed"]
+[connection signal="timeout" from="waitForClipboard" to="." method="_on_wait_for_clipboard_timeout"]
+[connection signal="timeout" from="waitForClipboardEmail" to="." method="_on_wait_for_clipboard_email_timeout"]
