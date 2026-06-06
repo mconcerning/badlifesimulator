@@ -260,34 +260,48 @@ func specialised(): #runs any miscellanious specialised, non-age-up events
 		$option1.text = "Dang it"
 		optionRemover(2)
 	elif global.revent [0] == "university-degree-picked" || global.revent[0] == "university-degree-picked-o2-refused-o1" || global.revent[0] == "university-degree-picked-o4-rejected-o1":
+		var cost = 0 #total cost of the degree, in dollars
+		var loanDuration = 0 #duration of a loan to pay for the degree, in years
+		var loanInterestRate = 0 #interest rate of the loan, as a percentage
 		$heading.text = "University degree"
-		$body.text = "You picked a"
-		if global.degreePicked == "Education":
-			$body.text += "n Education degree, which costs a total of $25,000 to undertake.\n"
-			if global.money < 25000: #if you don't have enough money to pay the degree upfront
-				$body.text += "Since you don't have enough money to pay for it upfront ($" + str(global.money) + "), you can choose to take out a 20-year loan to cover the costs with an interest rate of 8%, or you can apply for a scholarship."
-				$option1.disabled = true #you can't pay for it upfront; this option is unavailable
-			else: #if you have enough money to pay for it upfront
-				$body.text += "You have enough money to pay for it upfront ($" + str(global.money) + "), but you can still choose to take out a 20-year loan to cover the costs with an interest rate of 8%, or apply for a scholarship."
-			$option1.text = "Pay for it with cash"
-			if global.personTypes.count("Mother") + global.personTypes.count("Father") >= 2: #if you have two parents
-				$option2.text = "Ask your parents to pay"
-			elif global.personTypes.count("Mother") + global.personTypes.count("Father") == 1: #if you only have one parent
-				if global.personTypes.find("Mother") != -1: #if you only have a mother
-					$option2.text = "Ask your mother to pay"
-				else: #if you only have a father
-					$option2.text = "Ask your father to pay"
-			else: #if you have no parents
-				$option2.text = "Ask your parents to pay"
-				$option2.disabled = true #if you have no parents, you can't exactly ask them to pay for your tuition
-			$option3.text = "Take out the loan"
-			$option4.text = "Apply for a scholarship"
-			optionRemover(5)
-			if global.eventMemory.has("university-degree-picked-o2-refused"): #if your parents already refused to pay for your tuition
-				$option2.disabled = true #you can't just keep pestering them until they cave
-			if global.eventMemory.has("university-degree-picked-o4-rejected"): #if your application for a scholarship was already denied
-				$option4.disabled = true #you can't try it again
-			global.revent[0] = "university-degree-picked"
+		match global.degreePicked:
+			"Education":
+				cost = 25000
+				loanDuration = 20
+				loanInterestRate = 5
+			"Law":
+				cost = 64000
+				loanDuration = 35
+				loanInterestRate = 7
+		global.degreePickedCost = cost
+		global.degreePickedLoanDuration = loanDuration
+		global.degreePickedLoanInterest = loanInterestRate
+		$body.text = "You picked " + global.anIser(global.degreePicked) + " degree, which costs a total of $" + global.commaiser(cost) + " to undertake. "
+		if global.money < cost: #if you don't have enough money to pay the degree upfront
+			$body.text += "Since you don't have enough money to pay for it upfront ($" + str(global.money) + "), you can choose "
+			$option1.disabled = true #you can't pay for it upfront; this option is unavailable
+		else: #if you have enough money to pay for it upfront
+			$body.text += "You have enough money to pay for it upfront ($" + str(global.money) + "), but you can still choose "
+		$body.text += "to take out a " + str(loanDuration) + "-year loan to cover the costs with an interest rate of " + str(loanInterestRate) + "%, or you can apply for a scholarship."
+		$option1.text = "Pay for it with cash"
+		if global.personTypes.count("Mother") + global.personTypes.count("Father") >= 2: #if you have two parents
+			$option2.text = "Ask your parents to pay"
+		elif global.personTypes.count("Mother") + global.personTypes.count("Father") == 1: #if you only have one parent
+			if global.personTypes.find("Mother") != -1: #if you only have a mother
+				$option2.text = "Ask your mother to pay"
+			else: #if you only have a father
+				$option2.text = "Ask your father to pay"
+		else: #if you have no parents
+			$option2.text = "Ask your parents to pay"
+			$option2.disabled = true #if you have no parents, you can't exactly ask them to pay for your tuition
+		$option3.text = "Take out the loan"
+		$option4.text = "Apply for a scholarship"
+		optionRemover(5)
+		if global.eventMemory.has("university-degree-picked-o2-refused"): #if your parents already refused to pay for your tuition
+			$option2.disabled = true #you can't just keep pestering them until they cave
+		if global.eventMemory.has("university-degree-picked-o4-rejected"): #if your application for a scholarship was already denied
+			$option4.disabled = true #you can't try it again
+		global.revent[0] = "university-degree-picked"
 
 
 func relationships(): #specialised relationship events
@@ -993,10 +1007,8 @@ func option1outcomes(): #option 1 has been picked
 		global.evality += 3 #since you did something semi-bad, you become slightly desensitised to doing bad things
 	elif global.revent[0] == "university-degree-picked-o1":
 		$heading.text = "Well educated"
-		$body.text = "You are now enrolled in University for a degree in " + global.degreePicked + ".\n- $"
-		if global.degreePicked == "Education":
-			global.money -= 25000 #pay the appropriate amount for university tuition
-			$body.text += "25000"
+		$body.text = "You are now enrolled in University for a degree in " + global.degreePicked + ".\n- $" + global.commaIser(global.degreePickedCost)
+		global.money -= global.degreePickedCost #pay the appropriate amount for university tuition
 		$option1.text = "Okay"
 		optionRemover(2)
 		global.XPQueued += 50
@@ -1141,7 +1153,7 @@ func option2outcomes(): #option 2 has been picked
 			else: #if you only have a father
 				parentNoun = "father"
 		#if your parents actually do agree to pay for your tuition
-		if global.personRelationships[parent] >= 60 && randi_range(1,2) == 1: #if you have a good relationship with your parents AND your parents actually agree to pay for your tuition (1 in 2 chance)
+		if global.personRelationships[parent] >= 70 && randi_range(1, max(2, roundi(float(global.degreePickedCost) / 10000))) == 1: #if you have a good relationship with your parents AND your parents actually agree to pay for your tuition (1 in (the cost of the degree / 10,000 (e.g. 1 in ~2.5 (3) chance for a $25,000 loan) chance)
 			$heading.text = "Nepo baby?"
 			$body.text = "Your " + parentNoun + " agreed to pay for your University tuition!"
 			global.schoolLevel = 3 #puts you in tertiary school
@@ -1223,15 +1235,12 @@ func option3outcomes(): #option 3 has been picked
 		global.joy -= 12
 	elif global.revent[0] == "university-degree-picked-o3":
 		$heading.text = "Student loans"
-		$body.text = "You took out a "
+		$body.text = "You took out a $" + global.commaiser(global.degreePickedCost) + " student loan that needs to be paid back over " + str(global.degreePickedLoanDuration) + " years with an interest rate of " + str(global.degreePickedLoanInterest) + "% to pay for your " + global.degreePicked + " degree."
+		global.takeOutLoan(global.degreePickedCost, global.degreePickedLoanInterest, global.degreePickedLoanDuration) #takes out loan
+		print("loans: " + str(global.loans))
+		print("loan interest: " + str(global.loanInterest))
+		print("loan payback duration: " + str(global.loanPaybackDuration))
 		print(global.degreePicked)
-		if global.degreePicked == "Education":
-			print(global.degreePicked)
-			$body.text += "$25,000 student loan that needs to be paid back over 20 years with an interest rate of 8%."
-			global.takeOutLoan(25000, 8, 20) #takes out loan
-			print("loans: " + str(global.loans))
-			print("loan interest: " + str(global.loanInterest))
-			print("loan payback duration: " + str(global.loanPaybackDuration))
 		global.schoolLevel = 3 #puts you in tertiary school
 		global.schoolName = global.lastNames[randi_range(0, global.lastNames.size() - 1)] #gives the university a random name
 		match randi_range(1,3): #gives the university name a random appendix
@@ -1241,7 +1250,7 @@ func option3outcomes(): #option 3 has been picked
 				global.schoolName += " College"
 			3:
 				global.schoolName += " University"
-		global.XPQueued += 30
+		global.XPQueued += 40
 		$option1.text = "Okay"
 		optionRemover(2)
 		emForget("university-degree-picked-o2-refused")
@@ -1260,7 +1269,7 @@ func option4outcomes(): #option 4 has been picked
 		global.commitCrime("Second degree homicide", 95, "Life")
 		global.NPCKiller("kill", relativeOfChoice) #kills uncle
 	elif global.revent[0] == "university-degree-picked-o4":
-		if global.schoolPerformance >= 80: #if you did really well at your last school (usually highschool, unless you're going for a second degree)
+		if global.schoolPerformance >= 85 && randi_range(1,4) != 1: #if you did really well at your last school (usually highschool, unless you're going for a second degree) and you're not super unlucky (3 in 4 chance)
 			$heading.text = "What a scholar"
 			$body.text = "Your application for a scholarship was accepted!"
 			global.schoolLevel = 3 #puts you in tertiary school

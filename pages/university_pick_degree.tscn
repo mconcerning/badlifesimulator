@@ -54,5 +54,10 @@ text = "Actually, nevermind"
 layout_mode = 2
 text = "Education"
 
+[node name="law" parent="scrollContainer/centerContainer/vBoxContainer" unique_id=1435302084 instance=ExtResource("4_r6h0o")]
+layout_mode = 2
+text = "Law"
+
 [connection signal="pressed" from="scrollContainer/centerContainer/vBoxContainer/cancel" to="." method="_on_cancel_pressed"]
 [connection signal="pressed" from="scrollContainer/centerContainer/vBoxContainer/education" to="." method="_on_education_pressed"]
+[connection signal="pressed" from="scrollContainer/centerContainer/vBoxContainer/law" to="." method="_on_law_pressed"]

@@ -42,6 +42,7 @@ func _ready() -> void:
 		scrollContainer.add_child(degreeHeading)
 		var enroll = button.instantiate()
 		enroll.text = "Enroll in University"
+		enroll.pressed.connect(universityEnroll.bind())
 		scrollContainer.add_child(enroll)
 		lineBreak()
 	if global.fullTimeJob != "":
@@ -84,3 +85,6 @@ func _on_back_pressed() -> void:
 
 func schoolClicked():
 	get_tree().change_scene_to_file("res://pages/school.tscn")
+
+func universityEnroll():
+	get_tree().change_scene_to_file("res://pages/university_pick_degree.tscn")

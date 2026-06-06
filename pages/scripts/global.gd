@@ -92,6 +92,9 @@ var eventPersonAge = ""
 var eventPersonSex = ""
 #other
 var degreePicked = ""
+var degreePickedCost = ""
+var degreePickedLoanDuration = 0
+var degreePickedLoanInterest = 0
 var customLifeSaveDir = ""
 var customLifeImportDir = ""
 var customGameSaveDir = ""
@@ -429,6 +432,9 @@ func lifeSerialiser(): #serialises every life-specific variable we need to save 
 		"eventPersonAge" : eventPersonAge,
 		"eventPersonSex" : eventPersonSex,
 		"degreePicked" : degreePicked,
+		"degreePickedCost" : degreePickedCost,
+		"degreePickedLoanDuration" : degreePickedLoanDuration,
+		"degreePickedLoanInterest" : degreePickedLoanInterest,
 		#keeping track
 		"joyOverTime" : joyOverTime,
 		"healthOverTime" : healthOverTime,
@@ -618,6 +624,9 @@ func loadLife(takeHome = true, base64life = ""): #does the actual LIFE loading
 	eventPersonAge = dictionary["eventPersonAge"]
 	eventPersonSex = dictionary["eventPersonSex"]
 	degreePicked = dictionary["degreePicked"]
+	degreePickedCost = dictionary["degreePickedCost"]
+	degreePickedLoanDuration = dictionary["degreePickedLoanDuration"]
+	degreePickedLoanInterest = dictionary["degreePickedLoanInterest"]
 	#keeping track
 	joyOverTime = intIser(dictionary["joyOverTime"])
 	healthOverTime = intIser(dictionary["healthOverTime"])
