@@ -1,0 +1,36 @@
+[gd_scene format=3 uid="uid://c32tnk3nwm2mj"]
+
+[ext_resource type="Script" uid="uid://3uj5gujed3i7" path="res://pages/scripts/jobSearchFullTime.gd" id="1_7fh03"]
+[ext_resource type="PackedScene" uid="uid://pmo8e2dmbkfm" path="res://objects/background.tscn" id="2_367jp"]
+[ext_resource type="PackedScene" uid="uid://cjnbhqp8obehv" path="res://objects/back_button.tscn" id="3_8t6fx"]
+[ext_resource type="PackedScene" uid="uid://moehuc8f6dgg" path="res://objects/exit.tscn" id="4_tdg3h"]
+[ext_resource type="PackedScene" uid="uid://b7bfib5vbcvk6" path="res://objects/heading.tscn" id="5_367jp"]
+
+[node name="jobSearch" type="Node2D" unique_id=940218900]
+script = ExtResource("1_7fh03")
+
+[node name="background" parent="." unique_id=450277003 instance=ExtResource("2_367jp")]
+
+[node name="back" parent="." unique_id=17962498 instance=ExtResource("3_8t6fx")]
+
+[node name="exit" parent="." unique_id=1865769784 instance=ExtResource("4_tdg3h")]
+offset_left = 960.0
+offset_right = 1060.0
+
+[node name="heading" parent="." unique_id=33655322 instance=ExtResource("5_367jp")]
+text = "Job search"
+
+[node name="scrollContainer" type="ScrollContainer" parent="." unique_id=1299347878]
+offset_left = 40.0
+offset_top = 300.0
+offset_right = 1040.0
+offset_bottom = 1800.0
+
+[node name="vBoxContainer" type="VBoxContainer" parent="scrollContainer" unique_id=1580272077]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 4
+theme_override_constants/separation = 50
+
+[connection signal="pressed" from="back" to="." method="_on_back_pressed"]
+[connection signal="pressed" from="exit" to="." method="_on_exit_pressed"]

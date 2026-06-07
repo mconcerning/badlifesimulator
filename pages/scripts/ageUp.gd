@@ -32,6 +32,7 @@ func basicStatChanges():
 			global.multiplicativeArrestChance += 1
 	global.statClamper() #clamps stats if they're below 0 or above 100
 	global.history = [] #clears activity history
+	global.newJobOpenings()
 
 
 func school():

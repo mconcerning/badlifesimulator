@@ -59,6 +59,7 @@ func _ready() -> void:
 		scrollContainer.add_child(searchHeading)
 		var search = button.instantiate()
 		search.text = "Search for a job"
+		search.pressed.connect(fullTimeJobSearch.bind())
 		scrollContainer.add_child(search)
 		lineBreak()
 	if global.partTimeJob != "":
@@ -88,3 +89,6 @@ func schoolClicked():
 
 func universityEnroll():
 	get_tree().change_scene_to_file("res://pages/university_pick_degree.tscn")
+
+func fullTimeJobSearch():
+	get_tree().change_scene_to_file("res://pages/job_search_full_time.tscn")

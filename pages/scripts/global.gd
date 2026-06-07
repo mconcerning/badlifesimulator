@@ -1,6 +1,6 @@
 extends Node #author(s): Ethan Scott
 
-#this is this game's global script. It is accessible from any script at any point. If you need to access or change a variable from here, for instance, firstName, in a different script, type "global." before the variable name: "global.firstName".
+##This is this game's global script. It is accessible from any script at any point. If you need to access or change a variable from here, for instance, firstName, in a different script, type "global." before the variable name: "global.firstName".
 
 
 #engine
@@ -33,6 +33,8 @@ var sexuality = "" #stored definitively, not relative to the sex of the player, 
 
 
 #rest-of-life-related
+var jobOpenings = []
+var jobOpeningsSalary = []
 var crimes = []
 var crimesSeverity = []
 var crimeTime = [] #how many years in prison is each crime worth?
@@ -312,7 +314,7 @@ func anIser(undoctoredProceedingWord): #an-iser. Returns "n " to be appended to 
 	return "a " + undoctoredProceedingWord
 
 
-func intIser(theArray): #turns array elements into integers
+func intIser(theArray): ##Turns array elements into integers
 	var intTheArray = []
 	for i in theArray.size():
 		intTheArray.append(int(theArray[i]))
@@ -329,6 +331,12 @@ func crimeTimeCalculator():
 		#otherwise, you already have a life sentence, and there's no need to add to it
 	return totalSentence
 
+func prisonPreparer(sentenceLength): #does everything you need to prepare the player for prison; you still have to be physically sent there manually
+	prisonSentence = sentenceLength
+	for i in crimes.size():
+		criminalRecord.append(crimes[i])
+		criminalRecordSeverity.append(crimesSeverity[i])
+
 
 func takeOutLoan(amount : int, interest : int, paybackPeriod : int): #amount in dollars, interest as a percentage, and pacyback period in years
 	global.loans.append(amount) #takes out the loan
@@ -337,11 +345,20 @@ func takeOutLoan(amount : int, interest : int, paybackPeriod : int): #amount in 
 	global.loanPaybackDuration.append(paybackPeriod) #pay it back over the course of however many years
 
 
-func prisonPreparer(sentenceLength): #does everything you need to prepare the player for prison; you still have to be physically sent there manually
-	prisonSentence = sentenceLength
-	for i in crimes.size():
-		criminalRecord.append(crimes[i])
-		criminalRecordSeverity.append(crimesSeverity[i])
+func newJobOpenings(): ##Creates a set of new job openings from the list of possible jobs. Used when creating a new life or aging up.
+	var allJobs = [["Primary school teacher", randi_range(850, 920) * 100], ["High school teacher", randi_range(900, 1040) * 100], ["University professor", randi_range(2100, 2300) * 100], ["Public defender", randi_range(122, 130) * 100], ["Apprentice lawyer", randi_range(850, 1000) * 100], ["Lawyer", randi_range(1800, 2100) * 100], ["Fast food worker", randi_range(490, 530) * 100], ["Fast food manager", randi_range(560, 620) * 100], ["Retail worker", randi_range(425, 550) * 100]] ##[[name, salary], [name, salary]]... Salaries are within a randomised range depending on the job. The salary is calculated by generating a random number and multiplying it by 100. A 3-digit random number would produce a 5-figure salary (tens of thousands of dollars), a 4-digit number would produce a 6-figure salary, and so on. The multiplication results in salaries rounded to hundred of dollars.
+	var _newJobOpenings = allJobs
+	_newJobOpenings.shuffle() #randomises order of the jobs. Used in tandem with the below, randomly limits which jobs are available.
+	while _newJobOpenings.size() > 25: #limits the number of job openings on any given year to 25; these 25 could be any
+		_newJobOpenings.pop_back()
+	var newJobNames = []
+	for i in _newJobOpenings.size():
+		newJobNames.append(_newJobOpenings[i][0]) #adds the name of each available job to the jobs name array
+	var newJobSalaries = []
+	for i in _newJobOpenings.size():
+		newJobSalaries.append(_newJobOpenings[i][1]) #adds the salary of each available job to the job opening salary array
+	jobOpenings = newJobNames
+	jobOpeningsSalary = newJobSalaries
 
 
 func averageFinder(array): #finds the mean average of all integer elements in any array
@@ -379,6 +396,8 @@ func lifeSerialiser(): #serialises every life-specific variable we need to save 
 		"evality" : evality,
 		"sexuality" : sexuality,
 		#rest-of-life-related
+		"jobOpenings" : jobOpenings,
+		"jobOpeningsSalary" : jobOpeningsSalary,
 		"crimes" : crimes,
 		"crimesSeverity" : crimesSeverity,
 		"intellectAtTimeOfCrime" : intellectAtTimeOfCrime,
@@ -571,6 +590,8 @@ func loadLife(takeHome = true, base64life = ""): #does the actual LIFE loading
 	evality = dictionary["evality"]
 	sexuality = dictionary["sexuality"]
 	#rest-of-life-related
+	jobOpenings = dictionary["jobOpenings"]
+	jobOpeningsSalary = dictionary["jobOpeningsSalary"]
 	crimes = dictionary["crimes"]
 	crimesSeverity = intIser(dictionary["crimesSeverity"])
 	intellectAtTimeOfCrime = intIser(dictionary["intellectAtTimeOfCrime"])

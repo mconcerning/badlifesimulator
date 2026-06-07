@@ -1,5 +1,6 @@
 extends Node2D #author(s): Ethan Scott
-#handles all events
+
+##Handles all events in the game.
 
 
 func optionRemover(optionXOnwards): #disables and changes the opacity to 0 of unused buttons (optionXOnwards is the button you want to disable. It and every button below it will be disabled)
