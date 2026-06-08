@@ -48,9 +48,10 @@ label_settings = SubResource("LabelSettings_j0g5h")
 horizontal_alignment = 1
 
 [node name="vBoxContainer" type="VBoxContainer" parent="." unique_id=1341806161]
+offset_left = 40.0
 offset_top = 400.0
-offset_right = 1080.0
-offset_bottom = 1920.0
+offset_right = 1040.0
+offset_bottom = 1800.0
 size_flags_horizontal = 4
 theme_override_constants/separation = 50
 

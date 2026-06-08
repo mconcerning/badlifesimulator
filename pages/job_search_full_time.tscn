@@ -6,7 +6,7 @@
 [ext_resource type="PackedScene" uid="uid://moehuc8f6dgg" path="res://objects/exit.tscn" id="4_tdg3h"]
 [ext_resource type="PackedScene" uid="uid://b7bfib5vbcvk6" path="res://objects/heading.tscn" id="5_367jp"]
 
-[node name="jobSearch" type="Node2D" unique_id=940218900]
+[node name="jobSearchFullTime" type="Node2D" unique_id=940218900]
 script = ExtResource("1_7fh03")
 
 [node name="background" parent="." unique_id=450277003 instance=ExtResource("2_367jp")]
@@ -22,9 +22,9 @@ text = "Job search"
 
 [node name="scrollContainer" type="ScrollContainer" parent="." unique_id=1299347878]
 offset_left = 40.0
-offset_top = 300.0
+offset_top = 350.0
 offset_right = 1040.0
-offset_bottom = 1800.0
+offset_bottom = 1850.0
 
 [node name="vBoxContainer" type="VBoxContainer" parent="scrollContainer" unique_id=1580272077]
 layout_mode = 2

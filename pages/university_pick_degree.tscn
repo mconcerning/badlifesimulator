@@ -50,14 +50,24 @@ theme_override_constants/separation = 50
 layout_mode = 2
 text = "Actually, nevermind"
 
+[node name="business" parent="scrollContainer/centerContainer/vBoxContainer" unique_id=1308240770 instance=ExtResource("4_r6h0o")]
+layout_mode = 2
+text = "Business"
+
 [node name="education" parent="scrollContainer/centerContainer/vBoxContainer" unique_id=1021089088 instance=ExtResource("4_r6h0o")]
 layout_mode = 2
 text = "Education"
+
+[node name="graphicDesign" parent="scrollContainer/centerContainer/vBoxContainer" unique_id=1505016618 instance=ExtResource("4_r6h0o")]
+layout_mode = 2
+text = "Graphic design"
 
 [node name="law" parent="scrollContainer/centerContainer/vBoxContainer" unique_id=1435302084 instance=ExtResource("4_r6h0o")]
 layout_mode = 2
 text = "Law"
 
 [connection signal="pressed" from="scrollContainer/centerContainer/vBoxContainer/cancel" to="." method="_on_cancel_pressed"]
+[connection signal="pressed" from="scrollContainer/centerContainer/vBoxContainer/business" to="." method="_on_business_pressed"]
 [connection signal="pressed" from="scrollContainer/centerContainer/vBoxContainer/education" to="." method="_on_education_pressed"]
+[connection signal="pressed" from="scrollContainer/centerContainer/vBoxContainer/graphicDesign" to="." method="_on_graphic_design_pressed"]
 [connection signal="pressed" from="scrollContainer/centerContainer/vBoxContainer/law" to="." method="_on_law_pressed"]

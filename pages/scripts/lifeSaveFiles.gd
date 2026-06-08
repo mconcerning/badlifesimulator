@@ -56,7 +56,8 @@ func _ready() -> void:
 		button.clip_text = true
 		#gets how much x size the text takes up on the button
 		var text_width = button.get_theme_font("font").get_string_size(button.text, HORIZONTAL_ALIGNMENT_LEFT, -1, button.get_theme_font_size("font_size")).x #gets the total width of the text
-		button.custom_minimum_size.x = min(text_width, 1000) #sets the button's cap (by setting its minimum size to either the size of the text or 1000, whichever's lower). This leads to buttons that are too big being abruptly cut off, but it doesn't really matter all that much.
+		button.custom_minimum_size.x = min(text_width, 960) #sets the button's cap (by setting its minimum size to either the size of the text or 960, whichever's lower). Could lead to text being abruptly cut off without autowrap.
+		#button.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART #prevents text from getting cut off abruptly
 		var fileBasename = dir[i].get_basename()
 		button.pressed.connect(buttonPressed.bind(fileBasename, "life" + str(i)))
 	$scrollContainer/centerContainer/vBoxContainer.size.y += 50 #increases the size of the container so the scrolling doesn't stop as soon as you hit the bottom of the last button

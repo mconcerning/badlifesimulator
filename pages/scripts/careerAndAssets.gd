@@ -17,37 +17,13 @@ func lineBreak(): ##Creates a blank body paragraph in the scroll container to fu
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	#button and heading generation
-	if global.schoolLevel == 1 || global.schoolLevel == 2 || global.schoolLevel == 3: #if you're in school
-		var schoolHeading = subheading.instantiate()
-		match global.schoolLevel:
-			1:
-				schoolHeading.text = "Primary school"
-			2:
-				schoolHeading.text = "High school"
-			3:
-				schoolHeading.text = "University"
-		#subheading colour change for differentiation (currently disabled bc it looks like shit)
-		#var lSet = schoolHeading.label_settings.duplicate() #duplicates the label settings (makes them unique) so changes to it don't affect any other labels
-		#lSet.font_color = Color.from_rgba8(0, 0, 255, 255)
-		#schoolHeading.label_settings = lSet
-		scrollContainer.add_child(schoolHeading)
-		var school = button.instantiate()
-		school.text = global.schoolName
-		school.pressed.connect(schoolClicked.bind())
-		scrollContainer.add_child(school)
-		lineBreak()
-	elif global.schoolLevel == 0: #if you've graduated
-		var degreeHeading = subheading.instantiate()
-		degreeHeading.text = "Not in school"
-		scrollContainer.add_child(degreeHeading)
-		var enroll = button.instantiate()
-		enroll.text = "Enroll in University"
-		enroll.pressed.connect(universityEnroll.bind())
-		scrollContainer.add_child(enroll)
-		lineBreak()
 	if global.fullTimeJob != "":
 		var fullTimeJobHeading = subheading.instantiate()
 		fullTimeJobHeading.text = "Full-time job"
+		#subheading colour change for differentiation (currently disabled bc it looks like shit)
+		#var lSet = fullTimeJobHeading.label_settings.duplicate() #duplicates the label settings (makes them unique) so changes to it don't affect any other labels
+		#lSet.font_color = Color.from_rgba8(0, 0, 255, 255)
+		#fullTimeJobHeading.label_settings = lSet
 		scrollContainer.add_child(fullTimeJobHeading)
 		var fullTimeJob = button.instantiate()
 		fullTimeJob.text = global.fullTimeJob
@@ -77,6 +53,30 @@ func _ready() -> void:
 		var search = button.instantiate()
 		search.text = "Look for a gig"
 		scrollContainer.add_child(search)
+		lineBreak()
+	if global.schoolLevel == 1 || global.schoolLevel == 2 || global.schoolLevel == 3: #if you're in school
+		var schoolHeading = subheading.instantiate()
+		match global.schoolLevel:
+			1:
+				schoolHeading.text = "Primary school"
+			2:
+				schoolHeading.text = "High school"
+			3:
+				schoolHeading.text = "University"
+		scrollContainer.add_child(schoolHeading)
+		var school = button.instantiate()
+		school.text = global.schoolName
+		school.pressed.connect(schoolClicked.bind())
+		scrollContainer.add_child(school)
+		lineBreak()
+	elif global.schoolLevel == 0: #if you've graduated
+		var degreeHeading = subheading.instantiate()
+		degreeHeading.text = "Not in school"
+		scrollContainer.add_child(degreeHeading)
+		var enroll = button.instantiate()
+		enroll.text = "Enroll in University"
+		enroll.pressed.connect(universityEnroll.bind())
+		scrollContainer.add_child(enroll)
 		lineBreak()
 
 

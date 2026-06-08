@@ -52,7 +52,18 @@ func _ready() -> void:
 			labelInstance.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 			labelInstance.size.x = 900
 		$scrollContainer/centerContainer/vBoxContainer.add_child(labelInstance)
-	$scrollContainer/centerContainer/vBoxContainer/noOfRelationships.text = "You have " + global.commaiser(family.size()) + " family members\nYou know " + global.commaiser(misc.size()) + " other people\nYou know " + global.commaiser(global.personTypes.size()) + " people in total"
+	#corrects grammar
+	var personPeopleMisc
+	if misc.size() == 1:
+		personPeopleMisc = "person"
+	else:
+		personPeopleMisc = "people"
+	var personPeopleTotal
+	if misc.size() + family.size() == 1:
+		personPeopleTotal = "person"
+	else:
+		personPeopleTotal = "people"
+	$scrollContainer/centerContainer/vBoxContainer/noOfRelationships.text = "You have " + global.commaiser(family.size()) + " family members\nYou know " + global.commaiser(misc.size()) + " other " + personPeopleMisc + "\nYou know " + global.commaiser(global.personTypes.size()) + " " + personPeopleTotal + " in total"
 
 
 func personClicked(personID, relationshipType): #positive numbers are family; negative numbers are other

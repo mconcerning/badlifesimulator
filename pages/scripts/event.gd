@@ -3,8 +3,8 @@ extends Node2D #author(s): Ethan Scott
 ##Handles all events in the game.
 
 
-func optionRemover(optionXOnwards): #disables and changes the opacity to 0 of unused buttons (optionXOnwards is the button you want to disable. It and every button below it will be disabled)
-	$cancelEvent.queue_free() #having options means there is an event, which means you can't softlock your life by being here unless the options do nothing. nonetheless, you don't need this now.
+func optionRemover(optionXOnwards : int): ##Disables and changes the opacity to 0 of unused buttons (optionXOnwards is the number representing which button you want to disable (option 1, 2, 3, 4... etc). It and every button after it will be disabled).
+	$cancelEvent.queue_free() #having options means there is an event, which means you can't softlock your life by being here unless the options do nothing.
 	if optionXOnwards <= 2:
 		$option2.disabled = true #disables the button
 		$option2.hide() #makes it invisible
@@ -19,7 +19,7 @@ func optionRemover(optionXOnwards): #disables and changes the opacity to 0 of un
 		$option5.hide()
 
 
-func EGPGenerator(ageRange, minAge): #randomly generates EGPs (Event Generated Persons)
+func EGPGenerator(ageRange, minAge): ##Randomly generates EGPs (Event Generated Persons). You can then access this new EGP via the global variables eventPersonSex, eventPersonFirstName, etc. If you intend to keep this NPC permanently, generate it, then move it into the permanent relationship (person) arrays.
 	#sexer
 	if randi_range(1,2) == 1: #if EGP is male
 		global.eventPersonSex = "M"
@@ -48,11 +48,11 @@ func EGPGenerator(ageRange, minAge): #randomly generates EGPs (Event Generated P
 		global.eventPersonAge = minAge #sets their age to the minimum age
 
 
-func eventPronoun(type): #short for event generated person pronoun. A more concise version of global.pronounGenerator("x", global.eventPersonSex); only for event generated people.
+func eventPronoun(type): ##Short for event generated person pronoun. A more concise version of global.pronounGenerator("x", global.eventPersonSex); only for event generated people.
 	return global.pronounGenerator(type, global.eventPersonSex)
 
 
-func repositionResize(): #repositions and resizes the nodes on-screen
+func repositionResize(): ##Repositions and resizes the nodes on-screen to create the UI.
 	$heading.size.y = 0
 	$body.size.y = 0
 	#enabling word wrap so the buttons and text don't run off the screen if they're too long
@@ -96,38 +96,37 @@ func repositionResize(): #repositions and resizes the nodes on-screen
 	$option5.position.x = round(540 - (float($option5.size.x / 2)))
 
 
-##Event Memory Forget. Checks for an "forgets" (removes) elements from event memory.
-func emForget(elementToDelete):
+func emForget(elementToDelete): ##Event Memory Forget. Checks for an "forgets" (removes) predetermined elements from event memory. Don't use this if you don't know the exact value of the element you're trying to remove. 
 	var eleIndex = global.eventMemory.find(elementToDelete) #element index. Sets value to -1 if it can't find the element searched for.
 	if eleIndex != -1: #if it isn't not (if it is) present
 		global.eventMemory.remove_at(eleIndex) #get rid of it
 
 
-func outcome(reventID):
+func outcome(reventID): ##Takes you to the outcome of an event.
 	global.revent[0] = reventID
 	await get_tree().process_frame
 	get_tree().reload_current_scene()
 
 
-func goHome():
+func goHome(): ##Goes home. Could you have guessed? Jeez.
 	global.revent.pop_front()
 	await get_tree().process_frame
 	get_tree().change_scene_to_file("res://pages/game_menu.tscn")
 
 
-func goToPrison(): #you need to manually set prisonSentence and do everything else
+func goToPrison(): ##Takes you to prison, but that's all this does. You still need to manually set prisonSentence and all other relevant variables.
 	global.revent.pop_front()
 	await get_tree().process_frame
 	get_tree().change_scene_to_file("res://pages/prison.tscn")
 
 
-func goToSpecific(page):
+func goToSpecific(page): ##Goes to a specific page.
 	#global.revent.pop_front() #doesn't run here due to issues with the rest of the script running after it - you'll need to pop on the page you're going to
 	await get_tree().process_frame
 	get_tree().change_scene_to_file(page)
 
 
-func toddlerhood(): #toddlerhood base events - prefix is "toddler-"
+func toddlerhood(): ##Toddlerhood base events - prefix is "toddler-"
 	if global.revent[0] == "toddler-friend":
 		$heading.text = "New friend?"
 		EGPGenerator(4, 0) #generates a brand new, never-before-seen person to be featured in this event. Perameter is age range; in this case, the EGP will be between 4 years younger and 4 years older than you.
@@ -149,7 +148,7 @@ func toddlerhood(): #toddlerhood base events - prefix is "toddler-"
 		$credit.text = "mconcerning"
 
 
-func childhood(): #childhood base events - prefix is "child-"
+func childhood(): ##Childhood base events - prefix is "child-"
 	if global.revent[0] == "child-friend":
 		$heading.text = "New friend?"
 		EGPGenerator(3, 0) #generates an event person to use
@@ -177,7 +176,7 @@ func childhood(): #childhood base events - prefix is "child-"
 		$credit.text = "Goblin + mconcerning"
 
 
-func teenagehood(): #teenage base events - prefix is "teenager-"
+func teenagehood(): ##Teenage base events - prefix is "teenager-"
 	if global.revent[0] == "teenager-friend":
 		$heading.text = "New friend?"
 		EGPGenerator(3, 10)
@@ -193,7 +192,7 @@ func teenagehood(): #teenage base events - prefix is "teenager-"
 		$credit.text = "mconcerning"
 
 
-func adulthood(): #adult base events - prefix is "adult-"
+func adulthood(): ##Adult base events - prefix is "adult-"
 	if global.revent[0] == "adult-friend":
 		$heading.text = "New connection"
 		EGPGenerator(7, 18)
@@ -209,7 +208,7 @@ func adulthood(): #adult base events - prefix is "adult-"
 		$credit.text = "mconcerning"
 
 
-func elderhood(): #elderly base events - prefix is "elder-"
+func elderhood(): ##Elderly base events - prefix is "elder-"
 	if global.revent[0] == "elder-friend":
 		$heading.text = "New connection"
 		EGPGenerator(12, 55)
@@ -225,11 +224,11 @@ func elderhood(): #elderly base events - prefix is "elder-"
 		$credit.text = "mconcerning"
 
 
-func multiAgeRange(): #runs events that span across multiple age ranges
+func multiAgeRange(): ##Runs events that span across multiple age ranges.
 	pass
 
 
-func specialised(): #runs any miscellanious specialised, non-age-up events
+func specialised(): ##Runs any miscellanious specialised, non-age-up events.
 	if global.revent[0] == "change-save-management-mode-to-delete":
 		$heading.text = "Please confirm"
 		$body.text = "Are you sure you want to enter delete mode?\nANY save file you press will be PERMANENTLY deleted. This action CANNOT be undone.\nPress the ''Load mode'' button above your save files to switch back to load mode at any time.\nYou cannot delete your MAIN game save here. Rest assured, no matter what, that will stay intact. You can, however, delete individual lives, including the one you're playing on currently."
@@ -274,6 +273,14 @@ func specialised(): #runs any miscellanious specialised, non-age-up events
 				cost = 64000
 				loanDuration = 35
 				loanInterestRate = 7
+			"Graphic design":
+				cost = 26000
+				loanDuration = 15
+				loanInterestRate = 8
+			"Business":
+				cost = 55000
+				loanDuration = 25
+				loanInterestRate = 6
 		global.degreePickedCost = cost
 		global.degreePickedLoanDuration = loanDuration
 		global.degreePickedLoanInterest = loanInterestRate
@@ -305,7 +312,7 @@ func specialised(): #runs any miscellanious specialised, non-age-up events
 		global.revent[0] = "university-degree-picked"
 
 
-func relationships(): #specialised relationship events
+func relationships(): ##Specialised, specifically relationship-related events.
 	if global.revent[0] == "compliment-relationship":
 		global.history.append("compliment-relationship-" + str(global.personUIDs[global.IDClicked]))
 		var badCompliments = ["racist", "a tangerine"]
@@ -334,7 +341,7 @@ func relationships(): #specialised relationship events
 		optionRemover(2)
 
 
-func prison(): #specialised prison events
+func prison(): ##Specialised prison events.
 	if global.revent[0] == "arrested" || global.revent[0] == "court-trial-o2-failed-o1": #"arrested" when you encounter police randomly, "arrested-caught" when you get caught in the middle of committing a crime.
 		$heading.text = "Long arm of the law"
 		if global.sumCalculator(global.crimesSeverity) >= 200:
@@ -805,7 +812,7 @@ func prison(): #specialised prison events
 		optionRemover(2)
 
 
-func confirmation(): #non-random confirmation events that tell you that something just happened
+func confirmation(): ##Non-random confirmation events that tell you that something just happened.
 	if global.revent[0] == "enrolled-in-primary-school" || global.revent[0] == "enrolled-in-high-school":
 		if global.revent[0] == "enrolled-in-primary-school":
 			$heading.text = "Primary school"
@@ -900,11 +907,26 @@ func confirmation(): #non-random confirmation events that tell you that somethin
 		global.XPQueued += 3
 		$option1.text = "Okay"
 		optionRemover(2)
+	elif global.revent[0] == "full-time-job-applied-already":
+		$heading.text = "Dobule-dipping much?"
+		$body.text = "You can't apply for this job.\n\nYou've already applied this year."
+		$option1.text = "Dang"
+		optionRemover(2)
+	elif global.revent[0] == "full-time-job-applied-accepted":
+		$heading.text = "Job career"
+		$body.text = "Your application for " + global.fullTimeJob + " was accepted!\n\nYou start immediately, earning a $" + global.commaiser(global.fullTimeSalary) + " yearly salary!"
+		$option1.text = "Hooray"
+		optionRemover(2)
+	elif global.revent[0] == "full-time-job-applied-rejected":
+		$heading.text = "Typical of today's economy"
+		$body.text = "Your application for " + global.fullTimeJob + " was denied, even though you are fully qualified."
+		$option1.text = "Dang"
+		optionRemover(2)
 
 
-func _on_option_1_pressed() -> void: #on option 1 selected
+func _on_option_1_pressed() -> void: ##On option 1 selected
 	#confirmation - option 1 will be the only button available when the event's purpose is only to display information. Generally, the button will say "Okay".
-	if global.revent[0] == "toddler-0-o1" || global.revent[0] == "toddler-0-o2" || global.revent[0] == "toddler-0-o3" || global.revent[0] == "child-0-o1" || global.revent[0] == "child-0-o2" || global.revent[0] == "child-0-o3" || global.revent[0] == "child-0-o4" || global.revent[0] == "toddler-friend-o1" || global.revent[0] == "toddler-friend-o2" || global.revent[0] == "child-friend-o1" || global.revent[0] == "child-friend-o2" || global.revent[0] == "teenager-friend-o1" || global.revent[0] == "teenager-friend-o2" || global.revent[0] == "teenager-friend-o3" || global.revent[0] == "adult-friend-o1" || global.revent[0] == "adult-friend-o2" || global.revent[0] == "adult-friend-o3" || global.revent[0] == "elder-friend-o1" || global.revent[0] == "elder-friend-o2" || global.revent[0] == "elder-friend-o3" || global.revent[0] == "child-labour-is-outlawed" || global.revent[0] == "enrolled-in-primary-school" || global.revent[0] == "enrolled-in-high-school" || global.revent[0] == "graduated-high-school" || global.revent[0] == "study-harder" || global.revent[0] == "university-degree-picked-o1" || global.revent[0] == "university-degree-picked-o2" || global.revent[0] == "university-degree-picked-o3" || global.revent[0] == "university-degree-picked-o4" || global.revent[0] == "graduated-university" || global.revent[0] == "compliment-relationship" || global.revent[0] == "skip-class" || global.revent[0] == "arrested-o1-success" || global.revent[0] == "court-trial-o2" || global.revent[0] == "dont-go-to-prison":
+	if global.revent[0] == "toddler-0-o1" || global.revent[0] == "toddler-0-o2" || global.revent[0] == "toddler-0-o3" || global.revent[0] == "child-0-o1" || global.revent[0] == "child-0-o2" || global.revent[0] == "child-0-o3" || global.revent[0] == "child-0-o4" || global.revent[0] == "toddler-friend-o1" || global.revent[0] == "toddler-friend-o2" || global.revent[0] == "child-friend-o1" || global.revent[0] == "child-friend-o2" || global.revent[0] == "teenager-friend-o1" || global.revent[0] == "teenager-friend-o2" || global.revent[0] == "teenager-friend-o3" || global.revent[0] == "adult-friend-o1" || global.revent[0] == "adult-friend-o2" || global.revent[0] == "adult-friend-o3" || global.revent[0] == "elder-friend-o1" || global.revent[0] == "elder-friend-o2" || global.revent[0] == "elder-friend-o3" || global.revent[0] == "child-labour-is-outlawed" || global.revent[0] == "enrolled-in-primary-school" || global.revent[0] == "enrolled-in-high-school" || global.revent[0] == "graduated-high-school" || global.revent[0] == "study-harder" || global.revent[0] == "university-degree-picked-o1" || global.revent[0] == "university-degree-picked-o2" || global.revent[0] == "university-degree-picked-o3" || global.revent[0] == "university-degree-picked-o4" || global.revent[0] == "graduated-university" || global.revent[0] == "compliment-relationship" || global.revent[0] == "skip-class" || global.revent[0] == "arrested-o1-success" || global.revent[0] == "court-trial-o2" || global.revent[0] == "dont-go-to-prison" || global.revent[0] == "full-time-job-applied-already" || global.revent[0] == "full-time-job-applied-accepted" || global.revent[0] == "full-time-job-applied-rejected":
 		goHome()
 	#special exceptions
 	elif global.revent[0] == "go-to-prison":
@@ -931,23 +953,23 @@ func _on_option_1_pressed() -> void: #on option 1 selected
 		outcome(global.revent[0] + "-o1")
 
 
-func _on_option_2_pressed() -> void: #on option 2 selected
+func _on_option_2_pressed() -> void: ##On option 2 selected
 	outcome(global.revent[0] + "-o2")
 
 
-func _on_option_3_pressed() -> void: #on option 3 selected
+func _on_option_3_pressed() -> void: ##On option 3 selected
 	outcome(global.revent[0] + "-o3")
 
 
-func _on_option_4_pressed() -> void: #on option 4 selected
+func _on_option_4_pressed() -> void: ##On option 4 selected
 	outcome(global.revent[0] + "-o4")
 
 
-func _on_option_5_pressed() -> void: #on option 5 selected
+func _on_option_5_pressed() -> void: ##On option 5 selected
 	outcome(global.revent[0] + "-o5")
 
 
-func option1outcomes(): #option 1 has been picked
+func option1outcomes(): ##Option 1 has been picked
 	if global.revent[0] == "toddler-friend-o1" || global.revent[0] == "child-friend-o1":
 		$heading.text = "Yay"
 		$body.text = "You befriended " + global.eventPersonFirstName + " " + global.eventPersonLastName + "!"
@@ -1050,7 +1072,7 @@ func option1outcomes(): #option 1 has been picked
 		optionRemover(2)
 
 
-func option2outcomes(): #option 2 has been picked
+func option2outcomes(): ##Option 2 has been picked
 	if global.revent[0] == "toddler-friend-o2" || global.revent[0] == "child-friend-o2":
 		$heading.text = "...Can you go away?"
 		$body.text = "You ignore " + global.pronounGenerator("him", global.eventPersonSex) + " for a while, and eventually " + global.pronounGenerator("he", global.eventPersonSex) + " goes away."
@@ -1062,10 +1084,10 @@ func option2outcomes(): #option 2 has been picked
 			$heading.text = "What's your number?"
 			$body.text = "You ask " + global.pronounGenerator("him", global.eventPersonSex) + " out on a date, and " + global.pronounGenerator("he", global.eventPersonSex) + " says yes.\nJoy + 15"
 			global.joy += 15
-			#if you already have an S/O, break up with (removes) them
-			for i in global.personTypes.size(): #runs through every non-familial relationship
-				if global.personTypes[i] == "Boyfriend" || global.personTypes[i] == "Girlfriend": #and if they're your gf/bf
-					global.NPCKiller("remove", i) #removes them
+			#if you already have an S/O, break up with (removes) them - DISABLED
+			#for i in global.personTypes.size(): #runs through every non-familial relationship
+				#if global.personTypes[i] == "Boyfriend" || global.personTypes[i] == "Girlfriend": #and if they're your gf/bf
+					#global.NPCKiller("remove", i) #removes them
 				#for loops automatically increase the variable they use (in this case, i) so no need to manually increment it
 			#adds them to your relationships
 			global.NPCCreator(global.eventPersonSex, global.eventPersonFirstName, global.eventPersonLastName, global.eventPersonAge, randi_range(20, 50), global.pronounGenerator("boy", global.eventPersonSex).capitalize() + "friend", "misc", "random")
@@ -1080,10 +1102,10 @@ func option2outcomes(): #option 2 has been picked
 		if randi_range(1, round((36 - float(global.looks) / 4) / 2) - 3) == 1: #if you're more physically attractive, you have a higher chance of being accepted
 			$body.text = "You ask " + global.pronounGenerator("him", global.eventPersonSex) + " out on a date, and " + global.pronounGenerator("he", global.eventPersonSex) + " says yes.\nJoy + 15"
 			global.joy += 15
-			#if you already have an S/O, break up with (removes) them
-			for i in global.personTypes.size(): #runs through every relationship
-				if global.personTypes[i] == "Boyfriend" || global.personTypes[i] == "Girlfriend": #and if they're your gf/bf
-					global.NPCKiller("remove", i) #removes them
+			#if you already have an S/O, break up with (removes) them - DISABLED
+			#for i in global.personTypes.size(): #runs through every relationship
+				#if global.personTypes[i] == "Boyfriend" || global.personTypes[i] == "Girlfriend": #and if they're your gf/bf
+					#global.NPCKiller("remove", i) #removes them
 				#for loops automatically increase the variable they use (in this case, i) so no need to manually increment it
 			#adds them to your relationships
 			global.NPCCreator(global.eventPersonSex, global.eventPersonFirstName, global.eventPersonLastName, global.eventPersonAge, randi_range(40, 80), global.pronounGenerator("boy", global.eventPersonSex).capitalize() + "friend", "misc", "random")
@@ -1097,10 +1119,10 @@ func option2outcomes(): #option 2 has been picked
 			$heading.text = "Better late than never"
 			$body.text = "You ask " + global.pronounGenerator("him", global.eventPersonSex) + " out on a date, and " + global.pronounGenerator("he", global.eventPersonSex) + " says yes.\nJoy + 15"
 			global.joy += 15
-			#if you already have an S/O, break up with (removes) them
-			for i in global.personTypes.size(): #runs through every non-familial relationship
-				if global.personTypes[i] == "Boyfriend" || global.personTypes[i] == "Girlfriend": #and if they're your gf/bf
-					global.NPCKiller("remove", i) #removes them
+			#if you already have an S/O, break up with (removes) them - DISABLED
+			#for i in global.personTypes.size(): #runs through every non-familial relationship
+				#if global.personTypes[i] == "Boyfriend" || global.personTypes[i] == "Girlfriend": #and if they're your gf/bf
+					#global.NPCKiller("remove", i) #removes them
 				#for loops automatically increase the variable they use (in this case, i) so no need to manually increment it
 			#adds them to your relationships
 			global.NPCCreator(global.eventPersonSex, global.eventPersonFirstName, global.eventPersonLastName, global.eventPersonAge, randi_range(20, 50), global.pronounGenerator("boy", global.eventPersonSex).capitalize() + "friend", "misc", "random")
@@ -1200,7 +1222,7 @@ func option2outcomes(): #option 2 has been picked
 		goToSpecific("res://pages/import_progress_from_clipboard.tscn")
 
 
-func option3outcomes(): #option 3 has been picked
+func option3outcomes(): ##Option 3 has been picked
 	if global.revent[0] == "teenager-friend-o3" || global.revent[0] == "adult-friend-o3" || global.revent[0] == "elder-friend-o3":
 		if global.evality >= 60:
 			$heading.text = "Can you go away"
@@ -1258,7 +1280,7 @@ func option3outcomes(): #option 3 has been picked
 		emForget("university-degree-picked-o4-rejected")
 
 
-func option4outcomes(): #option 4 has been picked
+func option4outcomes(): ##Option 4 has been picked
 	if global.revent[0] == "child-0-o4":
 		var relativeOfChoice = global.personRelationships.find(global.personRelationships.min()) #gets the index of the relative featured in this event
 		$heading.text = "No one can ever know."
@@ -1270,7 +1292,12 @@ func option4outcomes(): #option 4 has been picked
 		global.commitCrime("Second degree homicide", 95, "Life")
 		global.NPCKiller("kill", relativeOfChoice) #kills uncle
 	elif global.revent[0] == "university-degree-picked-o4":
-		if global.schoolPerformance >= 85 && randi_range(1,4) != 1: #if you did really well at your last school (usually highschool, unless you're going for a second degree) and you're not super unlucky (3 in 4 chance)
+		var degreesSize = global.degrees.size() #only counts university degrees; primary and high school don't count
+		if global.degrees.has("primary-school"):
+			degreesSize -= 1
+		if global.degrees.has("high-school"):
+			degreesSize -= 1
+		if global.schoolPerformance >= 85 && randi_range(1,4) != 1 && degreesSize <= 2: #if you did really well at your last school (usually highschool, unless you're going for a second degree), you're not super unlucky (3 in 4 chance), and you don't have 2 or more degrees
 			$heading.text = "What a scholar"
 			$body.text = "Your application for a scholarship was accepted!"
 			global.schoolLevel = 3 #puts you in tertiary school
@@ -1289,17 +1316,19 @@ func option4outcomes(): #option 4 has been picked
 		else: #if your school performance isn't really good
 			$heading.text = "NOT a scholar"
 			$body.text = "Your application for a scholarship was rejected."
+			if degreesSize > 2: #if you have 2 or more degrees
+				$body.text = "Since you already have " + global.commaiser(degreesSize) + " degrees, your application for a scholarship was rejected." #Look, I don't know how many degrees you have, it very well COULD be over 1,000
 			global.revent[0] = "university-degree-picked-o4-rejected"
 			$option1.text = "Okay"
 			global.eventMemory.append("university-degree-picked-o4-rejected")
 		optionRemover(2)
 
 
-func option5outcomes(): #option 5 has been picked
+func option5outcomes(): ##Option 5 has been picked
 	pass
 
 
-func eventer(): #runs all the functions
+func eventer(): ##Runs all the functions
 	toddlerhood()
 	childhood()
 	teenagehood()

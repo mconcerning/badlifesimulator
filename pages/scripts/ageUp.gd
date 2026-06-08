@@ -30,6 +30,10 @@ func basicStatChanges():
 			global.multiplicativeArrestChance = 2
 		if global.crimes.find("Failing to appear") != -1: #if you have skipped court
 			global.multiplicativeArrestChance += 1
+	if global.fullTimeJob != "": #if you have a full-time job
+		global.workExperience.append(global.fullTimeJob) #you get work experience for it
+	if global.partTimeJob != "": #if you have a part-time job
+		global.workExperience.append(global.partTimeJob) #you get work experience for it
 	global.statClamper() #clamps stats if they're below 0 or above 100
 	global.history = [] #clears activity history
 	global.newJobOpenings()

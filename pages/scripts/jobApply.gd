@@ -1,0 +1,99 @@
+extends Node2D #author(s): Ethan Scott
+
+
+const scrl = "scrollContainer/vBoxContainer/" #prefix for the paths of the scroll container's children
+
+@onready var applyButton = get_node(scrl + "apply")
+
+
+var universityDegreesCount = global.degrees.size()
+
+
+func qualificationChecker(): ##Checks if you're qualified for the job you've selected.
+	applyButton.disabled = true
+	match global.jobOpenings[global.IDClicked][0]:
+		"Primary school teacher":
+			if global.degrees.has("high-school") && global.intellect >= 70:
+				applyButton.disabled = false
+		"High school teacher":
+			if universityDegreesCount >= 1:
+				applyButton.disabled = false
+		"University professor":
+			if universityDegreesCount - 1 >= 1 && global.degrees.has("Education"): #if you have an education degree and at least one other degree
+				applyButton.disabled = false
+		"Public defender":
+			if global.degrees.has("Law"):
+				applyButton.disabled = false
+		"Apprentice lawyer":
+			if global.degrees.has("Law") && global.degreeProficiency[global.degrees.find("Law")] >= 65:
+				applyButton.disabled = false
+		"Laywer":
+			if global.degrees.has("Law") && global.workExperience.count("Apprentice lawyer") >= 7: #if you have a law degree and the appropriate number of years experience
+				applyButton.disabled = false
+		"Fast food worker":
+			if global.age >= 16: #if you're old enough to work here
+				applyButton.disabled = false
+		"Fast food manager":
+			if global.workExperience.count("Fast food worker") >= 4 && global.intellect >= 60 && global.age >= 25:
+				applyButton.disabled = false
+		"Retail worker":
+			if global.degrees.has("high-school"):
+				applyButton.disabled = false
+		"Apprentice logo designer":
+			if global.degrees.has("Graphic design"):
+				applyButton.disabled = false
+		"Logo designer":
+			if global.degrees.has("Graphic design") && global.workExperience.count("Apprentice logo designer") >= 6:
+				applyButton.disabled = false
+		"Jr. business consultant":
+			if global.degrees.has("Business"):
+				applyButton.disabled = false
+		"Business consultant":
+			if global.degrees.has("Business") && global.workExperience.count("Jr. business consultant") >= 8 && global.intellect >= 75:
+				applyButton.disabled = false
+		"Sanitation worker":
+			if global.degrees.has("high-school"):
+				applyButton.disabled = false
+		"Salt technician":
+			if global.degrees.has("high-school") && global.health >= 70:
+				applyButton.disabled = false
+		"Exorcist":
+			if global.degrees.has("high-school"):
+				applyButton.disabled = false
+
+
+func applyForJob():
+	var applicationRecord = "applied-for-" + global.jobOpenings[global.IDClicked][0]
+	if global.history.has(applicationRecord): #if you've already tried to apply for this job this year
+		global.revent.append("full-time-job-applied-already")
+	else:
+		if randi_range(1, 4) != 1: #if get accepted; for this you need to be qualified (1 in 4 chance of being denied even if you are) - you have to be qualified to be able to even press the apply button, so no need to check eligibility here
+			#gives you the job
+			global.fullTimeJob = global.jobOpenings[global.IDClicked][0]
+			global.fullTimeSalary = global.jobOpenings[global.IDClicked][1]
+			global.fullTimePerformance = randi_range(50, 65)
+			global.revent.append("full-time-job-applied-accepted")
+		else: #if you're unlucky and get denied for the position even though you're qualified
+			global.revent.append("full-time-job-applied-rejected")
+	get_tree().change_scene_to_file("res://pages/event.tscn")
+
+
+# Called when the node enters the scene tree for the first time.
+func _ready() -> void:
+	if global.degrees.has("primary-school"):
+		universityDegreesCount -= 1
+	if global.degrees.has("high-school"):
+		universityDegreesCount -= 1
+	$jobName.text = global.jobOpenings[global.IDClicked][0] #shows job name
+	$details.text = "$" + global.commaiser(global.jobOpenings[global.IDClicked][1]) + "/yr\nRequires: " + global.jobOpenings[global.IDClicked][2] #shows job salary and qualifications
+	qualificationChecker()
+
+
+func _on_back_pressed() -> void:
+	get_tree().change_scene_to_file("res://pages/job_search_full_time.tscn")
+
+func _on_exit_pressed() -> void:
+	get_tree().change_scene_to_file("res://pages/game_menu.tscn")
+
+func _on_apply_pressed() -> void:
+	applyForJob()

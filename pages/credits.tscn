@@ -19,7 +19,7 @@ script = ExtResource("1_73mna")
 offset_left = 20.0
 offset_top = 270.0
 offset_right = 1060.0
-offset_bottom = 1997.0
+offset_bottom = 1870.0
 theme = SubResource("Theme_73mna")
 horizontal_scroll_mode = 0
 vertical_scroll_mode = 2
@@ -70,7 +70,6 @@ Everyone else in the server :)
 
 Zero thanks to:
 Doordash Guy
-
 "
 label_settings = ExtResource("3_0xm2l")
 horizontal_alignment = 1

@@ -18,6 +18,10 @@ func _ready() -> void:
 		get_node(scrl + "education").disabled = true
 	if global.degrees.has("Law"):
 		get_node(scrl + "law").disabled = true
+	if global.degrees.has("Graphic design"):
+		get_node(scrl + "graphicDesign").disabled = true
+	if global.degrees.has("Business"):
+		get_node(scrl + "business").disabled = true
 
 
 func _on_cancel_pressed() -> void:
@@ -32,4 +36,12 @@ func _on_education_pressed() -> void:
 
 func _on_law_pressed() -> void:
 	global.degreePicked = "Law"
+	go()
+
+func _on_graphic_design_pressed() -> void:
+	global.degreePicked = "Graphic design"
+	go()
+
+func _on_business_pressed() -> void:
+	global.degreePicked = "Business"
 	go()

@@ -9,7 +9,7 @@ func _ready() -> void:
 		2:
 			$schoolType.text = "High school"
 		3:
-			$schoolType.text = "University"
+			$schoolType.text = "Majoring in " + global.degreePicked
 		-1: #you're not in school? but you somehow still got here??
 			$schoolType.text = "NOT school?"
 	$schoolName.text = global.schoolName

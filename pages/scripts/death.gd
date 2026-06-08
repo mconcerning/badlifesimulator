@@ -43,9 +43,9 @@ func _on_100ms_timeout() -> void: #every 0.1s
 	elif timerRuns == 9:
 		$statsLeft.text += "\nLooks at death: " + str(global.looks)
 	elif timerRuns == 10:
-		$statsLeft.text += "\n\nXP: " + global.commaiser(global.XP)
+		$statsLeft.text += "\n\nXP earned: " + global.commaiser(XPThatWasQueued)
 	elif timerRuns == 11:
-		$statsLeft.text += "\nXP earned: " + global.commaiser(XPThatWasQueued)
+		$statsLeft.text += "\nXP: " + global.commaiser(global.XP)
 	elif timerRuns == 12: #first right-justified stat
 		$statsRight.text += "Level " + global.commaiser(global.level)
 	elif timerRuns == 13:
