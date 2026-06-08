@@ -75,6 +75,7 @@ func applyForJob():
 			global.revent.append("full-time-job-applied-accepted")
 		else: #if you're unlucky and get denied for the position even though you're qualified
 			global.revent.append("full-time-job-applied-rejected")
+		global.history.append("applied-for-" + global.jobOpenings[global.IDClicked][0])
 	get_tree().change_scene_to_file("res://pages/event.tscn")
 
 

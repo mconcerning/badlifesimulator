@@ -909,17 +909,17 @@ func confirmation(): ##Non-random confirmation events that tell you that somethi
 		optionRemover(2)
 	elif global.revent[0] == "full-time-job-applied-already":
 		$heading.text = "Dobule-dipping much?"
-		$body.text = "You can't apply for this job.\n\nYou've already applied this year."
+		$body.text = "You can't apply for this job. You've already applied this year."
 		$option1.text = "Dang"
 		optionRemover(2)
 	elif global.revent[0] == "full-time-job-applied-accepted":
 		$heading.text = "Job career"
-		$body.text = "Your application for " + global.fullTimeJob + " was accepted!\n\nYou start immediately, earning a $" + global.commaiser(global.fullTimeSalary) + " yearly salary!"
+		$body.text = "Your application for " + global.fullTimeJob + " was accepted! You start immediately, earning a $" + global.commaiser(global.fullTimeSalary) + " yearly salary!"
 		$option1.text = "Hooray"
 		optionRemover(2)
 	elif global.revent[0] == "full-time-job-applied-rejected":
 		$heading.text = "Typical of today's economy"
-		$body.text = "Your application for " + global.fullTimeJob + " was denied, even though you are fully qualified."
+		$body.text = "Your application for " + global.jobOpenings[global.IDClicked][0] + " was denied, even though you are fully qualified."
 		$option1.text = "Dang"
 		optionRemover(2)
 

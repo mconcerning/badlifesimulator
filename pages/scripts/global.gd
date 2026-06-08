@@ -50,6 +50,7 @@ var schoolPerformanceTracker = []
 var degrees = []
 var degreeProficiency = [] ##How good of work you did to get the degree with the matching index. This the average of your school performance per year you did the degree, from 0 - 100 (info from schoolPerformanceTracker).
 var licences = [] ##Contains your licences and certificate qualifications, such as a driver's licence, gun licence, etc.
+var incomeTax = 30 ##How much you are taxxed on your income, expressed as a percentage.
 var fullTimeJob = ""
 var fullTimeSalary : int = 0 ##How much money you make annually from your full-time job
 var partTimeJob = ""
@@ -411,6 +412,7 @@ func lifeSerialiser(): ##Serialises every life-specific variable we need to save
 		"degrees" : degrees,
 		"degreeProficiency" : degreeProficiency,
 		"licences" : licences,
+		"incomeTax" : incomeTax,
 		"fullTimeJob" : fullTimeJob,
 		"fullTimeSalary" : fullTimeSalary,
 		"partTimeJob" : partTimeJob,
@@ -605,6 +607,7 @@ func loadLife(takeHome = true, base64life = ""): ##Does the actual LIFE loading.
 	degrees = dictionary["degrees"]
 	degreeProficiency = intIser(dictionary["degreeProficiency"])
 	licences = dictionary["licences"]
+	incomeTax = dictionary["incomeTax"]
 	fullTimeJob = dictionary["fullTimeJob"]
 	fullTimeSalary = dictionary["fullTimeSalary"]
 	partTimeJob = dictionary["partTimeJob"]

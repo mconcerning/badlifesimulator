@@ -11,7 +11,29 @@ func basicStatChanges():
 	global.health += randi_range(-6, 6)
 	global.intellect += randi_range(-4, 4)
 	global.looks += randi_range(-6, 6)
-	global.money += global.fullTimeSalary + global.partTimeSalary
+	#income tax bracketer - modelled loosely after the Australian resident tax rates 2025 - 2026
+	var combinedSalary = global.fullTimeSalary + global.partTimeSalary
+	var costOfLiving = 0 #cost of living expressed as a percentage
+	if combinedSalary <= 18200:
+		global.incomeTax = 0 #0% income tax
+		costOfLiving = 60 #wishful thinking but it's not fun to have 0 income
+	elif combinedSalary > 18200 && combinedSalary <= 45000:
+		global.incomeTax = 16 #16% income tax
+		costOfLiving = 60
+	elif combinedSalary > 45000 && combinedSalary <= 135000:
+		global.incomeTax = 30
+		costOfLiving = 50
+	elif combinedSalary > 135000 && combinedSalary <= 190000:
+		global.incomeTax = 37
+		costOfLiving = 40
+	elif combinedSalary > 190000:
+		global.incomeTax = 45
+		costOfLiving = 30
+	global.money += roundi(float(combinedSalary) / 100 * (100 - global.incomeTax - costOfLiving)) #salary giver. Deducts a certain percentage for income tax.
+	#print(str(global.incomeTax) + "% income tax")
+	#print("you earned $" + global.commaiser(combinedSalary))
+	#print("you paid $" + global.commaiser(combinedSalary - roundi(float(combinedSalary) / 100 * (100 - global.incomeTax))) + " in income tax")
+	#print("you earned $" + global.commaiser(roundi(float(combinedSalary) / 100 * (100 - global.incomeTax))) + " after tax")
 	#over-timers
 	global.joyOverTime.append(global.joy)
 	global.healthOverTime.append(global.health)
