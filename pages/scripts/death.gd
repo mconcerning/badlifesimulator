@@ -94,7 +94,7 @@ func _ready() -> void:
 	if global.age <= 25: #if you're really young and die, nerf the XP you get AGAIN to prevent effortless farming
 		XPFromStats = roundi(float(XPFromStats) / 50 * global.age * 2)
 	if global.money > 0: #if you're not in debt (so you can't lose XP for having negative money)
-		global.XPQueued += min(10000, roundi(float(global.money) / (10000.0 / float(global.level) / 2))) #gives you a 10,000th of your money upon death in XP, up to 10,000
+		global.XPQueued += min(10000, roundi(float(global.money) / (20000.0 / float(global.level) / 2))) #gives you a (20,000 / half of your level)th of your money upon death in XP, up to 10,000
 	#the rest of everything
 	global.XPQueued += XPFromStats
 	global.XP += global.XPQueued #adds the XP you are owed to your XP

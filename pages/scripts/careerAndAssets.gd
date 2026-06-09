@@ -27,6 +27,7 @@ func _ready() -> void:
 		scrollContainer.add_child(fullTimeJobHeading)
 		var fullTimeJob = button.instantiate()
 		fullTimeJob.text = global.fullTimeJob
+		fullTimeJob.pressed.connect(fullTimeJobInteract.bind())
 		scrollContainer.add_child(fullTimeJob)
 		lineBreak()
 	elif global.schoolLevel == 0: #if you don't have a full-time job, but you're also not in school
@@ -69,7 +70,7 @@ func _ready() -> void:
 		school.pressed.connect(schoolClicked.bind())
 		scrollContainer.add_child(school)
 		lineBreak()
-	elif global.schoolLevel == 0: #if you've graduated
+	elif global.schoolLevel == 0 && global.fullTimeJob == "": #if you've graduated and don't have a full-time job
 		var degreeHeading = subheading.instantiate()
 		degreeHeading.text = "Not in school"
 		scrollContainer.add_child(degreeHeading)
@@ -92,3 +93,6 @@ func universityEnroll():
 
 func fullTimeJobSearch():
 	get_tree().change_scene_to_file("res://pages/job_search_full_time.tscn")
+
+func fullTimeJobInteract():
+	get_tree().change_scene_to_file("res://pages/job_full_time.tscn")

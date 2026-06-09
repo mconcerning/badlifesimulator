@@ -39,19 +39,35 @@ func _ready() -> void:
 	subheadingInstance = sectionSeperators.instantiate()
 	subheadingInstance.text = "Other"
 	$scrollContainer/centerContainer/vBoxContainer.add_child(subheadingInstance)
-	for i in misc.size(): #runs through any other people you know
-		#button
-		var buttonInstance = button.instantiate() #creates a button for the person at index misc[i]
-		buttonInstance.text = global.personFirstNames[misc[i]] + " " + global.personLastNames[misc[i]] #puts their name on the button
-		$scrollContainer/centerContainer/vBoxContainer.add_child(buttonInstance) #places the button in the scene
-		buttonInstance.pressed.connect(personClicked.bind(misc[i], "type"))
-		#label below
-		var labelInstance = labelBelowLabel.instantiate() #creates the label for the misc person at index misc[i]
-		labelInstance.text = global.personTypes[misc[i]] + " (" + global.personSexes[misc[i]] + "), Age " + str(global.personAges[misc[i]]) + ", Relationship: " + str(global.personRelationships[misc[i]]) + "\n"
-		if labelInstance.get_minimum_size().x >= 1000:
-			labelInstance.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-			labelInstance.size.x = 900
-		$scrollContainer/centerContainer/vBoxContainer.add_child(labelInstance)
+	#runs through any other people you know
+	for i in misc.size(): #significant others first
+		if global.personTypes[misc[i]] == "Boyfriend" || global.personTypes[misc[i]] == "Girlfriend" || global.personTypes[misc[i]] == "Husband" || global.personTypes[misc[i]] == "Wife": #if they're a significant other, append them first
+			#button
+			var buttonInstance = button.instantiate() #creates a button for the person at index misc[i]
+			buttonInstance.text = global.personFirstNames[misc[i]] + " " + 	global.personLastNames[misc[i]] #puts their name on the button
+			$scrollContainer/centerContainer/vBoxContainer.add_child(buttonInstance) #places the button in the scene
+			buttonInstance.pressed.connect(personClicked.bind(misc[i], "type"))
+			#label below
+			var labelInstance = labelBelowLabel.instantiate() #creates the label for the misc person at index misc[i]
+			labelInstance.text = global.personTypes[misc[i]] + " (" + global.personSexes[misc[i]] + "), Age " + str(global.personAges[misc[i]]) + ", Relationship: " + str(global.personRelationships[misc[i]]) + "\n"
+			if labelInstance.get_minimum_size().x >= 1000:
+				labelInstance.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+				labelInstance.size.x = 900
+			$scrollContainer/centerContainer/vBoxContainer.add_child(labelInstance)
+	for i in misc.size(): #runs through any non-significant-others people you know
+		if !global.personTypes[misc[i]] == "Boyfriend" && !global.personTypes[misc[i]] == "Girlfriend" && !global.personTypes[misc[i]] == "Husband" && !global.personTypes[misc[i]] == "Wife": #if they're a significant other, append them first
+			#button
+			var buttonInstance = button.instantiate() #creates a button for the person at index misc[i]
+			buttonInstance.text = global.personFirstNames[misc[i]] + " " + 	global.personLastNames[misc[i]] #puts their name on the button
+			$scrollContainer/centerContainer/vBoxContainer.add_child(buttonInstance) #places the button in the scene
+			buttonInstance.pressed.connect(personClicked.bind(misc[i], "type"))
+			#label below
+			var labelInstance = labelBelowLabel.instantiate() #creates the label for the misc person at index misc[i]
+			labelInstance.text = global.personTypes[misc[i]] + " (" + global.personSexes[misc[i]] + "), Age " + str(global.personAges[misc[i]]) + ", Relationship: " + str(global.personRelationships[misc[i]]) + "\n"
+			if labelInstance.get_minimum_size().x >= 1000:
+				labelInstance.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+				labelInstance.size.x = 900
+			$scrollContainer/centerContainer/vBoxContainer.add_child(labelInstance)
 	#corrects grammar
 	var personPeopleMisc
 	if misc.size() == 1:

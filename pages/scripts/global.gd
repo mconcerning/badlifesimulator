@@ -125,7 +125,7 @@ var level : int = 1 ##Increments when you reach the amount of XP you need to lev
 var XPRequired : int = 500 ##The amount of XP you need total to level up. Increases by 500 every level.
 
 
-func isBetween(x, minimum, maximum, inclusive): ##Checks if any variable (x) is between two values (floor is the lowest it will accept, ceil is the highest). If inclusive, if x is equal to the floor or ceil, it will still return true, if it is false, it will not.
+func isBetween(x : float, minimum : float = 0, maximum : float = 1, inclusive = true): ##Checks if any variable (x) is between two values (floor is the lowest it will accept, ceil is the highest). If inclusive, if x is equal to the floor or ceil, it will still return true, if it is false, it will not.
 	if inclusive == true:
 		if x >= minimum && x <= maximum:
 			return true
@@ -237,7 +237,7 @@ func pronounGenerator(type, selectedSex): ##Returns pronouns so you don't have t
 	return "what" #usually you can't get here unless there's an error
 
 
-func NPCCreator(NPCsex, NPCfirstName, NPClastName, NPCage, NPCrelationship, NPCtype, NPCcategory, NPCstats): ##Creates an NPC from several custom perameters
+func NPCCreator(NPCsex : String, NPCfirstName : String, NPClastName : String, NPCage : int, NPCrelationship : int, NPCtype : String, NPCcategory : String, NPCstats): ##Creates an NPC from several custom perameters. NPCtype can be either "family" or "misc". If NPCstats is "random", this fills it in with random values.
 	personSexes.append(NPCsex)
 	personFirstNames.append(NPCfirstName)
 	personLastNames.append(NPClastName)

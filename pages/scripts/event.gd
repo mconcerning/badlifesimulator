@@ -3,6 +3,9 @@ extends Node2D #author(s): Ethan Scott
 ##Handles all events in the game.
 
 
+var goingToSpecific : String = "false"
+
+
 func optionRemover(optionXOnwards : int): ##Disables and changes the opacity to 0 of unused buttons (optionXOnwards is the number representing which button you want to disable (option 1, 2, 3, 4... etc). It and every button after it will be disabled).
 	$cancelEvent.queue_free() #having options means there is an event, which means you can't softlock your life by being here unless the options do nothing.
 	if optionXOnwards <= 2:
@@ -120,7 +123,7 @@ func goToPrison(): ##Takes you to prison, but that's all this does. You still ne
 	get_tree().change_scene_to_file("res://pages/prison.tscn")
 
 
-func goToSpecific(page): ##Goes to a specific page.
+func goToSpecific(page : String): ##Goes to a specific page.
 	#global.revent.pop_front() #doesn't run here due to issues with the rest of the script running after it - you'll need to pop on the page you're going to
 	await get_tree().process_frame
 	get_tree().change_scene_to_file(page)
@@ -259,6 +262,12 @@ func specialised(): ##Runs any miscellanious specialised, non-age-up events.
 		$body.text = "You're too young to get a job. Child labour is thoroughly illegal. Unless..."
 		$option1.text = "Dang it"
 		optionRemover(2)
+	elif global.revent[0] == "full-time-quit-confirm":
+		$heading.text = "Please confirm"
+		$body.text = "Are you sure you want to quit your full-time job as " + global.fullTimeJob + "? You won't be able to re-apply for it until next year.\n\nSalary: $" + global.commaiser(global.fullTimeSalary) + "\nPerformance: " + str(global.fullTimePerformance)
+		$option1.text = "I'm sure"
+		$option2.text = "Cancel"
+		optionRemover(3)
 	elif global.revent [0] == "university-degree-picked" || global.revent[0] == "university-degree-picked-o2-refused-o1" || global.revent[0] == "university-degree-picked-o4-rejected-o1":
 		var cost = 0 #total cost of the degree, in dollars
 		var loanDuration = 0 #duration of a loan to pay for the degree, in years
@@ -986,13 +995,7 @@ func option1outcomes(): ##Option 1 has been picked
 			$heading.text = "Sweet"
 			$body.text = "You befriended " + global.eventPersonFirstName + " " + global.eventPersonLastName + "."
 			#adds the EGP to your relationships array
-			global.personSexes.append(global.eventPersonSex)
-			global.personFirstNames.append(global.eventPersonFirstName)
-			global.personLastNames.append(global.eventPersonLastName)
-			global.personAges.append(global.eventPersonAge)
-			global.personRelationships.append(randi_range(20, 50))
-			global.personTypes.append("Friend")
-			global.personCategories.append("misc")
+			global.NPCCreator(global.eventPersonSex, global.eventPersonFirstName, global.eventPersonLastName, global.eventPersonAge, randi_range(20, 50), "Friend", "misc", "random")
 			$option1.text = "Okay"
 		optionRemover(2)
 	elif global.revent[0] == "adult-friend-o1" || global.revent[0] == "elder-friend-o1":
@@ -1030,7 +1033,7 @@ func option1outcomes(): ##Option 1 has been picked
 		global.evality += 3 #since you did something semi-bad, you become slightly desensitised to doing bad things
 	elif global.revent[0] == "university-degree-picked-o1":
 		$heading.text = "Well educated"
-		$body.text = "You are now enrolled in University for a degree in " + global.degreePicked + ".\n- $" + global.commaIser(global.degreePickedCost)
+		$body.text = "You are now enrolled in University for a degree in " + global.degreePicked + ".\n- $" + global.commaiser(global.degreePickedCost)
 		global.money -= global.degreePickedCost #pay the appropriate amount for university tuition
 		$option1.text = "Okay"
 		optionRemover(2)
@@ -1070,6 +1073,11 @@ func option1outcomes(): ##Option 1 has been picked
 		print(global.crimeTime)
 		$option1.text = "Okay"
 		optionRemover(2)
+	elif global.revent[0] == "full-time-quit-confirm-o1":
+		print("quitting job...")
+		global.fullTimeJob = ""
+		global.fullTimeSalary = 0
+		goingToSpecific = "res://pages/game_menu.tscn"
 
 
 func option2outcomes(): ##Option 2 has been picked
@@ -1080,7 +1088,7 @@ func option2outcomes(): ##Option 2 has been picked
 		optionRemover(2)
 		global.evality += 4 #i mean, it was kind of rude...
 	if global.revent[0] == "teenager-friend-o2":
-		if randi_range(1, round((36 - float(global.looks) / 4) / 2) - 3) == 1: #if you're more physically attractive, you have a higher chance of being accepted
+		if randi_range(1, roundi((36 - float(global.looks) / 4) / 2) - 3) == 1: #if you're more physically attractive, you have a higher chance of being accepted
 			$heading.text = "What's your number?"
 			$body.text = "You ask " + global.pronounGenerator("him", global.eventPersonSex) + " out on a date, and " + global.pronounGenerator("he", global.eventPersonSex) + " says yes.\nJoy + 15"
 			global.joy += 15
@@ -1220,6 +1228,8 @@ func option2outcomes(): ##Option 2 has been picked
 		print("cancelled import")
 		global.eventMemory.pop_front()
 		goToSpecific("res://pages/import_progress_from_clipboard.tscn")
+	elif global.revent[0] == "full-time-quit-confirm-o2":
+		goingToSpecific = "res://pages/job_full_time.tscn"
 
 
 func option3outcomes(): ##Option 3 has been picked
@@ -1263,7 +1273,7 @@ func option3outcomes(): ##Option 3 has been picked
 		print("loans: " + str(global.loans))
 		print("loan interest: " + str(global.loanInterest))
 		print("loan payback duration: " + str(global.loanPaybackDuration))
-		print(global.degreePicked)
+		print("going for a degree in " + global.degreePicked)
 		global.schoolLevel = 3 #puts you in tertiary school
 		global.schoolName = global.lastNames[randi_range(0, global.lastNames.size() - 1)] #gives the university a random name
 		match randi_range(1,3): #gives the university name a random appendix
@@ -1356,6 +1366,9 @@ func _ready() -> void:
 		global.saveGame()
 	#await get_tree().process_frame #waits for frame to be processed first to avoid weirdness
 	eventer()
+	if goingToSpecific != "false": #if you're going to a specific page
+		global.revent.pop_front()
+		goToSpecific(goingToSpecific)
 	repositionResize()
 
 

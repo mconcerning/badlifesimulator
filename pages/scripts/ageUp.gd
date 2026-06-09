@@ -13,7 +13,7 @@ func basicStatChanges():
 	global.looks += randi_range(-6, 6)
 	#income tax bracketer - modelled loosely after the Australian resident tax rates 2025 - 2026
 	var combinedSalary = global.fullTimeSalary + global.partTimeSalary
-	var costOfLiving = 0 #cost of living expressed as a percentage
+	var costOfLiving = 0 #cost of living expressed as a percentage. Cost of living is 0% is you have no income so as to prevent unnecessary debt.
 	if combinedSalary <= 18200:
 		global.incomeTax = 0 #0% income tax
 		costOfLiving = 60 #wishful thinking but it's not fun to have 0 income
@@ -34,6 +34,11 @@ func basicStatChanges():
 	#print("you earned $" + global.commaiser(combinedSalary))
 	#print("you paid $" + global.commaiser(combinedSalary - roundi(float(combinedSalary) / 100 * (100 - global.incomeTax))) + " in income tax")
 	#print("you earned $" + global.commaiser(roundi(float(combinedSalary) / 100 * (100 - global.incomeTax))) + " after tax")
+	#accrewing of debt
+	if global.money < 0 && global.age >= 18: #if you're in debt
+		var debtInterest = roundi(float(-global.money) / 100 * 14) #your interest is 14%
+		global.money -= debtInterest
+		print("paid $" + global.commaiser(debtInterest) + " in debt interest")
 	#over-timers
 	global.joyOverTime.append(global.joy)
 	global.healthOverTime.append(global.health)
@@ -52,10 +57,6 @@ func basicStatChanges():
 			global.multiplicativeArrestChance = 2
 		if global.crimes.find("Failing to appear") != -1: #if you have skipped court
 			global.multiplicativeArrestChance += 1
-	if global.fullTimeJob != "": #if you have a full-time job
-		global.workExperience.append(global.fullTimeJob) #you get work experience for it
-	if global.partTimeJob != "": #if you have a part-time job
-		global.workExperience.append(global.partTimeJob) #you get work experience for it
 	global.statClamper() #clamps stats if they're below 0 or above 100
 	global.history = [] #clears activity history
 	global.newJobOpenings()
@@ -145,6 +146,17 @@ func school():
 		global.XPQueued += 50
 
 
+func job():
+	if global.fullTimeJob != "": #if you have a full-time job
+		global.workExperience.append(global.fullTimeJob) #you get work experience for it
+		global.XPQueued += 25
+		global.fullTimePerformance += randi_range(-6, 6)
+	if global.partTimeJob != "": #if you have a part-time job
+		global.workExperience.append(global.partTimeJob) #you get work experience for it
+		global.XPQueued += 15
+		global.partTimePerformance += randi_range(-6, 6)
+
+
 func imprisonment(): #handles your chances of being arrested
 	if global.sumCalculator(global.crimesSeverity) >= 10: #if you've committed serious enough crimes to warrant being arrested for them
 		if (randi_range(max(1, global.sumCalculator(global.crimesSeverity) - 20), global.sumCalculator(global.crimesSeverity) * (global.multiplicativeArrestChance / 2)) * global.multiplicativeArrestChance) >= global.averageFinder(global.intellectAtTimeOfCrime) && (randi_range(10,120) / global.multiplicativeArrestChance) <= global.sumCalculator(global.crimesSeverity):
@@ -210,8 +222,8 @@ func rareAgeUpEvents():
 
 func randomDeathChance():
 	if global.age >= 65: #if you're old enough to randomly die (not super realistic, but as it turns out, it is NOT fun dying for no reason at age 2)
-		print("1 in " + str(max(1, 4 + global.health * 3 - (global.age - 10) * 2)) + " chance of death")
-		if randi_range(1, max(1, 4 + global.health * 3 - (global.age - 10) * 2)) == 1:
+		print("1 in " + str(max(1, 65 - global.age +  roundi(float(global.health) / 2))) + " chance of death") # equation for age at which death is inevitable at x health: a = 64 + health / 2
+		if randi_range(1, max(1, 65 - global.age +  roundi(float(global.health) / 2))) == 1:
 			global.causeOfDeath = "You died of complications associated with advanced age"
 			isDying = true
 			get_tree().change_scene_to_file("res://pages/death.tscn") #kills you
@@ -222,6 +234,7 @@ func _ready() -> void:
 	await get_tree().process_frame #waits until the frame is fully loaded. Without this, the screen flashes gray while on this scene
 	basicStatChanges()
 	school()
+	job()
 	loanHandler()
 	ageUpEventHandler()
 	rareAgeUpEvents()

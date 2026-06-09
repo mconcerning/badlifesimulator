@@ -14,7 +14,7 @@ func _ready() -> void:
 			$schoolType.text = "NOT school?"
 	$schoolName.text = global.schoolName
 	$performance.text = "Performance: " + str(global.schoolPerformance)
-	if global.schoolPerformance <= 20: #if you're underperforming and at risk of being expelled
+	if global.schoolPerformance <= 35: #if you're underperforming and at risk of being expelled
 		$performance.label_settings.font_color = Color.from_rgba8(200, 0, 0, 255) #makes the font colour of the performance text only (it has a unique LabelSettings resource) dark red to signify danger
 	elif global.schoolPerformance >= 80: #if you're doing really well at school
 		$performance.label_settings.font_color = Color.from_rgba8(0, 170, 0, 255) #makes the text green to signify you're doing well :)
