@@ -467,7 +467,7 @@ func prison(): ##Specialised prison events.
 					if global.intellect >= 95 && global.sumCalculator(global.crimesSeverity) <= global.intellect:
 						if global.crimeTimeCalculator() is int && global.crimeTimeCalculator() > 1:
 							var sentenceLoweredBy = randi_range(1, min(3, global.crimeTimeCalculator() - 1)) #lowers your potential sentence
-							$body.text += "Even though you don't have a law degree, you successfully managed to lower your sentence by " + sentenceLoweredBy + "year"
+							$body.text += "Even though you don't have a law degree, you successfully managed to lower your sentence by " + str(sentenceLoweredBy) + " year"
 							if sentenceLoweredBy > 1:
 								$body.text += "s"
 							$body.text += "."
@@ -503,7 +503,7 @@ func prison(): ##Specialised prison events.
 					if global.degreeProficiency[global.degrees.find("Law")] - 5 >= global.evality && global.crimes.size() <= (global.degreeProficiency[global.degrees.find("Law")] / 10) && global.sumCalculator(global.criminalRecordSeverity) < (global.degreeProficiency[global.degrees.find("Law")] * 2): #if you're less evil than you are proficient as a lawyer, you haven't committed more crimes than you can handle to combat, and you aren't re-offending more than you can wave away (i.e. you CAN get a lower sentence)
 						if global.crimeTimeCalculator() is int && global.crimeTimeCalculator() > 1:
 							var sentenceLoweredBy = randi_range(1, min(20, global.crimeTimeCalculator() - 1)) #lowers your potential sentence
-							$body.text += "You used your proficiency in law to successfully lower your sentence by " + sentenceLoweredBy + "year"
+							$body.text += "You used your proficiency in law to successfully lower your sentence by " + str(sentenceLoweredBy) + " year"
 							if sentenceLoweredBy > 1:
 								$body.text += "s"
 							$body.text += "."
@@ -540,7 +540,7 @@ func prison(): ##Specialised prison events.
 				if global.evality <= 25 && global.crimes.size() <= randi_range(3,4) && global.sumCalculator(global.criminalRecordSeverity) < 40: #if you're not very evil, you haven't committed many crimes, and you aren't re-offending much (i.e. you CAN get a lower sentence)
 					if global.crimeTimeCalculator() is int && global.crimeTimeCalculator() > 1:
 						var sentenceLoweredBy = randi_range(1, min(7, global.crimeTimeCalculator() - 1)) #lowers your potential sentence
-						$body.text += "Your public defender managed to lower your sentence by " + sentenceLoweredBy + "year"
+						$body.text += "Your public defender managed to lower your sentence by " + str(sentenceLoweredBy) + " year"
 						if sentenceLoweredBy > 1:
 							$body.text += "s"
 						$body.text += "."
@@ -577,7 +577,7 @@ func prison(): ##Specialised prison events.
 				if global.evality <= 40 && global.crimes.size() <= randi_range(3,4) && global.sumCalculator(global.criminalRecordSeverity) < 60: #if you're not very evil, you haven't committed many crimes, and you aren't re-offending much (i.e. you CAN get a lower sentence)
 					if global.crimeTimeCalculator() is int && global.crimeTimeCalculator() > 1:
 						var sentenceLoweredBy = randi_range(min(5, global.crimeTimeCalculator() - 1), min(8, global.crimeTimeCalculator() - 1)) #lowers your potential sentence by anywhere from (5 or numerical sentence - 1, whichever is smallest) to (8 or numerical sentence - 1, whichever is smallest). The numbers being generated are checked against your potential prison sentence to ensure that when it is subtracted by sentenceLoweredBy, it will never end up being lower than 1.
-						$body.text += global.lawyers[0] + " managed to lower your sentence by " + sentenceLoweredBy + "year"
+						$body.text += global.lawyers[0] + " managed to lower your sentence by " + str(sentenceLoweredBy) + " year"
 						if sentenceLoweredBy > 1:
 							$body.text += "s"
 						$body.text += "."
@@ -614,7 +614,7 @@ func prison(): ##Specialised prison events.
 				if global.evality <= 55 && global.crimes.size() <= randi_range(5,6) && global.sumCalculator(global.criminalRecordSeverity) < 85: #if you're not very evil, you haven't committed many crimes, and you aren't re-offending much (i.e. you CAN get a lower sentence)
 					if global.crimeTimeCalculator() is int && global.crimeTimeCalculator() > 1:
 						var sentenceLoweredBy = randi_range(min(10, global.crimeTimeCalculator() - 1), min(15, global.crimeTimeCalculator() - 1)) #lowers your potential sentence by anywhere from (10 or numerical sentence - 1, whichever is smallest) to (15 or numerical sentence - 1, whichever is smallest). The numbers being generated are checked against your potential prison sentence to ensure that when it is subtracted by sentenceLoweredBy, it will never end up being lower than 1.
-						$body.text += global.lawyers[1] + " managed to lower your sentence by " + sentenceLoweredBy + "year"
+						$body.text += global.lawyers[1] + " managed to lower your sentence by " + str(sentenceLoweredBy) + " year"
 						if sentenceLoweredBy > 1:
 							$body.text += "s"
 						$body.text += "."
@@ -651,7 +651,7 @@ func prison(): ##Specialised prison events.
 				if global.evality <= 80 && global.crimes.size() <= randi_range(6,7) && global.sumCalculator(global.criminalRecordSeverity) < 140: #if you're not incredibly evil, you haven't committed too many crimes, and you aren't re-offending more than your lawyer can defend (i.e. you CAN get a lower sentence)
 					if global.crimeTimeCalculator() is int && global.crimeTimeCalculator() > 1:
 						var sentenceLoweredBy = randi_range(min(17, global.crimeTimeCalculator() - 1), min(25, global.crimeTimeCalculator() - 1)) #lowers your potential sentence by anywhere from (17 or numerical sentence - 1, whichever is smallest) to (25 or numerical sentence - 1, whichever is smallest). The numbers being generated are checked against your potential prison sentence to ensure that when it is subtracted by sentenceLoweredBy, it will never end up being lower than 1.
-						$body.text += global.lawyers[2] + " managed to lower your sentence by " + sentenceLoweredBy + "year"
+						$body.text += global.lawyers[2] + " managed to lower your sentence by " + str(sentenceLoweredBy) + " year"
 						if sentenceLoweredBy > 1:
 							$body.text += "s"
 						$body.text += "."
@@ -709,7 +709,7 @@ func prison(): ##Specialised prison events.
 						global.prisonPreparer(global.crimeTimeCalculator())
 						global.revent[0] = "go-to-prison"
 				else: #if you ARE a qualified lawyer
-					if (global.degreeProficiency[global.degrees.find("Law")] >= max(global.crimesSeverity) - randi_range(1, 15) && global.intellect >= max(60, global.averageFinder(global.intellectAtTimeOfCrime)) && global.sumCalculator(global.crimesSeverity) <= 400) || randi_range(1, 25) == 1: #if your proficiency is greater than the severity of your worst crime, and you're smarter than you were when you committed most of your crimes, AND you're not some super-criminal. There is a small (1 in 25) chance you win even if you don't meet these requirements.
+					if (global.degreeProficiency[global.degrees.find("Law")] >= min(200, global.crimesSeverity * 2) + randi_range(1, 15) && global.intellect >= max(60, global.averageFinder(global.intellectAtTimeOfCrime)) && global.sumCalculator(global.crimesSeverity) <= 400) || randi_range(1, 25) == 1: #if your proficiency is greater than the severity of your worst crime, and you're smarter than you were when you committed most of your crimes, AND you're not some super-criminal. There is a small (1 in 25) chance you win even if you don't meet these requirements.
 						$heading.text = "Self-defence GOAT"
 						$body.text = "You successfully represented yourself in court and have been found not guilty of all charges."
 						$option1.text = "Awesome"
@@ -931,11 +931,39 @@ func confirmation(): ##Non-random confirmation events that tell you that somethi
 		$body.text = "Your application for " + global.jobOpenings[global.IDClicked][0] + " was denied, even though you are fully qualified."
 		$option1.text = "Dang"
 		optionRemover(2)
+	elif global.revent[0] == "full-time-extra-effort":
+		var healthSubtract = randi_range(9, 4)
+		if global.history.count("full-time-extra-effort") <= 3: #if you haven't already done this 3 or more times this year
+			$heading.text = "Absolutely locked IN"
+			var performanceAdd = randi_range(6, 9)
+			var joyChange = 0
+			match randi_range(1,2):
+				1:
+					joyChange = randi_range(-8, -3)
+				2:
+					joyChange = randi_range(4, 9)
+			$body.text = "You started putting in some extra effort at your full-time job as " + global.anIser(global.fullTimeJob) + ".\n+ " + str(performanceAdd) + " performance, - " + str(healthSubtract) + " health, "
+			if joyChange < 0: #if the change to joy is negative
+				$body.text += "- " + str(-joyChange) + " joy"
+			elif joyChange > 0: #if the change to joy is positive
+				$body.text += "+ " + str(joyChange) + " joy"
+			global.fullTimePerformance += performanceAdd
+			global.health -= healthSubtract
+			global.joy += joyChange
+			global.history.append("full-time-extra-effort")
+		else: #if you've already done this more than 3 times this year
+			var joySubtract = randi_range(3, 6)
+			$heading.text = "Absolutely locked OUT"
+			$body.text = "You've overextended yourself too much this year.\n- " + str(healthSubtract) + " health, - " + str(joySubtract) + " joy"
+			global.health -= healthSubtract
+			global.joy -= joySubtract
+		$option1.text = "Okay"
+		optionRemover(2)
 
 
 func _on_option_1_pressed() -> void: ##On option 1 selected
 	#confirmation - option 1 will be the only button available when the event's purpose is only to display information. Generally, the button will say "Okay".
-	if global.revent[0] == "toddler-0-o1" || global.revent[0] == "toddler-0-o2" || global.revent[0] == "toddler-0-o3" || global.revent[0] == "child-0-o1" || global.revent[0] == "child-0-o2" || global.revent[0] == "child-0-o3" || global.revent[0] == "child-0-o4" || global.revent[0] == "toddler-friend-o1" || global.revent[0] == "toddler-friend-o2" || global.revent[0] == "child-friend-o1" || global.revent[0] == "child-friend-o2" || global.revent[0] == "teenager-friend-o1" || global.revent[0] == "teenager-friend-o2" || global.revent[0] == "teenager-friend-o3" || global.revent[0] == "adult-friend-o1" || global.revent[0] == "adult-friend-o2" || global.revent[0] == "adult-friend-o3" || global.revent[0] == "elder-friend-o1" || global.revent[0] == "elder-friend-o2" || global.revent[0] == "elder-friend-o3" || global.revent[0] == "child-labour-is-outlawed" || global.revent[0] == "enrolled-in-primary-school" || global.revent[0] == "enrolled-in-high-school" || global.revent[0] == "graduated-high-school" || global.revent[0] == "study-harder" || global.revent[0] == "university-degree-picked-o1" || global.revent[0] == "university-degree-picked-o2" || global.revent[0] == "university-degree-picked-o3" || global.revent[0] == "university-degree-picked-o4" || global.revent[0] == "graduated-university" || global.revent[0] == "compliment-relationship" || global.revent[0] == "skip-class" || global.revent[0] == "arrested-o1-success" || global.revent[0] == "court-trial-o2" || global.revent[0] == "dont-go-to-prison" || global.revent[0] == "full-time-job-applied-already" || global.revent[0] == "full-time-job-applied-accepted" || global.revent[0] == "full-time-job-applied-rejected":
+	if global.revent[0] == "toddler-0-o1" || global.revent[0] == "toddler-0-o2" || global.revent[0] == "toddler-0-o3" || global.revent[0] == "child-0-o1" || global.revent[0] == "child-0-o2" || global.revent[0] == "child-0-o3" || global.revent[0] == "child-0-o4" || global.revent[0] == "toddler-friend-o1" || global.revent[0] == "toddler-friend-o2" || global.revent[0] == "child-friend-o1" || global.revent[0] == "child-friend-o2" || global.revent[0] == "teenager-friend-o1" || global.revent[0] == "teenager-friend-o2" || global.revent[0] == "teenager-friend-o3" || global.revent[0] == "adult-friend-o1" || global.revent[0] == "adult-friend-o2" || global.revent[0] == "adult-friend-o3" || global.revent[0] == "elder-friend-o1" || global.revent[0] == "elder-friend-o2" || global.revent[0] == "elder-friend-o3" || global.revent[0] == "child-labour-is-outlawed" || global.revent[0] == "enrolled-in-primary-school" || global.revent[0] == "enrolled-in-high-school" || global.revent[0] == "graduated-high-school" || global.revent[0] == "study-harder" || global.revent[0] == "university-degree-picked-o1" || global.revent[0] == "university-degree-picked-o2" || global.revent[0] == "university-degree-picked-o3" || global.revent[0] == "university-degree-picked-o4" || global.revent[0] == "graduated-university" || global.revent[0] == "compliment-relationship" || global.revent[0] == "skip-class" || global.revent[0] == "arrested-o1-success" || global.revent[0] == "court-trial-o2" || global.revent[0] == "dont-go-to-prison" || global.revent[0] == "full-time-job-applied-already" || global.revent[0] == "full-time-job-applied-accepted" || global.revent[0] == "full-time-job-applied-rejected" || global.revent[0] == "full-time-extra-effort":
 		goHome()
 	#special exceptions
 	elif global.revent[0] == "go-to-prison":

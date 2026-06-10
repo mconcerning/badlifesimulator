@@ -47,18 +47,31 @@ text = "Prefab performance"
 label_settings = SubResource("LabelSettings_j0g5h")
 horizontal_alignment = 1
 
+[node name="effects" type="Label" parent="." unique_id=1451490870]
+offset_top = 320.0
+offset_right = 1080.0
+offset_bottom = 380.0
+text = "Excellent effects"
+label_settings = SubResource("LabelSettings_j0g5h")
+horizontal_alignment = 1
+
 [node name="vBoxContainer" type="VBoxContainer" parent="." unique_id=1341806161]
 offset_left = 40.0
-offset_top = 400.0
+offset_top = 450.0
 offset_right = 1040.0
 offset_bottom = 1800.0
 size_flags_horizontal = 4
 theme_override_constants/separation = 50
 
-[node name="quit" parent="vBoxContainer" unique_id=1544237965 instance=ExtResource("8_pb1la")]
+[node name="extraEffort" parent="vBoxContainer" unique_id=1544237965 instance=ExtResource("8_pb1la")]
+layout_mode = 2
+text = "Put in some extra effort"
+
+[node name="quit" parent="vBoxContainer" unique_id=911307708 instance=ExtResource("8_pb1la")]
 layout_mode = 2
 text = "Quit"
 
 [connection signal="pressed" from="back" to="." method="_on_back_pressed"]
 [connection signal="pressed" from="exit" to="." method="_on_exit_pressed"]
+[connection signal="pressed" from="vBoxContainer/extraEffort" to="." method="_on_extra_effort_pressed"]
 [connection signal="pressed" from="vBoxContainer/quit" to="." method="_on_quit_pressed"]

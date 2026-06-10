@@ -74,6 +74,11 @@ func cleanLife(): #resets your existing life (if any) and generates new stats
 	global.partTimeJob = ""
 	global.partTimeSalary = 0
 	global.workExperience = []
+	global.fullTimeEffectJoy = 0
+	global.fullTimeEffectHealth = 0
+	global.fullTimeEffectIntellect = 0
+	global.fullTimeEffectLooks = 0
+	global.fullTimeEffectEvality = 0
 	global.loans = []
 	global.loanInitialValue = []
 	global.loanPaybackDuration = []

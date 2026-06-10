@@ -39,6 +39,12 @@ func basicStatChanges():
 		var debtInterest = roundi(float(-global.money) / 100 * 14) #your interest is 14%
 		global.money -= debtInterest
 		print("paid $" + global.commaiser(debtInterest) + " in debt interest")
+	#job effects
+	global.joy += global.fullTimeEffectJoy
+	global.health += global.fullTimeEffectHealth
+	global.intellect += global.fullTimeEffectIntellect
+	global.looks += global.fullTimeEffectLooks
+	global.evality += global.fullTimeEffectEvality
 	#over-timers
 	global.joyOverTime.append(global.joy)
 	global.healthOverTime.append(global.health)
@@ -222,8 +228,8 @@ func rareAgeUpEvents():
 
 func randomDeathChance():
 	if global.age >= 65: #if you're old enough to randomly die (not super realistic, but as it turns out, it is NOT fun dying for no reason at age 2)
-		print("1 in " + str(max(1, 65 - global.age +  roundi(float(global.health) / 2))) + " chance of death") # equation for age at which death is inevitable at x health: a = 64 + health / 2
-		if randi_range(1, max(1, 65 - global.age +  roundi(float(global.health) / 2))) == 1:
+		print("1 in " + str(max(1, 65 - global.age + roundi(float(global.health) / 2))) + " chance of death") # equation for age at which death is inevitable at x health: a = 64 + health / 2
+		if randi_range(1, max(1, 65 - global.age + roundi(float(global.health) / 2))) == 1:
 			global.causeOfDeath = "You died of complications associated with advanced age"
 			isDying = true
 			get_tree().change_scene_to_file("res://pages/death.tscn") #kills you

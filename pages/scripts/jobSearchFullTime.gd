@@ -21,7 +21,7 @@ func _ready() -> void:
 		listing.pressed.connect(jobSelect.bind(i))
 		scrl.add_child(listing)
 		var moreDetails = body.instantiate()
-		moreDetails.text = "$" + global.commaiser(global.jobOpenings[i][1]) + "/yr\nRequires: " + global.jobOpenings[i][2] + "\n"
+		moreDetails.text = "$" + global.commaiser(global.jobOpenings[i][1]) + "/yr\nRequires: " + global.jobOpenings[i][2] + "\nEffects: " + global.jobOpenings[i][3] + "\n"
 		scrl.add_child(moreDetails)
 		if moreDetails.size.x > 960: #caps the details text length at 960 pixels; if it's longer, enable autowrap
 			moreDetails.custom_minimum_size.x = 960

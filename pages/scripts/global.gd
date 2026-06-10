@@ -59,6 +59,11 @@ var workExperience = [] ##Every year you work a job or go to school, it is appen
 var schoolPerformance : int = 0 ##How well are you doing at school? from 1 - 100
 var partTimePerformance : int = 0
 var fullTimePerformance : int = 0
+var fullTimeEffectJoy = 0
+var fullTimeEffectHealth = 0
+var fullTimeEffectIntellect = 0
+var fullTimeEffectLooks = 0
+var fullTimeEffectEvality = 0
 var loans = [] ##Uh oh - can hold multiple loans at once - holds the total amount in dollars you owe
 var loanInitialValue = [] ##Stores the initial dollar amount of each current loan you've taken out
 var loanPaybackDuration = [] ##In how many years must the loan at its same index be fully paid back? Used to calculate how much you owe at the start of every year. The amount owed is then automatically deducted from your money total.
@@ -338,6 +343,7 @@ func prisonPreparer(sentenceLength): ##Does everything you need to prepare the p
 	for i in crimes.size():
 		criminalRecord.append(crimes[i])
 		criminalRecordSeverity.append(crimesSeverity[i])
+	
 
 
 func takeOutLoan(amount : int, interest : int, paybackPeriod : int): ##Takes out a loan. Perameters are: amount in dollars, interest as a percentage, and payback period in years.
@@ -346,9 +352,9 @@ func takeOutLoan(amount : int, interest : int, paybackPeriod : int): ##Takes out
 	global.loanInterest.append(interest) #percentage annual interest
 	global.loanPaybackDuration.append(paybackPeriod) #pay it back over the course of however many years
 
+var allJobs = [["Primary school teacher", randi_range(850, 920) * 100, "High school diploma, 70+ intellect", "None"], ["High school teacher", randi_range(900, 1040) * 100, "Any University degree", "- 5 joy"], ["University professor", randi_range(2100, 2300) * 100, "Education + any second degree", "+ 4 intellect"], ["Public defender", randi_range(850, 1000) * 100, "Law degree", "- 4 joy, + 2 intellect"], ["Apprentice lawyer", randi_range(1220, 1300) * 100, "Law degree (65+ proficiency)", "- 4 joy, + 3 intellect"], ["Lawyer", randi_range(1800, 2100) * 100, "Law degree, 7+ yrs experience as apprentice", "- 5 joy, + 5 intellect"], ["Fast food worker", randi_range(490, 530) * 100, "Age 16+", "- 5 joy"], ["Fast food manager", randi_range(560, 620) * 100, "4+ yrs experience as worker, 60+ intellect, 25 yrs or older", "- 6 joy"], ["Retail worker", randi_range(425, 550) * 100, "High school diploma", "- 3 joy"], ["Apprentice logo designer", randi_range(600, 680) * 100, "Graphic design degree", " + 3 joy"], ["Logo designer", randi_range(820, 900) * 100, "Graphic design degree, 6+ yrs experience as apprentice", "+ 4 joy"], ["Jr. business consultant", randi_range(750, 850) * 100, "Business degree", "+ 3 intellect"], ["Business consultant", randi_range(1100, 1250) * 100, "Business degree, 8+ yrs experience as Jr., 75+ intellect", "+ 5 intellect"], ["Sanitation worker", randi_range(510, 540) * 100, "High school diploma", "- 7 health"], ["Salt technician", randi_range(740, 810) * 100, "High school diploma, 70+ health", "+ 3 looks"], ["Exorcist", randi_range(350, 380) * 100, "High school diploma", "+ 9 joy"], ["Plumber", randi_range(850, 920) * 100, "High school diploma", "+ 2 joy, - 4 health"]] ##Randomises which jobs are available for application. Salaries are within a randomised range depending on the job. The salary is calculated by generating a random number and multiplying it by 100. A 3-digit random number would produce a 5-figure salary (tens of thousands of dollars), a 4-digit number would produce a 6-figure salary, and so on. The multiplication results in salaries rounded to hundred of dollars.
 
 func newJobOpenings(): ##Creates a set of new job openings from the list of possible jobs. Used when creating a new life or aging up.
-	var allJobs = [["Primary school teacher", randi_range(850, 920) * 100, "high school diploma, 70+ intellect"], ["High school teacher", randi_range(900, 1040) * 100, "any University degree"], ["University professor", randi_range(2100, 2300) * 100, "Education + any second degree"], ["Public defender", randi_range(850, 1000) * 100, "Law degree"], ["Apprentice lawyer", randi_range(1220, 1300) * 100, "Law degree (65+ proficiency)"], ["Lawyer", randi_range(1800, 2100) * 100, "Law degree, 7+ yrs experience as apprentice"], ["Fast food worker", randi_range(490, 530) * 100, "Age 16+"], ["Fast food manager", randi_range(560, 620) * 100, "4+ yrs experience as worker, 60+ intellect, 25 yrs or older"], ["Retail worker", randi_range(425, 550) * 100, "High school diploma"], ["Apprentice logo designer", randi_range(600, 680) * 100, "Graphic design degree"], ["Logo designer", randi_range(820, 900) * 100, "Graphic design degree, 6+ yrs experience as apprentice"], ["Jr. business consultant", randi_range(750, 850) * 100, "Business degree"], ["Business consultant", randi_range(1100, 1250) * 100, "Business degree, 8+ yrs experience as Jr., 75+ intellect"], ["Sanitation worker", randi_range(510, 540) * 100, "High school diploma"], ["Salt technician", randi_range(740, 810) * 100, "High school diploma, 70+ health"], ["Exorcist", randi_range(350, 380) * 100, "High school diploma"]] ##Randomises which jobs are available for application. Salaries are within a randomised range depending on the job. The salary is calculated by generating a random number and multiplying it by 100. A 3-digit random number would produce a 5-figure salary (tens of thousands of dollars), a 4-digit number would produce a 6-figure salary, and so on. The multiplication results in salaries rounded to hundred of dollars.
 	var _newJobOpenings = allJobs
 	_newJobOpenings.shuffle() #randomises order of the jobs. Used in tandem with the below, randomly limits which jobs are available.
 	while _newJobOpenings.size() > 25: #limits the number of job openings on any given year to 25; these 25 could be any
@@ -357,6 +363,11 @@ func newJobOpenings(): ##Creates a set of new job openings from the list of poss
 	#i'm not doing sort_custom with a lambda. What the hell is a lambda?? Why call it that??
 	_newJobOpenings.sort_custom(func(a, b): return a[1] > b[1]) #fine
 	jobOpenings = _newJobOpenings
+
+func findJob(job : String): ##Returns the index of any job in the allJobs array
+	for i in allJobs.size():
+		if allJobs[i][0] == job:
+			return i
 
 
 func averageFinder(array): ##Finds the mean average of all integer elements in any array.
@@ -421,6 +432,11 @@ func lifeSerialiser(): ##Serialises every life-specific variable we need to save
 		"schoolPerformance" : schoolPerformance,
 		"partTimePerformance" : partTimePerformance,
 		"fullTimePerformance" : fullTimePerformance,
+		"fullTimeEffectJoy" : fullTimeEffectJoy,
+		"fullTimeEffectHealth" : fullTimeEffectHealth,
+		"fullTimeEffectIntellect" : fullTimeEffectIntellect,
+		"fullTimeEffectLooks" : fullTimeEffectLooks,
+		"fullTimeEffectEvality" : fullTimeEffectEvality,
 		"loans" : loans,
 		"loanInitialValue" : loanInitialValue,
 		"loanPaybackDuration" : loanPaybackDuration,
@@ -616,6 +632,11 @@ func loadLife(takeHome = true, base64life = ""): ##Does the actual LIFE loading.
 	schoolPerformance = dictionary["schoolPerformance"]
 	partTimePerformance = dictionary["partTimePerformance"]
 	fullTimePerformance = dictionary["fullTimePerformance"]
+	fullTimeEffectJoy = dictionary["fullTimeEffectJoy"]
+	fullTimeEffectHealth = dictionary["fullTimeEffectHealth"]
+	fullTimeEffectIntellect = dictionary["fullTimeEffectIntellect"]
+	fullTimeEffectLooks = dictionary["fullTimeEffectLooks"]
+	fullTimeEffectEvality = dictionary["fullTimeEffectEvality"]
 	loans = dictionary["loans"]
 	loanInitialValue = dictionary["loanInitialValue"]
 	loanPaybackDuration = dictionary["loanPaybackDuration"]

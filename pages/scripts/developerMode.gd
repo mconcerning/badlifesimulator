@@ -159,6 +159,22 @@ func _on_set_crime_time_pressed() -> void:
 	$confirmation.text = "Successfully set crimeTime!"
 	print("set crime time")
 
+func _on_set_degrees_pressed() -> void:
+	var arrayTemp = Array($input.text.split(","))
+	for i in arrayTemp.size():
+		arrayTemp[i] = str(arrayTemp[i])
+	global.degrees = arrayTemp
+	$confirmation.text = "Successfully set degrees!"
+	print("set degrees")
+
+func _on_set_degree_proficiency_pressed() -> void:
+	var arrayTemp = Array($input.text.split(","))
+	for i in arrayTemp.size():
+		arrayTemp[i] = int(arrayTemp[i])
+	global.degreeProficiency = arrayTemp
+	$confirmation.text = "Successfully set degree proficiency!"
+	print("set degree proficiency")
+
 func _on_loans_pressed() -> void:
 	var loansTemp = Array($input.text.split(","))
 	for i in loansTemp.size():

@@ -194,6 +194,18 @@ size_flags_horizontal = 4
 theme = ExtResource("6_llmlx")
 text = "Set crime time"
 
+[node name="setDegrees" type="Button" parent="scrollContainer/centerContainer/vBoxContainer" unique_id=961506220]
+layout_mode = 2
+size_flags_horizontal = 4
+theme = ExtResource("6_llmlx")
+text = "Set degrees"
+
+[node name="setDegreeProficiency" type="Button" parent="scrollContainer/centerContainer/vBoxContainer" unique_id=640423536]
+layout_mode = 2
+size_flags_horizontal = 4
+theme = ExtResource("6_llmlx")
+text = "Set degree proficiency"
+
 [node name="loans" type="Button" parent="scrollContainer/centerContainer/vBoxContainer" unique_id=900482820]
 layout_mode = 2
 size_flags_horizontal = 4
@@ -289,6 +301,8 @@ stretch_mode = 0
 [connection signal="pressed" from="scrollContainer/centerContainer/vBoxContainer/setCrimesSeverity" to="." method="_on_set_crimes_severity_pressed"]
 [connection signal="pressed" from="scrollContainer/centerContainer/vBoxContainer/setAvgIntellectCrime" to="." method="_on_set_avg_intellect_crime_pressed"]
 [connection signal="pressed" from="scrollContainer/centerContainer/vBoxContainer/setCrimeTime" to="." method="_on_set_crime_time_pressed"]
+[connection signal="pressed" from="scrollContainer/centerContainer/vBoxContainer/setDegrees" to="." method="_on_set_degrees_pressed"]
+[connection signal="pressed" from="scrollContainer/centerContainer/vBoxContainer/setDegreeProficiency" to="." method="_on_set_degree_proficiency_pressed"]
 [connection signal="pressed" from="scrollContainer/centerContainer/vBoxContainer/loans" to="." method="_on_loans_pressed"]
 [connection signal="pressed" from="scrollContainer/centerContainer/vBoxContainer/loanInterest" to="." method="_on_loan_interest_pressed"]
 [connection signal="pressed" from="scrollContainer/centerContainer/vBoxContainer/loanPaybackDuration" to="." method="_on_loan_payback_duration_pressed"]

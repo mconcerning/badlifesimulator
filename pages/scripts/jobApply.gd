@@ -60,6 +60,55 @@ func qualificationChecker(): ##Checks if you're qualified for the job you've sel
 		"Exorcist":
 			if global.degrees.has("high-school"):
 				applyButton.disabled = false
+		"Plumber":
+			if global.degrees.has("high-school"):
+				applyButton.disabled = false
+
+
+func jobEffectInitialiser(joy = 0, health = 0, intellect = 0, looks = 0, evality = 0): ##Actually sets the job effects variables
+	global.fullTimeEffectJoy = joy
+	global.fullTimeEffectHealth = health
+	global.fullTimeEffectIntellect = intellect
+	global.fullTimeEffectLooks = looks
+	global.fullTimeEffectEvality = evality
+
+
+func jobEffectsGiver():
+	match global.jobOpenings[global.IDClicked][0]:
+		"Primary school teacher":
+			jobEffectInitialiser() #sets all effects to 0
+		"High school teacher":
+			jobEffectInitialiser(-5) #sets joy effect to -5
+		"University professor":
+			jobEffectInitialiser(0, 0, 4) #sets intellect effect to +4
+		"Public defender":
+			jobEffectInitialiser(-4, 0, 2) #sets joy effect to -4, intellect to +2
+		"Apprentice lawyer":
+			jobEffectInitialiser(-4, 0, 3)
+		"Laywer":
+			jobEffectInitialiser(-5, 0, 5)
+		"Fast food worker":
+			jobEffectInitialiser(-5)
+		"Fast food manager":
+			jobEffectInitialiser(-6)
+		"Retail worker":
+			jobEffectInitialiser(-3)
+		"Apprentice logo designer":
+			jobEffectInitialiser(3)
+		"Logo designer":
+			jobEffectInitialiser(4)
+		"Jr. business consultant":
+			jobEffectInitialiser(0, 0, 3)
+		"Business consultant":
+			jobEffectInitialiser(0, 0, 5)
+		"Sanitation worker":
+			jobEffectInitialiser(0, -7)
+		"Salt technician":
+			jobEffectInitialiser(0, 0, 0, 3)
+		"Exorcist":
+			jobEffectInitialiser(9, 0, 0, 0, 8) #secretly increases evality - your ass is so getting haunted
+		"Plumber":
+			jobEffectInitialiser(2, -4)
 
 
 func applyForJob():
@@ -71,7 +120,8 @@ func applyForJob():
 			#gives you the job
 			global.fullTimeJob = global.jobOpenings[global.IDClicked][0]
 			global.fullTimeSalary = global.jobOpenings[global.IDClicked][1]
-			global.fullTimePerformance = randi_range(50, 65)
+			global.fullTimePerformance = randi_range(45, 60)
+			jobEffectsGiver()
 			global.revent.append("full-time-job-applied-accepted")
 		else: #if you're unlucky and get denied for the position even though you're qualified
 			global.revent.append("full-time-job-applied-rejected")
@@ -86,7 +136,7 @@ func _ready() -> void:
 	if global.degrees.has("high-school"):
 		universityDegreesCount -= 1
 	$jobName.text = global.jobOpenings[global.IDClicked][0] #shows job name
-	$details.text = "$" + global.commaiser(global.jobOpenings[global.IDClicked][1]) + "/yr\nRequires: " + global.jobOpenings[global.IDClicked][2] #shows job salary and qualifications
+	$details.text = "$" + global.commaiser(global.jobOpenings[global.IDClicked][1]) + "/yr\nRequires: " + global.jobOpenings[global.IDClicked][2] + "\nEffects: " + global.jobOpenings[global.IDClicked][3] #shows job salary, qualifications, etc.
 	qualificationChecker()
 
 
