@@ -369,6 +369,13 @@ func findJob(job : String): ##Returns the index of any job in the allJobs array
 		if allJobs[i][0] == job:
 			return i
 
+func jobEffectReset(): ##Gets rid of all job effects
+	fullTimeEffectJoy = 0
+	fullTimeEffectHealth = 0
+	fullTimeEffectIntellect = 0
+	fullTimeEffectLooks = 0
+	fullTimeEffectEvality = 0
+
 
 func averageFinder(array): ##Finds the mean average of all integer elements in any array.
 	var combinedTotal = 0

@@ -28,5 +28,6 @@ func _on_extra_effort_pressed() -> void:
 
 
 func _on_quit_pressed() -> void:
+	global.jobEffectReset()
 	global.revent.append("full-time-quit-confirm")
 	get_tree().change_scene_to_file("res://pages/event.tscn")
