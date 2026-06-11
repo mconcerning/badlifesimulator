@@ -1,0 +1,59 @@
+[gd_scene format=3 uid="uid://cwxi3jw2egm1b"]
+
+[ext_resource type="Script" uid="uid://bh7863ft5csiu" path="res://pages/scripts/certificatePick.gd" id="1_ovmp3"]
+[ext_resource type="PackedScene" uid="uid://pmo8e2dmbkfm" path="res://objects/background.tscn" id="2_wcanj"]
+[ext_resource type="LabelSettings" uid="uid://bst31irnyaguk" path="res://styles/text/subheading.tres" id="3_8obj3"]
+[ext_resource type="LabelSettings" uid="uid://dl6sog5hfkb6u" path="res://styles/text/body.tres" id="4_qjkgh"]
+[ext_resource type="PackedScene" uid="uid://ck7ra4cupjjkm" path="res://objects/button_default.tscn" id="5_wo330"]
+
+[node name="certificatePick" type="Node2D" unique_id=1273545522]
+script = ExtResource("1_ovmp3")
+
+[node name="background" parent="." unique_id=1116211783 instance=ExtResource("2_wcanj")]
+
+[node name="heading" type="Label" parent="." unique_id=46993885]
+offset_left = 40.0
+offset_top = 140.0
+offset_right = 1040.0
+offset_bottom = 222.0
+text = "Certificate qualification"
+label_settings = ExtResource("3_8obj3")
+horizontal_alignment = 1
+metadata/_edit_use_anchors_ = true
+
+[node name="body" type="Label" parent="." unique_id=1943299473]
+offset_left = 40.0
+offset_top = 250.0
+offset_right = 1040.0
+offset_bottom = 310.0
+text = "Choose a certificate from the list below."
+label_settings = ExtResource("4_qjkgh")
+horizontal_alignment = 1
+metadata/_edit_use_anchors_ = true
+
+[node name="scrollContainer" type="ScrollContainer" parent="." unique_id=1177639025]
+offset_left = 40.0
+offset_top = 400.0
+offset_right = 1040.0
+offset_bottom = 1820.0
+size_flags_horizontal = 4
+size_flags_vertical = 4
+
+[node name="centerContainer" type="CenterContainer" parent="scrollContainer" unique_id=2040428718]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="vBoxContainer" type="VBoxContainer" parent="scrollContainer/centerContainer" unique_id=1433405338]
+layout_mode = 2
+theme_override_constants/separation = 50
+
+[node name="cancel" parent="scrollContainer/centerContainer/vBoxContainer" unique_id=1544237965 instance=ExtResource("5_wo330")]
+layout_mode = 2
+text = "Actually, nevermind"
+
+[node name="plumbery" parent="scrollContainer/centerContainer/vBoxContainer" unique_id=1435302084 instance=ExtResource("5_wo330")]
+layout_mode = 2
+text = "Plumbery"
+
+[connection signal="pressed" from="scrollContainer/centerContainer/vBoxContainer/cancel" to="." method="_on_cancel_pressed"]
+[connection signal="pressed" from="scrollContainer/centerContainer/vBoxContainer/plumbery" to="." method="_on_plumbery_pressed"]

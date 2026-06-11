@@ -6,6 +6,7 @@
 [ext_resource type="LabelSettings" uid="uid://d2sr5rgpltp8f" path="res://styles/text/small_body.tres" id="4_f8ivl"]
 [ext_resource type="PackedScene" uid="uid://ck7ra4cupjjkm" path="res://objects/button_default.tscn" id="5_n5qs2"]
 [ext_resource type="Texture2D" uid="uid://c3a0ewygoqbo3" path="res://assets/cog.png" id="6_64g6t"]
+[ext_resource type="Texture2D" uid="uid://ytgiutqfksyr" path="res://assets/user-circle.png" id="6_68ntq"]
 [ext_resource type="Texture2D" uid="uid://c32hg43t7tlpy" path="res://assets/discord.png" id="7_f8ivl"]
 
 [node name="main_menu" type="Node2D" unique_id=791832117]
@@ -47,6 +48,15 @@ offset_right = 780.0
 offset_bottom = 734.0
 text = "Start new game"
 
+[node name="progress" type="TextureButton" parent="." unique_id=1571853976]
+offset_left = 960.0
+offset_top = 1680.0
+offset_right = 1060.0
+offset_bottom = 1780.0
+texture_normal = ExtResource("6_68ntq")
+ignore_texture_size = true
+stretch_mode = 0
+
 [node name="settings" type="TextureButton" parent="." unique_id=1926293411]
 offset_left = 960.0
 offset_top = 1800.0
@@ -67,5 +77,6 @@ stretch_mode = 0
 
 [connection signal="pressed" from="continue" to="." method="_on_continue_pressed"]
 [connection signal="pressed" from="newGame" to="." method="_on_new_game_pressed"]
+[connection signal="pressed" from="progress" to="." method="_on_progress_pressed"]
 [connection signal="pressed" from="settings" to="." method="_on_settings_pressed"]
 [connection signal="pressed" from="discord" to="." method="_on_discord_pressed"]

@@ -295,10 +295,10 @@ func specialised(): ##Runs any miscellanious specialised, non-age-up events.
 		global.degreePickedLoanInterest = loanInterestRate
 		$body.text = "You picked " + global.anIser(global.degreePicked) + " degree, which costs a total of $" + global.commaiser(cost) + " to undertake. "
 		if global.money < cost: #if you don't have enough money to pay the degree upfront
-			$body.text += "Since you don't have enough money to pay for it upfront ($" + str(global.money) + "), you can choose "
+			$body.text += "Since you don't have enough money to pay for it upfront ($" + global.commaiser(global.money) + "), you can choose "
 			$option1.disabled = true #you can't pay for it upfront; this option is unavailable
 		else: #if you have enough money to pay for it upfront
-			$body.text += "You have enough money to pay for it upfront ($" + str(global.money) + "), but you can still choose "
+			$body.text += "You have enough money to pay for it upfront ($" + global.commaiser(global.money) + "), but you can still choose "
 		$body.text += "to take out a " + str(loanDuration) + "-year loan to cover the costs with an interest rate of " + str(loanInterestRate) + "%, or you can apply for a scholarship."
 		$option1.text = "Pay for it with cash"
 		if global.personTypes.count("Mother") + global.personTypes.count("Father") >= 2: #if you have two parents
@@ -319,6 +319,64 @@ func specialised(): ##Runs any miscellanious specialised, non-age-up events.
 		if global.eventMemory.has("university-degree-picked-o4-rejected"): #if your application for a scholarship was already denied
 			$option4.disabled = true #you can't try it again
 		global.revent[0] = "university-degree-picked"
+	elif global.revent[0] == "certificate-picked" || global.revent[0] == "certificate-picked-o2-refused-o1" || global.revent[0] == "certificate-picked-o4-rejected-o1":
+		var cost = 0 #total cost of the certificate, in dollars
+		var loanDuration = 0 #duration of a loan to pay for the certificate, in years
+		var loanInterestRate = 0 #interest rate of the loan, as a percentage
+		$heading.text = "Certificate qualification"
+		match global.degreePicked:
+			"Plumbery":
+				cost = 7500
+				loanDuration = 5
+				loanInterestRate = 3
+		global.degreePickedCost = cost
+		global.degreePickedLoanDuration = loanDuration
+		global.degreePickedLoanInterest = loanInterestRate
+		$body.text = "You picked a certificate in " + global.anIser(global.degreePicked) + ", which costs a total of $" + global.commaiser(cost) + " to undertake. "
+		if global.money < cost: #if you don't have enough money to pay the degree upfront
+			$body.text += "Since you don't have enough money to pay for it upfront ($" + global.commaiser(global.money) + "), you can choose "
+			$option1.disabled = true #you can't pay for it upfront; this option is unavailable
+		else: #if you have enough money to pay for it upfront
+			$body.text += "You have enough money to pay for it upfront ($" + global.commaiser(global.money) + "), but you can still choose "
+		$body.text += "to take out a " + str(loanDuration) + "-year loan to cover the costs with an interest rate of " + str(loanInterestRate) + "%, or you can apply for a scholarship."
+		$option1.text = "Pay for it with cash"
+		if global.personTypes.count("Mother") + global.personTypes.count("Father") >= 2: #if you have two parents
+			$option2.text = "Ask your parents to pay"
+		elif global.personTypes.count("Mother") + global.personTypes.count("Father") == 1: #if you only have one parent
+			if global.personTypes.find("Mother") != -1: #if you only have a mother
+				$option2.text = "Ask your mother to pay"
+			else: #if you only have a father
+				$option2.text = "Ask your father to pay"
+		else: #if you have no parents
+			$option2.text = "Ask your parents to pay"
+			$option2.disabled = true #if you have no parents, you can't exactly ask them to pay for your tuition
+		$option3.text = "Take out the loan"
+		$option4.text = "Apply for a scholarship"
+		optionRemover(5)
+		if global.eventMemory.has("certificate-picked-o2-refused"): #if your parents already refused to pay for your tuition
+			$option2.disabled = true #you can't just keep pestering them until they cave
+		if global.eventMemory.has("certificate-picked-o4-rejected"): #if your application for a scholarship was already denied
+			$option4.disabled = true #you can't try it again
+	elif global.revent[0] == "certificate-do-o1":
+		#sets the event for below:
+		if (global.intellect < 50 && randi_range(1,4) != 1) || randi_range(1,9) == 1:
+			global.revent[0] = "certificate-failed"
+		else:
+			global.revent[0] = "certificate-achieved"
+		#outcome:
+		if global.revent[0] == "certificate-failed":
+			$heading.text = "Whoops"
+			$body.text = "You failed your certificate in " + global.degreePicked + "."
+			global.failedCertificates.append(global.degreePicked)
+			$option1.text = "Okay"
+		elif global.revent[0] == "certificate-achieved":
+			$heading.text = "Now 100% qualified"
+			$body.text = "You passed your course and now have a certificate in " + global.degreePicked + "!"
+			global.certificates.append(global.degreePicked) #awards you the certificate
+			$option1.text = "Hooray"
+		optionRemover(2)
+		emForget("certificate-picked-o2-refused")
+		emForget("certificate-picked-o4-rejected")
 
 
 func relationships(): ##Specialised, specifically relationship-related events.
@@ -844,7 +902,9 @@ func confirmation(): ##Non-random confirmation events that tell you that somethi
 		$body.text = "Congratulations! You graduated high school."
 		$option1.text = "Take some time off"
 		$option2.text = "Apply to a university"
-		optionRemover(3)
+		$option3.text = "Get a full-time job"
+		$option4.text = "Apply for a certificate"
+		optionRemover(5)
 	elif global.revent[0] == "graduated-university":
 		$heading.text = "Job time"
 		$body.text = "Congratulations! You graduated University."
@@ -963,7 +1023,7 @@ func confirmation(): ##Non-random confirmation events that tell you that somethi
 
 func _on_option_1_pressed() -> void: ##On option 1 selected
 	#confirmation - option 1 will be the only button available when the event's purpose is only to display information. Generally, the button will say "Okay".
-	if global.revent[0] == "toddler-0-o1" || global.revent[0] == "toddler-0-o2" || global.revent[0] == "toddler-0-o3" || global.revent[0] == "child-0-o1" || global.revent[0] == "child-0-o2" || global.revent[0] == "child-0-o3" || global.revent[0] == "child-0-o4" || global.revent[0] == "toddler-friend-o1" || global.revent[0] == "toddler-friend-o2" || global.revent[0] == "child-friend-o1" || global.revent[0] == "child-friend-o2" || global.revent[0] == "teenager-friend-o1" || global.revent[0] == "teenager-friend-o2" || global.revent[0] == "teenager-friend-o3" || global.revent[0] == "adult-friend-o1" || global.revent[0] == "adult-friend-o2" || global.revent[0] == "adult-friend-o3" || global.revent[0] == "elder-friend-o1" || global.revent[0] == "elder-friend-o2" || global.revent[0] == "elder-friend-o3" || global.revent[0] == "child-labour-is-outlawed" || global.revent[0] == "enrolled-in-primary-school" || global.revent[0] == "enrolled-in-high-school" || global.revent[0] == "graduated-high-school" || global.revent[0] == "study-harder" || global.revent[0] == "university-degree-picked-o1" || global.revent[0] == "university-degree-picked-o2" || global.revent[0] == "university-degree-picked-o3" || global.revent[0] == "university-degree-picked-o4" || global.revent[0] == "graduated-university" || global.revent[0] == "compliment-relationship" || global.revent[0] == "skip-class" || global.revent[0] == "arrested-o1-success" || global.revent[0] == "court-trial-o2" || global.revent[0] == "dont-go-to-prison" || global.revent[0] == "full-time-job-applied-already" || global.revent[0] == "full-time-job-applied-accepted" || global.revent[0] == "full-time-job-applied-rejected" || global.revent[0] == "full-time-extra-effort":
+	if global.revent[0] == "toddler-0-o1" || global.revent[0] == "toddler-0-o2" || global.revent[0] == "toddler-0-o3" || global.revent[0] == "child-0-o1" || global.revent[0] == "child-0-o2" || global.revent[0] == "child-0-o3" || global.revent[0] == "child-0-o4" || global.revent[0] == "toddler-friend-o1" || global.revent[0] == "toddler-friend-o2" || global.revent[0] == "child-friend-o1" || global.revent[0] == "child-friend-o2" || global.revent[0] == "teenager-friend-o1" || global.revent[0] == "teenager-friend-o2" || global.revent[0] == "teenager-friend-o3" || global.revent[0] == "adult-friend-o1" || global.revent[0] == "adult-friend-o2" || global.revent[0] == "adult-friend-o3" || global.revent[0] == "elder-friend-o1" || global.revent[0] == "elder-friend-o2" || global.revent[0] == "elder-friend-o3" || global.revent[0] == "child-labour-is-outlawed" || global.revent[0] == "enrolled-in-primary-school" || global.revent[0] == "enrolled-in-high-school" || global.revent[0] == "graduated-high-school" || global.revent[0] == "study-harder" || global.revent[0] == "university-degree-picked-o1" || global.revent[0] == "university-degree-picked-o2" || global.revent[0] == "university-degree-picked-o3" || global.revent[0] == "university-degree-picked-o4" || global.revent[0] == "graduated-university" || global.revent[0] == "compliment-relationship" || global.revent[0] == "skip-class" || global.revent[0] == "arrested-o1-success" || global.revent[0] == "court-trial-o2" || global.revent[0] == "dont-go-to-prison" || global.revent[0] == "full-time-job-applied-already" || global.revent[0] == "full-time-job-applied-accepted" || global.revent[0] == "full-time-job-applied-rejected" || global.revent[0] == "full-time-extra-effort" || global.revent[0] == "certificate-achieved" || global.revent[0] == "certificate-failed":
 		goHome()
 	#special exceptions
 	elif global.revent[0] == "go-to-prison":
@@ -1103,9 +1163,15 @@ func option1outcomes(): ##Option 1 has been picked
 		optionRemover(2)
 	elif global.revent[0] == "full-time-quit-confirm-o1":
 		print("quitting job...")
-		global.fullTimeJob = ""
-		global.fullTimeSalary = 0
+		global.removeJob()
 		goingToSpecific = "res://pages/game_menu.tscn"
+	elif global.revent[0] == "certificate-picked-o1":
+		global.money -= global.degreePickedCost #deducts money, as you paid for the degree upfront
+		$heading.text = "Cash cow"
+		$body.text = "You paid for your " + global.degreePicked + " certificate upfront.\n- $" + global.commaiser(global.degreePickedCost)
+		$option1.text = "Okay"
+		optionRemover(2)
+		global.revent[0] = "certificate-do" #you now attempt to complete your certificate
 
 
 func option2outcomes(): ##Option 2 has been picked
@@ -1198,21 +1264,22 @@ func option2outcomes(): ##Option 2 has been picked
 	elif global.revent[0] == "graduated-high-school-o2":
 		goToSpecific("res://pages/university_pick_degree.tscn")
 	elif global.revent[0] == "university-degree-picked-o2":
-		var parent = 0
 		var parentNoun = ""
-		if global.personTypes.find("Mother") != -1: #if you have a mother
-			parent = global.personTypes.find("Mother") #gets the index of said mother
-		elif global.personTypes.find("Father") != -1: #if you have only a father
-			parent = global.personTypes.find("Father") #gets the index of said father
-		if global.personTypes.count("Mother") + global.personTypes.count("Father") >= 2: #if you have multiple parents
+		var numberOfParents = global.personTypes.count("Mother") + global.personTypes.count("Father")
+		var avgParentRelationship = 0
+		for i in global.personTypes.size():
+			if global.personTypes[i] == "Mother" || global.personTypes[i] == "Father": #if they are a parent
+				avgParentRelationship += global.personRelationships[i]
+		avgParentRelationship = roundi(float(avgParentRelationship) / numberOfParents)
+		if numberOfParents >= 2: #if you have multiple parents
 			parentNoun = "parents"
-		elif global.personTypes.count("Mother") + global.personTypes.count("Father") == 1: #if you only have one parent
-			if global.personTypes[parent] == "Mother": #if you have only a mother
+		elif numberOfParents == 1: #if you only have one parent
+			if global.personTypes.find("Mother") != -1: #if you have only a mother
 				parentNoun = "mother"
 			else: #if you only have a father
 				parentNoun = "father"
 		#if your parents actually do agree to pay for your tuition
-		if global.personRelationships[parent] >= 70 && randi_range(1, max(2, roundi(float(global.degreePickedCost) / 10000))) == 1: #if you have a good relationship with your parents AND your parents actually agree to pay for your tuition (1 in (the cost of the degree / 10,000 (e.g. 1 in ~2.5 (3) chance for a $25,000 loan) chance)
+		if avgParentRelationship >= 72 && randi_range(1, max(2, roundi(float(global.degreePickedCost) / (8000.0 / numberOfParents)))) == 1: #if you have a good relationship with your parents AND your parents actually agree to pay for your tuition (1 in (the cost of the degree / 8,000 / number of parents (e.g. 1 in ~3.125 (3) chance for a $50,000 loan with 2 parents) chance)
 			$heading.text = "Nepo baby?"
 			$body.text = "Your " + parentNoun + " agreed to pay for your University tuition!"
 			global.schoolLevel = 3 #puts you in tertiary school
@@ -1258,6 +1325,35 @@ func option2outcomes(): ##Option 2 has been picked
 		goToSpecific("res://pages/import_progress_from_clipboard.tscn")
 	elif global.revent[0] == "full-time-quit-confirm-o2":
 		goingToSpecific = "res://pages/job_full_time.tscn"
+	elif global.revent[0] == "certificate-picked-o2":
+		#i'm just stealing all of this code from university degrees
+		var parentNoun = ""
+		var numberOfParents = global.personTypes.count("Mother") + global.personTypes.count("Father")
+		var avgParentRelationship = 0
+		for i in global.personTypes.size():
+			if global.personTypes[i] == "Mother" || global.personTypes[i] == "Father": #if they are a parent
+				avgParentRelationship += global.personRelationships[i]
+		avgParentRelationship = roundi(float(avgParentRelationship) / numberOfParents)
+		if numberOfParents >= 2: #if you have multiple parents
+			parentNoun = "parents"
+		elif numberOfParents == 1: #if you only have one parent
+			if global.personTypes.find("Mother") != -1: #if you have only a mother
+				parentNoun = "mother"
+			else: #if you only have a father
+				parentNoun = "father"
+		#if your parents actually do agree to pay for your certificate
+		if avgParentRelationship >= 65 && randi_range(1, max(2, roundi(float(global.degreePickedCost) / (1500.0 / numberOfParents))) + global.failedCertificates.count(global.degreePicked)) == 1: #if you have a good relationship with your parents AND your parents actually agree to pay for your tuition (1 in (the cost of the degree / 3,000 / number of parents) + number of times you've failed this same certificate). Chance for a $7,000 loan with 2 parents and without having failed this certificate before: (e.g. 1 in ~2.33 (2))
+			$heading.text = "Pampered"
+			$body.text = "Your " + parentNoun + " agreed to cover your certificate costs!"
+			global.XPQueued += 20
+			global.revent[0] = "certificate-do"
+		else: #if your parents refuse to pay for it
+			$heading.text = "Wooooowwww, typical"
+			$body.text = "Your " + parentNoun + " refused to cover your certificate costs."
+			global.revent[0] = "certificate-picked-o2-refused" #this sends you back to the start of the original event asking how you would like to pay
+			global.eventMemory.append("certificate-picked-o2-refused") #this lets the original event know to disable the option to ask your parents to pay, since you already tried that and it didn't work. This information can't simply be stored in the event ID since it would be too complex to keep track of due to asking for a scholarship also requiring memory.
+		$option1.text = "Okay"
+		optionRemover(2)
 
 
 func option3outcomes(): ##Option 3 has been picked
@@ -1316,6 +1412,20 @@ func option3outcomes(): ##Option 3 has been picked
 		optionRemover(2)
 		emForget("university-degree-picked-o2-refused")
 		emForget("university-degree-picked-o4-rejected")
+	elif global.revent[0] == "graduated-high-school-o3":
+		goingToSpecific = "res://pages/job_search_full_time.tscn"
+	elif global.revent[0] == "certificate-picked-o3":
+		$heading.text = "Don't you just love debt"
+		$body.text = "You took out a $" + global.commaiser(global.degreePickedCost) + " student loan that needs to be paid back over " + str(global.degreePickedLoanDuration) + " years with an interest rate of " + str(global.degreePickedLoanInterest) + "% to pay for your certificate in " + global.degreePicked + "."
+		global.takeOutLoan(global.degreePickedCost, global.degreePickedLoanInterest, global.degreePickedLoanDuration) #takes out loan
+		print("loans: " + str(global.loans))
+		print("loan interest: " + str(global.loanInterest))
+		print("loan payback duration: " + str(global.loanPaybackDuration))
+		print("going for a degree in " + global.degreePicked)
+		global.XPQueued += 25
+		$option1.text = "Okay"
+		optionRemover(2)
+		global.revent[0] = "certificate-do"
 
 
 func option4outcomes(): ##Option 4 has been picked
@@ -1359,6 +1469,30 @@ func option4outcomes(): ##Option 4 has been picked
 			global.revent[0] = "university-degree-picked-o4-rejected"
 			$option1.text = "Okay"
 			global.eventMemory.append("university-degree-picked-o4-rejected")
+		optionRemover(2)
+	elif global.revent[0] == "graduated-high-school-o4":
+		goingToSpecific = "res://pages/certificate_pick.tscn"
+	elif global.revent[0] == "certificate-picked-o4":
+		var certSize = global.certificates.size()
+		if global.failedCertificates.has(global.degreePicked):
+			$heading.text = "Titanic II"
+			$body.text = "Your application for a scholarship was rejected since you've already failed this certificate before."
+			$option1.text = "Damn it"
+			global.eventMemory.append("certificate-picked-o4-rejected")
+		if global.schoolPerformance >= 70 && randi_range(1,3) != 1 && certSize <= 2: #if you did well enough at your last school (usually highschool, unless you're going for a second degree), you're not unlucky (2 in 3 chance), and you don't have 2 or more certificates already
+			$heading.text = "Scholarafloat"
+			$body.text = "Your application for a scholarship was accepted!"
+			$option1.text = "Hooray"
+			global.XPQueued += 30
+			global.revent[0] = "certificate-do"
+		else: #if your school performance isn't really good
+			$heading.text = "Scholarsinking"
+			$body.text = "Your application for a scholarship was rejected."
+			if certSize > 2: #if you have 2 or more degrees
+				$body.text = "Since you already have " + global.commaiser(certSize) + " certificates across varying subjects, your application for a scholarship was rejected." #Look, I don't know how many degrees you have, it very well COULD be over 1,000
+			global.revent[0] = "certificate-picked-o4-rejected"
+			$option1.text = "Okay"
+			global.eventMemory.append("certificate-picked-o4-rejected")
 		optionRemover(2)
 
 

@@ -1,0 +1,57 @@
+[gd_scene format=3 uid="uid://b6flkqdjllayc"]
+
+[ext_resource type="Script" uid="uid://bdpd054xuwttn" path="res://pages/scripts/xpLevel.gd" id="1_0j0te"]
+[ext_resource type="PackedScene" uid="uid://pmo8e2dmbkfm" path="res://objects/background.tscn" id="1_3qaq3"]
+[ext_resource type="PackedScene" uid="uid://cjnbhqp8obehv" path="res://objects/back_button.tscn" id="2_0j0te"]
+[ext_resource type="PackedScene" uid="uid://b7bfib5vbcvk6" path="res://objects/heading.tscn" id="3_batbs"]
+[ext_resource type="PackedScene" uid="uid://dvna50i2k0geh" path="res://objects/body.tscn" id="5_batbs"]
+[ext_resource type="FontFile" uid="uid://jc7d7o5eghs1" path="res://assets/fonts/poppins/Poppins-Bold.ttf" id="6_037g0"]
+[ext_resource type="PackedScene" uid="uid://cr0knljf47y6w" path="res://objects/progress_bar.tscn" id="6_pnctt"]
+[ext_resource type="PackedScene" uid="uid://b3nrc0n5eeris" path="res://objects/subheading.tscn" id="7_isryx"]
+
+[sub_resource type="LabelSettings" id="LabelSettings_isryx"]
+font = ExtResource("6_037g0")
+font_size = 42
+font_color = Color(0, 0, 0, 1)
+
+[node name="XPLevel" type="Node2D" unique_id=676784660]
+script = ExtResource("1_0j0te")
+
+[node name="background" parent="." unique_id=1170930324 instance=ExtResource("1_3qaq3")]
+
+[node name="back" parent="." unique_id=17962498 instance=ExtResource("2_0j0te")]
+
+[node name="heading" parent="." unique_id=33655322 instance=ExtResource("3_batbs")]
+text = "XP & Level"
+
+[node name="levelTextOld" parent="." unique_id=1032932187 instance=ExtResource("5_batbs")]
+visible = false
+offset_top = 400.0
+offset_right = 1080.0
+offset_bottom = 460.0
+text = "Level 0 (backrooms)"
+label_settings = SubResource("LabelSettings_isryx")
+
+[node name="levelText" parent="." unique_id=1227387029 instance=ExtResource("7_isryx")]
+offset_top = 378.0
+offset_bottom = 460.0
+text = "Level 0 (backrooms)"
+clip_text = true
+
+[node name="progressBar" parent="." unique_id=1279183898 instance=ExtResource("6_pnctt")]
+offset_left = 115.0
+offset_top = 520.0
+offset_right = 965.0
+offset_bottom = 600.0
+value = 0.0
+
+[node name="XPText" parent="." unique_id=1020018437 instance=ExtResource("5_batbs")]
+offset_left = 40.0
+offset_top = 660.0
+offset_right = 1040.0
+offset_bottom = 783.0
+text = "0 / 500
+XP"
+autowrap_mode = 3
+
+[connection signal="pressed" from="back" to="." method="_on_back_pressed"]

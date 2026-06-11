@@ -49,7 +49,9 @@ var schoolLevel : int = -1 ##-1 before you go to school, 0 if you've graduated s
 var schoolPerformanceTracker = []
 var degrees = []
 var degreeProficiency = [] ##How good of work you did to get the degree with the matching index. This the average of your school performance per year you did the degree, from 0 - 100 (info from schoolPerformanceTracker).
-var licences = [] ##Contains your licences and certificate qualifications, such as a driver's licence, gun licence, etc.
+var licences = [] ##Contains your licences, such as a driver's licence, gun licence, etc.
+var certificates = [] ##Contains your certificate qualifications, such as a cert in plumbery, electricity, etc.
+var failedCertificates = [] ##Contains every certificate you have failed.
 var incomeTax = 30 ##How much you are taxxed on your income, expressed as a percentage.
 var fullTimeJob = ""
 var fullTimeSalary : int = 0 ##How much money you make annually from your full-time job
@@ -278,13 +280,6 @@ func NPCKiller(type, index): ##Kills an NPC. Type can be either "kill" or "remov
 	XPQueued += 5
 
 
-func commitCrime(crime : String, severity : int, time): ##Commits crime.
-	crimes.append(crime)
-	crimesSeverity.append(severity)
-	intellectAtTimeOfCrime.append(intellect)
-	crimeTime.append(time)
-
-
 func sumCalculator(numbers): ##Calculates the sum of all the elements in any array.
 	var sum = 0
 	for i in numbers.size():
@@ -328,31 +323,14 @@ func intIser(theArray): ##Turns array elements into integers
 	return intTheArray
 
 
-func crimeTimeCalculator(): ##Calculates how much time you need to serve for your crimes. Returns either a number in years or "Life" for a life sentence.
-	var totalSentence = 0
-	for i in crimeTime.size():
-		if crimeTime[i] is int && totalSentence is int: #if it's not a life sentence yet and this crime doesn't warrant a life sentence
-			totalSentence += crimeTime[i]
-		elif str(crimeTime[i]) == "Life" && str(totalSentence) != "Life": #if it's not a life sentence yet but the crime being checked does warrant a life sentence
-			totalSentence = "Life"
-		#otherwise, you already have a life sentence, and there's no need to add to it
-	return totalSentence
-
-func prisonPreparer(sentenceLength): ##Does everything you need to prepare the player for prison, but you still have to actually be sent there manually.
-	prisonSentence = sentenceLength
-	for i in crimes.size():
-		criminalRecord.append(crimes[i])
-		criminalRecordSeverity.append(crimesSeverity[i])
-	
-
-
 func takeOutLoan(amount : int, interest : int, paybackPeriod : int): ##Takes out a loan. Perameters are: amount in dollars, interest as a percentage, and payback period in years.
 	global.loans.append(amount) #takes out the loan
 	global.loanInitialValue.append(roundi(float(amount) / paybackPeriod))
 	global.loanInterest.append(interest) #percentage annual interest
 	global.loanPaybackDuration.append(paybackPeriod) #pay it back over the course of however many years
 
-var allJobs = [["Primary school teacher", randi_range(850, 920) * 100, "High school diploma, 70+ intellect", "None"], ["High school teacher", randi_range(900, 1040) * 100, "Any University degree", "- 5 joy"], ["University professor", randi_range(2100, 2300) * 100, "Education + any second degree", "+ 4 intellect"], ["Public defender", randi_range(850, 1000) * 100, "Law degree", "- 4 joy, + 2 intellect"], ["Apprentice lawyer", randi_range(1220, 1300) * 100, "Law degree (65+ proficiency)", "- 4 joy, + 3 intellect"], ["Lawyer", randi_range(1800, 2100) * 100, "Law degree, 7+ yrs experience as apprentice", "- 5 joy, + 5 intellect"], ["Fast food worker", randi_range(490, 530) * 100, "Age 16+", "- 5 joy"], ["Fast food manager", randi_range(560, 620) * 100, "4+ yrs experience as worker, 60+ intellect, 25 yrs or older", "- 6 joy"], ["Retail worker", randi_range(425, 550) * 100, "High school diploma", "- 3 joy"], ["Apprentice logo designer", randi_range(600, 680) * 100, "Graphic design degree", " + 3 joy"], ["Logo designer", randi_range(820, 900) * 100, "Graphic design degree, 6+ yrs experience as apprentice", "+ 4 joy"], ["Jr. business consultant", randi_range(750, 850) * 100, "Business degree", "+ 3 intellect"], ["Business consultant", randi_range(1100, 1250) * 100, "Business degree, 8+ yrs experience as Jr., 75+ intellect", "+ 5 intellect"], ["Sanitation worker", randi_range(510, 540) * 100, "High school diploma", "- 7 health"], ["Salt technician", randi_range(740, 810) * 100, "High school diploma, 70+ health", "+ 3 looks"], ["Exorcist", randi_range(350, 380) * 100, "High school diploma", "+ 9 joy"], ["Plumber", randi_range(850, 920) * 100, "High school diploma", "+ 2 joy, - 4 health"]] ##Randomises which jobs are available for application. Salaries are within a randomised range depending on the job. The salary is calculated by generating a random number and multiplying it by 100. A 3-digit random number would produce a 5-figure salary (tens of thousands of dollars), a 4-digit number would produce a 6-figure salary, and so on. The multiplication results in salaries rounded to hundred of dollars.
+
+var allJobs = [["Primary school teacher", randi_range(850, 920) * 100, "High school diploma, 70+ intellect", "None"], ["High school teacher", randi_range(900, 1040) * 100, "Any University degree", "- 2 joy"], ["University professor", randi_range(2100, 2300) * 100, "Education + any second degree", "+ 4 intellect"], ["Public defender", randi_range(850, 1000) * 100, "Law degree", "- 4 joy, + 2 intellect"], ["Apprentice lawyer", randi_range(1220, 1300) * 100, "Law degree (65+ proficiency)", "- 4 joy, + 3 intellect"], ["Lawyer", randi_range(1800, 2100) * 100, "Law degree, 7+ yrs experience as apprentice", "- 5 joy, + 5 intellect"], ["Fast food worker", randi_range(490, 530) * 100, "Age 16+", "- 5 joy"], ["Fast food manager", randi_range(560, 620) * 100, "4+ yrs experience as worker, 60+ intellect, 25 yrs or older", "- 6 joy"], ["Retail worker", randi_range(425, 550) * 100, "High school diploma", "- 3 joy"], ["Apprentice logo designer", randi_range(600, 680) * 100, "Graphic design degree", "+ 3 joy"], ["Logo designer", randi_range(820, 900) * 100, "Graphic design degree, 6+ yrs experience as apprentice", "+ 4 joy"], ["Jr. business consultant", randi_range(750, 850) * 100, "Business degree", "+ 3 intellect"], ["Business consultant", randi_range(1100, 1250) * 100, "Business degree, 8+ yrs experience as Jr., 75+ intellect", "+ 5 intellect"], ["Sanitation worker", randi_range(510, 540) * 100, "High school diploma", "- 7 health"], ["Salt technician", randi_range(740, 810) * 100, "High school diploma, 70+ health", "+ 3 looks"], ["Exorcist", randi_range(350, 380) * 100, "High school diploma", "+ 6 joy"], ["Plumber", randi_range(850, 920) * 100, "High school diploma, Cert. in Plumbery", "- 1 health"]] ##Randomises which jobs are available for application. Salaries are within a randomised range depending on the job. The salary is calculated by generating a random number and multiplying it by 100. A 3-digit random number would produce a 5-figure salary (tens of thousands of dollars), a 4-digit number would produce a 6-figure salary, and so on. The multiplication results in salaries rounded to hundred of dollars.
 
 func newJobOpenings(): ##Creates a set of new job openings from the list of possible jobs. Used when creating a new life or aging up.
 	var _newJobOpenings = allJobs
@@ -369,12 +347,40 @@ func findJob(job : String): ##Returns the index of any job in the allJobs array
 		if allJobs[i][0] == job:
 			return i
 
-func jobEffectReset(): ##Gets rid of all job effects
+func removeJob(): ##Removes your full-time job. Use this when quitting or getting fired.
+	#resets all job effects
 	fullTimeEffectJoy = 0
 	fullTimeEffectHealth = 0
 	fullTimeEffectIntellect = 0
 	fullTimeEffectLooks = 0
 	fullTimeEffectEvality = 0
+	#removes the job
+	global.fullTimeJob = ""
+	global.fullTimeSalary = 0
+
+
+func commitCrime(crime : String, severity : int, time): ##Commits crime.
+	crimes.append(crime)
+	crimesSeverity.append(severity)
+	intellectAtTimeOfCrime.append(intellect)
+	crimeTime.append(time)
+
+func crimeTimeCalculator(): ##Calculates how much time you need to serve for your crimes. Returns either a number in years or "Life" for a life sentence.
+	var totalSentence = 0
+	for i in crimeTime.size():
+		if crimeTime[i] is int && totalSentence is int: #if it's not a life sentence yet and this crime doesn't warrant a life sentence
+			totalSentence += crimeTime[i]
+		elif str(crimeTime[i]) == "Life" && str(totalSentence) != "Life": #if it's not a life sentence yet but the crime being checked does warrant a life sentence
+			totalSentence = "Life"
+		#otherwise, you already have a life sentence, and there's no need to add to it
+	return totalSentence
+
+func prisonPreparer(sentenceLength): ##Does everything you need to prepare the player for prison, but you still have to actually be sent there manually.
+	prisonSentence = sentenceLength
+	for i in crimes.size():
+		criminalRecord.append(crimes[i])
+		criminalRecordSeverity.append(crimesSeverity[i])
+	removeJob()
 
 
 func averageFinder(array): ##Finds the mean average of all integer elements in any array.
@@ -430,6 +436,8 @@ func lifeSerialiser(): ##Serialises every life-specific variable we need to save
 		"degrees" : degrees,
 		"degreeProficiency" : degreeProficiency,
 		"licences" : licences,
+		"certificates" : certificates,
+		"failedCertificates" : failedCertificates,
 		"incomeTax" : incomeTax,
 		"fullTimeJob" : fullTimeJob,
 		"fullTimeSalary" : fullTimeSalary,
@@ -630,6 +638,8 @@ func loadLife(takeHome = true, base64life = ""): ##Does the actual LIFE loading.
 	degrees = dictionary["degrees"]
 	degreeProficiency = intIser(dictionary["degreeProficiency"])
 	licences = dictionary["licences"]
+	certificates = dictionary["certificates"]
+	failedCertificates = dictionary["failedCertificates"]
 	incomeTax = dictionary["incomeTax"]
 	fullTimeJob = dictionary["fullTimeJob"]
 	fullTimeSalary = dictionary["fullTimeSalary"]

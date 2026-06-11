@@ -79,6 +79,15 @@ func _ready() -> void:
 		enroll.pressed.connect(universityEnroll.bind())
 		scrollContainer.add_child(enroll)
 		lineBreak()
+	if global.age >= 15: #if you're 15 or older
+		var certificateHeading = subheading.instantiate()
+		certificateHeading.text = "Get a certificate"
+		scrollContainer.add_child(certificateHeading)
+		var apply = button.instantiate()
+		apply.text = "Apply"
+		apply.pressed.connect(certificateApply.bind())
+		scrollContainer.add_child(apply)
+		lineBreak()
 
 
 func _on_back_pressed() -> void:
@@ -96,3 +105,6 @@ func fullTimeJobSearch():
 
 func fullTimeJobInteract():
 	get_tree().change_scene_to_file("res://pages/job_full_time.tscn")
+
+func certificateApply():
+	get_tree().change_scene_to_file("res://pages/certificate_pick.tscn")

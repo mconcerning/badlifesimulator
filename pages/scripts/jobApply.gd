@@ -61,7 +61,7 @@ func qualificationChecker(): ##Checks if you're qualified for the job you've sel
 			if global.degrees.has("high-school"):
 				applyButton.disabled = false
 		"Plumber":
-			if global.degrees.has("high-school"):
+			if global.degrees.has("high-school") && global.certificates.has("Plumbery"):
 				applyButton.disabled = false
 
 
@@ -78,7 +78,7 @@ func jobEffectsGiver():
 		"Primary school teacher":
 			jobEffectInitialiser() #sets all effects to 0
 		"High school teacher":
-			jobEffectInitialiser(-5) #sets joy effect to -5
+			jobEffectInitialiser(-2) #sets joy effect to -5
 		"University professor":
 			jobEffectInitialiser(0, 0, 4) #sets intellect effect to +4
 		"Public defender":
@@ -106,9 +106,9 @@ func jobEffectsGiver():
 		"Salt technician":
 			jobEffectInitialiser(0, 0, 0, 3)
 		"Exorcist":
-			jobEffectInitialiser(9, 0, 0, 0, 8) #secretly increases evality - your ass is so getting haunted
+			jobEffectInitialiser(6, 0, 0, 0, 6) #secretly increases evality - your ass is so getting haunted doing this job
 		"Plumber":
-			jobEffectInitialiser(2, -4)
+			jobEffectInitialiser(0, -1)
 
 
 func applyForJob():

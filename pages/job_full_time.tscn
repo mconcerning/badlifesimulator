@@ -52,7 +52,7 @@ offset_top = 320.0
 offset_right = 1080.0
 offset_bottom = 380.0
 text = "Excellent effects"
-label_settings = SubResource("LabelSettings_j0g5h")
+label_settings = ExtResource("5_w3rx8")
 horizontal_alignment = 1
 
 [node name="vBoxContainer" type="VBoxContainer" parent="." unique_id=1341806161]

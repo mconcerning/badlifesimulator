@@ -1,0 +1,41 @@
+[gd_scene format=3 uid="uid://cr0knljf47y6w"]
+
+[ext_resource type="FontFile" uid="uid://bf7pfy6renkw4" path="res://assets/fonts/poppins/Poppins-Regular.ttf" id="1_o4ixe"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_m5yh1"]
+bg_color = Color(0.9372549, 0.9372549, 0.9372549, 1)
+border_width_left = 5
+border_width_top = 5
+border_width_right = 5
+border_width_bottom = 5
+corner_radius_top_left = 64
+corner_radius_top_right = 64
+corner_radius_bottom_right = 64
+corner_radius_bottom_left = 64
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_fgija"]
+bg_color = Color(0, 0.47058824, 0.83137256, 1)
+border_width_left = 5
+border_width_top = 5
+border_width_right = 5
+border_width_bottom = 5
+corner_radius_top_left = 64
+corner_radius_top_right = 64
+corner_radius_bottom_right = 64
+corner_radius_bottom_left = 64
+
+[sub_resource type="Theme" id="Theme_q331r"]
+ProgressBar/colors/font_color = Color(0, 0, 0, 1)
+ProgressBar/constants/outline_size = 0
+ProgressBar/font_sizes/font_size = 42
+ProgressBar/fonts/font = ExtResource("1_o4ixe")
+ProgressBar/styles/background = SubResource("StyleBoxFlat_m5yh1")
+ProgressBar/styles/fill = SubResource("StyleBoxFlat_fgija")
+
+[node name="progressBar" type="ProgressBar" unique_id=1279183898]
+offset_right = 850.0
+offset_bottom = 64.0
+theme = SubResource("Theme_q331r")
+step = 1.0
+value = 33.0
+rounded = true
