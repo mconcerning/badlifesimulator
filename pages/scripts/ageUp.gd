@@ -227,9 +227,13 @@ func rareAgeUpEvents():
 
 
 func randomDeathChance():
-	if global.age >= 65: #if you're old enough to randomly die (not super realistic, but as it turns out, it is NOT fun dying for no reason at age 2)
-		print("1 in " + str(max(1, 65 - global.age + roundi(float(global.health) / 2))) + " chance of death") # equation for age at which death is inevitable at x health: a = 64 + health / 2
-		if randi_range(1, max(1, 65 - global.age + roundi(float(global.health) / 2))) == 1:
+	if global.age >= 69: #if you're old enough to randomly die (not super realistic, but as it turns out, it is NOT fun dying for no reason at age 2)
+		var chance = randi_range(1, max(1, 70 - global.age + roundi(float(global.health) / 2))) # equation for age at which death is inevitable at x health (max age): a = 69 + health / 2
+		# equation for the health that would no longer be able to keep you alive at x age: h = (a - 69) * 2
+		#print(70 - global.age + roundi(float(global.health) / 2))
+		#print(chance)
+		print("1 in " + str(chance) + " chance of death")
+		if chance == 1:
 			global.causeOfDeath = "You died of complications associated with advanced age"
 			isDying = true
 			get_tree().change_scene_to_file("res://pages/death.tscn") #kills you

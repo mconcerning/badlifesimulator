@@ -63,6 +63,12 @@ func qualificationChecker(): ##Checks if you're qualified for the job you've sel
 		"Plumber":
 			if global.degrees.has("high-school") && global.certificates.has("Plumbery"):
 				applyButton.disabled = false
+		"Electrician":
+			if global.degrees.has("Engineering") && global.certificates.has("Electrical engineering"):
+				applyButton.disabled = false
+		"Astrophysicist":
+			if global.degrees.has("Physics"):
+				applyButton.disabled = false
 
 
 func jobEffectInitialiser(joy = 0, health = 0, intellect = 0, looks = 0, evality = 0): ##Actually sets the job effects variables
@@ -88,11 +94,11 @@ func jobEffectsGiver():
 		"Laywer":
 			jobEffectInitialiser(-5, 0, 5)
 		"Fast food worker":
-			jobEffectInitialiser(-5)
-		"Fast food manager":
-			jobEffectInitialiser(-6)
-		"Retail worker":
 			jobEffectInitialiser(-3)
+		"Fast food manager":
+			jobEffectInitialiser(-5)
+		"Retail worker":
+			jobEffectInitialiser(-2)
 		"Apprentice logo designer":
 			jobEffectInitialiser(3)
 		"Logo designer":
@@ -109,6 +115,10 @@ func jobEffectsGiver():
 			jobEffectInitialiser(6, 0, 0, 0, 6) #secretly increases evality - your ass is so getting haunted doing this job
 		"Plumber":
 			jobEffectInitialiser(0, -1)
+		"Electrician":
+			jobEffectInitialiser()
+		"Astrophysicist":
+			jobEffectInitialiser(0, 0, 2)
 
 
 func applyForJob():

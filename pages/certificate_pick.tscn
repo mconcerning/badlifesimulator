@@ -51,9 +51,14 @@ theme_override_constants/separation = 50
 layout_mode = 2
 text = "Actually, nevermind"
 
+[node name="electricalEngineering" parent="scrollContainer/centerContainer/vBoxContainer" unique_id=1267420805 instance=ExtResource("5_wo330")]
+layout_mode = 2
+text = "Electrical engineering"
+
 [node name="plumbery" parent="scrollContainer/centerContainer/vBoxContainer" unique_id=1435302084 instance=ExtResource("5_wo330")]
 layout_mode = 2
 text = "Plumbery"
 
 [connection signal="pressed" from="scrollContainer/centerContainer/vBoxContainer/cancel" to="." method="_on_cancel_pressed"]
+[connection signal="pressed" from="scrollContainer/centerContainer/vBoxContainer/electricalEngineering" to="." method="_on_electrical_engineering_pressed"]
 [connection signal="pressed" from="scrollContainer/centerContainer/vBoxContainer/plumbery" to="." method="_on_plumbery_pressed"]
