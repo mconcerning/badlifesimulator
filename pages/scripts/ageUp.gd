@@ -157,6 +157,8 @@ func job():
 		if global.fullTimePerformance <= 35 && randi_range(1, roundi(float(global.fullTimePerformance) / 10)) == 1: #if you're performing too poorly and end up getting fired
 			global.revent.append("full-time-fired-performance")
 		else: #if you haven't been fired
+			if global.fullTimePerformance >= 80 && randi_range(1,3) == 1:
+				global.revent.append("full-time-raise-performance")
 			global.workExperience.append(global.fullTimeJob) #you get work experience for it
 			global.XPQueued += 25
 			global.fullTimePerformance += randi_range(-6, 6)

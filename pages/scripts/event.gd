@@ -399,7 +399,7 @@ func specialised(): ##Runs any miscellanious specialised, non-age-up events.
 		$body.text += "."
 		$option1.text = "Oh okay"
 		optionRemover(2)
-	elif global.revent[0] == "full-time-fired-performance": #if you've been fired from your full-time job for poor performance.
+	elif global.revent[0] == "full-time-fired-performance": #if you've been fired from your full-time job for poor performance
 		if randi_range(1,2) == 1:
 			$heading.text = "Jobless"
 		else:
@@ -408,6 +408,17 @@ func specialised(): ##Runs any miscellanious specialised, non-age-up events.
 		$option1.text = "Okay"
 		optionRemover(2)
 		global.removeFullTimeJob()
+	elif global.revent[0] == "full-time-raise-performance": #if you're getting a raise at your full-time job for good performance
+		$heading.text = "How cash money"
+		var raisePercentage = float(global.fullTimePerformance) / 20 + (float(randi_range(-150, 150)) / 100) #the percentage of your original salary you will recieve extra
+		var oldSalary = global.fullTimeSalary #your salary in dollars, pre-raise
+		var salaryIncrease = roundi(float(global.fullTimeSalary) / 100 * raisePercentage) #the amount in dollars your salary will increase
+		var performanceDetriment = roundi(raisePercentage * randi_range(6, 7)) #how much your performance will go down
+		$body.text = "You have been given a " + str(raisePercentage) + "% raise at your job as " + global.fullTimeJob + " for your impeccable performance.\n\n- " + str(performanceDetriment) + " performance\n" + " Old salary: $" + global.commaiser(oldSalary) + "\nNew salary: $" + global.commaiser(oldSalary + salaryIncrease)
+		$option1.text = "Hooray"
+		optionRemover(2)
+		global.fullTimePerformance = global.fullTimePerformance - performanceDetriment #penalises performance
+		global.fullTimeSalary = oldSalary + salaryIncrease #gives you the raise
 
 
 func relationships(): ##Specialised, specifically relationship-related events.
@@ -1054,7 +1065,7 @@ func confirmation(): ##Non-random confirmation events that tell you that somethi
 
 func _on_option_1_pressed() -> void: ##On option 1 selected
 	#confirmation - option 1 will be the only button available when the event's purpose is only to display information. Generally, the button will say "Okay".
-	if global.revent[0] == "toddler-0-o1" || global.revent[0] == "toddler-0-o2" || global.revent[0] == "toddler-0-o3" || global.revent[0] == "child-0-o1" || global.revent[0] == "child-0-o2" || global.revent[0] == "child-0-o3" || global.revent[0] == "child-0-o4" || global.revent[0] == "toddler-friend-o1" || global.revent[0] == "toddler-friend-o2" || global.revent[0] == "child-friend-o1" || global.revent[0] == "child-friend-o2" || global.revent[0] == "teenager-friend-o1" || global.revent[0] == "teenager-friend-o2" || global.revent[0] == "teenager-friend-o3" || global.revent[0] == "adult-friend-o1" || global.revent[0] == "adult-friend-o2" || global.revent[0] == "adult-friend-o3" || global.revent[0] == "elder-friend-o1" || global.revent[0] == "elder-friend-o2" || global.revent[0] == "elder-friend-o3" || global.revent[0] == "child-labour-is-outlawed" || global.revent[0] == "enrolled-in-primary-school" || global.revent[0] == "enrolled-in-high-school" || global.revent[0] == "graduated-high-school" || global.revent[0] == "study-harder" || global.revent[0] == "university-degree-picked-o1" || global.revent[0] == "university-degree-picked-o2" || global.revent[0] == "university-degree-picked-o3" || global.revent[0] == "university-degree-picked-o4" || global.revent[0] == "graduated-university" || global.revent[0] == "compliment-relationship" || global.revent[0] == "skip-class" || global.revent[0] == "arrested-o1-success" || global.revent[0] == "court-trial-o2" || global.revent[0] == "dont-go-to-prison" || global.revent[0] == "full-time-job-applied-already" || global.revent[0] == "full-time-job-applied-accepted" || global.revent[0] == "full-time-job-applied-rejected" || global.revent[0] == "full-time-extra-effort" || global.revent[0] == "certificate-achieved" || global.revent[0] == "certificate-failed" || global.revent[0] == "certificate-unqualified" || global.revent[0] == "full-time-fired-performance":
+	if global.revent[0] == "toddler-0-o1" || global.revent[0] == "toddler-0-o2" || global.revent[0] == "toddler-0-o3" || global.revent[0] == "child-0-o1" || global.revent[0] == "child-0-o2" || global.revent[0] == "child-0-o3" || global.revent[0] == "child-0-o4" || global.revent[0] == "toddler-friend-o1" || global.revent[0] == "toddler-friend-o2" || global.revent[0] == "child-friend-o1" || global.revent[0] == "child-friend-o2" || global.revent[0] == "teenager-friend-o1" || global.revent[0] == "teenager-friend-o2" || global.revent[0] == "teenager-friend-o3" || global.revent[0] == "adult-friend-o1" || global.revent[0] == "adult-friend-o2" || global.revent[0] == "adult-friend-o3" || global.revent[0] == "elder-friend-o1" || global.revent[0] == "elder-friend-o2" || global.revent[0] == "elder-friend-o3" || global.revent[0] == "child-labour-is-outlawed" || global.revent[0] == "enrolled-in-primary-school" || global.revent[0] == "enrolled-in-high-school" || global.revent[0] == "graduated-high-school" || global.revent[0] == "study-harder" || global.revent[0] == "university-degree-picked-o1" || global.revent[0] == "university-degree-picked-o2" || global.revent[0] == "university-degree-picked-o3" || global.revent[0] == "university-degree-picked-o4" || global.revent[0] == "graduated-university" || global.revent[0] == "compliment-relationship" || global.revent[0] == "skip-class" || global.revent[0] == "arrested-o1-success" || global.revent[0] == "court-trial-o2" || global.revent[0] == "dont-go-to-prison" || global.revent[0] == "full-time-job-applied-already" || global.revent[0] == "full-time-job-applied-accepted" || global.revent[0] == "full-time-job-applied-rejected" || global.revent[0] == "full-time-extra-effort" || global.revent[0] == "certificate-achieved" || global.revent[0] == "certificate-failed" || global.revent[0] == "certificate-unqualified" || global.revent[0] == "full-time-fired-performance" || global.revent[0] == "full-time-raise-performance":
 		goHome()
 	#special exceptions
 	elif global.revent[0] == "go-to-prison":

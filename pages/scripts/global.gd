@@ -343,12 +343,12 @@ func newJobOpenings(): ##Creates a set of new job openings from the list of poss
 	_newJobOpenings.sort_custom(func(a, b): return a[1] > b[1]) #fine
 	jobOpenings = _newJobOpenings
 
-func fullTimeEffectInitialiser(joy = 0, health = 0, intellect = 0, looks = 0, evality = 0): ##Sets every full-time job effects variable. Leaving any field blank will set them to 0 (no effect).
-	global.fullTimeEffectJoy = joy
-	global.fullTimeEffectHealth = health
-	global.fullTimeEffectIntellect = intellect
-	global.fullTimeEffectLooks = looks
-	global.fullTimeEffectEvality = evality
+func fullTimeEffectInitialiser(Fjoy = 0, Fhealth = 0, Fintellect = 0, Flooks = 0, Fevality = 0): ##Sets every full-time job effects variable. Leaving any field blank will set them to 0 (no effect).
+	global.fullTimeEffectJoy = Fjoy
+	global.fullTimeEffectHealth = Fhealth
+	global.fullTimeEffectIntellect = Fintellect
+	global.fullTimeEffectLooks = Flooks
+	global.fullTimeEffectEvality = Fevality
 
 func findFullTimeJob(job : String): ##Returns the index of any full-time job in the allJobs array from its name.
 	for i in allJobs.size():
