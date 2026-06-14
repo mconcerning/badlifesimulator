@@ -330,10 +330,11 @@ func takeOutLoan(amount : int, interest : int, paybackPeriod : int): ##Takes out
 	global.loanPaybackDuration.append(paybackPeriod) #pay it back over the course of however many years
 
 
-var allJobs = [["Primary school teacher", randi_range(850, 920) * 100, "High school diploma, 70+ intellect", "None"], ["High school teacher", randi_range(900, 1040) * 100, "Any University degree", "- 2 joy"], ["University professor", randi_range(2100, 2300) * 100, "Education + any second degree", "+ 4 intellect"], ["Public defender", randi_range(850, 1000) * 100, "Law degree", "- 4 joy, + 2 intellect"], ["Apprentice lawyer", randi_range(1220, 1300) * 100, "Law degree (65+ proficiency)", "- 4 joy, + 3 intellect"], ["Lawyer", randi_range(1800, 2100) * 100, "Law degree, 7+ yrs experience as apprentice", "- 5 joy, + 5 intellect"], ["Fast food worker", randi_range(490, 530) * 100, "Age 16+", "- 3 joy"], ["Fast food manager", randi_range(560, 620) * 100, "4+ yrs experience as worker, 60+ intellect, 25 yrs or older", "- 5 joy"], ["Retail worker", randi_range(425, 550) * 100, "High school diploma", "- 2 joy"], ["Apprentice logo designer", randi_range(600, 680) * 100, "Graphic design degree", "+ 3 joy"], ["Logo designer", randi_range(820, 900) * 100, "Graphic design degree, 6+ yrs experience as apprentice", "+ 4 joy"], ["Jr. business consultant", randi_range(750, 850) * 100, "Business degree", "+ 3 intellect"], ["Business consultant", randi_range(1100, 1250) * 100, "Business degree, 8+ yrs experience as Jr., 75+ intellect", "+ 5 intellect"], ["Sanitation worker", randi_range(510, 540) * 100, "High school diploma", "- 7 health"], ["Salt technician", randi_range(740, 810) * 100, "High school diploma, 70+ health", "+ 3 looks"], ["Exorcist", randi_range(350, 380) * 100, "High school diploma", "+ 6 joy"], ["Plumber", randi_range(850, 920) * 100, "High school diploma, Cert. in Plumbery", "- 1 health"], ["Electrician", randi_range(1100, 1190) * 100, "Engineering degree, Cert. in Electrical engineering", "None"], ["Astrophysicist", randi_range(1000, 1050) * 100, "Physics degree", "+ 2 intellect"]] ##Randomises which jobs are available for application. Salaries are within a randomised range depending on the job. The salary is calculated by generating a random number and multiplying it by 100. A 3-digit random number would produce a 5-figure salary (tens of thousands of dollars), a 4-digit number would produce a 6-figure salary, and so on. The multiplication results in salaries rounded to hundred of dollars.
+var allJobs = [] ##All full-time jobs that exist. Fills upon starting a new life or aging up.
 
 func newJobOpenings(): ##Creates a set of new job openings from the list of possible jobs. Used when creating a new life or aging up.
-	var _newJobOpenings = allJobs
+	var _newJobOpenings = [["Primary school teacher", randi_range(850, 920) * 100, "High school diploma, 70+ intellect", "None"], ["High school teacher", randi_range(900, 1040) * 100, "Any University degree", "- 2 joy"], ["University professor", randi_range(2100, 2300) * 100, "Education + any second degree", "+ 4 intellect"], ["Public defender", randi_range(850, 1000) * 100, "Law degree", "- 4 joy, + 2 intellect"], ["Apprentice lawyer", randi_range(1220, 1300) * 100, "Law degree (65+ proficiency)", "- 4 joy, + 3 intellect"], ["Lawyer", randi_range(1800, 2100) * 100, "Law degree, 7+ yrs experience as apprentice", "- 5 joy, + 5 intellect"], ["Fast food worker", randi_range(490, 530) * 100, "Age 16+", "- 3 joy"], ["Fast food manager", randi_range(560, 620) * 100, "4+ yrs experience as worker, 60+ intellect, 25 yrs or older", "- 5 joy"], ["Retail worker", randi_range(425, 550) * 100, "High school diploma", "- 2 joy"], ["Apprentice logo designer", randi_range(600, 680) * 100, "Graphic design degree", "+ 3 joy"], ["Logo designer", randi_range(820, 900) * 100, "Graphic design degree, 6+ yrs experience as apprentice", "+ 4 joy"], ["Jr. business consultant", randi_range(750, 850) * 100, "Business degree", "+ 3 intellect"], ["Business consultant", randi_range(1100, 1250) * 100, "Business degree, 8+ yrs experience as Jr., 75+ intellect", "+ 5 intellect"], ["Sanitation worker", randi_range(510, 540) * 100, "High school diploma", "- 7 health"], ["Salt technician", randi_range(740, 810) * 100, "High school diploma, 70+ health", "+ 3 looks"], ["Exorcist", randi_range(350, 380) * 100, "High school diploma", "+ 6 joy"], ["Plumber", randi_range(850, 920) * 100, "High school diploma, Cert. in Plumbery", "- 1 health"], ["Electrician", randi_range(1100, 1190) * 100, "Engineering degree, Cert. in Electrical engineering", "None"], ["Astrophysicist", randi_range(1000, 1050) * 100, "Physics degree", "+ 2 intellect"]] ##Randomises which jobs are available for application. Salaries are within a randomised range depending on the job. The salary is calculated by generating a random number and multiplying it by 100. A 3-digit random number would produce a 5-figure salary (tens of thousands of dollars), a 4-digit number would produce a 6-figure salary, and so on. The multiplication results in salaries rounded to hundred of dollars.
+	allJobs = _newJobOpenings #before the number of jobs is culled and the order is randomised, create the global dictionary of all jobs
 	_newJobOpenings.shuffle() #randomises order of the jobs. Used in tandem with the below, randomly limits which jobs are available.
 	while _newJobOpenings.size() > 25: #limits the number of job openings on any given year to 25; these 25 could be any
 		_newJobOpenings.pop_back()
@@ -342,21 +343,25 @@ func newJobOpenings(): ##Creates a set of new job openings from the list of poss
 	_newJobOpenings.sort_custom(func(a, b): return a[1] > b[1]) #fine
 	jobOpenings = _newJobOpenings
 
-func findJob(job : String): ##Returns the index of any job in the allJobs array
+func fullTimeEffectInitialiser(joy = 0, health = 0, intellect = 0, looks = 0, evality = 0): ##Sets every full-time job effects variable. Leaving any field blank will set them to 0 (no effect).
+	global.fullTimeEffectJoy = joy
+	global.fullTimeEffectHealth = health
+	global.fullTimeEffectIntellect = intellect
+	global.fullTimeEffectLooks = looks
+	global.fullTimeEffectEvality = evality
+
+func findFullTimeJob(job : String): ##Returns the index of any full-time job in the allJobs array from its name.
 	for i in allJobs.size():
 		if allJobs[i][0] == job:
 			return i
 
-func removeJob(): ##Removes your full-time job. Use this when quitting or getting fired.
+func removeFullTimeJob(): ##Clears your full-time job. Use this when quitting or getting fired.
 	#resets all job effects
-	fullTimeEffectJoy = 0
-	fullTimeEffectHealth = 0
-	fullTimeEffectIntellect = 0
-	fullTimeEffectLooks = 0
-	fullTimeEffectEvality = 0
+	fullTimeEffectInitialiser() #sets every job effect to 0
 	#removes the job
 	global.fullTimeJob = ""
 	global.fullTimeSalary = 0
+	global.fullTimePerformance = 0
 
 
 func commitCrime(crime : String, severity : int, time): ##Commits crime.
@@ -380,7 +385,7 @@ func prisonPreparer(sentenceLength): ##Does everything you need to prepare the p
 	for i in crimes.size():
 		criminalRecord.append(crimes[i])
 		criminalRecordSeverity.append(crimesSeverity[i])
-	removeJob()
+	removeFullTimeJob()
 
 
 func averageFinder(array): ##Finds the mean average of all integer elements in any array.

@@ -71,54 +71,46 @@ func qualificationChecker(): ##Checks if you're qualified for the job you've sel
 				applyButton.disabled = false
 
 
-func jobEffectInitialiser(joy = 0, health = 0, intellect = 0, looks = 0, evality = 0): ##Actually sets the job effects variables
-	global.fullTimeEffectJoy = joy
-	global.fullTimeEffectHealth = health
-	global.fullTimeEffectIntellect = intellect
-	global.fullTimeEffectLooks = looks
-	global.fullTimeEffectEvality = evality
-
-
 func jobEffectsGiver():
 	match global.jobOpenings[global.IDClicked][0]:
 		"Primary school teacher":
-			jobEffectInitialiser() #sets all effects to 0
+			global.fullTimeEffectInitialiser() #sets all effects to 0
 		"High school teacher":
-			jobEffectInitialiser(-2) #sets joy effect to -5
+			global.fullTimeEffectInitialiser(-2) #sets joy effect to -5
 		"University professor":
-			jobEffectInitialiser(0, 0, 4) #sets intellect effect to +4
+			global.fullTimeEffectInitialiser(0, 0, 4) #sets intellect effect to +4
 		"Public defender":
-			jobEffectInitialiser(-4, 0, 2) #sets joy effect to -4, intellect to +2
+			global.fullTimeEffectInitialiser(-4, 0, 2) #sets joy effect to -4, intellect to +2
 		"Apprentice lawyer":
-			jobEffectInitialiser(-4, 0, 3)
+			global.fullTimeEffectInitialiser(-4, 0, 3)
 		"Laywer":
-			jobEffectInitialiser(-5, 0, 5)
+			global.fullTimeEffectInitialiser(-5, 0, 5)
 		"Fast food worker":
-			jobEffectInitialiser(-3)
+			global.fullTimeEffectInitialiser(-3)
 		"Fast food manager":
-			jobEffectInitialiser(-5)
+			global.fullTimeEffectInitialiser(-5)
 		"Retail worker":
-			jobEffectInitialiser(-2)
+			global.fullTimeEffectInitialiser(-2)
 		"Apprentice logo designer":
-			jobEffectInitialiser(3)
+			global.fullTimeEffectInitialiser(3)
 		"Logo designer":
-			jobEffectInitialiser(4)
+			global.fullTimeEffectInitialiser(4)
 		"Jr. business consultant":
-			jobEffectInitialiser(0, 0, 3)
+			global.fullTimeEffectInitialiser(0, 0, 3)
 		"Business consultant":
-			jobEffectInitialiser(0, 0, 5)
+			global.fullTimeEffectInitialiser(0, 0, 5)
 		"Sanitation worker":
-			jobEffectInitialiser(0, -7)
+			global.fullTimeEffectInitialiser(0, -7)
 		"Salt technician":
-			jobEffectInitialiser(0, 0, 0, 3)
+			global.fullTimeEffectInitialiser(0, 0, 0, 3)
 		"Exorcist":
-			jobEffectInitialiser(6, 0, 0, 0, 6) #secretly increases evality - your ass is so getting haunted doing this job
+			global.fullTimeEffectInitialiser(6, 0, 0, 0, 6) #secretly increases evality - your ass is so getting haunted doing this job
 		"Plumber":
-			jobEffectInitialiser(0, -1)
+			global.fullTimeEffectInitialiser(0, -1)
 		"Electrician":
-			jobEffectInitialiser()
+			global.fullTimeEffectInitialiser()
 		"Astrophysicist":
-			jobEffectInitialiser(0, 0, 2)
+			global.fullTimeEffectInitialiser(0, 0, 2)
 
 
 func applyForJob():

@@ -24,6 +24,8 @@ func _ready() -> void:
 		get_node(scrl + "business").disabled = true
 	if global.degrees.has("Engineering"):
 		get_node(scrl + "engineering").disabled = true
+	if global.degrees.has("Physics"):
+		get_node(scrl + "physics").disabled = true
 
 
 func _on_cancel_pressed() -> void:

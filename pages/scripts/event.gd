@@ -399,6 +399,15 @@ func specialised(): ##Runs any miscellanious specialised, non-age-up events.
 		$body.text += "."
 		$option1.text = "Oh okay"
 		optionRemover(2)
+	elif global.revent[0] == "full-time-fired-performance": #if you've been fired from your full-time job for poor performance.
+		if randi_range(1,2) == 1:
+			$heading.text = "Jobless"
+		else:
+			$heading.text = "Unemployed"
+		$body.text = "You've been fired from your job as " + global.fullTimeJob + " for poor performance."
+		$option1.text = "Okay"
+		optionRemover(2)
+		global.removeFullTimeJob()
 
 
 func relationships(): ##Specialised, specifically relationship-related events.
@@ -1015,7 +1024,7 @@ func confirmation(): ##Non-random confirmation events that tell you that somethi
 		optionRemover(2)
 	elif global.revent[0] == "full-time-extra-effort":
 		var healthSubtract = randi_range(9, 4)
-		if global.history.count("full-time-extra-effort") <= 3: #if you haven't already done this 3 or more times this year
+		if global.history.count("full-time-extra-effort") < 3: #if you haven't already done this 3 times this year
 			$heading.text = "Absolutely locked IN"
 			var performanceAdd = randi_range(6, 9)
 			var joyChange = 0
@@ -1033,7 +1042,7 @@ func confirmation(): ##Non-random confirmation events that tell you that somethi
 			global.health -= healthSubtract
 			global.joy += joyChange
 			global.history.append("full-time-extra-effort")
-		else: #if you've already done this more than 3 times this year
+		else: #if you've already done this 3 or more times this year
 			var joySubtract = randi_range(3, 6)
 			$heading.text = "Absolutely locked OUT"
 			$body.text = "You've overextended yourself too much this year.\n- " + str(healthSubtract) + " health, - " + str(joySubtract) + " joy"
@@ -1045,7 +1054,7 @@ func confirmation(): ##Non-random confirmation events that tell you that somethi
 
 func _on_option_1_pressed() -> void: ##On option 1 selected
 	#confirmation - option 1 will be the only button available when the event's purpose is only to display information. Generally, the button will say "Okay".
-	if global.revent[0] == "toddler-0-o1" || global.revent[0] == "toddler-0-o2" || global.revent[0] == "toddler-0-o3" || global.revent[0] == "child-0-o1" || global.revent[0] == "child-0-o2" || global.revent[0] == "child-0-o3" || global.revent[0] == "child-0-o4" || global.revent[0] == "toddler-friend-o1" || global.revent[0] == "toddler-friend-o2" || global.revent[0] == "child-friend-o1" || global.revent[0] == "child-friend-o2" || global.revent[0] == "teenager-friend-o1" || global.revent[0] == "teenager-friend-o2" || global.revent[0] == "teenager-friend-o3" || global.revent[0] == "adult-friend-o1" || global.revent[0] == "adult-friend-o2" || global.revent[0] == "adult-friend-o3" || global.revent[0] == "elder-friend-o1" || global.revent[0] == "elder-friend-o2" || global.revent[0] == "elder-friend-o3" || global.revent[0] == "child-labour-is-outlawed" || global.revent[0] == "enrolled-in-primary-school" || global.revent[0] == "enrolled-in-high-school" || global.revent[0] == "graduated-high-school" || global.revent[0] == "study-harder" || global.revent[0] == "university-degree-picked-o1" || global.revent[0] == "university-degree-picked-o2" || global.revent[0] == "university-degree-picked-o3" || global.revent[0] == "university-degree-picked-o4" || global.revent[0] == "graduated-university" || global.revent[0] == "compliment-relationship" || global.revent[0] == "skip-class" || global.revent[0] == "arrested-o1-success" || global.revent[0] == "court-trial-o2" || global.revent[0] == "dont-go-to-prison" || global.revent[0] == "full-time-job-applied-already" || global.revent[0] == "full-time-job-applied-accepted" || global.revent[0] == "full-time-job-applied-rejected" || global.revent[0] == "full-time-extra-effort" || global.revent[0] == "certificate-achieved" || global.revent[0] == "certificate-failed" || global.revent[0] == "certificate-unqualified":
+	if global.revent[0] == "toddler-0-o1" || global.revent[0] == "toddler-0-o2" || global.revent[0] == "toddler-0-o3" || global.revent[0] == "child-0-o1" || global.revent[0] == "child-0-o2" || global.revent[0] == "child-0-o3" || global.revent[0] == "child-0-o4" || global.revent[0] == "toddler-friend-o1" || global.revent[0] == "toddler-friend-o2" || global.revent[0] == "child-friend-o1" || global.revent[0] == "child-friend-o2" || global.revent[0] == "teenager-friend-o1" || global.revent[0] == "teenager-friend-o2" || global.revent[0] == "teenager-friend-o3" || global.revent[0] == "adult-friend-o1" || global.revent[0] == "adult-friend-o2" || global.revent[0] == "adult-friend-o3" || global.revent[0] == "elder-friend-o1" || global.revent[0] == "elder-friend-o2" || global.revent[0] == "elder-friend-o3" || global.revent[0] == "child-labour-is-outlawed" || global.revent[0] == "enrolled-in-primary-school" || global.revent[0] == "enrolled-in-high-school" || global.revent[0] == "graduated-high-school" || global.revent[0] == "study-harder" || global.revent[0] == "university-degree-picked-o1" || global.revent[0] == "university-degree-picked-o2" || global.revent[0] == "university-degree-picked-o3" || global.revent[0] == "university-degree-picked-o4" || global.revent[0] == "graduated-university" || global.revent[0] == "compliment-relationship" || global.revent[0] == "skip-class" || global.revent[0] == "arrested-o1-success" || global.revent[0] == "court-trial-o2" || global.revent[0] == "dont-go-to-prison" || global.revent[0] == "full-time-job-applied-already" || global.revent[0] == "full-time-job-applied-accepted" || global.revent[0] == "full-time-job-applied-rejected" || global.revent[0] == "full-time-extra-effort" || global.revent[0] == "certificate-achieved" || global.revent[0] == "certificate-failed" || global.revent[0] == "certificate-unqualified" || global.revent[0] == "full-time-fired-performance":
 		goHome()
 	#special exceptions
 	elif global.revent[0] == "go-to-prison":
@@ -1185,7 +1194,7 @@ func option1outcomes(): ##Option 1 has been picked
 		optionRemover(2)
 	elif global.revent[0] == "full-time-quit-confirm-o1":
 		print("quitting job...")
-		global.removeJob()
+		global.removeFullTimeJob()
 		goingToSpecific = "res://pages/game_menu.tscn"
 	elif global.revent[0] == "certificate-picked-o1":
 		global.money -= global.degreePickedCost #deducts money, as you paid for the degree upfront

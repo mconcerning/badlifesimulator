@@ -19,7 +19,7 @@ func _ready() -> void:
 		$performance.label_settings.font_color = Color.from_rgba8(0, 170, 0, 255) #makes the text green to signify you're doing well :) 
 	else: #if you're doing fine
 		$performance.label_settings.font_color = Color.from_rgba8(0, 0, 0, 255)
-	$effects.text = "Effects: " + global.allJobs[global.findJob(global.fullTimeJob)][3]
+	$effects.text = "Effects: " + global.allJobs[global.findFullTimeJob(global.fullTimeJob)][3]
 
 
 func _on_extra_effort_pressed() -> void:

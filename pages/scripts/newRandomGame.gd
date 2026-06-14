@@ -38,7 +38,6 @@ func cleanLife(): #resets your existing life (if any) and generates new stats
 	global.money = 0
 	global.evality = 0
 	#rest-of-life-related
-	global.newJobOpenings()
 	global.crimes = []
 	global.crimesSeverity = []
 	global.intellectAtTimeOfCrime = []
@@ -72,13 +71,10 @@ func cleanLife(): #resets your existing life (if any) and generates new stats
 	global.licences = []
 	global.certificates = []
 	global.failedCertificates = []
+	global.newJobOpenings()
 	global.fullTimeJob = ""
 	global.fullTimeSalary = 0
-	global.fullTimeEffectJoy = 0
-	global.fullTimeEffectHealth = 0
-	global.fullTimeEffectIntellect = 0
-	global.fullTimeEffectLooks = 0
-	global.fullTimeEffectEvality = 0
+	global.fullTimeEffectInitialiser()
 	global.partTimeJob = ""
 	global.partTimeSalary = 0
 	global.workExperience = []

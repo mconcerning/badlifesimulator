@@ -154,9 +154,12 @@ func school():
 
 func job():
 	if global.fullTimeJob != "": #if you have a full-time job
-		global.workExperience.append(global.fullTimeJob) #you get work experience for it
-		global.XPQueued += 25
-		global.fullTimePerformance += randi_range(-6, 6)
+		if global.fullTimePerformance <= 35 && randi_range(1, roundi(float(global.fullTimePerformance) / 10)) == 1: #if you're performing too poorly and end up getting fired
+			global.revent.append("full-time-fired-performance")
+		else: #if you haven't been fired
+			global.workExperience.append(global.fullTimeJob) #you get work experience for it
+			global.XPQueued += 25
+			global.fullTimePerformance += randi_range(-6, 6)
 	if global.partTimeJob != "": #if you have a part-time job
 		global.workExperience.append(global.partTimeJob) #you get work experience for it
 		global.XPQueued += 15
