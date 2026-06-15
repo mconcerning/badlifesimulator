@@ -43,11 +43,19 @@ script = ExtResource("1_4h7a2")
 offset_left = 100.0
 offset_top = 50.0
 offset_right = 980.0
-offset_bottom = 1962.0
+offset_bottom = 132.0
+size_flags_vertical = 0
 text = "Name Johnson"
 label_settings = ExtResource("7_qyc5l")
 horizontal_alignment = 1
 autowrap_mode = 3
+
+[node name="gender" type="Label" parent="." unique_id=1244751944]
+offset_top = 150.0
+offset_right = 1080.0
+offset_bottom = 210.0
+label_settings = ExtResource("7_ec2j7")
+horizontal_alignment = 1
 
 [node name="ageUpButton" parent="." unique_id=509130995 instance=ExtResource("2_jhx4l")]
 offset_left = 440.0

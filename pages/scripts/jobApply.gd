@@ -117,6 +117,8 @@ func applyForJob():
 	var applicationRecord = "applied-for-" + global.jobOpenings[global.IDClicked][0]
 	if global.history.has(applicationRecord): #if you've already tried to apply for this job this year
 		global.revent.append("full-time-job-applied-already")
+	elif global.history.has(global.jobOpenings[global.IDClicked][0] + "-fired") || global.history.has(global.jobOpenings[global.IDClicked][0] + "-quit"): #if you've already had this job this year but you've been fired or you've quit
+		global.revent.append("full-time-job-apply-fired-quit-already")
 	else:
 		if randi_range(1, 4) != 1: #if get accepted; for this you need to be qualified (1 in 4 chance of being denied even if you are) - you have to be qualified to be able to even press the apply button, so no need to check eligibility here
 			#gives you the job

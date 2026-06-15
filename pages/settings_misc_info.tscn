@@ -1,0 +1,52 @@
+[gd_scene format=3 uid="uid://cbcx5asny3c6h"]
+
+[ext_resource type="Script" uid="uid://dwpl8gh4fx5lk" path="res://pages/scripts/settingsMiscInfo.gd" id="1_clphh"]
+[ext_resource type="PackedScene" uid="uid://pmo8e2dmbkfm" path="res://objects/background.tscn" id="2_uoby3"]
+[ext_resource type="PackedScene" uid="uid://cjnbhqp8obehv" path="res://objects/back_button.tscn" id="3_26wib"]
+[ext_resource type="PackedScene" uid="uid://b3nrc0n5eeris" path="res://objects/subheading.tscn" id="5_clphh"]
+[ext_resource type="PackedScene" uid="uid://b7bfib5vbcvk6" path="res://objects/heading.tscn" id="5_qu6fp"]
+[ext_resource type="PackedScene" uid="uid://dvna50i2k0geh" path="res://objects/body.tscn" id="6_ci34g"]
+
+[node name="miscSettingsInfo" type="Node2D" unique_id=1974988509]
+script = ExtResource("1_clphh")
+
+[node name="background" parent="." unique_id=132212067 instance=ExtResource("2_uoby3")]
+
+[node name="back" parent="." unique_id=17962498 instance=ExtResource("3_26wib")]
+
+[node name="heading" parent="." unique_id=33655322 instance=ExtResource("5_qu6fp")]
+text = "More info"
+
+[node name="scrollContainer" type="ScrollContainer" parent="." unique_id=1826959448]
+offset_left = 40.0
+offset_top = 300.0
+offset_right = 1040.0
+offset_bottom = 1800.0
+
+[node name="centerContainer" type="CenterContainer" parent="scrollContainer" unique_id=1035551520]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 0
+
+[node name="vBoxContainer" type="VBoxContainer" parent="scrollContainer/centerContainer" unique_id=862239922]
+layout_mode = 2
+theme_override_constants/separation = 50
+
+[node name="hKeyboardShortcuts" parent="scrollContainer/centerContainer/vBoxContainer" unique_id=1227387029 instance=ExtResource("5_clphh")]
+layout_mode = 2
+text = "Keyboard shortcuts"
+
+[node name="bKeyboardShortcuts" parent="scrollContainer/centerContainer/vBoxContainer" unique_id=1032932187 instance=ExtResource("6_ci34g")]
+custom_minimum_size = Vector2(950, 0)
+layout_mode = 2
+text = "Enables keyboard shortcuts on desktop. These include:
+
+Game menu:
+1 (occupation menu)
+2 (assets menu)
+3 (activites menu)
+4 (relationships menu)
+enter/return/spacebar (age up)"
+autowrap_mode = 3
+
+[connection signal="pressed" from="back" to="." method="_on_back_pressed"]

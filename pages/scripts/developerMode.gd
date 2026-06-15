@@ -10,6 +10,10 @@ func _ready() -> void:
 		$scrollContainer/centerContainer/vBoxContainer/DMRP/DMRPCheck.frame = 1
 	else:
 		$scrollContainer/centerContainer/vBoxContainer/DMRP/DMRPCheck.frame = 0
+	if global.dangerousKeyboardShortcuts == true:
+		$scrollContainer/centerContainer/vBoxContainer/dangerousKbrdShortcuts/dangerousKbrdShortcutsCheck.frame = 1
+	else:
+		$scrollContainer/centerContainer/vBoxContainer/dangerousKbrdShortcuts/dangerousKbrdShortcutsCheck.frame = 0
 
 
 func _on_exit_pressed() -> void:
@@ -231,7 +235,7 @@ func _on_set_part_time_job_pressed() -> void:
 	print("set part time job to " + str(global.partTimeJob))
 
 func _on_set_part_time_job_salary_pressed() -> void:
-	global.partTimeSalary = int($input.text)
+	global.partTimeRate = int($input.text)
 	$confirmation.text = "Successfully set part time salary!"
 	print("set part time salary to " + str(global.partTimeSalary))
 
@@ -239,3 +243,21 @@ func _on_set_part_time_job_performance_pressed() -> void:
 	global.partTimePerformance = int($input.text)
 	$confirmation.text = "Successfully set part time performance!"
 	print("set part time performance to " + str(global.partTimePerformance))
+
+func _on_dangerous_kbrd_shortcuts_pressed() -> void:
+	if global.dangerousKeyboardShortcuts == false:
+		$scrollContainer/centerContainer/vBoxContainer/dangerousKbrdShortcuts/dangerousKbrdShortcutsCheck.frame = 1
+		global.dangerousKeyboardShortcuts = true
+		$confirmation.text = "Successfully set dangerous kbrd s. cuts to true!"
+	else: #if you DON'T require password after clicking this
+		$scrollContainer/centerContainer/vBoxContainer/dangerousKbrdShortcuts/dangerousKbrdShortcutsCheck.frame = 0
+		global.dangerousKeyboardShortcuts = false
+		$confirmation.text = "Successfully set dangerous kbrd s. cuts to false!"
+	print("set dangerous kbrd shortcuts to " + str(global.dangerousKeyboardShortcuts))
+
+
+#keyboard shortcut exit save handling
+func _unhandled_input(inputMade: InputEvent) -> void: #if you make an input
+	if global.keyboardShortcutsEnabled == true && global.dangerousKeyboardShortcuts == true:
+		if inputMade.is_action_pressed("shortcut_to_gamemenu"):
+			global.saveGame()

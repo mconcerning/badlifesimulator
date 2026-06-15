@@ -404,12 +404,13 @@ func specialised(): ##Runs any miscellanious specialised, non-age-up events.
 			$heading.text = "Jobless"
 		else:
 			$heading.text = "Unemployed"
-		$body.text = "You've been fired from your job as " + global.fullTimeJob + " for poor performance."
+		$body.text = "You've been fired from your job as " + global.fullTimeJob + ". They say it's because of your poor performance."
 		$option1.text = "Okay"
 		optionRemover(2)
+		global.history.append(global.fullTimeJob + "-fired")
 		global.removeFullTimeJob()
 	elif global.revent[0] == "full-time-raise-performance": #if you're getting a raise at your full-time job for good performance
-		$heading.text = "How cash money"
+		$heading.text = "Keeping up with inflation"
 		var raisePercentage = float(global.fullTimePerformance) / 20 + (float(randi_range(-150, 150)) / 100) #the percentage of your original salary you will recieve extra
 		var oldSalary = global.fullTimeSalary #your salary in dollars, pre-raise
 		var salaryIncrease = roundi(float(global.fullTimeSalary) / 100 * raisePercentage) #the amount in dollars your salary will increase
@@ -419,11 +420,35 @@ func specialised(): ##Runs any miscellanious specialised, non-age-up events.
 		optionRemover(2)
 		global.fullTimePerformance = global.fullTimePerformance - performanceDetriment #penalises performance
 		global.fullTimeSalary = oldSalary + salaryIncrease #gives you the raise
+	elif global.revent[0] == "full-time-job-apply-fired-quit-already": #if you're trying to apply for a full-time job, but you've already been fired from or quit it this year
+		$heading.text = "Right back on the grind"
+		$body.text = "You can't apply to be a " + global.jobOpenings[global.IDClicked][0] + ". You've already had this job this year."
+		$option1.text = "Okay"
+		optionRemover(2)
+	elif global.revent[0] == "full-time-fired-imprisonment": #if you're being fired from your full-time job
+		$heading.text = "I can't work from there?"
+		$body.text = "You have been fired from your job as " + global.fullTimeJob + ". They say it's because you're going to prison."
+		$option1.text = "Whattt"
+		optionRemover(2)
+		global.removeFullTimeJob()
+	elif global.revent[0] == "school-kicked-out-imprisonment": #if you're getting kicked out of school or university because you're being taken to prison
+		$heading.text = "How am I to reassimilate without an education?"
+		$body.text = "You have been kicked out of your "
+		if global.schoolLevel == 1:
+			$body.text += "primary school"
+		elif global.schoolLevel == 2:
+			$body.text += "high school"
+		elif global.schoolLevel == 3:
+			$body.text += "university"
+		$body.text += ", " + global.schoolName + ". They say it's because you're going to prison."
+		$option1.text = "Whattt"
+		optionRemover(2)
+		global.schoolRemove()
 
 
 func relationships(): ##Specialised, specifically relationship-related events.
 	if global.revent[0] == "compliment-relationship":
-		global.history.append("compliment-relationship-" + str(global.personUIDs[global.IDClicked]))
+		global.history.append("pcompliment-relationship-" + str(global.personUIDs[global.IDClicked]))
 		var badCompliments = ["racist", "a tangerine"]
 		var possibleCompliments = ["really cool", "incredibly attractive", "talented", "fun to be around", "kind", "productive", "intelligent", "smart", "energetic", "creative", "interesting", "a hero", "the best"]
 		if global.personCategories[global.IDClicked] == "family": #if they are a family member
@@ -558,6 +583,7 @@ func prison(): ##Specialised prison events.
 		$option2.text = "Not guilty"
 		optionRemover(3)
 	elif global.revent[0] == "court-trial-o1-results-o1" || global.revent[0] == "court-trial-o2-results-o1" || global.revent[0] == "court-trial-o3-results-o1" || global.revent[0] == "court-trial-o4-results-o1" || global.revent[0] == "court-trial-o5-results-o1": #plead guilty
+		global.XPQueued += roundi(float(global.sumCalculator(global.crimesSeverity)) / 4) #gives you XP depending on how severe your crimes are
 		$body.text = "You pleaded guilty to all charges.\n\n"
 		$option1.text = "Okay"
 		match global.revent[0]:
@@ -792,6 +818,7 @@ func prison(): ##Specialised prison events.
 						$heading.text = "And everybody clapped"
 						$body.text = "Even though you don't have a law degree, you managed to successfully defend yourself in court and have been found not guilty of all charges."
 						$option1.text = "Awesome"
+						global.XPQueued += roundi(global.sumCalculator(global.crimesSeverity) * 2) #extra XP for getting away with it, SUPER extra since you managed to get away with it defending yourself AND you did it without a law degree
 						global.crimes = [] #no more crimes, you're free to go
 						global.crimesSeverity = []
 						global.crimeTime = []
@@ -813,6 +840,7 @@ func prison(): ##Specialised prison events.
 						$heading.text = "Self-defence GOAT"
 						$body.text = "You successfully represented yourself in court and have been found not guilty of all charges."
 						$option1.text = "Awesome"
+						global.XPQueued += global.sumCalculator(global.crimesSeverity) #extra XP for getting away with it, extra XP on top of that for doing it while defending yourself, even if it was with a law degree
 						global.crimes = [] #no more crimes, you're free to go
 						global.crimesSeverity = []
 						global.crimeTime = []
@@ -837,6 +865,7 @@ func prison(): ##Specialised prison events.
 						$heading.text = "I'm glad SOMEONE was paying taxes"
 					$body.text = "Your public defender successfully cleared your name in court. You have been found not guilty of all charges."
 					$option1.text = "Hooray"
+					global.XPQueued += roundi(float(global.sumCalculator(global.crimesSeverity)) / 1.5) #extra XP for getting away with it, a little bit extra because you did it with a public defender
 					global.crimes = [] #no more crimes, you're free to go
 					global.crimesSeverity = []
 					global.crimeTime = []
@@ -858,6 +887,7 @@ func prison(): ##Specialised prison events.
 					$heading.text = "$3 an hour well spent"
 					$body.text = global.lawyers[0] + ", a tier 1 lawyer, successfully cleared your name in court. You have been found not guilty of all charges."
 					$option1.text = "Sweet"
+					global.XPQueued += roundi(float(global.sumCalculator(global.crimesSeverity)) / 2) #extra XP for getting away with it
 					global.crimes = [] #no more crimes, you're free to go
 					global.crimesSeverity = []
 					global.crimeTime = []
@@ -879,6 +909,7 @@ func prison(): ##Specialised prison events.
 					$heading.text = "Money well spent"
 					$body.text = global.lawyers[1] + ", a tier 2 lawyer, successfully cleared your name in court. You have been found not guilty of all charges."
 					$option1.text = "Incredible"
+					global.XPQueued += roundi(float(global.sumCalculator(global.crimesSeverity)) / 2) #extra XP for getting away with it
 					global.crimes = [] #no more crimes, you're free to go
 					global.crimesSeverity = []
 					global.crimeTime = []
@@ -902,6 +933,7 @@ func prison(): ##Specialised prison events.
 						$heading.text = "Perhaps I went a little bit overboard"
 					$body.text = global.lawyers[2] + ", a tier 3 lawyer, successfully cleared your name in court. You have been found not guilty of all charges."
 					$option1.text = "Amazing"
+					global.XPQueued += roundi(float(global.sumCalculator(global.crimesSeverity)) / 2) #extra XP for getting away with it
 					global.crimes = [] #no more crimes, you're free to go
 					global.crimesSeverity = []
 					global.crimeTime = []
@@ -1053,6 +1085,7 @@ func confirmation(): ##Non-random confirmation events that tell you that somethi
 			global.health -= healthSubtract
 			global.joy += joyChange
 			global.history.append("full-time-extra-effort")
+			global.XPQueued += 2
 		else: #if you've already done this 3 or more times this year
 			var joySubtract = randi_range(3, 6)
 			$heading.text = "Absolutely locked OUT"
@@ -1065,7 +1098,7 @@ func confirmation(): ##Non-random confirmation events that tell you that somethi
 
 func _on_option_1_pressed() -> void: ##On option 1 selected
 	#confirmation - option 1 will be the only button available when the event's purpose is only to display information. Generally, the button will say "Okay".
-	if global.revent[0] == "toddler-0-o1" || global.revent[0] == "toddler-0-o2" || global.revent[0] == "toddler-0-o3" || global.revent[0] == "child-0-o1" || global.revent[0] == "child-0-o2" || global.revent[0] == "child-0-o3" || global.revent[0] == "child-0-o4" || global.revent[0] == "toddler-friend-o1" || global.revent[0] == "toddler-friend-o2" || global.revent[0] == "child-friend-o1" || global.revent[0] == "child-friend-o2" || global.revent[0] == "teenager-friend-o1" || global.revent[0] == "teenager-friend-o2" || global.revent[0] == "teenager-friend-o3" || global.revent[0] == "adult-friend-o1" || global.revent[0] == "adult-friend-o2" || global.revent[0] == "adult-friend-o3" || global.revent[0] == "elder-friend-o1" || global.revent[0] == "elder-friend-o2" || global.revent[0] == "elder-friend-o3" || global.revent[0] == "child-labour-is-outlawed" || global.revent[0] == "enrolled-in-primary-school" || global.revent[0] == "enrolled-in-high-school" || global.revent[0] == "graduated-high-school" || global.revent[0] == "study-harder" || global.revent[0] == "university-degree-picked-o1" || global.revent[0] == "university-degree-picked-o2" || global.revent[0] == "university-degree-picked-o3" || global.revent[0] == "university-degree-picked-o4" || global.revent[0] == "graduated-university" || global.revent[0] == "compliment-relationship" || global.revent[0] == "skip-class" || global.revent[0] == "arrested-o1-success" || global.revent[0] == "court-trial-o2" || global.revent[0] == "dont-go-to-prison" || global.revent[0] == "full-time-job-applied-already" || global.revent[0] == "full-time-job-applied-accepted" || global.revent[0] == "full-time-job-applied-rejected" || global.revent[0] == "full-time-extra-effort" || global.revent[0] == "certificate-achieved" || global.revent[0] == "certificate-failed" || global.revent[0] == "certificate-unqualified" || global.revent[0] == "full-time-fired-performance" || global.revent[0] == "full-time-raise-performance":
+	if global.revent[0] == "toddler-0-o1" || global.revent[0] == "toddler-0-o2" || global.revent[0] == "toddler-0-o3" || global.revent[0] == "child-0-o1" || global.revent[0] == "child-0-o2" || global.revent[0] == "child-0-o3" || global.revent[0] == "child-0-o4" || global.revent[0] == "toddler-friend-o1" || global.revent[0] == "toddler-friend-o2" || global.revent[0] == "child-friend-o1" || global.revent[0] == "child-friend-o2" || global.revent[0] == "teenager-friend-o1" || global.revent[0] == "teenager-friend-o2" || global.revent[0] == "teenager-friend-o3" || global.revent[0] == "adult-friend-o1" || global.revent[0] == "adult-friend-o2" || global.revent[0] == "adult-friend-o3" || global.revent[0] == "elder-friend-o1" || global.revent[0] == "elder-friend-o2" || global.revent[0] == "elder-friend-o3" || global.revent[0] == "child-labour-is-outlawed" || global.revent[0] == "enrolled-in-primary-school" || global.revent[0] == "enrolled-in-high-school" || global.revent[0] == "graduated-high-school" || global.revent[0] == "study-harder" || global.revent[0] == "university-degree-picked-o1" || global.revent[0] == "university-degree-picked-o2" || global.revent[0] == "university-degree-picked-o3" || global.revent[0] == "university-degree-picked-o4" || global.revent[0] == "graduated-university" || global.revent[0] == "compliment-relationship" || global.revent[0] == "skip-class" || global.revent[0] == "arrested-o1-success" || global.revent[0] == "court-trial-o2" || global.revent[0] == "dont-go-to-prison" || global.revent[0] == "full-time-job-applied-already" || global.revent[0] == "full-time-job-applied-accepted" || global.revent[0] == "full-time-job-applied-rejected" || global.revent[0] == "full-time-extra-effort" || global.revent[0] == "certificate-achieved" || global.revent[0] == "certificate-failed" || global.revent[0] == "certificate-unqualified" || global.revent[0] == "full-time-fired-performance" || global.revent[0] == "full-time-raise-performance" || global.revent[0] == "full-time-job-apply-fired-quit-already" || global.revent[0] == "full-time-fired-imprisonment" || global.revent[0] == "school-kicked-out-imprisonment":
 		goHome()
 	#special exceptions
 	elif global.revent[0] == "go-to-prison":
@@ -1205,6 +1238,7 @@ func option1outcomes(): ##Option 1 has been picked
 		optionRemover(2)
 	elif global.revent[0] == "full-time-quit-confirm-o1":
 		print("quitting job...")
+		global.history.append(global.fullTimeJob + "-quit")
 		global.removeFullTimeJob()
 		goingToSpecific = "res://pages/game_menu.tscn"
 	elif global.revent[0] == "certificate-picked-o1":
@@ -1350,6 +1384,7 @@ func option2outcomes(): ##Option 2 has been picked
 			$option1.text = "Sweet"
 			if randi_range(1,2) == 1:
 				global.revent[0] = "court-trial-o2-failed" #it secretly failed and you're about to be re-arrested
+			global.XPQueued += roundi(float(global.sumCalculator(global.crimesSeverity)) / 7) #extra XP, even though you get XP for committing a crime in the first place
 			global.commitCrime("Failing to appear", roundi(float(global.sumCalculator(global.crimesSeverity)) / 3), max(1, roundi(float(global.sumCalculator(global.crimesSeverity) / 12)))) #the more of a criminal you are, the more severe it is that you didn't show up (or tried not to)
 		else:
 			$heading.text = "Whattt"

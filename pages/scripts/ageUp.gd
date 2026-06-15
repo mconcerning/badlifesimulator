@@ -12,11 +12,11 @@ func basicStatChanges():
 	global.intellect += randi_range(-4, 4)
 	global.looks += randi_range(-6, 6)
 	#income tax bracketer - modelled loosely after the Australian resident tax rates 2025 - 2026
-	var combinedSalary = global.fullTimeSalary + global.partTimeSalary
-	var costOfLiving = 0 #cost of living expressed as a percentage. Cost of living is 0% is you have no income so as to prevent unnecessary debt.
+	var combinedSalary = global.fullTimeSalary + global.partTimeSalary()
+	var costOfLiving = 0 ##Cost of living expressed as a percentage. Cost of living is 0% if you have no income so as to prevent unnecessary debt.
 	if combinedSalary <= 18200:
 		global.incomeTax = 0 #0% income tax
-		costOfLiving = 60 #wishful thinking but it's not fun to have 0 income
+		costOfLiving = 65 #honestly wishful thinking but it's not fun to have 0 income
 	elif combinedSalary > 18200 && combinedSalary <= 45000:
 		global.incomeTax = 16 #16% income tax
 		costOfLiving = 60
@@ -34,13 +34,13 @@ func basicStatChanges():
 	#print("you earned $" + global.commaiser(combinedSalary))
 	#print("you paid $" + global.commaiser(combinedSalary - roundi(float(combinedSalary) / 100 * (100 - global.incomeTax))) + " in income tax")
 	#print("you earned $" + global.commaiser(roundi(float(combinedSalary) / 100 * (100 - global.incomeTax))) + " after tax")
-	#accrewing of debt
+	#accrewage of debt
 	if global.money < 0 && global.age >= 18: #if you're in debt
 		var debtInterest = roundi(float(-global.money) / 100 * 14) #your interest is 14%
 		global.money -= debtInterest
 		print("paid $" + global.commaiser(debtInterest) + " in debt interest")
 	#job effects
-	global.joy += global.fullTimeEffectJoy
+	global.joy += global.fullTimeEffectJoy #these effects can be negative, they just... plus minus the amount.
 	global.health += global.fullTimeEffectHealth
 	global.intellect += global.fullTimeEffectIntellect
 	global.looks += global.fullTimeEffectLooks
@@ -69,8 +69,11 @@ func basicStatChanges():
 
 
 func school():
-	if global.schoolLevel != -1 && global.schoolLevel != 0: #if you have not not entered school yet and have not graduated yet (i.e. you are in school)
+	if global.schoolLevel == 1 || global.schoolLevel == 2: #if you are in primary or high school
 		global.workExperience.append("school-" + str(global.schoolLevel)) #adds schooling as work experience - this is used and removed only when you graduated
+	elif global.schoolLevel == 3: #if you are in university
+		global.workExperience.append("school-" + str(global.schoolLevel) + global.degreePicked) #adds schooling as work experience - this is used and removed only when you graduated
+	if global.schoolLevel != -1 && global.schoolLevel != 0: #if you are in school at all
 		if global.schoolPerformance < global.intellect: #if you're not doing as well as your functional maximum
 			global.schoolPerformance = min(global.intellect, global.schoolPerformance + float(global.intellect) / 10) #you work towards it
 		elif global.schoolPerformance > global.intellect: #if you're less intelligent than your school performance
@@ -134,9 +137,9 @@ func school():
 		global.workExperience = workExpDupe
 		print("graduated high school")
 		global.XPQueued += 20
-	#university enrollment happens in an event
+	#university enrollment happens in an event: university-degree-picked-o1
 	#university graduation
-	elif global.workExperience.count("school-3") == 4: #if you've been in university for 4 years
+	elif global.workExperience.count("school-3" + global.degreePicked) == 4: #if you've been in university studying for THIS degree for 4 years
 		global.schoolLevel = 0 #officially graduates you
 		global.revent.append("graduated-university")
 		global.degrees.append(global.degreePicked)
@@ -145,7 +148,7 @@ func school():
 		#rids work experience of school-3
 		var workExpDupe = []
 		for i in global.workExperience.size():
-			if global.workExperience[i] != "school-3":
+			if global.workExperience[i] != "school-3" + global.degreePicked:
 				workExpDupe.append(global.workExperience[i])
 		global.workExperience = workExpDupe
 		print("graduated university")
@@ -166,6 +169,8 @@ func job():
 		global.workExperience.append(global.partTimeJob) #you get work experience for it
 		global.XPQueued += 15
 		global.partTimePerformance += randi_range(-6, 6)
+	if global.fullTimeJob != "" && global.partTimeJob != "": #if you have both a full-time and part-time job
+		global.health -= randi_range(4, 6) + max(2, roundi(float(global.partTimeHours) / 10)) #it's not exactly healthy to be working 72 hours a week...
 
 
 func imprisonment(): #handles your chances of being arrested
@@ -232,13 +237,14 @@ func rareAgeUpEvents():
 
 
 func randomDeathChance():
-	if global.age >= 69: #if you're old enough to randomly die (not super realistic, but as it turns out, it is NOT fun dying for no reason at age 2)
-		var chance = randi_range(1, max(1, 70 - global.age + roundi(float(global.health) / 2))) # equation for age at which death is inevitable at x health (max age): a = 69 + health / 2
-		# equation for the health that would no longer be able to keep you alive at x age: h = (a - 69) * 2
-		#print(70 - global.age + roundi(float(global.health) / 2))
+	if global.age >= 69: #if you're old enough to randomly die (not super realistic to have this, but as it turns out, it is NOT fun dying for no reason at age 2)
+		var chance = max(1, 75 - global.age + roundi(float(global.health) / 2)) # equation for chance of death at x age and y health (1 in [answer])
+		# equation for age at which death is inevitable at x health (max age): a = 74 + health / 2
+		# equation for the health that would no longer be able to keep you alive at x age: h = (a - 75) * 2
+		#print(75 - global.age + roundi(float(global.health) / 2))
 		#print(chance)
 		print("1 in " + str(chance) + " chance of death")
-		if chance == 1:
+		if randi_range(1, chance) == 1:
 			global.causeOfDeath = "You died of complications associated with advanced age"
 			isDying = true
 			get_tree().change_scene_to_file("res://pages/death.tscn") #kills you

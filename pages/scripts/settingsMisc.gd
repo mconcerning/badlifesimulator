@@ -25,3 +25,7 @@ func _on_enable_keyboard_shortcuts_pressed() -> void:
 		global.keyboardShortcutsEnabled = true
 		$vBoxContainer/enableKeyboardShortcuts/checkbox.frame = 1 #enable it
 	global.saveGame()
+
+
+func _on_more_info_pressed() -> void:
+	get_tree().change_scene_to_file("res://pages/settings_misc_info.tscn")

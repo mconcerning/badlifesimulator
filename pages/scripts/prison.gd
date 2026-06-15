@@ -12,6 +12,7 @@ func _ready() -> void:
 	$intellect.text = "Intellect: " + str(global.intellect)
 	$looks.text = "Looks: " + str(global.looks)
 	$prison.position.y = 20 + $name.position.y + $name.size.y
+	$gender.text = global.sex
 	if global.age < 18: #if you are a juvenile
 		$prison.text = "Juvenile detention"
 	if global.logs.size() == 0: #if there aren't logs to show

@@ -3,6 +3,7 @@
 [ext_resource type="Script" uid="uid://desthyk41cfcg" path="res://pages/scripts/settingsMisc.gd" id="1_fcerb"]
 [ext_resource type="PackedScene" uid="uid://pmo8e2dmbkfm" path="res://objects/background.tscn" id="2_gpqpm"]
 [ext_resource type="PackedScene" uid="uid://cjnbhqp8obehv" path="res://objects/back_button.tscn" id="3_flqkp"]
+[ext_resource type="PackedScene" uid="uid://bdmp0wqtq5xur" path="res://objects/more_info_button.tscn" id="4_flqkp"]
 [ext_resource type="PackedScene" uid="uid://b7bfib5vbcvk6" path="res://objects/heading.tscn" id="4_rxi18"]
 [ext_resource type="PackedScene" uid="uid://ck7ra4cupjjkm" path="res://objects/button_default.tscn" id="5_q6vhn"]
 [ext_resource type="PackedScene" uid="uid://cil46lqksrpuy" path="res://objects/checkbox.tscn" id="6_gpqpm"]
@@ -13,6 +14,8 @@ script = ExtResource("1_fcerb")
 [node name="background" parent="." unique_id=132212067 instance=ExtResource("2_gpqpm")]
 
 [node name="back" parent="." unique_id=17962498 instance=ExtResource("3_flqkp")]
+
+[node name="moreInfo" parent="." unique_id=894308063 instance=ExtResource("4_flqkp")]
 
 [node name="heading" parent="." unique_id=33655322 instance=ExtResource("4_rxi18")]
 text = "Misc"
@@ -31,4 +34,5 @@ text = "Keyboard shortcuts"
 position = Vector2(650, 0)
 
 [connection signal="pressed" from="back" to="." method="_on_back_pressed"]
+[connection signal="pressed" from="moreInfo" to="." method="_on_more_info_pressed"]
 [connection signal="pressed" from="vBoxContainer/enableKeyboardShortcuts" to="." method="_on_enable_keyboard_shortcuts_pressed"]

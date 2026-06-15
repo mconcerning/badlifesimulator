@@ -65,6 +65,13 @@ horizontal_alignment = 1
 autowrap_mode = 2
 metadata/_edit_use_anchors_ = true
 
+[node name="gender" type="Label" parent="." unique_id=1488346616]
+offset_top = 250.0
+offset_right = 1080.0
+offset_bottom = 310.0
+label_settings = ExtResource("8_1cpv2")
+horizontal_alignment = 1
+
 [node name="ageUpButton" parent="." unique_id=509130995 instance=ExtResource("4_pmyl4")]
 offset_left = 440.0
 offset_top = 980.0

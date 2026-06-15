@@ -9,6 +9,7 @@ func _ready() -> void:
 	global.statClamper()
 	#stat text setting
 	$name.text = str(global.firstName) + " " + str(global.lastName)
+	$gender.text = global.sex
 	$age.text = "Age: " + str(global.age)
 	$joy.text = "Joy: " + str(global.joy)
 	$health.text = "Health: " + str(global.health)

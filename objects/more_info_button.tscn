@@ -1,0 +1,12 @@
+[gd_scene format=3 uid="uid://bdmp0wqtq5xur"]
+
+[ext_resource type="Texture2D" uid="uid://bemsctyd8n4h2" path="res://assets/info-circle.png" id="1_yngrn"]
+
+[node name="moreInfo" type="TextureButton" unique_id=894308063]
+offset_left = 960.0
+offset_top = 20.0
+offset_right = 1060.0
+offset_bottom = 120.0
+texture_normal = ExtResource("1_yngrn")
+ignore_texture_size = true
+stretch_mode = 0

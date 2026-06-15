@@ -30,7 +30,7 @@ func _ready() -> void:
 		fullTimeJob.pressed.connect(fullTimeJobInteract.bind())
 		scrollContainer.add_child(fullTimeJob)
 		lineBreak()
-	elif global.schoolLevel == 0: #if you don't have a full-time job, but you're also not in school
+	elif global.schoolLevel == 0 && global.age >= 15: #if you don't have a full-time job, you're 15 or over, but you're also not in school
 		var searchHeading = subheading.instantiate()
 		searchHeading.text = "Unemployed"
 		scrollContainer.add_child(searchHeading)
@@ -53,6 +53,7 @@ func _ready() -> void:
 		scrollContainer.add_child(searchHeading)
 		var search = button.instantiate()
 		search.text = "Look for a gig"
+		search.pressed.connect(partTimeJobSearch.bind())
 		scrollContainer.add_child(search)
 		lineBreak()
 	if global.schoolLevel == 1 || global.schoolLevel == 2 || global.schoolLevel == 3: #if you're in school
@@ -105,6 +106,9 @@ func fullTimeJobSearch():
 
 func fullTimeJobInteract():
 	get_tree().change_scene_to_file("res://pages/job_full_time.tscn")
+
+func partTimeJobSearch():
+	get_tree().change_scene_to_file("res://pages/job_search_part_time.tscn")
 
 func certificateApply():
 	get_tree().change_scene_to_file("res://pages/certificate_pick.tscn")

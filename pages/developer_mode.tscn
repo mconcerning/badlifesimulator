@@ -269,6 +269,15 @@ size_flags_horizontal = 4
 theme = ExtResource("6_llmlx")
 text = "Set part time job performance"
 
+[node name="dangerousKbrdShortcuts" type="Button" parent="scrollContainer/centerContainer/vBoxContainer" unique_id=1391154215]
+layout_mode = 2
+size_flags_horizontal = 4
+theme = ExtResource("6_llmlx")
+text = "Dangerous kbrd s. cuts"
+
+[node name="dangerousKbrdShortcutsCheck" parent="scrollContainer/centerContainer/vBoxContainer/dangerousKbrdShortcuts" unique_id=1024996593 instance=ExtResource("8_4vx13")]
+position = Vector2(749, 0)
+
 [node name="saveGame" type="TextureButton" parent="." unique_id=1317964170]
 offset_left = 960.0
 offset_top = 20.0
@@ -313,4 +322,5 @@ stretch_mode = 0
 [connection signal="pressed" from="scrollContainer/centerContainer/vBoxContainer/setPartTimeJob" to="." method="_on_set_part_time_job_pressed"]
 [connection signal="pressed" from="scrollContainer/centerContainer/vBoxContainer/setPartTimeJobSalary" to="." method="_on_set_part_time_job_salary_pressed"]
 [connection signal="pressed" from="scrollContainer/centerContainer/vBoxContainer/setPartTimeJobPerformance" to="." method="_on_set_part_time_job_performance_pressed"]
+[connection signal="pressed" from="scrollContainer/centerContainer/vBoxContainer/dangerousKbrdShortcuts" to="." method="_on_dangerous_kbrd_shortcuts_pressed"]
 [connection signal="pressed" from="saveGame" to="." method="_on_save_game_pressed"]

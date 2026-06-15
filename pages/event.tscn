@@ -21,6 +21,7 @@ offset_bottom = 222.0
 text = "Event name"
 label_settings = ExtResource("3_ueyd5")
 horizontal_alignment = 1
+autowrap_mode = 3
 metadata/_edit_use_anchors_ = true
 
 [node name="body" type="Label" parent="." unique_id=556120999]

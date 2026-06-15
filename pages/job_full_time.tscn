@@ -55,11 +55,19 @@ text = "Excellent effects"
 label_settings = ExtResource("5_w3rx8")
 horizontal_alignment = 1
 
+[node name="salary" type="Label" parent="." unique_id=1989462564]
+offset_top = 400.0
+offset_right = 1080.0
+offset_bottom = 460.0
+text = "Surreptitious salary"
+label_settings = ExtResource("5_w3rx8")
+horizontal_alignment = 1
+
 [node name="vBoxContainer" type="VBoxContainer" parent="." unique_id=1341806161]
 offset_left = 40.0
-offset_top = 450.0
+offset_top = 530.0
 offset_right = 1040.0
-offset_bottom = 1800.0
+offset_bottom = 1810.0
 size_flags_horizontal = 4
 theme_override_constants/separation = 50
 

@@ -1,6 +1,6 @@
 extends Node #author(s): Ethan Scott
 
-##This is this game's global script. It is accessible from any script at any point. If you need to access or change a variable from here, for instance, firstName, in a different script, type "global." before the variable name: "global.firstName".
+##This is this game's global script. It is accessible from any script at any point. If you need to access or change a variable from here, for instance, firstName, in a different script, type "" before the variable name: "firstName".
 
 
 #engine
@@ -13,6 +13,7 @@ var IDClickedType = "" ##Used to identify what type of relationship you're inter
 var importLegacySave = "" ##You are sent to newRandomGame to import and load a legacy save. if, after all life variables are filled in, this does not equal "" (i.e. there is a path here), it will load the legacy save from the path provided.
 var developerModePassword = "" ##Once you enter it correctly, you won't have to do it every time. It is saved here and run automatically.
 var keyboardShortcutsEnabled = false ##Whether or not keyboard shortcuts are enabled. Only works on devices with a physical keyboard attatched. Disabled by default. This can be changed in settings.
+var dangerousKeyboardShortcuts = false ##Must also have regular keyboard shortcuts enabled. Enables risky global shortcuts that are too dangerous for the general public to have access to, a la ctrl + shift + h letting you rerandomise all luck in events - previously less able to be done, as you had to restart the entire game. This setting is only enablable in developer mode and recommended exclusively for developers, testers, and power users. See global script function for unhandled input for more information.
 var eventMemory = [] ##An array that holds any extraneous data that events need to remember between several pages, isn't significant enough to warrant its own dedicated global variables, and too complex to be stored in the event ID.
 
 
@@ -33,7 +34,8 @@ var sexuality = "" ##Stored definitively, not relative to the sex of the player,
 
 
 #rest-of-life-related
-var jobOpenings = [] ##Holds all the jobs available to apply for this year. Index 0 is job name, 1 is salary, 2 is qualifications... See global.newJobOpenings() for more info.
+var jobOpenings = [] ##Holds all the full-time jobs available to apply for this year. Index 0 is job name, 1 is salary, 2 is qualifications, 3 is effects... See newJobOpenings() for more info.
+var partTimeJobOpenings = [] ##Holds all the part-time jobs available to apply for this year. Index 0 is job name, 1 is hourly pay, 2 is weekly hours... See newJobOpenings() for more info.
 var crimes = []
 var crimesSeverity = []
 var crimeTime = [] ##How many years in prison is each crime worth?
@@ -53,10 +55,12 @@ var licences = [] ##Contains your licences, such as a driver's licence, gun lice
 var certificates = [] ##Contains your certificate qualifications, such as a cert in plumbery, electricity, etc.
 var failedCertificates = [] ##Contains every certificate you have failed.
 var incomeTax = 30 ##How much you are taxxed on your income, expressed as a percentage.
-var fullTimeJob = ""
+var fullTimeJob = "" ##The name of your full-time job. "" (blank) if you don't have one.
 var fullTimeSalary : int = 0 ##How much money you make annually from your full-time job
-var partTimeJob = ""
-var partTimeSalary : int = 0 ##How much money you make annually from your part-time job
+var partTimeJob = "" ##The name of your part-time job. "" (blank) if you don't have one.
+var partTimeRate : int = 0 ##How much money you make per hour from your part-time job
+var partTimeHours : int = 0 ##How many hours per annum you work part-time
+var partTimeWorkWeeksPerAnnum : int = 48 ##How many weeks of the year do you work part-time? 48 by default; there's technically closer to ~52 weeks in a year, but this is supposed to factor in days off and other stuff.
 var workExperience = [] ##Every year you work a job or go to school, it is appended to this array. The number of times it appears is then used to calculate how many years of experience you have working a certain job or going to a certain school.
 var schoolPerformance : int = 0 ##How well are you doing at school? from 1 - 100
 var partTimePerformance : int = 0
@@ -129,7 +133,7 @@ var RAUE = true ##RAUE is an acronym for Random Age Up Events. When true, events
 #inter-life variables (non-life specific, saved into the game save file, persists across all lives)
 var XP : int = 0
 var level : int = 1 ##Increments when you reach the amount of XP you need to level up
-var XPRequired : int = 500 ##The amount of XP you need total to level up. Increases by 500 every level.
+var XPRequired : int = 1000 ##The amount of XP you need total to level up. Increases by 1,000 every level - these calculations are made when you die (death.gd).
 
 
 func isBetween(x : float, minimum : float = 0, maximum : float = 1, inclusive = true): ##Checks if any variable (x) is between two values (floor is the lowest it will accept, ceil is the highest). If inclusive, if x is equal to the floor or ceil, it will still return true, if it is false, it will not.
@@ -297,7 +301,7 @@ func anIser(undoctoredProceedingWord): ##An-iser. Returns "an " + word if the wo
 	undoctoredProceedingWord = str(undoctoredProceedingWord) #turns the word we're working with into a string in case it's a number or something weird
 	var proceedingWord = undoctoredProceedingWord.to_lower() #decapitalises the word you're testing, then saves it to a new variable so we can still use the original version later
 	#first, check for words that DO start with vowels but still only need an "a"
-	var specialNegativeExceptions = ["one"] #if the word starts with a vowel, but still shouldn't be prefixed with an "an", like "one"
+	var specialNegativeExceptions = ["one", "university"] #if the word starts with a vowel, but still shouldn't be prefixed with an "an", like "one"
 	for i in specialNegativeExceptions.size(): #check for matches
 		if proceedingWord == specialNegativeExceptions[i]:
 			return "a " + undoctoredProceedingWord #gives you the correct grammar AND the proceeding word WITH unaltered capitalisation (the way you entered it into the function)
@@ -324,31 +328,48 @@ func intIser(theArray): ##Turns array elements into integers
 
 
 func takeOutLoan(amount : int, interest : int, paybackPeriod : int): ##Takes out a loan. Perameters are: amount in dollars, interest as a percentage, and payback period in years.
-	global.loans.append(amount) #takes out the loan
-	global.loanInitialValue.append(roundi(float(amount) / paybackPeriod))
-	global.loanInterest.append(interest) #percentage annual interest
-	global.loanPaybackDuration.append(paybackPeriod) #pay it back over the course of however many years
+	loans.append(amount) #takes out the loan
+	loanInitialValue.append(roundi(float(amount) / paybackPeriod))
+	loanInterest.append(interest) #percentage annual interest
+	loanPaybackDuration.append(paybackPeriod) #pay it back over the course of however many years
+
+
+func schoolRemove(): ##If you are in school, removes you from your school. Use this when getting expelled/kicked out or dropping out. Does not prepare an event about how you left; you will need to do that seperately.
+	#you can keep your PROGRESS in school, including in university, so you can resume your progress as soon as you get out
+	schoolName = ""
+	schoolLevel = 0 #Lets you become full-time employed (yes, even if you are in primary school, STILL NOT MAKING CHILD LABOUR A THING, BY THE WAY), albeit without a diploma/the degree you picked.
 
 
 var allJobs = [] ##All full-time jobs that exist. Fills upon starting a new life or aging up.
 
+var allPartTimeJobs = [] ##All part-time jobs that exist. Like allJobs, this fills upon starting a new life or aging up.
+
 func newJobOpenings(): ##Creates a set of new job openings from the list of possible jobs. Used when creating a new life or aging up.
-	var _newJobOpenings = [["Primary school teacher", randi_range(850, 920) * 100, "High school diploma, 70+ intellect", "None"], ["High school teacher", randi_range(900, 1040) * 100, "Any University degree", "- 2 joy"], ["University professor", randi_range(2100, 2300) * 100, "Education + any second degree", "+ 4 intellect"], ["Public defender", randi_range(850, 1000) * 100, "Law degree", "- 4 joy, + 2 intellect"], ["Apprentice lawyer", randi_range(1220, 1300) * 100, "Law degree (65+ proficiency)", "- 4 joy, + 3 intellect"], ["Lawyer", randi_range(1800, 2100) * 100, "Law degree, 7+ yrs experience as apprentice", "- 5 joy, + 5 intellect"], ["Fast food worker", randi_range(490, 530) * 100, "Age 16+", "- 3 joy"], ["Fast food manager", randi_range(560, 620) * 100, "4+ yrs experience as worker, 60+ intellect, 25 yrs or older", "- 5 joy"], ["Retail worker", randi_range(425, 550) * 100, "High school diploma", "- 2 joy"], ["Apprentice logo designer", randi_range(600, 680) * 100, "Graphic design degree", "+ 3 joy"], ["Logo designer", randi_range(820, 900) * 100, "Graphic design degree, 6+ yrs experience as apprentice", "+ 4 joy"], ["Jr. business consultant", randi_range(750, 850) * 100, "Business degree", "+ 3 intellect"], ["Business consultant", randi_range(1100, 1250) * 100, "Business degree, 8+ yrs experience as Jr., 75+ intellect", "+ 5 intellect"], ["Sanitation worker", randi_range(510, 540) * 100, "High school diploma", "- 7 health"], ["Salt technician", randi_range(740, 810) * 100, "High school diploma, 70+ health", "+ 3 looks"], ["Exorcist", randi_range(350, 380) * 100, "High school diploma", "+ 6 joy"], ["Plumber", randi_range(850, 920) * 100, "High school diploma, Cert. in Plumbery", "- 1 health"], ["Electrician", randi_range(1100, 1190) * 100, "Engineering degree, Cert. in Electrical engineering", "None"], ["Astrophysicist", randi_range(1000, 1050) * 100, "Physics degree", "+ 2 intellect"]] ##Randomises which jobs are available for application. Salaries are within a randomised range depending on the job. The salary is calculated by generating a random number and multiplying it by 100. A 3-digit random number would produce a 5-figure salary (tens of thousands of dollars), a 4-digit number would produce a 6-figure salary, and so on. The multiplication results in salaries rounded to hundred of dollars.
-	allJobs = _newJobOpenings #before the number of jobs is culled and the order is randomised, create the global dictionary of all jobs
-	_newJobOpenings.shuffle() #randomises order of the jobs. Used in tandem with the below, randomly limits which jobs are available.
-	while _newJobOpenings.size() > 25: #limits the number of job openings on any given year to 25; these 25 could be any
-		_newJobOpenings.pop_back()
+	#full-time job openings
+	var theNewJobOpenings = [["Primary school teacher", randi_range(850, 920) * 100, "High school diploma, 70+ intellect", "None"], ["High school teacher", randi_range(900, 1040) * 100, "Any University degree", "- 2 joy"], ["University professor", randi_range(2100, 2300) * 100, "Education + any second degree", "+ 4 intellect"], ["Public defender", randi_range(850, 1000) * 100, "Law degree", "- 4 joy, + 2 intellect"], ["Apprentice lawyer", randi_range(1220, 1300) * 100, "Law degree (65+ proficiency)", "- 4 joy, + 3 intellect"], ["Lawyer", randi_range(1800, 2100) * 100, "Law degree, 7+ yrs experience as apprentice", "- 5 joy, + 5 intellect"], ["Fast food worker", randi_range(490, 530) * 100, "Age 16+", "- 3 joy"], ["Fast food manager", randi_range(560, 620) * 100, "4+ yrs experience as worker, 60+ intellect, 25 yrs or older", "- 5 joy"], ["Retail worker", randi_range(425, 550) * 100, "High school diploma", "- 2 joy"], ["Apprentice logo designer", randi_range(600, 680) * 100, "Graphic design degree", "+ 3 joy"], ["Logo designer", randi_range(820, 900) * 100, "Graphic design degree, 6+ yrs experience as apprentice", "+ 4 joy"], ["Jr. business consultant", randi_range(750, 850) * 100, "Business degree", "+ 3 intellect"], ["Business consultant", randi_range(1100, 1250) * 100, "Business degree, 8+ yrs experience as Jr., 75+ intellect", "+ 5 intellect"], ["Sanitation worker", randi_range(510, 540) * 100, "High school diploma", "- 7 health"], ["Salt technician", randi_range(740, 810) * 100, "High school diploma, 70+ health", "+ 3 looks"], ["Exorcist", randi_range(350, 380) * 100, "High school diploma", "+ 6 joy"], ["Plumber", randi_range(850, 920) * 100, "High school diploma, Cert. in Plumbery", "- 1 health"], ["Electrician", randi_range(1100, 1190) * 100, "Engineering degree, Cert. in Electrical engineering", "None"], ["Astrophysicist", randi_range(1000, 1050) * 100, "Physics degree", "+ 2 intellect"]] ##Randomises which jobs are available for application. Salaries are within a randomised range depending on the job. The salary is calculated by generating a random number and multiplying it by 100. A 3-digit random number would produce a 5-figure salary (tens of thousands of dollars), a 4-digit number would produce a 6-figure salary, and so on. The multiplication results in salaries rounded to hundred of dollars.
+	allJobs = theNewJobOpenings #before the number of jobs is culled and the order is randomised, create the global dictionary of all jobs
+	theNewJobOpenings.shuffle() #randomises order of the jobs. Used in tandem with the below, randomly limits which jobs are available.
+	while theNewJobOpenings.size() > 25: #limits the number of job openings on any given year to 25; these 25 could be any
+		theNewJobOpenings.pop_back()
 	#sort jobs in descending order by salary
 	#i'm not doing sort_custom with a lambda. What the hell is a lambda?? Why call it that??
-	_newJobOpenings.sort_custom(func(a, b): return a[1] > b[1]) #fine
-	jobOpenings = _newJobOpenings
+	theNewJobOpenings.sort_custom(func(a, b): return a[1] > b[1]) #fine
+	jobOpenings = theNewJobOpenings
+	#part-time job openings
+	var newPartTimeOpenings = [["Lifeguard", randi_range(13, 15), randi_range(18, 24)]] ##An array of arrays. Randomises which part-time jobs are available. The first index (0) of each array is the job name, the second index (1) is the hourly pay rate, and the third index (2) is how many hours you'd work per week. In Australia, this is usually about 15 - 35, but to qualify as part-time, it must be less than 38/week.
+	allPartTimeJobs = newPartTimeOpenings
+	newPartTimeOpenings.shuffle() #randomises order of the jobs
+	while newPartTimeOpenings.size() > 10: #limits the number of part time jobs available to 10; removes any jobs beyond those 10 in the randomised order array
+		newPartTimeOpenings.pop_back()
+	newPartTimeOpenings.sort_custom(func(a, b): return a[1] > b[1]) #FINE, I'LL DO A LAMBDA, CALM DOWN
+	partTimeJobOpenings = newPartTimeOpenings
 
 func fullTimeEffectInitialiser(Fjoy = 0, Fhealth = 0, Fintellect = 0, Flooks = 0, Fevality = 0): ##Sets every full-time job effects variable. Leaving any field blank will set them to 0 (no effect).
-	global.fullTimeEffectJoy = Fjoy
-	global.fullTimeEffectHealth = Fhealth
-	global.fullTimeEffectIntellect = Fintellect
-	global.fullTimeEffectLooks = Flooks
-	global.fullTimeEffectEvality = Fevality
+	fullTimeEffectJoy = Fjoy
+	fullTimeEffectHealth = Fhealth
+	fullTimeEffectIntellect = Fintellect
+	fullTimeEffectLooks = Flooks
+	fullTimeEffectEvality = Fevality
 
 func findFullTimeJob(job : String): ##Returns the index of any full-time job in the allJobs array from its name.
 	for i in allJobs.size():
@@ -359,9 +380,13 @@ func removeFullTimeJob(): ##Clears your full-time job. Use this when quitting or
 	#resets all job effects
 	fullTimeEffectInitialiser() #sets every job effect to 0
 	#removes the job
-	global.fullTimeJob = ""
-	global.fullTimeSalary = 0
-	global.fullTimePerformance = 0
+	fullTimeJob = ""
+	fullTimeSalary = 0
+	fullTimePerformance = 0
+
+
+func partTimeSalary(): ##Calculates how much money you should make for working part-time for one year.
+	return partTimeRate * partTimeHours * partTimeWorkWeeksPerAnnum #returns your hourly pay (e.g. $18) times your hours per week (e.g. 25) times the number of weeks you work in a year (e.g. 48). Example salary: 18 * 25 * 48 = $21,600/yr.
 
 
 func commitCrime(crime : String, severity : int, time): ##Commits crime.
@@ -369,6 +394,7 @@ func commitCrime(crime : String, severity : int, time): ##Commits crime.
 	crimesSeverity.append(severity)
 	intellectAtTimeOfCrime.append(intellect)
 	crimeTime.append(time)
+	XPQueued += roundi(float(severity) / 2)
 
 func crimeTimeCalculator(): ##Calculates how much time you need to serve for your crimes. Returns either a number in years or "Life" for a life sentence.
 	var totalSentence = 0
@@ -382,10 +408,16 @@ func crimeTimeCalculator(): ##Calculates how much time you need to serve for you
 
 func prisonPreparer(sentenceLength): ##Does everything you need to prepare the player for prison, but you still have to actually be sent there manually.
 	prisonSentence = sentenceLength
+	XPQueued += roundi(float(sumCalculator(crimesSeverity)) / 4) #extra XP, but not as much as if you got away with it
 	for i in crimes.size():
 		criminalRecord.append(crimes[i])
 		criminalRecordSeverity.append(crimesSeverity[i])
-	removeFullTimeJob()
+	if fullTimeJob != "":
+		revent.append("full-time-fired-imprisonment")
+	if partTimeJob != "":
+		revent.append("part-time-fired-imprisonment")
+	if schoolLevel != -1 && schoolLevel != 0: #if you are in school or university
+		revent.append("school-kicked-out-imprisonment")
 
 
 func averageFinder(array): ##Finds the mean average of all integer elements in any array.
@@ -423,7 +455,10 @@ func lifeSerialiser(): ##Serialises every life-specific variable we need to save
 		"evality" : evality,
 		"sexuality" : sexuality,
 		#rest-of-life-related
+		"allJobs" : allJobs,
+		"allPartTimeJobs" : allPartTimeJobs,
 		"jobOpenings" : jobOpenings,
+		"partTimeJobOpenings" : partTimeJobOpenings,
 		"crimes" : crimes,
 		"crimesSeverity" : crimesSeverity,
 		"intellectAtTimeOfCrime" : intellectAtTimeOfCrime,
@@ -447,7 +482,8 @@ func lifeSerialiser(): ##Serialises every life-specific variable we need to save
 		"fullTimeJob" : fullTimeJob,
 		"fullTimeSalary" : fullTimeSalary,
 		"partTimeJob" : partTimeJob,
-		"partTimeSalary" : partTimeSalary,
+		"partTimeRate" : partTimeRate,
+		"partTimeHours" : partTimeHours,
 		"workExperience" : workExperience,
 		"schoolPerformance" : schoolPerformance,
 		"partTimePerformance" : partTimePerformance,
@@ -509,6 +545,7 @@ func gameSerialiser(): ##Serialises every NON-life-specific variable we need to 
 		"XPRequired" : XPRequired,
 		"developerModePassword" : developerModePassword,
 		"keyboardShortcutsEnabled" : keyboardShortcutsEnabled,
+		"dangerousKeyboardShortcuts" : dangerousKeyboardShortcuts,
 	}
 	return cambridgeDictionary
 
@@ -583,13 +620,14 @@ func loadGame(base64game = ""): ##Does the actual GAME loading.
 		XPRequired = dictionary["XPRequired"]
 		developerModePassword = dictionary["developerModePassword"]
 		keyboardShortcutsEnabled = dictionary["keyboardShortcutsEnabled"]
+		dangerousKeyboardShortcuts = dictionary["dangerousKeyboardShortcuts"]
 		if gameSaveFile != null: #if we're loading from a file, close it
 			gameSaveFile.close() #closes file so it doesn't do anything weird
 		print("hoorah, game load successful")
 		print(currentLife)
 		return #cease function function
 
-func loadLife(takeHome = true, base64life = ""): ##Does the actual LIFE loading.
+func loadLife(takeHome = true, base64life = ""): ##Does the actual LIFE loading from a save file (the one at currentLife if it isn't blank), and takes you to the game menu unless takeHome specified as false.
 	var path = ""
 	var dictionary = {}
 	var lifeSaveFile
@@ -625,7 +663,10 @@ func loadLife(takeHome = true, base64life = ""): ##Does the actual LIFE loading.
 	evality = dictionary["evality"]
 	sexuality = dictionary["sexuality"]
 	#rest-of-life-related
+	allJobs = dictionary["allJobs"]
+	allPartTimeJobs = dictionary["allPartTimeJobs"]
 	jobOpenings = dictionary["jobOpenings"]
+	partTimeJobOpenings = dictionary["partTimeJobOpenings"]
 	crimes = dictionary["crimes"]
 	crimesSeverity = intIser(dictionary["crimesSeverity"])
 	intellectAtTimeOfCrime = intIser(dictionary["intellectAtTimeOfCrime"])
@@ -649,7 +690,8 @@ func loadLife(takeHome = true, base64life = ""): ##Does the actual LIFE loading.
 	fullTimeJob = dictionary["fullTimeJob"]
 	fullTimeSalary = dictionary["fullTimeSalary"]
 	partTimeJob = dictionary["partTimeJob"]
-	partTimeSalary = dictionary["partTimeSalary"]
+	partTimeRate = dictionary["partTimeRate"]
+	partTimeHours = dictionary["partTimeHours"]
 	workExperience = dictionary["workExperience"]
 	schoolPerformance = dictionary["schoolPerformance"]
 	partTimePerformance = dictionary["partTimePerformance"]
@@ -710,14 +752,14 @@ func loadList(path, splitter): ##Loads list of anything from a seperate file :) 
 #lists end in a comma followed by a space so any useless data after it (i.e. a new line) is included as the last element, which is popped (removed) when this script is loaded. must be strictly typed as arrays because otherwise godot automatically makes the name arrays and other string arrays into "packed string arrays", which don't let you remove elements as far as I know, but are more memory-efficient than regular arrays. Trust me, I would use those if I could.
 
 #global arrays that are loaded from external files
-var tips : Array = loadList("res://data/tips.txt", " | ") #tips to be displayed on the screen during loading :) - items in THIS list are seperated by " | "
+var tips : Array = loadList("res://data/tips.txt", " | ") ##tips to be displayed on the screen during loading :) - items in THIS list are seperated by " | "
 #names
-var mFirstNames : Array = loadList("res://data/names/mFirstNames.txt", ", ") #loads list of masculine first names
-var fFirstNames : Array = loadList("res://data/names/fFirstNames.txt", ", ") #feminine first names
-var uFirstNames : Array = loadList("res://data/names/uFirstNames.txt", ", ") #unisex first names
-var lastNames : Array = loadList("res://data/names/lastNames.txt", ", ") #dude just look at the variable name
-var rareFirstNames : Array = loadList("res://data/names/rareFirstNames.txt", ", ") #only generated in pairs of first name and last name. Regular names roll once for a first name and again to pick a last name, whereas rare names only roll once and pick the corresponding first and last name. So picking "Rob" as a rare first name cannot result in the name "Rob Salad", it will always result in "Rob Ery" as they are both at the same index. This is to make seperating first and last names easier, but also preserve the rare name as originally intended.
-var rareLastNames : Array = loadList("res://data/names/rareLastNames.txt", ", ") #Marl and ™ have only a first name. This will result in some weird behaviour, such as the player being called "Mr./Mrs.[blank]", but that is a sarcrifice I am willing to make.
+var mFirstNames : Array = loadList("res://data/names/mFirstNames.txt", ", ") ##loads list of masculine first names
+var fFirstNames : Array = loadList("res://data/names/fFirstNames.txt", ", ") ##feminine first names
+var uFirstNames : Array = loadList("res://data/names/uFirstNames.txt", ", ") ##unisex first names
+var lastNames : Array = loadList("res://data/names/lastNames.txt", ", ") ##dude just look at the variable name
+var rareFirstNames : Array = loadList("res://data/names/rareFirstNames.txt", ", ") ##Only generated in pairs of first name and last name. Regular names roll once for a first name and again to pick a last name, whereas rare names only roll once and pick the corresponding first and last name. So picking "Rob" as a rare first name cannot result in the name "Rob Salad", it will always result in "Rob Ery" as they are both at the same index. This is to make seperating first and last names easier, but also preserve the rare name as originally intended.
+var rareLastNames : Array = loadList("res://data/names/rareLastNames.txt", ", ") ##Paired with rareFirstNames. Marl and ™ have only a first name. This will result in some weird behaviour, such as the player being called "Mr./Mrs.[blank]", but that is a sarcrifice I am willing to make.
 
 
 func _ready() -> void: #when this is loaded for the first time (once when the game starts and never again while it's still running)
@@ -729,3 +771,30 @@ func _ready() -> void: #when this is loaded for the first time (once when the ga
 	lastNames.pop_back()
 	rareFirstNames.pop_back()
 	rareLastNames.pop_back()
+
+
+#keyboard shortcuts - disabled by defualt and locked under dangerous keyboard shortcuts because they made cheesing the game, namely events, way too easy.
+func _unhandled_input(inputMade: InputEvent) -> void: #if you make an input
+	if keyboardShortcutsEnabled == false || dangerousKeyboardShortcuts == false: #if shortcuts or dangerous shortcuts are disabled, do not proceed
+		return
+	if inputMade.is_action_pressed("shortcut_to_gamemenu"): #ctrl + shift + h (go to homepage)
+		if currentLife != "": #if you have a life to load
+			loadLife()
+		else:
+			print("no life to load")
+	elif inputMade.is_action_pressed("shortcut_to_save_import_export"): #ctrl + shift + s (go to import/export save files menu) - put this before crtl + s because this also meets the conditions of that; if this is not placed first, the shift will be ignored and you will be taken to browse life save files
+		get_tree().change_scene_to_file("res://pages/import_export_save_files.tscn")
+	elif inputMade.is_action_pressed("shortcut_to_save_files_browse"): #ctrl + s (browse life save files)
+		get_tree().change_scene_to_file("res://pages/life_save_files.tscn")
+	elif inputMade.is_action_pressed("shortcut_to_developer_mode"): #ctrl + shift + d (go to developer mode)
+		if currentLife != "": #if you have a life to edit in developer mode
+			if developerModePassword == "opensesame": #if you have the correct password saved
+				get_tree().change_scene_to_file("res://pages/developer_mode.tscn")
+			else: #if you do not have the correct password saved
+				get_tree().change_scene_to_file("res://pages/developer_mode_confirmation.tscn")
+		else:
+			print("no life to load")
+	elif inputMade.is_action_pressed("shortcut_to_settings"): #ctrl + shift + p (go to settings - p stands for preferences as s is taken by save files)
+		get_tree().change_scene_to_file("res://pages/settings.tscn")
+	elif inputMade.is_action_pressed("shortcut_to_main_menu"): #ctrl + shit + m (go to main menu)
+		get_tree().change_scene_to_file("res://pages/main_menu.tscn")
