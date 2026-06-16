@@ -49,4 +49,14 @@ Game menu:
 enter/return/spacebar (age up)"
 autowrap_mode = 3
 
+[node name="hBigMailto" parent="scrollContainer/centerContainer/vBoxContainer" unique_id=1076771505 instance=ExtResource("5_clphh")]
+layout_mode = 2
+text = "Big mailto"
+
+[node name="bBigMailto" parent="scrollContainer/centerContainer/vBoxContainer" unique_id=619835519 instance=ExtResource("6_ci34g")]
+custom_minimum_size = Vector2(950, 0)
+layout_mode = 2
+text = "Disables the size limit when exporting your life/progress via email. If you run into any errors with your email client (especially a 400 error), try without this."
+autowrap_mode = 3
+
 [connection signal="pressed" from="back" to="." method="_on_back_pressed"]

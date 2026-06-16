@@ -1607,6 +1607,7 @@ func _ready() -> void:
 	eventer()
 	if goingToSpecific != "false": #if you're going to a specific page
 		global.revent.pop_front()
+		global.saveGame()
 		goToSpecific(goingToSpecific)
 	repositionResize()
 

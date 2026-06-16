@@ -14,6 +14,7 @@ var importLegacySave = "" ##You are sent to newRandomGame to import and load a l
 var developerModePassword = "" ##Once you enter it correctly, you won't have to do it every time. It is saved here and run automatically.
 var keyboardShortcutsEnabled = false ##Whether or not keyboard shortcuts are enabled. Only works on devices with a physical keyboard attatched. Disabled by default. This can be changed in settings.
 var dangerousKeyboardShortcuts = false ##Must also have regular keyboard shortcuts enabled. Enables risky global shortcuts that are too dangerous for the general public to have access to, a la ctrl + shift + h letting you rerandomise all luck in events - previously less able to be done, as you had to restart the entire game. This setting is only enablable in developer mode and recommended exclusively for developers, testers, and power users. See global script function for unhandled input for more information.
+var bigMailto = false ##When enabled, increases the maximum character length for the mailto link when sending yourself a save file via email.
 var eventMemory = [] ##An array that holds any extraneous data that events need to remember between several pages, isn't significant enough to warrant its own dedicated global variables, and too complex to be stored in the event ID.
 
 
@@ -356,7 +357,7 @@ func newJobOpenings(): ##Creates a set of new job openings from the list of poss
 	theNewJobOpenings.sort_custom(func(a, b): return a[1] > b[1]) #fine
 	jobOpenings = theNewJobOpenings
 	#part-time job openings
-	var newPartTimeOpenings = [["Lifeguard", randi_range(13, 15), randi_range(18, 24)]] ##An array of arrays. Randomises which part-time jobs are available. The first index (0) of each array is the job name, the second index (1) is the hourly pay rate, and the third index (2) is how many hours you'd work per week. In Australia, this is usually about 15 - 35, but to qualify as part-time, it must be less than 38/week.
+	var newPartTimeOpenings = [["Lifeguard", randi_range(13, 15), randi_range(18, 24), "75+ health"]] ##An array of arrays. Randomises which part-time jobs are available. The first index (0) of each array is the job name, the second index (1) is the hourly pay rate, the third index (2) is how many hours you'd work per week, and the fourth index (3) is any additional requirements. In Australia, the hours would usually be about 15 - 35, but to qualify as part-time, it MUST be less than 38/week.
 	allPartTimeJobs = newPartTimeOpenings
 	newPartTimeOpenings.shuffle() #randomises order of the jobs
 	while newPartTimeOpenings.size() > 10: #limits the number of part time jobs available to 10; removes any jobs beyond those 10 in the randomised order array
@@ -546,6 +547,7 @@ func gameSerialiser(): ##Serialises every NON-life-specific variable we need to 
 		"developerModePassword" : developerModePassword,
 		"keyboardShortcutsEnabled" : keyboardShortcutsEnabled,
 		"dangerousKeyboardShortcuts" : dangerousKeyboardShortcuts,
+		"bigMailto" : bigMailto,
 	}
 	return cambridgeDictionary
 
@@ -621,6 +623,7 @@ func loadGame(base64game = ""): ##Does the actual GAME loading.
 		developerModePassword = dictionary["developerModePassword"]
 		keyboardShortcutsEnabled = dictionary["keyboardShortcutsEnabled"]
 		dangerousKeyboardShortcuts = dictionary["dangerousKeyboardShortcuts"]
+		bigMailto = dictionary["bigMailto"]
 		if gameSaveFile != null: #if we're loading from a file, close it
 			gameSaveFile.close() #closes file so it doesn't do anything weird
 		print("hoorah, game load successful")

@@ -36,7 +36,7 @@ func _on_wait_for_clipboard_email_timeout() -> void:
 	if clipboard == "" && $confirmation.text == "Copy success!": #if it successfully copied to clipboard, but now can't access what's there
 		$confirmation.text = "Error reading clipboard :( You might have tried too many times. Please wait a moment and try again."
 		return
-	if clipboard.length() > 7000: #if the data you copied is simply incredibly massive; so massive that it may fail to be sent through a mailto link
+	if clipboard.length() > 7000 && global.bigMailto == false: #if the data you copied is simply incredibly massive; so massive that it may fail to be sent through a mailto link
 		clipboard = "Turns out your data was actually really big, so it couldn't be given directly to your email service. It has still been copied to your clipboard, though. Please delete this message and paste it here."
 	emailAttemptCounter += 1
 	if emailAttemptCounter >= 3 && emailAttemptCounter < 5: #if you've tried emailing this 3 or more times in a row

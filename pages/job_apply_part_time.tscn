@@ -1,0 +1,62 @@
+[gd_scene format=3 uid="uid://r0kj0y62pu6h"]
+
+[ext_resource type="Script" uid="uid://dmeeaj6aiwafh" path="res://pages/scripts/jobApplyPartTime.gd" id="1_5md1d"]
+[ext_resource type="PackedScene" uid="uid://pmo8e2dmbkfm" path="res://objects/background.tscn" id="2_5pmeh"]
+[ext_resource type="PackedScene" uid="uid://cjnbhqp8obehv" path="res://objects/back_button.tscn" id="3_5nmrf"]
+[ext_resource type="PackedScene" uid="uid://moehuc8f6dgg" path="res://objects/exit.tscn" id="4_pwmhv"]
+[ext_resource type="PackedScene" uid="uid://b3nrc0n5eeris" path="res://objects/subheading.tscn" id="5_v2pu3"]
+[ext_resource type="FontFile" uid="uid://bf7pfy6renkw4" path="res://assets/fonts/poppins/Poppins-Regular.ttf" id="6_bubd6"]
+[ext_resource type="PackedScene" uid="uid://ck7ra4cupjjkm" path="res://objects/button_default.tscn" id="7_71wir"]
+
+[sub_resource type="LabelSettings" id="LabelSettings_j0g5h"]
+font = ExtResource("6_bubd6")
+font_size = 42
+font_color = Color(0, 0, 0, 1)
+
+[node name="jobApplyPartTime" type="Node2D" unique_id=1594056916]
+script = ExtResource("1_5md1d")
+
+[node name="background" parent="." unique_id=546064917 instance=ExtResource("2_5pmeh")]
+
+[node name="back" parent="." unique_id=17962498 instance=ExtResource("3_5nmrf")]
+
+[node name="exit" parent="." unique_id=1865769784 instance=ExtResource("4_pwmhv")]
+offset_left = 960.0
+offset_right = 1060.0
+
+[node name="jobName" parent="." unique_id=1227387029 instance=ExtResource("5_v2pu3")]
+offset_left = 0.0
+offset_right = 1080.0
+text = "Easter employment"
+autowrap_mode = 3
+
+[node name="details" type="Label" parent="." unique_id=299959575]
+offset_left = 40.0
+offset_top = 260.0
+offset_right = 1040.0
+offset_bottom = 320.0
+text = "Interesting information
+Line 2
+Line 3"
+label_settings = SubResource("LabelSettings_j0g5h")
+horizontal_alignment = 1
+autowrap_mode = 3
+
+[node name="scrollContainer" type="ScrollContainer" parent="." unique_id=309297055]
+offset_left = 40.0
+offset_top = 550.0
+offset_right = 1040.0
+offset_bottom = 1800.0
+
+[node name="vBoxContainer" type="VBoxContainer" parent="scrollContainer" unique_id=1341806161]
+layout_mode = 2
+size_flags_horizontal = 6
+theme_override_constants/separation = 50
+
+[node name="apply" parent="scrollContainer/vBoxContainer" unique_id=1544237965 instance=ExtResource("7_71wir")]
+layout_mode = 2
+text = "Apply"
+
+[connection signal="pressed" from="back" to="." method="_on_back_pressed"]
+[connection signal="pressed" from="exit" to="." method="_on_exit_pressed"]
+[connection signal="pressed" from="scrollContainer/vBoxContainer/apply" to="." method="_on_apply_pressed"]
