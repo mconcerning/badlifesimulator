@@ -207,11 +207,8 @@ func statClamper(): ##If stats are out of bounds (above or below their max/min v
 					stats[x] = 0
 
 
-func cooldown(activity): ##Returns how many times you've done a certain thing this year already. This number can then be used to create a cooldown of sorts; if you've done something a million times this year, make it ineffective for once.
-	var timesActivityAppeared = 0
-	for i in history.size(): #runs through everything you've done this year
-		if history[i] == activity: #if it's the activity we're looking for
-			timesActivityAppeared += 1 #it has appeared one more time
+func cooldown(activity): ##Returns how many times you've done a certain thing this year already using your history. This number can then be used to create a cooldown of sorts; if you've done something a million times this year, make it ineffective for once. This function only works if you make sure to actively append to history when things happen. NOTE: The exact same function can be achieved with the built-in .count("value") used on history. This function should no longer be used.
+	var timesActivityAppeared = history.count(activity)
 	return timesActivityAppeared
 
 
@@ -343,27 +340,52 @@ func schoolRemove(): ##If you are in school, removes you from your school. Use t
 
 var allJobs = [] ##All full-time jobs that exist. Fills upon starting a new life or aging up.
 
+var allJobSalaries = [] ##A list of all full-time salaries. This is saved in your life save file instead of allJobs since the randomly-generated salary is the only thing that needs to kept track of.
+
 var allPartTimeJobs = [] ##All part-time jobs that exist. Like allJobs, this fills upon starting a new life or aging up.
 
-func newJobOpenings(): ##Creates a set of new job openings from the list of possible jobs. Used when creating a new life or aging up.
-	#full-time job openings
-	var theNewJobOpenings = [["Primary school teacher", randi_range(850, 920) * 100, "High school diploma, 70+ intellect", "None"], ["High school teacher", randi_range(900, 1040) * 100, "Any University degree", "- 2 joy"], ["University professor", randi_range(2100, 2300) * 100, "Education + any second degree", "+ 4 intellect"], ["Public defender", randi_range(850, 1000) * 100, "Law degree", "- 4 joy, + 2 intellect"], ["Apprentice lawyer", randi_range(1220, 1300) * 100, "Law degree (65+ proficiency)", "- 4 joy, + 3 intellect"], ["Lawyer", randi_range(1800, 2100) * 100, "Law degree, 7+ yrs experience as apprentice", "- 5 joy, + 5 intellect"], ["Fast food worker", randi_range(490, 530) * 100, "Age 16+", "- 3 joy"], ["Fast food manager", randi_range(560, 620) * 100, "4+ yrs experience as worker, 60+ intellect, 25 yrs or older", "- 5 joy"], ["Retail worker", randi_range(425, 550) * 100, "High school diploma", "- 2 joy"], ["Apprentice logo designer", randi_range(600, 680) * 100, "Graphic design degree", "+ 3 joy"], ["Logo designer", randi_range(820, 900) * 100, "Graphic design degree, 6+ yrs experience as apprentice", "+ 4 joy"], ["Jr. business consultant", randi_range(750, 850) * 100, "Business degree", "+ 3 intellect"], ["Business consultant", randi_range(1100, 1250) * 100, "Business degree, 8+ yrs experience as Jr., 75+ intellect", "+ 5 intellect"], ["Sanitation worker", randi_range(510, 540) * 100, "High school diploma", "- 7 health"], ["Salt technician", randi_range(740, 810) * 100, "High school diploma, 70+ health", "+ 3 looks"], ["Exorcist", randi_range(350, 380) * 100, "High school diploma", "+ 6 joy"], ["Plumber", randi_range(850, 920) * 100, "High school diploma, Cert. in Plumbery", "- 1 health"], ["Electrician", randi_range(1100, 1190) * 100, "Engineering degree, Cert. in Electrical engineering", "None"], ["Astrophysicist", randi_range(1000, 1050) * 100, "Physics degree", "+ 2 intellect"]] ##Randomises which jobs are available for application. Salaries are within a randomised range depending on the job. The salary is calculated by generating a random number and multiplying it by 100. A 3-digit random number would produce a 5-figure salary (tens of thousands of dollars), a 4-digit number would produce a 6-figure salary, and so on. The multiplication results in salaries rounded to hundred of dollars.
-	allJobs = theNewJobOpenings #before the number of jobs is culled and the order is randomised, create the global dictionary of all jobs
-	theNewJobOpenings.shuffle() #randomises order of the jobs. Used in tandem with the below, randomly limits which jobs are available.
-	while theNewJobOpenings.size() > 25: #limits the number of job openings on any given year to 25; these 25 could be any
-		theNewJobOpenings.pop_back()
+var allPartTimeJobSalaries = [] ##A list of all part-time salaries. This is saved in your life save file instead of allPartTimeJobs since the randomly-generated salary is the only thing that needs to kept track of.
+
+func newJobOpenings(): ##Creates a set of new job openings from the list of possible jobs. Used when creating a new life or aging up. If returnAllFullTimeJobs equals "return", this won't randomise job openings and will only return an array of all possible full-time jobs.
+	var newFullTimeJobOpenings = [["Primary school teacher", randi_range(850, 920) * 100, "High school diploma, 70+ intellect", "None"], ["High school teacher", randi_range(900, 1040) * 100, "Any University degree", "- 2 joy"], ["University professor", randi_range(2100, 2300) * 100, "Education + any second degree", "+ 4 intellect"], ["Public defender", randi_range(850, 1000) * 100, "Law degree", "- 4 joy, + 2 intellect"], ["Apprentice lawyer", randi_range(1220, 1300) * 100, "Law degree (65+ proficiency)", "- 4 joy, + 3 intellect"], ["Lawyer", randi_range(1800, 2100) * 100, "Law degree, 7+ yrs experience as apprentice", "- 5 joy, + 5 intellect"], ["Fast food worker", randi_range(490, 530) * 100, "Age 16+", "- 3 joy"], ["Fast food manager", randi_range(560, 620) * 100, "4+ yrs experience as worker, 60+ intellect, 25 yrs or older", "- 5 joy"], ["Retail worker", randi_range(425, 550) * 100, "High school diploma", "- 2 joy"], ["Apprentice logo designer", randi_range(600, 680) * 100, "Graphic design degree", "+ 3 joy"], ["Logo designer", randi_range(820, 900) * 100, "Graphic design degree, 6+ yrs experience as apprentice", "+ 4 joy"], ["Jr. business consultant", randi_range(750, 850) * 100, "Business degree", "+ 3 intellect"], ["Business consultant", randi_range(1100, 1250) * 100, "Business degree, 8+ yrs experience as Jr., 75+ intellect", "+ 5 intellect"], ["Sanitation worker", randi_range(510, 540) * 100, "High school diploma", "- 7 health"], ["Salt technician", randi_range(740, 810) * 100, "High school diploma, 70+ health", "+ 3 looks"], ["Exorcist", randi_range(350, 380) * 100, "High school diploma", "+ 6 joy"], ["Plumber", randi_range(850, 920) * 100, "High school diploma, Cert. in Plumbery", "- 1 health"], ["Electrician", randi_range(1100, 1190) * 100, "Engineering degree, Cert. in Electrical engineering", "None"], ["Astrophysicist", randi_range(1000, 1050) * 100, "Physics degree", "+ 2 intellect"]] ##Randomises which jobs are available for application. Salaries are within a randomised range depending on the job. The salary is calculated by generating a random number and multiplying it by 100. A 3-digit random number would produce a 5-figure salary (tens of thousands of dollars), a 4-digit number would produce a 6-figure salary, and so on. The multiplication results in salaries rounded to hundred of dollars.
+	var newPartTimeOpenings = [["Lifeguard", randi_range(21, 25), randi_range(18, 24), "Age 18+, 75+ health"]] ##An array of arrays. Randomises which part-time jobs are available. The first index (0) of each array is the job name, the second index (1) is the hourly pay rate, the third index (2) is how many hours you'd work per week, and the fourth index (3) is any additional requirements. In Australia, the hours would usually be about 15 - 35, but to qualify as part-time, it MUST be less than 38/week.
+	#full-time jobs
+	allJobs = newFullTimeJobOpenings #before the number of jobs is culled and the order is randomised, create the global dictionary of all jobs
+	jobSavers("save", "full") #saves the randomly-generated job salaries based on allJobs
+	newFullTimeJobOpenings.shuffle() #randomises order of the jobs. Used in tandem with the below, randomly limits which jobs are available.
+	while newFullTimeJobOpenings.size() > 25: #limits the number of job openings on any given year to 25; these 25 could be any
+		newFullTimeJobOpenings.pop_back()
 	#sort jobs in descending order by salary
 	#i'm not doing sort_custom with a lambda. What the hell is a lambda?? Why call it that??
-	theNewJobOpenings.sort_custom(func(a, b): return a[1] > b[1]) #fine
-	jobOpenings = theNewJobOpenings
+	newFullTimeJobOpenings.sort_custom(func(a, b): return a[1] > b[1]) #fine
+	jobOpenings = newFullTimeJobOpenings
 	#part-time job openings
-	var newPartTimeOpenings = [["Lifeguard", randi_range(13, 15), randi_range(18, 24), "75+ health"]] ##An array of arrays. Randomises which part-time jobs are available. The first index (0) of each array is the job name, the second index (1) is the hourly pay rate, the third index (2) is how many hours you'd work per week, and the fourth index (3) is any additional requirements. In Australia, the hours would usually be about 15 - 35, but to qualify as part-time, it MUST be less than 38/week.
 	allPartTimeJobs = newPartTimeOpenings
+	jobSavers("save", "part") #saves the randomly-generated job salaries based on allPartTimeJobs
 	newPartTimeOpenings.shuffle() #randomises order of the jobs
 	while newPartTimeOpenings.size() > 10: #limits the number of part time jobs available to 10; removes any jobs beyond those 10 in the randomised order array
 		newPartTimeOpenings.pop_back()
 	newPartTimeOpenings.sort_custom(func(a, b): return a[1] > b[1]) #FINE, I'LL DO A LAMBDA, CALM DOWN
 	partTimeJobOpenings = newPartTimeOpenings
+
+func jobSavers(saveLoad : String, timeType : String): ##saves (or loads) the list of all jobs, both full-time and part-time, to/from global.allJobSalaries and global.allPartTimeJobSalaries. These special salary arrays can then be saved to and loaded from your life and swapped in place of the auto-generated salaries in allJobs and allPartTimeJobs. This makes the save file smaller, since we only have to store the jobs' salaries (since those are the only things that change), not all the information about them. saveLoad can be either "save" or "load"; "save" if we want to be able to save the jobs' salaries, and "load" if we want to load the jobs' saved salaries. timeType can be either "full" or "part", for full-time or part-time. You must use global.loadLife() before using the load function and you must use global.saveGame() sometime after using the save function if you want this to have any effect.
+	if saveLoad == "save": #if we want to be able to save the jobs' salaries
+		if timeType == "full":
+			allJobSalaries = [] #resets the job salaries we save so we're not just infinitely appending and creating a horrible nightmare file size cancer (i figured out this has to be here the hard way)
+			for i in allJobs.size():
+				allJobSalaries.append(allJobs[i][1]) #puts the full-time job's salary in the allJobSalaries array
+		elif timeType == "part":
+			allPartTimeJobSalaries = [] #resets the job salaries for the same reason as with full-time jobs
+			for i in allPartTimeJobs.size():
+				allPartTimeJobSalaries.append(allPartTimeJobs[i][1]) #puts the part-time job's salary in the allPartTimeJobSalaries array
+	elif saveLoad == "load": #if we want to load the jobs' saved salaries
+		if timeType == "full":
+			#allJobs = newJobOpenings("return full-time") #has to get the list of all jobs first because allJobs does not equal it yet
+			for i in allJobs.size():
+				allJobs[i][1] = allJobSalaries[i] #substitutes the salary there with the salary saved
+		elif timeType == "part":
+			for i in allPartTimeJobs.size():
+				allPartTimeJobs[i][1] = allPartTimeJobSalaries[i] #substitutes the salary there with the salary saved
 
 func fullTimeEffectInitialiser(Fjoy = 0, Fhealth = 0, Fintellect = 0, Flooks = 0, Fevality = 0): ##Sets every full-time job effects variable. Leaving any field blank will set them to 0 (no effect).
 	fullTimeEffectJoy = Fjoy
@@ -456,10 +478,10 @@ func lifeSerialiser(): ##Serialises every life-specific variable we need to save
 		"evality" : evality,
 		"sexuality" : sexuality,
 		#rest-of-life-related
-		"allJobs" : allJobs,
-		"allPartTimeJobs" : allPartTimeJobs,
 		"jobOpenings" : jobOpenings,
 		"partTimeJobOpenings" : partTimeJobOpenings,
+		"allJobSalaries" : allJobSalaries,
+		"allPartTimeJobSalaries" : allPartTimeJobSalaries,
 		"crimes" : crimes,
 		"crimesSeverity" : crimesSeverity,
 		"intellectAtTimeOfCrime" : intellectAtTimeOfCrime,
@@ -666,10 +688,12 @@ func loadLife(takeHome = true, base64life = ""): ##Does the actual LIFE loading 
 	evality = dictionary["evality"]
 	sexuality = dictionary["sexuality"]
 	#rest-of-life-related
-	allJobs = dictionary["allJobs"]
-	allPartTimeJobs = dictionary["allPartTimeJobs"]
 	jobOpenings = dictionary["jobOpenings"]
 	partTimeJobOpenings = dictionary["partTimeJobOpenings"]
+	allJobSalaries = dictionary["allJobSalaries"]
+	jobSavers("load", "full")
+	allPartTimeJobSalaries = dictionary["allPartTimeJobSalaries"]
+	jobSavers("load", "part")
 	crimes = dictionary["crimes"]
 	crimesSeverity = intIser(dictionary["crimesSeverity"])
 	intellectAtTimeOfCrime = intIser(dictionary["intellectAtTimeOfCrime"])

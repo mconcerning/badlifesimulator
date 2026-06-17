@@ -103,6 +103,6 @@ func _ready() -> void:
 	while global.XP >= global.XPRequired: #while you have more XP than you need to level up
 		global.XP -= global.XPRequired #deducts the XP required to level up from your XP
 		global.level += 1 #levels up
-		global.XPRequired += 1000 #makes the next level up harder to reach
+		global.XPRequired += 500 #makes the next level up harder to reach
 		didLevelUp = true
 	global.saveGame()

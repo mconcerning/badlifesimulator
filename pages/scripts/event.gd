@@ -20,6 +20,9 @@ func optionRemover(optionXOnwards : int): ##Disables and changes the opacity to 
 	if optionXOnwards <= 5:
 		$option5.disabled = true
 		$option5.hide()
+	if optionXOnwards <= 6:
+		$option6.disabled = true
+		$option6.hide()
 
 
 func EGPGenerator(ageRange, minAge): ##Randomly generates EGPs (Event Generated Persons). You can then access this new EGP via the global variables eventPersonSex, eventPersonFirstName, etc. If you intend to keep this NPC permanently, generate it, then move it into the permanent relationship (person) arrays.
@@ -80,6 +83,10 @@ func repositionResize(): ##Repositions and resizes the nodes on-screen to create
 	if $option5.get_minimum_size().x >= 1000:
 		$option5.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 		$option5.size.x = 900
+	if $option6.get_minimum_size().x >= 1000:
+		$option6.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+		$option6.size.x = 900
+	#damn. turns out I could have been making events faster this whole time by getting rid of the waiting... I'm keeping it though. It's like a little animation. And I don't know how to make a better animation.
 	if is_inside_tree() == true: #if this node still exists
 		await get_tree().process_frame #wait one frame so the word wrap stuff is able to apply
 	else:
@@ -90,6 +97,7 @@ func repositionResize(): ##Repositions and resizes the nodes on-screen to create
 	$option3.position.y = $option2.position.y + $option2.get_minimum_size().y + 50
 	$option4.position.y = $option3.position.y + $option3.get_minimum_size().y + 50
 	$option5.position.y = $option4.position.y + $option4.get_minimum_size().y + 50
+	$option6.position.y = $option5.position.y + $option5.get_minimum_size().y + 50
 	$heading.position.x = round(540 - (float($heading.size.x / 2))) #centres heading text horizontally on the screen
 	$body.position.x = round(540 - (float($body.size.x / 2)))
 	$option1.position.x = round(540 - (float($option1.size.x / 2))) #centres button horizontally on the screen
@@ -97,6 +105,7 @@ func repositionResize(): ##Repositions and resizes the nodes on-screen to create
 	$option3.position.x = round(540 - (float($option3.size.x / 2)))
 	$option4.position.x = round(540 - (float($option4.size.x / 2)))
 	$option5.position.x = round(540 - (float($option5.size.x / 2)))
+	$option6.position.x = round(540 - (float($option6.size.x / 2)))
 
 
 func emForget(elementToDelete): ##Event Memory Forget. Checks for an "forgets" (removes) predetermined elements from event memory. Don't use this if you don't know the exact value of the element you're trying to remove. 
@@ -372,7 +381,7 @@ func specialised(): ##Runs any miscellanious specialised, non-age-up events.
 			$option4.disabled = true #you can't try it again
 	elif global.revent[0] == "certificate-do-o1":
 		#sets the event for below:
-		if (global.intellect < 50 && randi_range(1,4) != 1) || randi_range(1,9) == 1:
+		if (global.intellect < 50 && randi_range(1, roundi(float(global.intellect) / 10)) == 1) || randi_range(1,9) == 1:
 			global.revent[0] = "certificate-failed"
 		else:
 			global.revent[0] = "certificate-achieved"
@@ -399,56 +408,11 @@ func specialised(): ##Runs any miscellanious specialised, non-age-up events.
 		$body.text += "."
 		$option1.text = "Oh okay"
 		optionRemover(2)
-	elif global.revent[0] == "full-time-fired-performance": #if you've been fired from your full-time job for poor performance
-		if randi_range(1,2) == 1:
-			$heading.text = "Jobless"
-		else:
-			$heading.text = "Unemployed"
-		$body.text = "You've been fired from your job as " + global.fullTimeJob + ". They say it's because of your poor performance."
-		$option1.text = "Okay"
-		optionRemover(2)
-		global.history.append(global.fullTimeJob + "-fired")
-		global.removeFullTimeJob()
-	elif global.revent[0] == "full-time-raise-performance": #if you're getting a raise at your full-time job for good performance
-		$heading.text = "Keeping up with inflation"
-		var raisePercentage = float(global.fullTimePerformance) / 20 + (float(randi_range(-150, 150)) / 100) #the percentage of your original salary you will recieve extra
-		var oldSalary = global.fullTimeSalary #your salary in dollars, pre-raise
-		var salaryIncrease = roundi(float(global.fullTimeSalary) / 100 * raisePercentage) #the amount in dollars your salary will increase
-		var performanceDetriment = roundi(raisePercentage * randi_range(6, 7)) #how much your performance will go down
-		$body.text = "You have been given a " + str(raisePercentage) + "% raise at your job as " + global.fullTimeJob + " for your impeccable performance.\n\n- " + str(performanceDetriment) + " performance\n" + " Old salary: $" + global.commaiser(oldSalary) + "\nNew salary: $" + global.commaiser(oldSalary + salaryIncrease)
-		$option1.text = "Hooray"
-		optionRemover(2)
-		global.fullTimePerformance = global.fullTimePerformance - performanceDetriment #penalises performance
-		global.fullTimeSalary = oldSalary + salaryIncrease #gives you the raise
-	elif global.revent[0] == "full-time-job-apply-fired-quit-already": #if you're trying to apply for a full-time job, but you've already been fired from or quit it this year
-		$heading.text = "Right back on the grind"
-		$body.text = "You can't apply to be a " + global.jobOpenings[global.IDClicked][0] + ". You've already had this job this year."
-		$option1.text = "Okay"
-		optionRemover(2)
-	elif global.revent[0] == "full-time-fired-imprisonment": #if you're being fired from your full-time job
-		$heading.text = "I can't work from there?"
-		$body.text = "You have been fired from your job as " + global.fullTimeJob + ". They say it's because you're going to prison."
-		$option1.text = "Whattt"
-		optionRemover(2)
-		global.removeFullTimeJob()
-	elif global.revent[0] == "school-kicked-out-imprisonment": #if you're getting kicked out of school or university because you're being taken to prison
-		$heading.text = "How am I to reassimilate without an education?"
-		$body.text = "You have been kicked out of your "
-		if global.schoolLevel == 1:
-			$body.text += "primary school"
-		elif global.schoolLevel == 2:
-			$body.text += "high school"
-		elif global.schoolLevel == 3:
-			$body.text += "university"
-		$body.text += ", " + global.schoolName + ". They say it's because you're going to prison."
-		$option1.text = "Whattt"
-		optionRemover(2)
-		global.schoolRemove()
 
 
 func relationships(): ##Specialised, specifically relationship-related events.
 	if global.revent[0] == "compliment-relationship":
-		global.history.append("pcompliment-relationship-" + str(global.personUIDs[global.IDClicked]))
+		global.history.append("compliment-relationship-" + str(global.personUIDs[global.IDClicked]))
 		var badCompliments = ["racist", "a tangerine"]
 		var possibleCompliments = ["really cool", "incredibly attractive", "talented", "fun to be around", "kind", "productive", "intelligent", "smart", "energetic", "creative", "interesting", "a hero", "the best"]
 		if global.personCategories[global.IDClicked] == "family": #if they are a family member
@@ -457,7 +421,7 @@ func relationships(): ##Specialised, specifically relationship-related events.
 		var complimentSelected = possibleCompliments[randi_range(0, possibleCompliments.size() - 1)] #picks a compliment to give
 		if randi_range(1, max(1, roundi(float(global.intellect) / 2))) == 1: #if you accidently forget to compliment them (higher change if you're less intelligent)
 			complimentSelected = badCompliments[randi_range(0, badCompliments.size() - 1)] #picks a "compliment" to give
-		if global.cooldown("compliment-relationship-" + str(global.personUIDs[global.IDClicked])) >= 3: #if you've complimented them too much recently
+		if global.history.count("compliment-relationship-" + str(global.personUIDs[global.IDClicked])) >= 3: #if you've complimented them too much recently
 			$heading.text = "Whatever you say"
 			$body.text = "Your " + global.personTypes[global.IDClicked].to_lower() + ", " + global.personFirstNames[global.IDClicked] + ", said " + global.pronounGenerator("he", global.personSexes[global.IDClicked]) + "'s sick of you trying to compliment " + global.pronounGenerator("him", global.personSexes[global.IDClicked]) + " so much and you need to calm down."
 		else: #if you haven't complimented them 3 or more times already this year
@@ -951,103 +915,52 @@ func prison(): ##Specialised prison events.
 					global.prisonPreparer(global.crimeTimeCalculator())
 					global.revent[0] = "go-to-prison"
 		optionRemover(2)
+	elif global.revent[0] == "school-kicked-out-imprisonment": #if you're getting kicked out of school or university because you're being taken to prison
+		$heading.text = "How am I to reassimilate without an education?"
+		$body.text = "You have been kicked out of your "
+		if global.schoolLevel == 1:
+			$body.text += "primary school"
+		elif global.schoolLevel == 2:
+			$body.text += "high school"
+		elif global.schoolLevel == 3:
+			$body.text += "university"
+		$body.text += ", " + global.schoolName + ". They say it's because you're going to prison."
+		$option1.text = "Whattt"
+		optionRemover(2)
+		global.schoolRemove()
+	elif global.revent[0] == "full-time-fired-imprisonment": #if you're being fired from your full-time job
+		$heading.text = "I can't work from there?"
+		$body.text = "You have been fired from your job as " + global.fullTimeJob + ". They say it's because you're going to prison."
+		$option1.text = "Whattt"
+		optionRemover(2)
+		global.removeFullTimeJob()
 
 
-func confirmation(): ##Non-random confirmation events that tell you that something just happened.
-	if global.revent[0] == "enrolled-in-primary-school" || global.revent[0] == "enrolled-in-high-school":
-		if global.revent[0] == "enrolled-in-primary-school":
-			$heading.text = "Primary school"
-		else: #if you're being enrolled in high school
-			$heading.text = "High school"
-		$body.text = "Your "
-		if global.personTypes.count("Mother") + global.personTypes.count("Father") > 1: #if you have more than one parent
-			$body.text += "parents have enrolled you in " + global.schoolName + "!"
-		elif global.personTypes.count("Mother") + global.personTypes.count("Father") == 1: #if you only have one parent
-			if global.personTypes.find("Mother") != -1: #if you have only a mother
-				$body.text += "mother has enrolled you in " + global.schoolName + "!"
-			elif global.personTypes.find("Father") != -1: #if you have only a father
-				$body.text += "father has enrolled you in " + global.schoolName + "!"
-			else: #if you have neither a mother or a father (technically could happen, if they die)
-				$body.text = "You have been enrolled in " + global.schoolName + "."
+func job(): ##Career-related and career-specific events.
+	if global.revent[0] == "full-time-fired-performance": #if you've been fired from your full-time job for poor performance
+		if randi_range(1,2) == 1:
+			$heading.text = "Jobless"
+		else:
+			$heading.text = "Unemployed"
+		$body.text = "You've been fired from your job as " + global.fullTimeJob + ". They say it's because of your poor performance."
 		$option1.text = "Okay"
 		optionRemover(2)
-	elif global.revent[0] == "graduated-high-school":
-		$heading.text = "Graduate"
-		$body.text = "Congratulations! You graduated high school."
-		$option1.text = "Take some time off"
-		$option2.text = "Apply to a university"
-		$option3.text = "Get a full-time job"
-		$option4.text = "Apply for a certificate"
-		optionRemover(5)
-	elif global.revent[0] == "graduated-university":
-		$heading.text = "Job time"
-		$body.text = "Congratulations! You graduated University."
-		$option1.text = "Take some time off"
+		global.history.append(global.fullTimeJob + "-fired")
+		global.removeFullTimeJob()
+	elif global.revent[0] == "full-time-raise-performance": #if you're getting a raise at your full-time job for good performance
+		$heading.text = "Keeping up with inflation"
+		var raisePercentage = float(global.fullTimePerformance) / 20 + (float(randi_range(-150, 150)) / 100) #the percentage of your original salary you will recieve extra
+		var oldSalary = global.fullTimeSalary #your salary in dollars, pre-raise
+		var salaryIncrease = roundi(float(global.fullTimeSalary) / 100 * raisePercentage) #the amount in dollars your salary will increase
+		var performanceDetriment = roundi(raisePercentage * randi_range(6, 7)) #how much your performance will go down
+		$body.text = "You have been given a " + str(raisePercentage) + "% raise at your job as " + global.fullTimeJob + " for your impeccable performance.\n\n- " + str(performanceDetriment) + " performance\n" + " Old salary: $" + global.commaiser(oldSalary) + "\nNew salary: $" + global.commaiser(oldSalary + salaryIncrease)
+		$option1.text = "Hooray"
 		optionRemover(2)
-	elif global.revent[0] == "study-harder":
-		var dudStudyChance = roundi(float(global.intellect) / 2)
-		if global.intellect <= 20: #if you're so intelligent that you're more inclined to have a total dud of a study session
-			dudStudyChance = roundi(float(dudStudyChance) / 4) #increases your chance of having a poor study session
-		if randi_range(1, max(1, dudStudyChance)) == 1 || global.cooldown("study-harder") >= 3: #if you had a total dud of a study session; happens either at random (higher chance if you're less intelligent) or if you've already studied 3 or more times this year (you're burned out)
-			match randi_range(1,2): #random heading text variation
-				1:
-					$heading.text = "What"
-				2:
-					$heading.text = "Huh"
-			$body.text = "You tried to study for " + str(randi_range(2, 6)) + " hours, but absorbed next to no information."
-			var joySubtracted = randi_range(3, 10)
-			if global.cooldown("study-harder") >= 4: #if you've tried studying WAY too many times now
-				var intellectGained = randi_range(3, 5)
-				global.intellect += intellectGained
-				$body.text += "\n+ " + str(intellectGained) + " Intellect, - " + str(joySubtracted) + " Joy"
-			else:
-				$body.text += "\n- " + str(joySubtracted) + " Joy"
-			$option1.text = "Okay"
-			optionRemover(2)
-			global.joy -= joySubtracted
-			global.history.append("study-harder")
-		else:
-			$heading.text = "Hunkering "
-			match randi_range(1, 4): #random heading text variation
-				1:
-					$heading.text += "down"
-				2:
-					$heading.text += "through"
-				3:
-					$heading.text += "left"
-				4:
-					$heading.text += "in"
-			var joySubtracted = randi_range(roundi(float(global.intellect)/10), 14 - roundi(float(global.intellect)/10))
-			$body.text = "You studied for " + str(max(2, int(roundi(float(global.intellect)/20)))) + " hours.\n+ " + str(int(roundi(float(global.intellect)/18)) + randi_range(1, 3)) + " school performance, + " + str(int(roundi(float(global.intellect)/20)) + 1) + " Intellect, - " + str(joySubtracted) + " Joy"
-			global.schoolPerformance += roundi(float(global.intellect)/18) + randi_range(1, 3)
-			global.intellect += roundi(float(global.intellect)/20) + 1
-			global.joy -= joySubtracted
-			global.history.append("study-harder")
-			$option1.text = "Okay"
-			optionRemover(2)
-			global.XPQueued += 2
-	elif global.revent[0] == "skip-class":
-		global.history.append("skip-class")
-		if global.cooldown("skip-class") >= randi_range(3, 4):
-			$heading.text = "Whoops"
-			$body.text = "You failed one of your classes after not attending for so long."
-			var classPerformanceDeducted = randi_range(7, 9)
-			var joyDeducted = randi_range(5, 11)
-			global.schoolPerformance -= classPerformanceDeducted
-			global.joy -= joyDeducted
-			$body.text += "\n- " + str(classPerformanceDeducted) + " performance, - " + str(joyDeducted) + " joy"
-		else:
-			$heading.text = "Skipping class"
-			const skippedClassTo = ["go bowling", "go skateboarding", "get lunch", "get ice cream", "go to the movie theatre", "go shopping"]
-			$body.text = "You skipped class to " + skippedClassTo[randi_range(0, skippedClassTo.size() - 1)] + " instead."
-			var classPerformanceDeducted = randi_range(7, 9)
-			var intellectDeducted = randi_range(3, 4)
-			var joyGained = randi_range(5, 11)
-			global.schoolPerformance -= classPerformanceDeducted
-			global.intellect -= intellectDeducted
-			global.joy += joyGained
-			$body.text += "\n- " + str(classPerformanceDeducted) + " performance, - " + str(intellectDeducted) + " intellect, + " + str(joyGained) + " joy"
-		global.XPQueued += 3
+		global.fullTimePerformance = global.fullTimePerformance - performanceDetriment #penalises performance
+		global.fullTimeSalary = oldSalary + salaryIncrease #gives you the raise
+	elif global.revent[0] == "full-time-job-apply-fired-quit-already": #if you're trying to apply for a full-time job, but you've already been fired from or quit it this year
+		$heading.text = "Right back on the grind"
+		$body.text = "You can't apply to be a " + global.jobOpenings[global.IDClicked][0] + ". You've already had this job this year."
 		$option1.text = "Okay"
 		optionRemover(2)
 	elif global.revent[0] == "full-time-job-applied-already":
@@ -1094,11 +1007,130 @@ func confirmation(): ##Non-random confirmation events that tell you that somethi
 			global.joy -= joySubtract
 		$option1.text = "Okay"
 		optionRemover(2)
+	elif global.revent[0] == "part-time-job-applied-accepted":
+		$heading.text = "Partial time"
+		$body.text = "Your application for " + global.partTimeJob + " was accepted! You start immediately, earning $" + global.commaiser(global.partTimeRate) + " per hour! ($" + global.commaiser(global.partTimeSalary()) + " per year)"
+		$option1.text = "Hooray"
+		optionRemover(2)
+	elif global.revent[0] == "part-time-job-applied-rejected":
+		$heading.text = "No income for me"
+		$body.text = "Your application for " + global.partTimeJobOpenings[global.IDClicked][0] + " was denied, even though you are fully qualified."
+		$option1.text = "Dang"
+		optionRemover(2)
+	elif global.revent[0] == "part-time-job-applied-already":
+		$heading.text = "Are all these resumes from the same guy??"
+		$body.text = "You can't apply for this job. You've already applied this year."
+		$option1.text = "Dang"
+		optionRemover(2)
+	elif global.revent[0] == "part-time-job-apply-fired-quit-already":
+		$heading.text = "I know! I'll just... Get it again."
+		$body.text = "You can't apply to be a " + global.jobOpenings[global.IDClicked][0] + ". You've already had this job this year."
+		$option1.text = "Okay"
+		optionRemover(2)
+
+
+func confirmation(): ##Non-random confirmation events that tell you that something just happened.
+	if global.revent[0] == "enrolled-in-primary-school" || global.revent[0] == "enrolled-in-high-school":
+		if global.revent[0] == "enrolled-in-primary-school":
+			$heading.text = "Primary school"
+		else: #if you're being enrolled in high school
+			$heading.text = "High school"
+		$body.text = "Your "
+		if global.personTypes.count("Mother") + global.personTypes.count("Father") > 1: #if you have more than one parent
+			$body.text += "parents have enrolled you in " + global.schoolName + "!"
+		elif global.personTypes.count("Mother") + global.personTypes.count("Father") == 1: #if you only have one parent
+			if global.personTypes.find("Mother") != -1: #if you have only a mother
+				$body.text += "mother has enrolled you in " + global.schoolName + "!"
+			elif global.personTypes.find("Father") != -1: #if you have only a father
+				$body.text += "father has enrolled you in " + global.schoolName + "!"
+			else: #if you have neither a mother or a father (technically could happen, if they die)
+				$body.text = "You have been enrolled in " + global.schoolName + "."
+		$option1.text = "Okay"
+		optionRemover(2)
+	elif global.revent[0] == "graduated-high-school":
+		$heading.text = "Graduate"
+		$body.text = "Congratulations! You graduated high school."
+		$option1.text = "Take some time off"
+		$option2.text = "Apply to a university"
+		$option3.text = "Get a full-time job"
+		$option4.text = "Apply for a certificate"
+		optionRemover(5)
+	elif global.revent[0] == "graduated-university":
+		$heading.text = "Job time"
+		$body.text = "Congratulations! You graduated University."
+		$option1.text = "Take some time off"
+		optionRemover(2)
+	elif global.revent[0] == "study-harder":
+		var dudStudyChance = roundi(float(global.intellect) / 2)
+		if global.intellect <= 20: #if you're so intelligent that you're more inclined to have a total dud of a study session
+			dudStudyChance = roundi(float(dudStudyChance) / 4) #increases your chance of having a poor study session
+		if randi_range(1, max(1, dudStudyChance)) == 1 || global.history.count("study-harder") >= 3: #if you had a total dud of a study session; happens either at random (higher chance if you're less intelligent) or if you've already studied 3 or more times this year (you're burned out)
+			match randi_range(1,2): #random heading text variation
+				1:
+					$heading.text = "What"
+				2:
+					$heading.text = "Huh"
+			$body.text = "You tried to study for " + str(randi_range(2, 6)) + " hours, but absorbed next to no information."
+			var joySubtracted = randi_range(3, 10)
+			if global.history.count("study-harder") >= 4: #if you've tried studying WAY too many times now
+				var intellectGained = randi_range(3, 5)
+				global.intellect += intellectGained
+				$body.text += "\n+ " + str(intellectGained) + " Intellect, - " + str(joySubtracted) + " Joy"
+			else:
+				$body.text += "\n- " + str(joySubtracted) + " Joy"
+			$option1.text = "Okay"
+			optionRemover(2)
+			global.joy -= joySubtracted
+			global.history.append("study-harder")
+		else:
+			$heading.text = "Hunkering "
+			match randi_range(1, 4): #random heading text variation
+				1:
+					$heading.text += "down"
+				2:
+					$heading.text += "through"
+				3:
+					$heading.text += "left"
+				4:
+					$heading.text += "in"
+			var joySubtracted = randi_range(roundi(float(global.intellect)/10), 14 - roundi(float(global.intellect)/10))
+			$body.text = "You studied for " + str(max(2, int(roundi(float(global.intellect)/20)))) + " hours.\n+ " + str(int(roundi(float(global.intellect)/18)) + randi_range(1, 3)) + " school performance, + " + str(int(roundi(float(global.intellect)/20)) + 1) + " Intellect, - " + str(joySubtracted) + " Joy"
+			global.schoolPerformance += roundi(float(global.intellect)/18) + randi_range(1, 3)
+			global.intellect += roundi(float(global.intellect)/20) + 1
+			global.joy -= joySubtracted
+			global.history.append("study-harder")
+			$option1.text = "Okay"
+			optionRemover(2)
+			global.XPQueued += 2
+	elif global.revent[0] == "skip-class":
+		global.history.append("skip-class")
+		if global.history.count("skip-class") >= randi_range(3, 4):
+			$heading.text = "Whoops"
+			$body.text = "You failed one of your classes after not attending for so long."
+			var classPerformanceDeducted = randi_range(7, 9)
+			var joyDeducted = randi_range(5, 11)
+			global.schoolPerformance -= classPerformanceDeducted
+			global.joy -= joyDeducted
+			$body.text += "\n- " + str(classPerformanceDeducted) + " performance, - " + str(joyDeducted) + " joy"
+		else:
+			$heading.text = "Skipping class"
+			const skippedClassTo = ["go bowling", "go skateboarding", "get lunch", "get ice cream", "go to the movie theatre", "go shopping"]
+			$body.text = "You skipped class to " + skippedClassTo[randi_range(0, skippedClassTo.size() - 1)] + " instead."
+			var classPerformanceDeducted = randi_range(7, 9)
+			var intellectDeducted = randi_range(3, 4)
+			var joyGained = randi_range(5, 11)
+			global.schoolPerformance -= classPerformanceDeducted
+			global.intellect -= intellectDeducted
+			global.joy += joyGained
+			$body.text += "\n- " + str(classPerformanceDeducted) + " performance, - " + str(intellectDeducted) + " intellect, + " + str(joyGained) + " joy"
+		global.XPQueued += 3
+		$option1.text = "Okay"
+		optionRemover(2)
 
 
 func _on_option_1_pressed() -> void: ##On option 1 selected
 	#confirmation - option 1 will be the only button available when the event's purpose is only to display information. Generally, the button will say "Okay".
-	if global.revent[0] == "toddler-0-o1" || global.revent[0] == "toddler-0-o2" || global.revent[0] == "toddler-0-o3" || global.revent[0] == "child-0-o1" || global.revent[0] == "child-0-o2" || global.revent[0] == "child-0-o3" || global.revent[0] == "child-0-o4" || global.revent[0] == "toddler-friend-o1" || global.revent[0] == "toddler-friend-o2" || global.revent[0] == "child-friend-o1" || global.revent[0] == "child-friend-o2" || global.revent[0] == "teenager-friend-o1" || global.revent[0] == "teenager-friend-o2" || global.revent[0] == "teenager-friend-o3" || global.revent[0] == "adult-friend-o1" || global.revent[0] == "adult-friend-o2" || global.revent[0] == "adult-friend-o3" || global.revent[0] == "elder-friend-o1" || global.revent[0] == "elder-friend-o2" || global.revent[0] == "elder-friend-o3" || global.revent[0] == "child-labour-is-outlawed" || global.revent[0] == "enrolled-in-primary-school" || global.revent[0] == "enrolled-in-high-school" || global.revent[0] == "graduated-high-school" || global.revent[0] == "study-harder" || global.revent[0] == "university-degree-picked-o1" || global.revent[0] == "university-degree-picked-o2" || global.revent[0] == "university-degree-picked-o3" || global.revent[0] == "university-degree-picked-o4" || global.revent[0] == "graduated-university" || global.revent[0] == "compliment-relationship" || global.revent[0] == "skip-class" || global.revent[0] == "arrested-o1-success" || global.revent[0] == "court-trial-o2" || global.revent[0] == "dont-go-to-prison" || global.revent[0] == "full-time-job-applied-already" || global.revent[0] == "full-time-job-applied-accepted" || global.revent[0] == "full-time-job-applied-rejected" || global.revent[0] == "full-time-extra-effort" || global.revent[0] == "certificate-achieved" || global.revent[0] == "certificate-failed" || global.revent[0] == "certificate-unqualified" || global.revent[0] == "full-time-fired-performance" || global.revent[0] == "full-time-raise-performance" || global.revent[0] == "full-time-job-apply-fired-quit-already" || global.revent[0] == "full-time-fired-imprisonment" || global.revent[0] == "school-kicked-out-imprisonment":
+	if global.revent[0] == "toddler-0-o1" || global.revent[0] == "toddler-0-o2" || global.revent[0] == "toddler-0-o3" || global.revent[0] == "child-0-o1" || global.revent[0] == "child-0-o2" || global.revent[0] == "child-0-o3" || global.revent[0] == "child-0-o4" || global.revent[0] == "toddler-friend-o1" || global.revent[0] == "toddler-friend-o2" || global.revent[0] == "child-friend-o1" || global.revent[0] == "child-friend-o2" || global.revent[0] == "teenager-friend-o1" || global.revent[0] == "teenager-friend-o2" || global.revent[0] == "teenager-friend-o3" || global.revent[0] == "adult-friend-o1" || global.revent[0] == "adult-friend-o2" || global.revent[0] == "adult-friend-o3" || global.revent[0] == "elder-friend-o1" || global.revent[0] == "elder-friend-o2" || global.revent[0] == "elder-friend-o3" || global.revent[0] == "child-labour-is-outlawed" || global.revent[0] == "enrolled-in-primary-school" || global.revent[0] == "enrolled-in-high-school" || global.revent[0] == "graduated-high-school" || global.revent[0] == "study-harder" || global.revent[0] == "university-degree-picked-o1" || global.revent[0] == "university-degree-picked-o2" || global.revent[0] == "university-degree-picked-o3" || global.revent[0] == "university-degree-picked-o4" || global.revent[0] == "graduated-university" || global.revent[0] == "compliment-relationship" || global.revent[0] == "skip-class" || global.revent[0] == "arrested-o1-success" || global.revent[0] == "court-trial-o2" || global.revent[0] == "dont-go-to-prison" || global.revent[0] == "full-time-job-applied-already" || global.revent[0] == "full-time-job-applied-accepted" || global.revent[0] == "full-time-job-applied-rejected" || global.revent[0] == "full-time-extra-effort" || global.revent[0] == "certificate-achieved" || global.revent[0] == "certificate-failed" || global.revent[0] == "certificate-unqualified" || global.revent[0] == "full-time-fired-performance" || global.revent[0] == "full-time-raise-performance" || global.revent[0] == "full-time-job-apply-fired-quit-already" || global.revent[0] == "full-time-fired-imprisonment" || global.revent[0] == "school-kicked-out-imprisonment" || global.revent[0] == "part-time-job-applied-accepted" || global.revent[0] == "part-time-job-applied-already":
 		goHome()
 	#special exceptions
 	elif global.revent[0] == "go-to-prison":
@@ -1141,7 +1173,11 @@ func _on_option_5_pressed() -> void: ##On option 5 selected
 	outcome(global.revent[0] + "-o5")
 
 
-func option1outcomes(): ##Option 1 has been picked
+func _on_option_6_pressed() -> void: ##On option 6 selected
+	outcome(global.revent[0] + "-o6")
+
+
+func option1outcomes(): ##Outcomes for option 1
 	if global.revent[0] == "toddler-friend-o1" || global.revent[0] == "child-friend-o1":
 		$heading.text = "Yay"
 		$body.text = "You befriended " + global.eventPersonFirstName + " " + global.eventPersonLastName + "!"
@@ -1250,7 +1286,7 @@ func option1outcomes(): ##Option 1 has been picked
 		global.revent[0] = "certificate-do" #you now attempt to complete your certificate
 
 
-func option2outcomes(): ##Option 2 has been picked
+func option2outcomes(): ##Outcomes for option 2
 	if global.revent[0] == "toddler-friend-o2" || global.revent[0] == "child-friend-o2":
 		$heading.text = "...Can you go away?"
 		$body.text = "You ignore " + global.pronounGenerator("him", global.eventPersonSex) + " for a while, and eventually " + global.pronounGenerator("he", global.eventPersonSex) + " goes away."
@@ -1577,6 +1613,10 @@ func option5outcomes(): ##Option 5 has been picked
 	pass
 
 
+func option6outcomes(): ##Option 6 has been picked
+	pass
+
+
 func eventer(): ##Runs all the functions
 	toddlerhood()
 	childhood()
@@ -1587,12 +1627,14 @@ func eventer(): ##Runs all the functions
 	specialised()
 	relationships()
 	prison()
+	job()
 	confirmation()
 	option1outcomes()
 	option2outcomes()
 	option3outcomes()
 	option4outcomes()
 	option5outcomes()
+	option6outcomes()
 
 
 # Called when the node enters the scene tree for the first time.
