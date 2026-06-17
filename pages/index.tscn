@@ -7,7 +7,7 @@
 [node name="index" type="Node2D" unique_id=777661214]
 script = ExtResource("1_uqewy")
 
-[node name="background" parent="." unique_id=1290927283 instance=ExtResource("2_itaww")]
+[node name="background" parent="." unique_id=1155911318 instance=ExtResource("2_itaww")]
 
 [node name="global" type="Node" parent="." unique_id=886032543]
 script = ExtResource("6_ijqpa")

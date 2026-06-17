@@ -1,6 +1,8 @@
 extends Node2D #author(s): Ethan Scott
 
 
+var universityDegreesCount = global.degrees.size() #does not include primary and high school degrees - see _ready().
+
 @onready var applyButton = $scrollContainer/vBoxContainer/apply
 
 
@@ -10,13 +12,6 @@ func qualificationChecker(): ##Checks if you're qualified to apply for this job 
 		"Lifeguard":
 			if global.age >= 18 && global.health >= 75:
 				applyButton.disabled = false
-
-
-func _on_back_pressed() -> void:
-	get_tree().change_scene_to_file("res://pages/job_search_part_time.tscn")
-
-func _on_exit_pressed() -> void:
-	get_tree().change_scene_to_file("res://pages/game_menu.tscn")
 
 
 func applyForJob():
@@ -39,8 +34,19 @@ func applyForJob():
 	get_tree().change_scene_to_file("res://pages/event.tscn")
 
 
+func _on_back_pressed() -> void:
+	get_tree().change_scene_to_file("res://pages/job_search_part_time.tscn")
+
+func _on_exit_pressed() -> void:
+	get_tree().change_scene_to_file("res://pages/game_menu.tscn")
+
+
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
+	if global.degrees.has("primary-school"):
+		universityDegreesCount -= 1
+	if global.degrees.has("high-school"):
+		universityDegreesCount -= 1
 	$jobName.text = global.partTimeJobOpenings[global.IDClicked][0]
 	$details.text = "Rate: $" + global.commaiser(global.partTimeJobOpenings[global.IDClicked][1]) + "/hr | Hours: " + global.commaiser(global.partTimeJobOpenings[global.IDClicked][2]) + "/wk\nPay per year: $" + global.commaiser(global.partTimeJobOpenings[global.IDClicked][1] * global.partTimeJobOpenings[global.IDClicked][2] * global.partTimeWorkWeeksPerAnnum) + "\nRequires: " + global.partTimeJobOpenings[global.IDClicked][3] #salary = rate * hours * weeks per hour
 	qualificationChecker()

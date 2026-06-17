@@ -39,12 +39,13 @@ func _ready() -> void:
 		search.pressed.connect(fullTimeJobSearch.bind())
 		scrollContainer.add_child(search)
 		lineBreak()
-	if global.partTimeJob != "":
+	if global.partTimeJob != "": #if you have a part-time job
 		var partTimeJobHeading = subheading.instantiate()
 		partTimeJobHeading.text = "Part-time job"
 		scrollContainer.add_child(partTimeJobHeading)
 		var partTimeJob = button.instantiate()
 		partTimeJob.text = global.partTimeJob
+		partTimeJob.pressed.connect(partTimeJobInteract.bind())
 		scrollContainer.add_child(partTimeJob)
 		lineBreak()
 	elif global.age >= 15: #if you don't have a part-time job, but you're 15 or older
@@ -109,6 +110,9 @@ func fullTimeJobInteract():
 
 func partTimeJobSearch():
 	get_tree().change_scene_to_file("res://pages/job_search_part_time.tscn")
+
+func partTimeJobInteract():
+	get_tree().change_scene_to_file("res://pages/job_part_time.tscn")
 
 func certificateApply():
 	get_tree().change_scene_to_file("res://pages/certificate_pick.tscn")

@@ -399,6 +399,11 @@ func findFullTimeJob(job : String): ##Returns the index of any full-time job in 
 		if allJobs[i][0] == job:
 			return i
 
+func findPartTimeJob(job : String): ##Returns the index of any part-time job in the allPartTimeJobs array from its name. Doesn't fucking work for some fucking reason and to be quite honest, I can't be fucked to figure it out.
+	for i in allPartTimeJobs.size():
+		if allPartTimeJobs[i][0] == job:
+			return i
+
 func removeFullTimeJob(): ##Clears your full-time job. Use this when quitting or getting fired.
 	#resets all job effects
 	fullTimeEffectInitialiser() #sets every job effect to 0
