@@ -10,7 +10,6 @@ func _on_exit_pressed() -> void:
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
-	print(global.findPartTimeJob(global.partTimejob))
 	$jobName.text = global.partTimeJob
 	$performance.text = "Performance: " + str(global.partTimePerformance)
 	$payAndHours.text = "Rate: $" + global.commaiser(global.partTimeRate) + "/hr | Hours: " + global.commaiser(global.partTimeHours) + "/wk"

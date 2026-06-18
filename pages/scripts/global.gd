@@ -399,10 +399,10 @@ func findFullTimeJob(job : String): ##Returns the index of any full-time job in 
 		if allJobs[i][0] == job:
 			return i
 
-func findPartTimeJob(job : String): ##Returns the index of any part-time job in the allPartTimeJobs array from its name. Doesn't fucking work for some fucking reason and to be quite honest, I can't be fucked to figure it out.
-	for i in allPartTimeJobs.size():
-		if allPartTimeJobs[i][0] == job:
-			return i
+#func findPartTimeJob(job : String): ##Returns the index of any part-time job in the allPartTimeJobs array from its name. Doesn't fucking work for some fucking reason and to be quite honest, I can't be fucked to figure it out.
+	#for i in allPartTimeJobs.size():
+		#if allPartTimeJobs[i][0] == job:
+			#return i
 
 func removeFullTimeJob(): ##Clears your full-time job. Use this when quitting or getting fired.
 	#resets all job effects
@@ -642,7 +642,7 @@ func loadGame(base64game = ""): ##Does the actual GAME loading.
 	else: #if we're loading from base64
 		dictionary = JSON.parse_string(Marshalls.base64_to_utf8(base64game)) #creates a dictionary of the de-encoded base64 save file to use below:
 	if gameSaveFile != null || base64game != "": #if the file has data to load (WON'T be true upon first ever startup, which is good, we don't want to load from a file that has N O T H I N G) OR we're loading from base64
-		windowSize = dictionary["windowSize"]
+		windowSize = intIser(dictionary["windowSize"])
 		currentLife = dictionary["currentLife"]
 		XP = dictionary["XP"]
 		level = dictionary["level"]
@@ -695,9 +695,9 @@ func loadLife(takeHome = true, base64life = ""): ##Does the actual LIFE loading 
 	#rest-of-life-related
 	jobOpenings = dictionary["jobOpenings"]
 	partTimeJobOpenings = dictionary["partTimeJobOpenings"]
-	allJobSalaries = dictionary["allJobSalaries"]
+	allJobSalaries = intIser(dictionary["allJobSalaries"])
 	jobSavers("load", "full")
-	allPartTimeJobSalaries = dictionary["allPartTimeJobSalaries"]
+	allPartTimeJobSalaries = intIser(dictionary["allPartTimeJobSalaries"])
 	jobSavers("load", "part")
 	crimes = dictionary["crimes"]
 	crimesSeverity = intIser(dictionary["crimesSeverity"])
@@ -733,9 +733,9 @@ func loadLife(takeHome = true, base64life = ""): ##Does the actual LIFE loading 
 	fullTimeEffectIntellect = dictionary["fullTimeEffectIntellect"]
 	fullTimeEffectLooks = dictionary["fullTimeEffectLooks"]
 	fullTimeEffectEvality = dictionary["fullTimeEffectEvality"]
-	loans = dictionary["loans"]
-	loanInitialValue = dictionary["loanInitialValue"]
-	loanPaybackDuration = dictionary["loanPaybackDuration"]
+	loans = intIser(dictionary["loans"])
+	loanInitialValue = intIser(dictionary["loanInitialValue"])
+	loanPaybackDuration = intIser(dictionary["loanPaybackDuration"])
 	loanInterest = dictionary["loanInterest"]
 	#NPC relationships
 	personFirstNames = dictionary["personFirstNames"]

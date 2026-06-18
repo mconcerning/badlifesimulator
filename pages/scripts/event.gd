@@ -3,7 +3,7 @@ extends Node2D #author(s): Ethan Scott
 ##Handles all events in the game.
 
 
-var goingToSpecific : String = "false"
+var goingToSpecific : String = "false" ##Use this instead of the goToSpecific() function to go to a specific page after an event. Set the value to the path of the scene you want to go to and the game will take you there as soon as all other processing is complete. Please note that in order for this to work properly, its value must be SET DURING an event or outcome, NOT when an option is clicked.
 
 
 func optionRemover(optionXOnwards : int): ##Disables and changes the opacity to 0 of unused buttons (optionXOnwards is the number representing which button you want to disable (option 1, 2, 3, 4... etc). It and every button after it will be disabled).
@@ -132,7 +132,7 @@ func goToPrison(): ##Takes you to prison, but that's all this does. You still ne
 	get_tree().change_scene_to_file("res://pages/prison.tscn")
 
 
-func goToSpecific(page : String): ##Goes to a specific page.
+func goToSpecific(page : String): ##Goes to a specific page. You should use the variable "goingToSpecific" in place of this; instead of using "goToSpecific(path)", set goingToSpecific to the path: "goingToSpecific = path". This is handled much better by the entire event system and doesn't break as much, as you only actually go to the page once all the event checks have been done.
 	#global.revent.pop_front() #doesn't run here due to issues with the rest of the script running after it - you'll need to pop on the page you're going to
 	await get_tree().process_frame
 	get_tree().change_scene_to_file(page)
@@ -1137,21 +1137,12 @@ func _on_option_1_pressed() -> void: ##On option 1 selected
 		goToPrison() #sends you to prison
 	elif global.revent[0] == "arrested-o1-curb":
 		goToSpecific("res://pages/death.tscn") #kills you
-	elif global.revent[0] == "change-save-management-mode-to-delete":
-		goToSpecific("res://pages/life_save_files.tscn")
 	elif global.revent[0] == "load-game-from-file-confirmation":
 		print("importing from " + global.eventMemory[0])
 		global.customGameImportDir = global.eventMemory[0]
 		global.eventMemory.pop_front() #get rid of it. We don't need it anymore. Doesn't use emForget() since the specific path stored in memory varies.
 		global.loadGame()
-		global.revent.pop_front()
-		goToSpecific("res://pages/main_menu.tscn")
-	elif global.revent[0] == "load-game-from-clipboard-confirmation":
-		print("importing from base64")
-		global.loadGame(global.eventMemory[0]) #loads progress from the base64 clipboard string
-		global.eventMemory.pop_front() #get rid of the memory. We don't need it anymore. Doesn't use emForget() since the specific data stored in memory varies.
-		global.revent.pop_front()
-		goToSpecific("res://pages/main_menu.tscn")
+		goingToSpecific = "res://pages/main_menu.tscn"
 	#event - option 1 will be an actual option
 	else:
 		outcome(global.revent[0] + "-o1")
@@ -1284,6 +1275,13 @@ func option1outcomes(): ##Outcomes for option 1
 		$option1.text = "Okay"
 		optionRemover(2)
 		global.revent[0] = "certificate-do" #you now attempt to complete your certificate
+	elif global.revent[0] == "load-game-from-clipboard-confirmation-o1":
+		print("importing from base64")
+		global.loadGame(global.eventMemory[0]) #loads progress from the base64 clipboard string
+		global.eventMemory.pop_front() #get rid of the memory. We don't need it anymore. Doesn't use emForget() since the specific data stored in memory varies.
+		goingToSpecific = "res://pages/main_menu.tscn"
+	elif global.revent[0] == "change-save-management-mode-to-delete-o1":
+		goingToSpecific = "res://pages/life_save_files.tscn"
 
 
 func option2outcomes(): ##Outcomes for option 2
@@ -1372,9 +1370,10 @@ func option2outcomes(): ##Outcomes for option 2
 		global.money += 50
 		global.evality += 4 #since you did something bad, you become slightly desensitised to doing bad things
 	elif global.revent[0] == "change-save-management-mode-to-delete-o2":
-		goToSpecific("res://pages/life_save_files.tscn")
+		goingToSpecific = "res://pages/life_save_files.tscn"
+		global.revent.append("change-save-management-mode-to-delete-o2") #the page it sends you to actually does have to know the event ID... Whoops. Put it here twice so it doesn't get removed automatically before it has a chance, I guess.
 	elif global.revent[0] == "graduated-high-school-o2":
-		goToSpecific("res://pages/university_pick_degree.tscn")
+		goingToSpecific = "res://pages/university_pick_degree.tscn"
 	elif global.revent[0] == "university-degree-picked-o2":
 		var parentNoun = ""
 		var numberOfParents = global.personTypes.count("Mother") + global.personTypes.count("Father")
@@ -1431,11 +1430,11 @@ func option2outcomes(): ##Outcomes for option 2
 	elif global.revent[0] == "load-game-from-file-confirmation-o2":
 		print("cancelled import")
 		global.eventMemory.pop_front()
-		goToSpecific("res://pages/import_export_save_files.tscn")
+		goingToSpecific = "res://pages/import_export_save_files.tscn"
 	elif global.revent[0] == "load-game-from-clipboard-confirmation-o2":
 		print("cancelled import")
 		global.eventMemory.pop_front()
-		goToSpecific("res://pages/import_progress_from_clipboard.tscn")
+		goingToSpecific = "res://pages/import_progress_from_clipboard.tscn"
 	elif global.revent[0] == "full-time-quit-confirm-o2":
 		goingToSpecific = "res://pages/job_full_time.tscn"
 	elif global.revent[0] == "certificate-picked-o2":

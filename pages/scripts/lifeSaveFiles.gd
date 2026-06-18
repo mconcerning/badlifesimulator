@@ -65,7 +65,7 @@ func _ready() -> void:
 	#extra stuff
 	if global.revent.size() != 0: #if there ARE events queued to run in the revent array (the first one is the one we want to check, if are in fact any)
 		if global.revent[0] == "change-save-management-mode-to-delete-o2": #if you've confirmed you'd like to enter delete mode
-			global.revent.pop_at(0) #gets rid of the event
+			global.revent.pop_front() #gets rid of the event
 			if global.firstName != "": #if there IS a save file
 				global.saveGame()
 			buttonAction = "delete"

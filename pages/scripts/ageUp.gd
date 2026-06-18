@@ -45,11 +45,6 @@ func basicStatChanges():
 	global.intellect += global.fullTimeEffectIntellect
 	global.looks += global.fullTimeEffectLooks
 	global.evality += global.fullTimeEffectEvality
-	#over-timers
-	global.joyOverTime.append(global.joy)
-	global.healthOverTime.append(global.health)
-	global.intellectOverTime.append(global.intellect)
-	global.looksOverTime.append(global.looks)
 	for i in global.personAges.size(): #runs through every NPC and ages them up
 		global.personAges[i] += 1
 		var stats = global.personStats[i]
@@ -63,7 +58,12 @@ func basicStatChanges():
 			global.multiplicativeArrestChance = 2
 		if global.crimes.find("Failing to appear") != -1: #if you have skipped court
 			global.multiplicativeArrestChance += 1
-	global.statClamper() #clamps stats if they're below 0 or above 100
+	global.statClamper() #clamps certain stats if they're below 0 or above 100
+	#over-timers
+	global.joyOverTime.append(global.joy)
+	global.healthOverTime.append(global.health)
+	global.intellectOverTime.append(global.intellect)
+	global.looksOverTime.append(global.looks)
 	global.history = [] #clears activity history
 	global.newJobOpenings()
 
