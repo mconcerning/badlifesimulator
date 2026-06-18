@@ -298,6 +298,9 @@ func commaiser(number): ##Seperates big numbers by commas every 3 characters fro
 func anIser(undoctoredProceedingWord): ##An-iser. Returns "an " + word if the word you give it starts with a vowel, and "a " + word if it doesn't. Useful in events where the word following "a" will vary; use this so you don't accidentally say "a electrician" or something dumb. There are some small exceptions: for example, if you feed this the word "one" it will flag it as needing an "an" before it, which it doesn't. If you need this to be able to handle a special exception, please add it to the special exceptions or special negative exceptions array contained within this function. Add it to the special exceptions if it doesn't start with a vowel and needs an "an", and add it to special negative exceptions if it DOES start with a vowel but only needs an "a".
 	undoctoredProceedingWord = str(undoctoredProceedingWord) #turns the word we're working with into a string in case it's a number or something weird
 	var proceedingWord = undoctoredProceedingWord.to_lower() #decapitalises the word you're testing, then saves it to a new variable so we can still use the original version later
+	#if we're anIsing a dollar amount, get rid of the dollar sign
+	if proceedingWord[0] == "$":
+		proceedingWord = proceedingWord.substr(1) #only look at the string from the second character (the character after the dollar sign) onwards
 	#first, check for words that DO start with vowels but still only need an "a"
 	var specialNegativeExceptions = ["one", "university"] #if the word starts with a vowel, but still shouldn't be prefixed with an "an", like "one"
 	for i in specialNegativeExceptions.size(): #check for matches
@@ -346,11 +349,14 @@ var allPartTimeJobs = [] ##All part-time jobs that exist. Like allJobs, this fil
 
 var allPartTimeJobSalaries = [] ##A list of all part-time salaries. This is saved in your life save file instead of allPartTimeJobs since the randomly-generated salary is the only thing that needs to kept track of.
 
-func newJobOpenings(): ##Creates a set of new job openings from the list of possible jobs. Used when creating a new life or aging up. If returnAllFullTimeJobs equals "return", this won't randomise job openings and will only return an array of all possible full-time jobs.
-	var newFullTimeJobOpenings = [["Primary school teacher", randi_range(850, 920) * 100, "High school diploma, 70+ intellect", "None"], ["High school teacher", randi_range(900, 1040) * 100, "Any University degree", "- 2 joy"], ["University professor", randi_range(2100, 2300) * 100, "Education + any second degree", "+ 4 intellect"], ["Public defender", randi_range(850, 1000) * 100, "Law degree", "- 4 joy, + 2 intellect"], ["Apprentice lawyer", randi_range(1220, 1300) * 100, "Law degree (65+ proficiency)", "- 4 joy, + 3 intellect"], ["Lawyer", randi_range(1800, 2100) * 100, "Law degree, 7+ yrs experience as apprentice", "- 5 joy, + 5 intellect"], ["Fast food worker", randi_range(490, 530) * 100, "Age 16+", "- 3 joy"], ["Fast food manager", randi_range(560, 620) * 100, "4+ yrs experience as worker, 60+ intellect, 25 yrs or older", "- 5 joy"], ["Retail worker", randi_range(425, 550) * 100, "High school diploma", "- 2 joy"], ["Apprentice logo designer", randi_range(600, 680) * 100, "Graphic design degree", "+ 3 joy"], ["Logo designer", randi_range(820, 900) * 100, "Graphic design degree, 6+ yrs experience as apprentice", "+ 4 joy"], ["Jr. business consultant", randi_range(750, 850) * 100, "Business degree", "+ 3 intellect"], ["Business consultant", randi_range(1100, 1250) * 100, "Business degree, 8+ yrs experience as Jr., 75+ intellect", "+ 5 intellect"], ["Sanitation worker", randi_range(510, 540) * 100, "High school diploma", "- 7 health"], ["Salt technician", randi_range(740, 810) * 100, "High school diploma, 70+ health", "+ 3 looks"], ["Exorcist", randi_range(350, 380) * 100, "High school diploma", "+ 6 joy"], ["Plumber", randi_range(850, 920) * 100, "High school diploma, Cert. in Plumbery", "- 1 health"], ["Electrician", randi_range(1100, 1190) * 100, "Engineering degree, Cert. in Electrical engineering", "None"], ["Astrophysicist", randi_range(1000, 1050) * 100, "Physics degree", "+ 2 intellect"]] ##Randomises which jobs are available for application. Salaries are within a randomised range depending on the job. The salary is calculated by generating a random number and multiplying it by 100. A 3-digit random number would produce a 5-figure salary (tens of thousands of dollars), a 4-digit number would produce a 6-figure salary, and so on. The multiplication results in salaries rounded to hundred of dollars.
-	var newPartTimeOpenings = [["Lifeguard", randi_range(21, 25), randi_range(18, 24), "Age 18+, 75+ health"]] ##An array of arrays. Randomises which part-time jobs are available. The first index (0) of each array is the job name, the second index (1) is the hourly pay rate, the third index (2) is how many hours you'd work per week, and the fourth index (3) is any additional requirements. In Australia, the hours would usually be about 15 - 35, but to qualify as part-time, it MUST be less than 38/week.
+func newJobOpenings(initialiseOnly = false): ##Creates a set of new job openings from the list of possible jobs. Used when creating a new life or aging up. If initialise equals true, this won't randomise job openings and will only fill in the allJobs and all partTimeJobs arrays.
+	var newFullTimeJobOpenings = [["Primary school teacher", randi_range(850, 920) * 100, "High school diploma, 70+ intellect", "None"], ["High school teacher", randi_range(900, 1040) * 100, "Any University degree", "- 2 joy"], ["University professor", randi_range(2100, 2300) * 100, "Education + any second degree", "+ 4 intellect"], ["Public defender", randi_range(850, 1000) * 100, "Law degree", "- 4 joy, + 2 intellect"], ["Apprentice lawyer", randi_range(1220, 1300) * 100, "Law degree (65+ proficiency)", "- 4 joy, + 3 intellect"], ["Lawyer", randi_range(1800, 2100) * 100, "Law degree, 7+ yrs experience as apprentice", "- 5 joy, + 5 intellect"], ["Fast food worker", randi_range(490, 530) * 100, "Age 16+", "- 3 joy"], ["Fast food manager", randi_range(560, 620) * 100, "4+ yrs experience as worker, 60+ intellect, 25 yrs or older", "- 5 joy"], ["Retail worker", randi_range(425, 550) * 100, "High school diploma", "- 2 joy"], ["Apprentice logo designer", randi_range(600, 680) * 100, "Graphic design degree", "+ 3 joy"], ["Logo designer", randi_range(820, 900) * 100, "Graphic design degree, 6+ yrs experience as apprentice", "+ 4 joy"], ["Jr. business consultant", randi_range(750, 850) * 100, "Business degree", "+ 3 intellect"], ["Business consultant", randi_range(1100, 1250) * 100, "Business degree, 8+ yrs experience as Jr., 75+ intellect", "+ 5 intellect"], ["Sanitation worker", randi_range(510, 540) * 100, "High school diploma", "- 7 health"], ["Salt technician", randi_range(740, 810) * 100, "High school diploma, 70+ health", "+ 3 looks"], ["Exorcist", randi_range(350, 380) * 100, "High school diploma", "+ 6 joy"], ["Plumber", randi_range(850, 920) * 100, "High school diploma, Cert. in Plumbery", "- 1 health"], ["Electrician", randi_range(1100, 1190) * 100, "Engineering degree, Cert. in Electrical engineering", "None"], ["Astrophysicist", randi_range(1000, 1050) * 100, "Physics degree", "+ 2 intellect"], ["Cook", randi_range(760, 800) * 100, "3+ yrs experience as Kitchen hand, High school diploma", "- 1 Joy"], ["Head chef", randi_range(880, 920) * 100, "8+ yrs experience as Cook", "- 1 Joy, - 1 Health"]] ##Randomises which jobs are available for application. Salaries are within a randomised range depending on the job. The salary is calculated by generating a random number and multiplying it by 100. A 3-digit random number would produce a 5-figure salary (tens of thousands of dollars), a 4-digit number would produce a 6-figure salary, and so on. The multiplication results in salaries rounded to hundred of dollars.
+	var newPartTimeOpenings = [["Lifeguard", randi_range(21, 25), randi_range(18, 24), "Age 18+, 75+ health"], ["Kitchen hand", randi_range(24, 27), randi_range(28, 34), "High school diploma"]] ##An array of arrays. Randomises which part-time jobs are available. The first index (0) of each array is the job name, the second index (1) is the hourly pay rate, the third index (2) is how many hours you'd work per week, and the fourth index (3) is any additional requirements. In Australia, the hours would usually be about 15 - 35, but to qualify as part-time, it MUST be less than 38/week.
+	allJobs = newFullTimeJobOpenings #before the number of jobs is cut and the order is randomised, create the global dictionary of all jobs
+	allPartTimeJobs = newPartTimeOpenings #do the same for part-time jobs
+	if initialiseOnly == true: #if we're only here to initialise the allJobs arrays, do the above and then stop
+		return
 	#full-time jobs
-	allJobs = newFullTimeJobOpenings #before the number of jobs is culled and the order is randomised, create the global dictionary of all jobs
 	jobSavers("save", "full") #saves the randomly-generated job salaries based on allJobs
 	newFullTimeJobOpenings.shuffle() #randomises order of the jobs. Used in tandem with the below, randomly limits which jobs are available.
 	while newFullTimeJobOpenings.size() > 25: #limits the number of job openings on any given year to 25; these 25 could be any
@@ -360,7 +366,6 @@ func newJobOpenings(): ##Creates a set of new job openings from the list of poss
 	newFullTimeJobOpenings.sort_custom(func(a, b): return a[1] > b[1]) #fine
 	jobOpenings = newFullTimeJobOpenings
 	#part-time job openings
-	allPartTimeJobs = newPartTimeOpenings
 	jobSavers("save", "part") #saves the randomly-generated job salaries based on allPartTimeJobs
 	newPartTimeOpenings.shuffle() #randomises order of the jobs
 	while newPartTimeOpenings.size() > 10: #limits the number of part time jobs available to 10; removes any jobs beyond those 10 in the randomised order array
@@ -379,6 +384,7 @@ func jobSavers(saveLoad : String, timeType : String): ##saves (or loads) the lis
 			for i in allPartTimeJobs.size():
 				allPartTimeJobSalaries.append(allPartTimeJobs[i][1]) #puts the part-time job's salary in the allPartTimeJobSalaries array
 	elif saveLoad == "load": #if we want to load the jobs' saved salaries
+		newJobOpenings(true) #initialise the allJobs arrays for both full-time and part-time jobs
 		if timeType == "full":
 			#allJobs = newJobOpenings("return full-time") #has to get the list of all jobs first because allJobs does not equal it yet
 			for i in allJobs.size():
@@ -399,10 +405,10 @@ func findFullTimeJob(job : String): ##Returns the index of any full-time job in 
 		if allJobs[i][0] == job:
 			return i
 
-#func findPartTimeJob(job : String): ##Returns the index of any part-time job in the allPartTimeJobs array from its name. Doesn't fucking work for some fucking reason and to be quite honest, I can't be fucked to figure it out.
-	#for i in allPartTimeJobs.size():
-		#if allPartTimeJobs[i][0] == job:
-			#return i
+func findPartTimeJob(job : String): ##Returns the index of any part-time job in the allPartTimeJobs array from its name.
+	for i in allPartTimeJobs.size():
+		if allPartTimeJobs[i][0] == job:
+			return i
 
 func removeFullTimeJob(): ##Clears your full-time job. Use this when quitting or getting fired.
 	#resets all job effects

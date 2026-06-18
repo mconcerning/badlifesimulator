@@ -21,7 +21,7 @@ func _ready() -> void:
 		partTimeJob.pressed.connect(jobSelect.bind(i))
 		scrl.add_child(partTimeJob)
 		var details = body.instantiate()
-		details.text = "Rate: $" + global.commaiser(global.partTimeJobOpenings[i][1]) + "/hr | Hours: " + global.commaiser(global.partTimeJobOpenings[i][2]) + "/wk\nPay per year: $" + global.commaiser(global.partTimeJobOpenings[i][1] * global.partTimeJobOpenings[i][2] * global.partTimeWorkWeeksPerAnnum) + "\nRequires: " + global.partTimeJobOpenings[i][3] #salary = rate * hours * weeks per hour
+		details.text = "Rate: $" + global.commaiser(global.partTimeJobOpenings[i][1]) + "/hr | Hours: " + global.commaiser(global.partTimeJobOpenings[i][2]) + "/wk\nPay per year: $" + global.commaiser(global.partTimeJobOpenings[i][1] * global.partTimeJobOpenings[i][2] * global.partTimeWorkWeeksPerAnnum) + "\nRequires: " + global.partTimeJobOpenings[i][3] + "\n" #salary = rate * hours * weeks per hour
 		scrl.add_child(details)
 		if details.size.x > 960: #caps the details text length at 960 pixels; if it's longer, enable autowrap
 			details.custom_minimum_size.x = 960

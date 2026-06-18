@@ -69,6 +69,12 @@ func qualificationChecker(): ##Checks if you're qualified for the job you've sel
 		"Astrophysicist":
 			if global.degrees.has("Physics"):
 				applyButton.disabled = false
+		"Cook":
+			if global.workExperience.count("Kitchen hand") >= 3 && global.degrees.has("high-school"):
+				applyButton.disabled = false
+		"Head chef":
+			if global.workExperience.count("Cook") >= 8:
+				applyButton.disabled = false
 
 
 func jobEffectsGiver():
@@ -104,13 +110,17 @@ func jobEffectsGiver():
 		"Salt technician":
 			global.fullTimeEffectInitialiser(0, 0, 0, 3)
 		"Exorcist":
-			global.fullTimeEffectInitialiser(6, 0, 0, 0, 6) #secretly increases evality - your ass is so getting haunted doing this job
+			global.fullTimeEffectInitialiser(6, 0, 0, 0, 7) #secretly increases evality - your ass is so getting haunted doing this job
 		"Plumber":
 			global.fullTimeEffectInitialiser(0, -1)
 		"Electrician":
 			global.fullTimeEffectInitialiser()
 		"Astrophysicist":
 			global.fullTimeEffectInitialiser(0, 0, 2)
+		"Cook":
+			global.fullTimeEffectInitialiser(-1)
+		"Head chef":
+			global.fullTimeEffectInitialiser(-1, -1)
 
 
 func applyForJob():

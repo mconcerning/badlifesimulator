@@ -10,7 +10,10 @@ func qualificationChecker(): ##Checks if you're qualified to apply for this job 
 	applyButton.disabled = true
 	match global.partTimeJobOpenings[global.IDClicked][0]:
 		"Lifeguard":
-			if global.age >= 18 && global.health >= 75:
+			if global.age >= 18 && global.health >= 75: #if you're 18 years or older and have 75 or more health
+				applyButton.disabled = false
+		"Kitchen hand":
+			if global.degrees.has("high-school"): #if you have a high school diploma
 				applyButton.disabled = false
 
 

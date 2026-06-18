@@ -316,7 +316,7 @@ func specialised(): ##Runs any miscellanious specialised, non-age-up events.
 			$option1.disabled = true #you can't pay for it upfront; this option is unavailable
 		else: #if you have enough money to pay for it upfront
 			$body.text += "You have enough money to pay for it upfront ($" + global.commaiser(global.money) + "), but you can still choose "
-		$body.text += "to take out a " + str(loanDuration) + "-year loan to cover the costs with an interest rate of " + str(loanInterestRate) + "%, or you can apply for a scholarship."
+		$body.text += "to take out " + global.anIser(loanDuration) + "-year loan to cover the costs with an interest rate of " + str(loanInterestRate) + "%, or you can apply for a scholarship."
 		$option1.text = "Pay for it with cash"
 		if global.personTypes.count("Mother") + global.personTypes.count("Father") >= 2: #if you have two parents
 			$option2.text = "Ask your parents to pay"
@@ -360,7 +360,7 @@ func specialised(): ##Runs any miscellanious specialised, non-age-up events.
 			$option1.disabled = true #you can't pay for it upfront; this option is unavailable
 		else: #if you have enough money to pay for it upfront
 			$body.text += "You have enough money to pay for it upfront ($" + global.commaiser(global.money) + "), but you can still choose "
-		$body.text += "to take out a " + str(loanDuration) + "-year loan to cover the costs with an interest rate of " + str(loanInterestRate) + "%, or you can apply for a scholarship."
+		$body.text += "to take out " + global.anIser(loanDuration) + "-year loan to cover the costs with an interest rate of " + str(loanInterestRate) + "%, or you can apply for a scholarship."
 		$option1.text = "Pay for it with cash"
 		if global.personTypes.count("Mother") + global.personTypes.count("Father") >= 2: #if you have two parents
 			$option2.text = "Ask your parents to pay"
@@ -953,14 +953,14 @@ func job(): ##Career-related and career-specific events.
 		var oldSalary = global.fullTimeSalary #your salary in dollars, pre-raise
 		var salaryIncrease = roundi(float(global.fullTimeSalary) / 100 * raisePercentage) #the amount in dollars your salary will increase
 		var performanceDetriment = roundi(raisePercentage * randi_range(6, 7)) #how much your performance will go down
-		$body.text = "You have been given a " + str(raisePercentage) + "% raise at your job as " + global.fullTimeJob + " for your impeccable performance.\n\n- " + str(performanceDetriment) + " performance\n" + " Old salary: $" + global.commaiser(oldSalary) + "\nNew salary: $" + global.commaiser(oldSalary + salaryIncrease)
+		$body.text = "You have been given " + global.anIser(raisePercentage) + "% raise at your job as " + global.fullTimeJob + " for your impeccable performance.\n\n- " + str(performanceDetriment) + " performance\n" + " Old salary: $" + global.commaiser(oldSalary) + "\nNew salary: $" + global.commaiser(oldSalary + salaryIncrease)
 		$option1.text = "Hooray"
 		optionRemover(2)
 		global.fullTimePerformance = global.fullTimePerformance - performanceDetriment #penalises performance
 		global.fullTimeSalary = oldSalary + salaryIncrease #gives you the raise
 	elif global.revent[0] == "full-time-job-apply-fired-quit-already": #if you're trying to apply for a full-time job, but you've already been fired from or quit it this year
 		$heading.text = "Right back on the grind"
-		$body.text = "You can't apply to be a " + global.jobOpenings[global.IDClicked][0] + ". You've already had this job this year."
+		$body.text = "You can't apply to be " + global.anIser(global.jobOpenings[global.IDClicked][0]) + ". You've already had this job this year."
 		$option1.text = "Okay"
 		optionRemover(2)
 	elif global.revent[0] == "full-time-job-applied-already":
@@ -970,7 +970,7 @@ func job(): ##Career-related and career-specific events.
 		optionRemover(2)
 	elif global.revent[0] == "full-time-job-applied-accepted":
 		$heading.text = "Job career"
-		$body.text = "Your application for " + global.fullTimeJob + " was accepted! You start immediately, earning a $" + global.commaiser(global.fullTimeSalary) + " yearly salary!"
+		$body.text = "Your application for " + global.fullTimeJob + " was accepted! You start immediately, earning " + global.anIser("$" + global.commaiser(global.fullTimeSalary)) + " yearly salary!"
 		$option1.text = "Hooray"
 		optionRemover(2)
 	elif global.revent[0] == "full-time-job-applied-rejected":
@@ -1024,7 +1024,7 @@ func job(): ##Career-related and career-specific events.
 		optionRemover(2)
 	elif global.revent[0] == "part-time-job-apply-fired-quit-already":
 		$heading.text = "I know! I'll just... Get it again."
-		$body.text = "You can't apply to be a " + global.jobOpenings[global.IDClicked][0] + ". You've already had this job this year."
+		$body.text = "You can't apply to be " + global.anIser(global.jobOpenings[global.IDClicked][0]) + ". You've already had this job this year."
 		$option1.text = "Okay"
 		optionRemover(2)
 
