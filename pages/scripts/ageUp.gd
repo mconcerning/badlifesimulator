@@ -69,8 +69,10 @@ func basicStatChanges():
 
 
 func school():
-	if global.schoolLevel == 1 || global.schoolLevel == 2: #if you are in primary or high school
+	if global.schoolLevel == 1: #if you are in primary school
 		global.workExperience.append("school-" + str(global.schoolLevel)) #adds schooling as work experience - this is used and removed only when you graduated
+	elif global.schoolLevel == 2: #if you are in high school
+		global.workExperience.append("school-" + str(global.schoolLevel))
 	elif global.schoolLevel == 3: #if you are in university
 		global.workExperience.append("school-" + str(global.schoolLevel) + global.degreePicked) #adds schooling as work experience - this is used and removed only when you graduated
 	if global.schoolLevel != -1 && global.schoolLevel != 0: #if you are in school at all
@@ -160,7 +162,7 @@ func job():
 		if global.fullTimePerformance <= 35 && randi_range(1, roundi(float(global.fullTimePerformance) / 10)) == 1: #if you're performing too poorly and end up getting fired
 			global.revent.append("full-time-fired-performance")
 		else: #if you haven't been fired
-			if global.fullTimePerformance >= 80 && randi_range(1,3) == 1:
+			if global.fullTimePerformance >= 80 && randi_range(1,3) == 1: #if you're getting a raise
 				global.revent.append("full-time-raise-performance")
 			global.workExperience.append(global.fullTimeJob) #you get work experience for it
 			global.XPQueued += 25
@@ -261,6 +263,7 @@ func _ready() -> void:
 	rareAgeUpEvents()
 	randomDeathChance()
 	imprisonment()
+	global.statClamper()
 	if isDying == true: #if you're dying
 		return #don't do anything below
 	#runs events if they're queued

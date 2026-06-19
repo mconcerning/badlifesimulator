@@ -17,7 +17,7 @@ func lineBreak(): ##Creates a blank body paragraph in the scroll container to fu
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	#button and heading generation
-	if global.fullTimeJob != "":
+	if global.fullTimeJob != "": #full time job search
 		var fullTimeJobHeading = subheading.instantiate()
 		fullTimeJobHeading.text = "Full-time job"
 		#subheading colour change for differentiation (currently disabled bc it looks like shit)

@@ -14,6 +14,7 @@ script = ExtResource("1_pi1xr")
 [node name="background" parent="." unique_id=1499591412 instance=ExtResource("2_tphct")]
 
 [node name="heading" type="Label" parent="." unique_id=631056579]
+custom_minimum_size = Vector2(1000, 0)
 offset_left = 40.0
 offset_top = 140.0
 offset_right = 1040.0
@@ -25,6 +26,7 @@ autowrap_mode = 3
 metadata/_edit_use_anchors_ = true
 
 [node name="body" type="Label" parent="." unique_id=556120999]
+custom_minimum_size = Vector2(1000, 0)
 offset_left = 40.0
 offset_top = 250.0
 offset_right = 1040.0

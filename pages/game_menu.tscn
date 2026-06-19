@@ -40,6 +40,7 @@ script = ExtResource("1_4h7a2")
 [node name="background" parent="." unique_id=305944048 instance=ExtResource("1_owp1n")]
 
 [node name="name" type="Label" parent="." unique_id=674454806]
+custom_minimum_size = Vector2(880, 0)
 offset_left = 100.0
 offset_top = 50.0
 offset_right = 980.0

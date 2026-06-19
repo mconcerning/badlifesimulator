@@ -35,6 +35,7 @@ placeholder_text = "Input value"
 caret_blink = true
 
 [node name="confirmation" type="Label" parent="." unique_id=1042720683]
+custom_minimum_size = Vector2(1080, 0)
 offset_top = 1820.0
 offset_right = 1080.0
 offset_bottom = 1880.0

@@ -10,6 +10,7 @@ script = ExtResource("1_igi2f")
 [node name="background" parent="." unique_id=582606507 instance=ExtResource("1_tjtcs")]
 
 [node name="loadingText" type="Label" parent="." unique_id=1041378799]
+custom_minimum_size = Vector2(1000, 1920)
 offset_left = 40.0
 offset_right = 1040.0
 offset_bottom = 1920.0

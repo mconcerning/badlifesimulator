@@ -1033,6 +1033,39 @@ func job(): ##Career-related and career-specific events.
 		$option1.text = "I'm sure"
 		$option2.text = "Cancel"
 		optionRemover(3)
+	elif global.revent[0] == "part-time-extra-effort":
+		var healthSubtract = randi_range(3, 6)
+		if global.history.count("part-time-extra-effort") < 3: #if you haven't already done this 3 times this year
+			$heading.text = "Working up an appetite"
+			if global.partTimeJob == "Kitchen hand":
+				$heading.text = "Yum"
+			var performanceAdd = randi_range(6, 8)
+			var joyChange = 0
+			match randi_range(1,2):
+				1:
+					joyChange = randi_range(-6, -3)
+				2:
+					joyChange = randi_range(3, 8)
+			$body.text = "You started putting in some extra effort at your part-time job as " + global.partTimeJob + ".\n+ " + str(performanceAdd) + " performance, - " + str(healthSubtract) + " health, "
+			if joyChange < 0: #if the change to joy is negative
+				$body.text += "- " + str(-joyChange) + " joy"
+			elif joyChange > 0: #if the change to joy is positive
+				$body.text += "+ " + str(joyChange) + " joy"
+			global.partTimePerformance += performanceAdd
+			global.health -= healthSubtract
+			global.joy += joyChange
+			global.history.append("part-time-extra-effort")
+			global.XPQueued += 2
+		else: #if you've already done this 3 or more times this year
+			var joySubtract = randi_range(2, 5)
+			$heading.text = "Too hungry"
+			if global.partTimeJob == "Kitchen hand":
+				$heading.text = "Not hungry anymore"
+			$body.text = "You've overextended yourself too much this year.\n- " + str(healthSubtract) + " health, - " + str(joySubtract) + " joy"
+			global.health -= healthSubtract
+			global.joy -= joySubtract
+		$option1.text = "Okay"
+		optionRemover(2)
 
 
 func confirmation(): ##Non-random confirmation events that tell you that something just happened.
@@ -1101,8 +1134,9 @@ func confirmation(): ##Non-random confirmation events that tell you that somethi
 				4:
 					$heading.text += "in"
 			var joySubtracted = randi_range(roundi(float(global.intellect)/10), 14 - roundi(float(global.intellect)/10))
-			$body.text = "You studied for " + str(max(2, int(roundi(float(global.intellect)/20)))) + " hours.\n+ " + str(int(roundi(float(global.intellect)/18)) + randi_range(1, 3)) + " school performance, + " + str(int(roundi(float(global.intellect)/20)) + 1) + " Intellect, - " + str(joySubtracted) + " Joy"
-			global.schoolPerformance += roundi(float(global.intellect)/18) + randi_range(1, 3)
+			var performanceIncreased = roundi(float(global.intellect)/18) + randi_range(1, 3)
+			$body.text = "You studied for " + str(max(2, int(roundi(float(global.intellect)/20)))) + " hours.\n+ " + str(performanceIncreased) + " school performance, + " + str(int(roundi(float(global.intellect)/20)) + 1) + " Intellect, - " + str(joySubtracted) + " Joy"
+			global.schoolPerformance += performanceIncreased
 			global.intellect += roundi(float(global.intellect)/20) + 1
 			global.joy -= joySubtracted
 			global.history.append("study-harder")
@@ -1137,7 +1171,7 @@ func confirmation(): ##Non-random confirmation events that tell you that somethi
 
 func _on_option_1_pressed() -> void: ##On option 1 selected
 	#confirmation - option 1 will be the only button available when the event's purpose is only to display information. Generally, the button will say "Okay".
-	if global.revent[0] == "toddler-0-o1" || global.revent[0] == "toddler-0-o2" || global.revent[0] == "toddler-0-o3" || global.revent[0] == "child-0-o1" || global.revent[0] == "child-0-o2" || global.revent[0] == "child-0-o3" || global.revent[0] == "child-0-o4" || global.revent[0] == "toddler-friend-o1" || global.revent[0] == "toddler-friend-o2" || global.revent[0] == "child-friend-o1" || global.revent[0] == "child-friend-o2" || global.revent[0] == "teenager-friend-o1" || global.revent[0] == "teenager-friend-o2" || global.revent[0] == "teenager-friend-o3" || global.revent[0] == "adult-friend-o1" || global.revent[0] == "adult-friend-o2" || global.revent[0] == "adult-friend-o3" || global.revent[0] == "elder-friend-o1" || global.revent[0] == "elder-friend-o2" || global.revent[0] == "elder-friend-o3" || global.revent[0] == "child-labour-is-outlawed" || global.revent[0] == "enrolled-in-primary-school" || global.revent[0] == "enrolled-in-high-school" || global.revent[0] == "graduated-high-school" || global.revent[0] == "study-harder" || global.revent[0] == "university-degree-picked-o1" || global.revent[0] == "university-degree-picked-o2" || global.revent[0] == "university-degree-picked-o3" || global.revent[0] == "university-degree-picked-o4" || global.revent[0] == "graduated-university" || global.revent[0] == "compliment-relationship" || global.revent[0] == "skip-class" || global.revent[0] == "arrested-o1-success" || global.revent[0] == "court-trial-o2" || global.revent[0] == "dont-go-to-prison" || global.revent[0] == "full-time-job-applied-already" || global.revent[0] == "full-time-job-applied-accepted" || global.revent[0] == "full-time-job-applied-rejected" || global.revent[0] == "full-time-extra-effort" || global.revent[0] == "certificate-achieved" || global.revent[0] == "certificate-failed" || global.revent[0] == "certificate-unqualified" || global.revent[0] == "full-time-fired-performance" || global.revent[0] == "full-time-raise-performance" || global.revent[0] == "full-time-job-apply-fired-quit-already" || global.revent[0] == "full-time-fired-imprisonment" || global.revent[0] == "school-kicked-out-imprisonment" || global.revent[0] == "part-time-job-applied-accepted" || global.revent[0] == "part-time-job-applied-already" || global.revent[0] == "part-time-job-applied-rejected" || global.revent[0] == "part-time-job-apply-fired-quit-already":
+	if global.revent[0] == "toddler-0-o1" || global.revent[0] == "toddler-0-o2" || global.revent[0] == "toddler-0-o3" || global.revent[0] == "child-0-o1" || global.revent[0] == "child-0-o2" || global.revent[0] == "child-0-o3" || global.revent[0] == "child-0-o4" || global.revent[0] == "toddler-friend-o1" || global.revent[0] == "toddler-friend-o2" || global.revent[0] == "child-friend-o1" || global.revent[0] == "child-friend-o2" || global.revent[0] == "teenager-friend-o1" || global.revent[0] == "teenager-friend-o2" || global.revent[0] == "teenager-friend-o3" || global.revent[0] == "adult-friend-o1" || global.revent[0] == "adult-friend-o2" || global.revent[0] == "adult-friend-o3" || global.revent[0] == "elder-friend-o1" || global.revent[0] == "elder-friend-o2" || global.revent[0] == "elder-friend-o3" || global.revent[0] == "child-labour-is-outlawed" || global.revent[0] == "enrolled-in-primary-school" || global.revent[0] == "enrolled-in-high-school" || global.revent[0] == "graduated-high-school" || global.revent[0] == "study-harder" || global.revent[0] == "university-degree-picked-o1" || global.revent[0] == "university-degree-picked-o2" || global.revent[0] == "university-degree-picked-o3" || global.revent[0] == "university-degree-picked-o4" || global.revent[0] == "graduated-university" || global.revent[0] == "compliment-relationship" || global.revent[0] == "skip-class" || global.revent[0] == "arrested-o1-success" || global.revent[0] == "court-trial-o2" || global.revent[0] == "dont-go-to-prison" || global.revent[0] == "full-time-job-applied-already" || global.revent[0] == "full-time-job-applied-accepted" || global.revent[0] == "full-time-job-applied-rejected" || global.revent[0] == "full-time-extra-effort" || global.revent[0] == "certificate-achieved" || global.revent[0] == "certificate-failed" || global.revent[0] == "certificate-unqualified" || global.revent[0] == "full-time-fired-performance" || global.revent[0] == "full-time-raise-performance" || global.revent[0] == "full-time-job-apply-fired-quit-already" || global.revent[0] == "full-time-fired-imprisonment" || global.revent[0] == "school-kicked-out-imprisonment" || global.revent[0] == "part-time-job-applied-accepted" || global.revent[0] == "part-time-job-applied-already" || global.revent[0] == "part-time-job-applied-rejected" || global.revent[0] == "part-time-job-apply-fired-quit-already" || global.revent[0] == "part-time-extra-effort":
 		goHome()
 	#special exceptions
 	elif global.revent[0] == "go-to-prison":

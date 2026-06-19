@@ -23,11 +23,11 @@ func _ready() -> void:
 	$salary.text = "Salary: $" + global.commaiser(global.fullTimeSalary) + "/yr"
 
 
-func _on_extra_effort_pressed() -> void:
-	global.revent.append("full-time-extra-effort")
+func _on_quit_pressed() -> void:
+	global.revent.append("full-time-quit-confirm")
 	get_tree().change_scene_to_file("res://pages/event.tscn")
 
 
-func _on_quit_pressed() -> void:
-	global.revent.append("full-time-quit-confirm")
+func _on_extra_effort_pressed() -> void:
+	global.revent.append("full-time-extra-effort")
 	get_tree().change_scene_to_file("res://pages/event.tscn")

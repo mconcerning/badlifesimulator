@@ -25,12 +25,14 @@ offset_left = 960.0
 offset_right = 1060.0
 
 [node name="jobName" parent="." unique_id=1227387029 instance=ExtResource("5_v2pu3")]
+custom_minimum_size = Vector2(1080, 0)
 offset_left = 0.0
 offset_right = 1080.0
 text = "Easter employment"
 autowrap_mode = 3
 
 [node name="details" type="Label" parent="." unique_id=299959575]
+custom_minimum_size = Vector2(1000, 0)
 offset_left = 40.0
 offset_top = 260.0
 offset_right = 1040.0

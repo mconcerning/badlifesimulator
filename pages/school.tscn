@@ -34,6 +34,7 @@ label_settings = ExtResource("4_f7717")
 horizontal_alignment = 1
 
 [node name="schoolName" parent="." unique_id=1227387029 instance=ExtResource("4_fkmne")]
+custom_minimum_size = Vector2(1080, 0)
 offset_left = 0.0
 offset_right = 1080.0
 text = "Christmas School 2"
