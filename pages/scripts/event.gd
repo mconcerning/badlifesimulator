@@ -271,12 +271,6 @@ func specialised(): ##Runs any miscellanious specialised, non-age-up events.
 		$body.text = "You're too young to get a job. Child labour is thoroughly illegal. Unless..."
 		$option1.text = "Dang it"
 		optionRemover(2)
-	elif global.revent[0] == "full-time-quit-confirm":
-		$heading.text = "Please confirm"
-		$body.text = "Are you sure you want to quit your full-time job as " + global.fullTimeJob + "? You won't be able to re-apply for it until next year.\n\nSalary: $" + global.commaiser(global.fullTimeSalary) + "\nPerformance: " + str(global.fullTimePerformance)
-		$option1.text = "I'm sure"
-		$option2.text = "Cancel"
-		optionRemover(3)
 	elif global.revent [0] == "university-degree-picked" || global.revent[0] == "university-degree-picked-o2-refused-o1" || global.revent[0] == "university-degree-picked-o4-rejected-o1":
 		var cost = 0 #total cost of the degree, in dollars
 		var loanDuration = 0 #duration of a loan to pay for the degree, in years
@@ -978,6 +972,12 @@ func job(): ##Career-related and career-specific events.
 		$body.text = "Your application for " + global.jobOpenings[global.IDClicked][0] + " was denied, even though you are fully qualified."
 		$option1.text = "Dang"
 		optionRemover(2)
+	elif global.revent[0] == "full-time-quit-confirm":
+		$heading.text = "Please confirm"
+		$body.text = "Are you sure you want to quit your full-time job as " + global.fullTimeJob + "? You won't be able to re-apply for it until next year.\n\nSalary: $" + global.commaiser(global.fullTimeSalary) + "\nPerformance: " + str(global.fullTimePerformance)
+		$option1.text = "I'm sure"
+		$option2.text = "Cancel"
+		optionRemover(3)
 	elif global.revent[0] == "full-time-extra-effort":
 		var healthSubtract = randi_range(9, 4)
 		if global.history.count("full-time-extra-effort") < 3: #if you haven't already done this 3 times this year
@@ -989,7 +989,7 @@ func job(): ##Career-related and career-specific events.
 					joyChange = randi_range(-8, -3)
 				2:
 					joyChange = randi_range(4, 9)
-			$body.text = "You started putting in some extra effort at your full-time job as " + global.anIser(global.fullTimeJob) + ".\n+ " + str(performanceAdd) + " performance, - " + str(healthSubtract) + " health, "
+			$body.text = "You started putting in some extra effort at your full-time job as " + global.fullTimeJob + ".\n+ " + str(performanceAdd) + " performance, - " + str(healthSubtract) + " health, "
 			if joyChange < 0: #if the change to joy is negative
 				$body.text += "- " + str(-joyChange) + " joy"
 			elif joyChange > 0: #if the change to joy is positive
@@ -1024,9 +1024,15 @@ func job(): ##Career-related and career-specific events.
 		optionRemover(2)
 	elif global.revent[0] == "part-time-job-apply-fired-quit-already":
 		$heading.text = "I know! I'll just... Get it again."
-		$body.text = "You can't apply to be " + global.anIser(global.jobOpenings[global.IDClicked][0]) + ". You've already had this job this year."
+		$body.text = "You can't apply to be " + global.anIser(global.partTimeJobOpenings[global.IDClicked][0]) + ". You've already had this job this year."
 		$option1.text = "Okay"
 		optionRemover(2)
+	elif global.revent[0] == "part-time-quit-confirm":
+		$heading.text = "Please confirm"
+		$body.text = "Are you sure you want to quit your part-time job as " + global.partTimeJob + "? You won't be able to re-apply for it until next year.\n\nSalary: $" + global.commaiser(global.partTimeSalary()) + "\nPerformance: " + str(global.partTimePerformance)
+		$option1.text = "I'm sure"
+		$option2.text = "Cancel"
+		optionRemover(3)
 
 
 func confirmation(): ##Non-random confirmation events that tell you that something just happened.
@@ -1054,7 +1060,8 @@ func confirmation(): ##Non-random confirmation events that tell you that somethi
 		$option2.text = "Apply to a university"
 		$option3.text = "Get a full-time job"
 		$option4.text = "Apply for a certificate"
-		optionRemover(5)
+		$option5.text = "Get a part-time job"
+		optionRemover(6)
 	elif global.revent[0] == "graduated-university":
 		$heading.text = "Job time"
 		$body.text = "Congratulations! You graduated University."
@@ -1130,7 +1137,7 @@ func confirmation(): ##Non-random confirmation events that tell you that somethi
 
 func _on_option_1_pressed() -> void: ##On option 1 selected
 	#confirmation - option 1 will be the only button available when the event's purpose is only to display information. Generally, the button will say "Okay".
-	if global.revent[0] == "toddler-0-o1" || global.revent[0] == "toddler-0-o2" || global.revent[0] == "toddler-0-o3" || global.revent[0] == "child-0-o1" || global.revent[0] == "child-0-o2" || global.revent[0] == "child-0-o3" || global.revent[0] == "child-0-o4" || global.revent[0] == "toddler-friend-o1" || global.revent[0] == "toddler-friend-o2" || global.revent[0] == "child-friend-o1" || global.revent[0] == "child-friend-o2" || global.revent[0] == "teenager-friend-o1" || global.revent[0] == "teenager-friend-o2" || global.revent[0] == "teenager-friend-o3" || global.revent[0] == "adult-friend-o1" || global.revent[0] == "adult-friend-o2" || global.revent[0] == "adult-friend-o3" || global.revent[0] == "elder-friend-o1" || global.revent[0] == "elder-friend-o2" || global.revent[0] == "elder-friend-o3" || global.revent[0] == "child-labour-is-outlawed" || global.revent[0] == "enrolled-in-primary-school" || global.revent[0] == "enrolled-in-high-school" || global.revent[0] == "graduated-high-school" || global.revent[0] == "study-harder" || global.revent[0] == "university-degree-picked-o1" || global.revent[0] == "university-degree-picked-o2" || global.revent[0] == "university-degree-picked-o3" || global.revent[0] == "university-degree-picked-o4" || global.revent[0] == "graduated-university" || global.revent[0] == "compliment-relationship" || global.revent[0] == "skip-class" || global.revent[0] == "arrested-o1-success" || global.revent[0] == "court-trial-o2" || global.revent[0] == "dont-go-to-prison" || global.revent[0] == "full-time-job-applied-already" || global.revent[0] == "full-time-job-applied-accepted" || global.revent[0] == "full-time-job-applied-rejected" || global.revent[0] == "full-time-extra-effort" || global.revent[0] == "certificate-achieved" || global.revent[0] == "certificate-failed" || global.revent[0] == "certificate-unqualified" || global.revent[0] == "full-time-fired-performance" || global.revent[0] == "full-time-raise-performance" || global.revent[0] == "full-time-job-apply-fired-quit-already" || global.revent[0] == "full-time-fired-imprisonment" || global.revent[0] == "school-kicked-out-imprisonment" || global.revent[0] == "part-time-job-applied-accepted" || global.revent[0] == "part-time-job-applied-already" || global.revent[0] == "part-time-job-applied-rejected":
+	if global.revent[0] == "toddler-0-o1" || global.revent[0] == "toddler-0-o2" || global.revent[0] == "toddler-0-o3" || global.revent[0] == "child-0-o1" || global.revent[0] == "child-0-o2" || global.revent[0] == "child-0-o3" || global.revent[0] == "child-0-o4" || global.revent[0] == "toddler-friend-o1" || global.revent[0] == "toddler-friend-o2" || global.revent[0] == "child-friend-o1" || global.revent[0] == "child-friend-o2" || global.revent[0] == "teenager-friend-o1" || global.revent[0] == "teenager-friend-o2" || global.revent[0] == "teenager-friend-o3" || global.revent[0] == "adult-friend-o1" || global.revent[0] == "adult-friend-o2" || global.revent[0] == "adult-friend-o3" || global.revent[0] == "elder-friend-o1" || global.revent[0] == "elder-friend-o2" || global.revent[0] == "elder-friend-o3" || global.revent[0] == "child-labour-is-outlawed" || global.revent[0] == "enrolled-in-primary-school" || global.revent[0] == "enrolled-in-high-school" || global.revent[0] == "graduated-high-school" || global.revent[0] == "study-harder" || global.revent[0] == "university-degree-picked-o1" || global.revent[0] == "university-degree-picked-o2" || global.revent[0] == "university-degree-picked-o3" || global.revent[0] == "university-degree-picked-o4" || global.revent[0] == "graduated-university" || global.revent[0] == "compliment-relationship" || global.revent[0] == "skip-class" || global.revent[0] == "arrested-o1-success" || global.revent[0] == "court-trial-o2" || global.revent[0] == "dont-go-to-prison" || global.revent[0] == "full-time-job-applied-already" || global.revent[0] == "full-time-job-applied-accepted" || global.revent[0] == "full-time-job-applied-rejected" || global.revent[0] == "full-time-extra-effort" || global.revent[0] == "certificate-achieved" || global.revent[0] == "certificate-failed" || global.revent[0] == "certificate-unqualified" || global.revent[0] == "full-time-fired-performance" || global.revent[0] == "full-time-raise-performance" || global.revent[0] == "full-time-job-apply-fired-quit-already" || global.revent[0] == "full-time-fired-imprisonment" || global.revent[0] == "school-kicked-out-imprisonment" || global.revent[0] == "part-time-job-applied-accepted" || global.revent[0] == "part-time-job-applied-already" || global.revent[0] == "part-time-job-applied-rejected" || global.revent[0] == "part-time-job-apply-fired-quit-already":
 		goHome()
 	#special exceptions
 	elif global.revent[0] == "go-to-prison":
@@ -1264,9 +1271,14 @@ func option1outcomes(): ##Outcomes for option 1
 		$option1.text = "Okay"
 		optionRemover(2)
 	elif global.revent[0] == "full-time-quit-confirm-o1":
-		print("quitting job...")
+		print("quitting full-time job...")
 		global.history.append(global.fullTimeJob + "-quit")
 		global.removeFullTimeJob()
+		goingToSpecific = "res://pages/game_menu.tscn"
+	elif global.revent[0] == "part-time-quit-confirm-o1":
+		print("quitting part-time job...")
+		global.history.append(global.partTimeJob + "-quit-part-time")
+		global.removePartTimeJob()
 		goingToSpecific = "res://pages/game_menu.tscn"
 	elif global.revent[0] == "certificate-picked-o1":
 		global.money -= global.degreePickedCost #deducts money, as you paid for the degree upfront
@@ -1437,6 +1449,8 @@ func option2outcomes(): ##Outcomes for option 2
 		goingToSpecific = "res://pages/import_progress_from_clipboard.tscn"
 	elif global.revent[0] == "full-time-quit-confirm-o2":
 		goingToSpecific = "res://pages/job_full_time.tscn"
+	elif global.revent[0] == "part-time-quit-confirm-o2":
+		goingToSpecific = "res://pages/job_part_time.tscn"
 	elif global.revent[0] == "certificate-picked-o2":
 		#i'm just stealing all of this code from university degrees
 		var parentNoun = ""
@@ -1609,7 +1623,8 @@ func option4outcomes(): ##Option 4 has been picked
 
 
 func option5outcomes(): ##Option 5 has been picked
-	pass
+	if global.revent[0] == "graduated-high-school-o5":
+		goingToSpecific = "res://pages/job_search_part_time.tscn"
 
 
 func option6outcomes(): ##Option 6 has been picked
@@ -1658,4 +1673,5 @@ func _on_cancel_event_pressed() -> void:
 
 func _on_cancel_event_timer_timeout() -> void:
 	if has_node("cancelEvent") == true: #if the button exists
+		$heading.text = global.revent[0] #tells you what event is "running"
 		$cancelEvent.position.y = 1356 #put it in the frame

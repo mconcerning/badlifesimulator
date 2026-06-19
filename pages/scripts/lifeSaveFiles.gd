@@ -19,7 +19,11 @@ func deleteLife(saveFile, buttonName): #deletes ONE save file (specify file NAME
 	DirAccess.remove_absolute("user://spycarsinc/bls/lives/" + saveFile + ".bls") #deletes the file
 	print("removed " + saveFile)
 	get_node("scrollContainer/centerContainer/vBoxContainer/" + buttonName).queue_free() #deletes the button (vBoxContainer automatically re-arranged all the other buttons so there isn't a gap where this was)
-	$howManySavedLives.text = "You have " + str(DirAccess.get_files_at("user://spycarsinc/bls/lives/").size()) + " saved lives."
+	$howManySavedLives.text = "You have " + str(DirAccess.get_files_at("user://spycarsinc/bls/lives/").size()) + " saved li"
+	if DirAccess.get_files_at("user://spycarsinc/bls/lives/").size() == 1: #correct pluralisation
+		$howManySavedLives.text += "fe."
+	else:
+		$howManySavedLives.text += "ves."
 	if saveFile == global.currentLife: #if you're deleting the life you're currently on
 		print("this is your current life, setting currentLife to ''")
 		global.currentLife = "" #empty current life (there's no life)
@@ -42,7 +46,11 @@ func _ready() -> void:
 	var dir = DirAccess.get_files_at(path)
 	print("directory size: " + str(dir.size())) #gets the number of files in the path provided (i.e. how many life save files exist)
 	print(dir) #prints every file in the directory
-	$howManySavedLives.text = "You have " + str(DirAccess.get_files_at(path).size()) + " saved lives."
+	$howManySavedLives.text = "You have " + str(DirAccess.get_files_at(path).size()) + " saved li"
+	if DirAccess.get_files_at(path).size() == 1: #correct pluralisation
+		$howManySavedLives.text += "fe."
+	else:
+		$howManySavedLives.text += "ves."
 	var positionDown = 0
 	#adds the button for each save file
 	for i in dir.size(): #runs through every file in the directory

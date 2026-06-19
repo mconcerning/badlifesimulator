@@ -81,3 +81,4 @@ text = "Quit"
 
 [connection signal="pressed" from="back" to="." method="_on_back_pressed"]
 [connection signal="pressed" from="exit" to="." method="_on_exit_pressed"]
+[connection signal="pressed" from="vBoxContainer/quit" to="." method="_on_quit_pressed"]

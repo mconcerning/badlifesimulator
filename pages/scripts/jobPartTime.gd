@@ -14,3 +14,8 @@ func _ready() -> void:
 	$performance.text = "Performance: " + str(global.partTimePerformance)
 	$payAndHours.text = "Rate: $" + global.commaiser(global.partTimeRate) + "/hr | Hours: " + global.commaiser(global.partTimeHours) + "/wk"
 	$salary.text = "Pay per year: $" + global.commaiser(global.partTimeSalary())
+
+
+func _on_quit_pressed() -> void:
+	global.revent.append("part-time-quit-confirm")
+	get_tree().change_scene_to_file("res://pages/event.tscn")

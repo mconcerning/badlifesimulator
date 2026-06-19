@@ -301,6 +301,14 @@ func anIser(undoctoredProceedingWord): ##An-iser. Returns "an " + word if the wo
 	#if we're anIsing a dollar amount, get rid of the dollar sign
 	if proceedingWord[0] == "$":
 		proceedingWord = proceedingWord.substr(1) #only look at the string from the second character (the character after the dollar sign) onwards
+	#if the string we're testing contains multiple words, only test the first one; this will be the only word requiring the correct "a" or "an". Seperating into only the first word makes sure special exceptions work correctly.
+	if proceedingWord.contains(" "): #if the string given contains a space
+		var stillGoing = true
+		for i in proceedingWord.length(): #check every character individually
+			if stillGoing == true: #until we're told to stop when stillGoing is set to false
+				if proceedingWord[i] == " ": #if this character is a space
+					proceedingWord = proceedingWord.left(i) #makes the proceeding word only the characters leading up to the space (not including it)
+					stillGoing = false #stop the loop
 	#first, check for words that DO start with vowels but still only need an "a"
 	var specialNegativeExceptions = ["one", "university"] #if the word starts with a vowel, but still shouldn't be prefixed with an "an", like "one"
 	for i in specialNegativeExceptions.size(): #check for matches
@@ -418,6 +426,12 @@ func removeFullTimeJob(): ##Clears your full-time job. Use this when quitting or
 	fullTimeSalary = 0
 	fullTimePerformance = 0
 
+func removePartTimeJob(): ##Clears your part-time job. Use this when quitting or getting fired.
+	partTimeJob = ""
+	partTimeHours = 0
+	partTimeRate = 0
+	partTimePerformance = 0
+
 
 func partTimeSalary(): ##Calculates how much money you should make for working part-time for one year.
 	return partTimeRate * partTimeHours * partTimeWorkWeeksPerAnnum #returns your hourly pay (e.g. $18) times your hours per week (e.g. 25) times the number of weeks you work in a year (e.g. 48). Example salary: 18 * 25 * 48 = $21,600/yr.
@@ -475,6 +489,7 @@ func lifeSerialiser(): ##Serialises every life-specific variable we need to save
 		"revent" : revent,
 		"RAUE" : RAUE,
 		"eventMemory" : eventMemory,
+		"IDClicked" : IDClicked,
 		#personal
 		"firstName" : firstName,
 		"lastName" : lastName,
@@ -604,6 +619,20 @@ func directoryGetter(): ##Gets path to life save files.
 	getSaveLifeFileName() #makes sure path exists
 	return "user://spycarsinc/bls/lives/" #returns path
 
+func versionCompare(minimumVersion : Array[int], saveVersion : Array[int]): ##Compares any two version numbers (used when loading save files) and returns either true or false; true if the saveVersion meets the minimumVersion needed and false if it does not.
+	var minVerInt = 0
+	minVerInt += minimumVersion[0] * 100000000
+	minVerInt += minimumVersion[1] * 100000
+	minVerInt += minimumVersion[2] * 100
+	var saveVerInt = 0
+	saveVerInt += saveVersion[0] * 100000000
+	saveVerInt += saveVersion[1] * 100000
+	saveVerInt += saveVersion[1] * 100
+	if saveVerInt < minVerInt: #if the save version number is lower than the minimum version number
+		return false
+	else:
+		return true
+
 func saveGame(): ##Does the actual saving.
 	if currentLife != "": #if you currently HAVE a life to save
 		var lifeSavePath = "user://spycarsinc/bls/lives/" + currentLife + ".bls" #the path on the user's device the save will be located - this save only stores the life-specific stuff that doesn't persist between lives (age, relationships, health...)
@@ -682,9 +711,11 @@ func loadLife(takeHome = true, base64life = ""): ##Does the actual LIFE loading 
 	else: #if you ARE loading from a base64 dictionary instead of a file (again, see importLifeFromClipboard.gd)
 		dictionary = JSON.parse_string(Marshalls.base64_to_utf8(base64life)) #creates a dictionary of the de-encoded base64 save file to use below:
 	#engine
+	var _lifeVersion = intIser(dictionary["versionNumber"].split(".")) #keep an integer array version of this game's verison number; use this to check if you're loading a life from a previous update (one that won't have the variables you're trying to load) by seeing if all indexes are lower in value than the corresponding indexes in the version you're checking using versionCompare. For example, to check if version 2.5.6 is a lower update than version 3.1.4, call versionCompare([2, 5, 6], [3, 1, 4]). versionCompare will return true if the first array meets the minimum update requirements (the second array) and false if it does not.
 	revent = dictionary["revent"]
 	RAUE = dictionary["RAUE"]
 	eventMemory = dictionary["eventMemory"]
+	IDClicked = dictionary["IDClicked"]
 	#personal
 	firstName = dictionary["firstName"]
 	lastName = dictionary["lastName"]
