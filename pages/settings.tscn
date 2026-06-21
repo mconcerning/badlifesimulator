@@ -42,9 +42,14 @@ text = "Display"
 layout_mode = 2
 text = "Misc"
 
+[node name="help" parent="vBoxContainer" unique_id=1655376676 instance=ExtResource("5_w6vqt")]
+layout_mode = 2
+text = "Help"
+
 [connection signal="pressed" from="back" to="." method="_on_back_pressed"]
 [connection signal="pressed" from="vBoxContainer/credits" to="." method="_on_credits_pressed"]
 [connection signal="pressed" from="vBoxContainer/savedLives" to="." method="_on_saved_lives_pressed"]
 [connection signal="pressed" from="vBoxContainer/importExportSaveFiles" to="." method="_on_import_export_save_files_pressed"]
 [connection signal="pressed" from="vBoxContainer/display" to="." method="_on_display_pressed"]
 [connection signal="pressed" from="vBoxContainer/misc" to="." method="_on_misc_pressed"]
+[connection signal="pressed" from="vBoxContainer/help" to="." method="_on_help_pressed"]

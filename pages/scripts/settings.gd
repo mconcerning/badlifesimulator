@@ -26,3 +26,6 @@ func _on_display_pressed() -> void:
 
 func _on_misc_pressed() -> void:
 	get_tree().change_scene_to_file("res://pages/settings_misc.tscn")
+
+func _on_help_pressed() -> void:
+	get_tree().change_scene_to_file("res://pages/settings_help.tscn")

@@ -5,6 +5,7 @@
 [ext_resource type="PackedScene" uid="uid://moehuc8f6dgg" path="res://objects/exit.tscn" id="3_ehrkj"]
 [ext_resource type="PackedScene" uid="uid://cjnbhqp8obehv" path="res://objects/back_button.tscn" id="3_rhx7h"]
 [ext_resource type="PackedScene" uid="uid://b3nrc0n5eeris" path="res://objects/subheading.tscn" id="4_ehrkj"]
+[ext_resource type="PackedScene" uid="uid://bdmp0wqtq5xur" path="res://objects/more_info_button.tscn" id="5_5bbkh"]
 [ext_resource type="PackedScene" uid="uid://dvna50i2k0geh" path="res://objects/body.tscn" id="5_rhx7h"]
 [ext_resource type="PackedScene" uid="uid://ck7ra4cupjjkm" path="res://objects/button_default.tscn" id="7_7jk2y"]
 
@@ -18,6 +19,10 @@ script = ExtResource("1_bpeln")
 [node name="exit" parent="." unique_id=1865769784 instance=ExtResource("3_ehrkj")]
 offset_left = 960.0
 offset_right = 1060.0
+
+[node name="moreInfo" parent="." unique_id=894308063 instance=ExtResource("5_5bbkh")]
+offset_left = 840.0
+offset_right = 940.0
 
 [node name="type" parent="." unique_id=1032932187 instance=ExtResource("5_rhx7h")]
 offset_top = 60.0
@@ -56,4 +61,5 @@ text = "Compliment "
 
 [connection signal="pressed" from="back" to="." method="_on_back_pressed"]
 [connection signal="pressed" from="exit" to="." method="_on_exit_pressed"]
+[connection signal="pressed" from="moreInfo" to="." method="_on_more_info_pressed"]
 [connection signal="pressed" from="scrollContainer/centerContainer/vBoxContainer/compliment" to="." method="_on_compliment_pressed"]

@@ -425,10 +425,12 @@ func relationships(): ##Specialised, specifically relationship-related events.
 			if complimentSelected == "racist" || (complimentSelected == "incredibly attractive" && global.personCategories[global.IDClicked] == "family"): #if you accidentally didn't compliment them
 				$heading.text = "...Thanks."
 				global.personRelationships[global.IDClicked] -= randi_range(5, 20)
+				global.personStats[global.IDClicked][global.personStatsDictionary.find("Joy")] -= 2 #they are less happy now
 			else: #if you did compliment them
 				var relationshipGained = randi_range(4, 7)
 				global.personRelationships[global.IDClicked] += relationshipGained
 				$body.text += "\n+ " + str(relationshipGained) + " relationship."
+				global.personStats[global.IDClicked][global.personStatsDictionary.find("Joy")] += 2 #they are happier now
 		$option1.text = "Okay"
 		optionRemover(2)
 
@@ -1216,7 +1218,7 @@ func option1outcomes(): ##Outcomes for option 1
 		$option1.text = "Hooray"
 		optionRemover(2)
 		#adds the EGP to your relationships array
-		global.NPCCreator(global.eventPersonSex, global.eventPersonFirstName, global.eventPersonLastName, global.eventPersonAge, randi_range(20, 50), "Friend", "misc", "random")
+		global.NPCCreator(global.eventPersonSex, global.eventPersonFirstName, global.eventPersonLastName, global.eventPersonAge, randi_range(20, 50), "Friend", "misc", "random", "random")
 	elif global.revent[0] == "teenager-friend-o1":
 		if randi_range(1,3) == 1: #if they refuse to be your friend
 			$heading.text = "That's awkward..."
@@ -1226,7 +1228,7 @@ func option1outcomes(): ##Outcomes for option 1
 			$heading.text = "Sweet"
 			$body.text = "You befriended " + global.eventPersonFirstName + " " + global.eventPersonLastName + "."
 			#adds the EGP to your relationships array
-			global.NPCCreator(global.eventPersonSex, global.eventPersonFirstName, global.eventPersonLastName, global.eventPersonAge, randi_range(20, 50), "Friend", "misc", "random")
+			global.NPCCreator(global.eventPersonSex, global.eventPersonFirstName, global.eventPersonLastName, global.eventPersonAge, randi_range(20, 50), "Friend", "misc", "random", "random")
 			$option1.text = "Okay"
 		optionRemover(2)
 	elif global.revent[0] == "adult-friend-o1" || global.revent[0] == "elder-friend-o1":
@@ -1238,7 +1240,7 @@ func option1outcomes(): ##Outcomes for option 1
 			$heading.text = "A blossoming friendship"
 			$body.text = "You befriended " + global.eventPersonFirstName + " " + global.eventPersonLastName + "."
 			#adds the EGP to your relationships array
-			global.NPCCreator(global.eventPersonSex, global.eventPersonFirstName, global.eventPersonLastName, global.eventPersonAge, randi_range(20, 50), "Friend", "misc", "random")
+			global.NPCCreator(global.eventPersonSex, global.eventPersonFirstName, global.eventPersonLastName, global.eventPersonAge, randi_range(20, 50), "Friend", "misc", "random", "random")
 			$option1.text = "Okay"
 		optionRemover(2)
 	elif global.revent[0] == "toddler-0-o1":
@@ -1348,7 +1350,7 @@ func option2outcomes(): ##Outcomes for option 2
 					#global.NPCKiller("remove", i) #removes them
 				#for loops automatically increase the variable they use (in this case, i) so no need to manually increment it
 			#adds them to your relationships
-			global.NPCCreator(global.eventPersonSex, global.eventPersonFirstName, global.eventPersonLastName, global.eventPersonAge, randi_range(20, 50), global.pronounGenerator("boy", global.eventPersonSex).capitalize() + "friend", "misc", "random")
+			global.NPCCreator(global.eventPersonSex, global.eventPersonFirstName, global.eventPersonLastName, global.eventPersonAge, randi_range(20, 50), global.pronounGenerator("boy", global.eventPersonSex).capitalize() + "friend", "misc", "random", "random")
 		else: #they DON'T want to date you
 			$heading.text = "..."
 			$body.text = "You ask " + global.pronounGenerator("him", global.eventPersonSex) + " out, but " + global.pronounGenerator("he", global.eventPersonSex) + " rejects you.\nJoy - 15"
@@ -1366,7 +1368,7 @@ func option2outcomes(): ##Outcomes for option 2
 					#global.NPCKiller("remove", i) #removes them
 				#for loops automatically increase the variable they use (in this case, i) so no need to manually increment it
 			#adds them to your relationships
-			global.NPCCreator(global.eventPersonSex, global.eventPersonFirstName, global.eventPersonLastName, global.eventPersonAge, randi_range(40, 80), global.pronounGenerator("boy", global.eventPersonSex).capitalize() + "friend", "misc", "random")
+			global.NPCCreator(global.eventPersonSex, global.eventPersonFirstName, global.eventPersonLastName, global.eventPersonAge, randi_range(40, 80), global.pronounGenerator("boy", global.eventPersonSex).capitalize() + "friend", "misc", "random", "random")
 		else: #they DON'T want to date you
 			$body.text = "You ask " + global.pronounGenerator("him", global.eventPersonSex) + " out, but " + global.pronounGenerator("he", global.eventPersonSex) + " rejects you.\nJoy - 15"
 			global.joy -= 15
@@ -1383,7 +1385,7 @@ func option2outcomes(): ##Outcomes for option 2
 					#global.NPCKiller("remove", i) #removes them
 				#for loops automatically increase the variable they use (in this case, i) so no need to manually increment it
 			#adds them to your relationships
-			global.NPCCreator(global.eventPersonSex, global.eventPersonFirstName, global.eventPersonLastName, global.eventPersonAge, randi_range(20, 50), global.pronounGenerator("boy", global.eventPersonSex).capitalize() + "friend", "misc", "random")
+			global.NPCCreator(global.eventPersonSex, global.eventPersonFirstName, global.eventPersonLastName, global.eventPersonAge, randi_range(20, 50), global.pronounGenerator("boy", global.eventPersonSex).capitalize() + "friend", "misc", "random", "random")
 		else: #they DON'T want to date you
 			$heading.text = str(global.age) + " and still unmarried"
 			$body.text = "You ask " + global.pronounGenerator("him", global.eventPersonSex) + " out on a date, but " + global.pronounGenerator("he", global.eventPersonSex) + " rejects you.\nJoy - 15"

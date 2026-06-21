@@ -49,8 +49,15 @@ func basicStatChanges():
 		global.personAges[i] += 1
 		var stats = global.personStats[i]
 		for x in stats.size(): #runs through all their stats
-			if global.personStatsDictionary[x] == "joy":
+			var theStat = global.personStatsDictionary[x]
+			if theStat == "Joy" || theStat == "Health" || theStat == "Intellect" || theStat == "Looks":
 				stats[x] += randi_range(-6, 6)
+		var theirMoney = global.personMoney[i]
+		if theirMoney > 8000000000000000000: #if they are frighteningly close to the 64-bit signed integer limit (just over 9.223 quintillion)
+			theirMoney = 8000000000000000000 #cap it to under 10% less than it so they can't integer overflow into immense debt
+		elif theirMoney < -8000000000000000000: #if they are so IN debt that they're frighteningly close to integer overflowing OUT of it
+			theirMoney = -8000000000000000000 #not on my watch
+		theirMoney += randi_range(-roundi(float(theirMoney) / 10), roundi(float(theirMoney) / 10)) #adds anywhere from negative a tenth of their money to positive a tenth of their money
 	if global.crimes.size() >= 1: #if you have committed a crime
 		if global.multiplicativeArrestChance <= 1.75:
 			global.multiplicativeArrestChance += 0.25

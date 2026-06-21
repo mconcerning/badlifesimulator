@@ -78,7 +78,6 @@ func cleanLife(): #resets your existing life (if any) and generates new stats
 	global.partTimeJob = ""
 	global.partTimeRate = 0
 	global.partTimeHours = 0
-	global.stress = 0
 	global.workExperience = []
 	global.loans = []
 	global.loanInitialValue = []
@@ -165,7 +164,7 @@ func familyGenerator(): #HELP I DON'T WANT TO MAKE THIS SCRIPT FOR A THIRD TIME 
 		else: #if you have a single father
 			global.personTypes.append("Father") #appends father
 		global.personCategories.append("family")
-		global.personStats.append([randi_range(0, 100)]) #gives them random stats (see global.gd)
+		global.personStats.append(global.NPCStatsGenerator()) #gives them random stats (see the function and the variable "personStats" in global.gd)
 		global.personUIDs.append(global.personUIDsUsed)
 		global.personUIDsUsed += 1
 		howManyGrandparents = randi_range(0, 2) #how many grandparents do you have
@@ -183,8 +182,8 @@ func familyGenerator(): #HELP I DON'T WANT TO MAKE THIS SCRIPT FOR A THIRD TIME 
 			global.personTypes.append("Father") #appends father
 		global.personCategories.append("family")
 		global.personCategories.append("family")
-		global.personStats.append([randi_range(0, 100)])
-		global.personStats.append([randi_range(0, 100)])
+		global.personStats.append(global.NPCStatsGenerator())
+		global.personStats.append(global.NPCStatsGenerator())
 		global.personUIDs.append(global.personUIDsUsed)
 		global.personUIDsUsed += 1
 		global.personUIDs.append(global.personUIDsUsed)
@@ -198,7 +197,7 @@ func familyGenerator(): #HELP I DON'T WANT TO MAKE THIS SCRIPT FOR A THIRD TIME 
 			else: #if sibling is a male
 				global.personTypes.append("Brother") #appends brother
 			global.personCategories.append("family")
-			global.personStats.append([randi_range(0, 100)])
+			global.personStats.append(global.NPCStatsGenerator())
 			global.personUIDs.append(global.personUIDsUsed)
 			global.personUIDsUsed += 1
 			howManySiblings -= 1 #we just generated a sibling, remember? god
@@ -216,8 +215,8 @@ func familyGenerator(): #HELP I DON'T WANT TO MAKE THIS SCRIPT FOR A THIRD TIME 
 				global.personTypes.append("Grandfather") #appends grandfather
 			global.personCategories.append("family")
 			global.personCategories.append("family")
-			global.personStats.append([randi_range(0, 100)])
-			global.personStats.append([randi_range(0, 100)])
+			global.personStats.append(global.NPCStatsGenerator())
+			global.personStats.append(global.NPCStatsGenerator())
 			global.personUIDs.append(global.personUIDsUsed)
 			global.personUIDsUsed += 1
 			global.personUIDs.append(global.personUIDsUsed)
@@ -229,7 +228,7 @@ func familyGenerator(): #HELP I DON'T WANT TO MAKE THIS SCRIPT FOR A THIRD TIME 
 			else: #if you have one grandfather
 				global.personTypes.append("Grandfather") #appends grandfather
 			global.personCategories.append("family")
-			global.personStats.append([randi_range(0, 100)])
+			global.personStats.append(global.NPCStatsGenerator())
 			global.personUIDs.append(global.personUIDsUsed)
 			global.personUIDsUsed += 1
 			howManyGrandparents -= 1 #1 less grandparent you need to generate
@@ -242,7 +241,7 @@ func familyGenerator(): #HELP I DON'T WANT TO MAKE THIS SCRIPT FOR A THIRD TIME 
 				else: #if you're getting an uncle
 					global.personTypes.append("Uncle") #appends uncle
 				global.personCategories.append("family")
-				global.personStats.append([randi_range(0, 100)])
+				global.personStats.append(global.NPCStatsGenerator())
 				global.personUIDs.append(global.personUIDsUsed)
 				global.personUIDsUsed += 1
 				howManyUncaunts -= 1 #1 less aunt/uncle you need to generate
@@ -251,7 +250,7 @@ func familyGenerator(): #HELP I DON'T WANT TO MAKE THIS SCRIPT FOR A THIRD TIME 
 				while howManyCousins > 0: #while there are still cousins left to generate
 					global.personTypes.append("Cousin") #don't need to do seperate appendings by sex since cousin is a gender neutral term; sexes will be assigned later
 					global.personCategories.append("family")
-					global.personStats.append([randi_range(0, 100)])
+					global.personStats.append(global.NPCStatsGenerator())
 					global.personUIDs.append(global.personUIDsUsed)
 					global.personUIDsUsed += 1
 					howManyCousins -= 1 #1 less cousin left to generate
@@ -352,6 +351,19 @@ func familyGenerator(): #HELP I DON'T WANT TO MAKE THIS SCRIPT FOR A THIRD TIME 
 		var whoIsBeyonce = randi_range(0, global.personFirstNames.size() - 1) #picks a random family member
 		global.personFirstNames[whoIsBeyonce] = "Beyoncé" #beyoncéficates them
 		global.personLastNames[whoIsBeyonce] = ""
+	for i in global.personTypes.size(): #runs through everyone to add last-minute stats
+		print(i)
+		#money (savings)
+		if global.personAges[i] >= randi_range(16, 20): #if they're old enough to have established savings
+			if (global.personTypes[i] == "Grandmother" || global.personTypes[i] == "Grandfather") && randi_range(1,2) == 1: #If they're old, they're more likely to be wealthy
+				global.personMoney.append(global.NPCMoneyGenerator(-1, 2, 5)) #put them in a better socioeconomic class
+			else: #if they're either not old or ARE old, but aren't wealthy (they still can be, it's just not guaranteed)
+				global.personMoney.append(global.NPCMoneyGenerator()) #put them in a regular random class
+		else: #if they're not old enough, give them no savings
+			if global.personAges[i] <= randi_range(8, 12): #if they're too young to have any money at all
+				global.personMoney.append(0)
+			else: #if they're old enough to have SOME money
+				global.personMoney.append(randi_range(0, 500))
 	print(global.personFirstNames)
 	print(global.personLastNames)
 	print(global.personSexes)
@@ -359,12 +371,17 @@ func familyGenerator(): #HELP I DON'T WANT TO MAKE THIS SCRIPT FOR A THIRD TIME 
 	print(global.personTypes)
 	print(global.personRelationships)
 	print(global.personStats)
+	var personMoneyPretty = [] #better presentation representing money in the console than just an array of large numbers that you have to decipher
+	for i in global.personMoney.size():
+		personMoneyPretty.append("$" + global.commaiser(global.personMoney[i]))
+	print(personMoneyPretty)
+	print("money size: " + str(global.personMoney.size()))
 	print("in total, you have " + str(global.personTypes.size()) + " family members")
 
 
 func legacySaveImport(path):
-	var file = FileAccess.open(path, FileAccess.READ) #opens the file to read
-	var data = JSON.parse_string(file.get_as_text()) #saves a parsed version of a text version of the save file
+	var file = FileAccess.open(path, FileAccess.READ) ##Opens the file to read
+	var data = JSON.parse_string(file.get_as_text()) ##Saves a parsed version of a text version of the save file
 	#parses the data into variables
 	print(path.get_file())
 	if path.get_file() == "bob.bls": #special exceptions that I will not elaborate on
@@ -417,7 +434,7 @@ func legacySaveImport(path):
 		global.personUIDs = []
 		global.personUIDsUsed = 0
 		for i in global.personTypes.size(): #runs through every person
-			global.personStats.append([randi_range(0, 100)]) #gives them random stats (see global.gd)
+			global.personStats.append(global.NPCStatsGenerator()) #gives them random stats (see global.gd)
 			global.personUIDs.append(global.personUIDsUsed)
 			global.personUIDsUsed += 1
 		global.currentLife = global.getSaveLifeFileName() #sets the currentLife variable to a unique file name

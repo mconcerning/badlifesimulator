@@ -85,8 +85,9 @@ var personSexes = []
 var personRelationships = []
 var personUIDsUsed : int = 0
 var personUIDs = [] ##Stores unique ID numbers for each NPC. Used when we have to keep track of EXACTLY the same person. Differs from their INDEX, accessed through other arrays, which can change if NPCs are removed. This stays consistent per person throughout their entire life. Each person's UID is entirely unique. personUIDsUsed is set to 0 at the start of a new life, and appended here before being incremented whenever a new person is added. A person's UID is popped upon their removal from other arrays, but their UID will never be used again. Use only when using indexes is insufficient. Most times it is fine, and in some cases even preferable, to simply use those.
-var personStats = [] ##An array that contains other arrays. each element in this array is another array whose index corresponds to an NPC. Each element inside each nested array is a stat, whose element in that array corresponds to a definition in the personStatsDictionary.
-var personStatsDictionary = ["joy"] ##Relationship stats dictionary - the types match the index of their respective values.
+var personStats = [] ##An array that contains other arrays. Each element in this array is another array whose index corresponds to an NPC. Each element inside each nested array is a stat, whose element in that array corresponds to a definition in the personStatsDictionary.
+var personMoney : Array[int] = [] ##The index of each element corresponds to an NPC and contains their amount of money in dollars.
+var personStatsDictionary = ["Joy", "Health", "Intellect", "Looks", "Evality"] ##Relationship stats dictionary - the types match the index of their respective values.
 var personCategories = [] ##Can be either family or misc
 #dead
 var deadPersonFirstNames = []
@@ -198,13 +199,18 @@ func statClamper(): ##If stats are out of bounds (above or below their max/min v
 		elif personRelationships[i] < 0:
 			personRelationships[i] = 0
 		for x in personStats[i].size(): #runs through all of their stats
-			var stats = personStats[x]
+			var stats = personStats[i][x]
 			var dict = personStatsDictionary[x]
-			if dict == "joy" || dict == "health" || dict == "intellect" || dict == "looks": #if the stat needs to be clamped
-				if stats[x] > 100:
-					stats[x] = 100
-				elif stats[x] < 0:
-					stats[x] = 0
+			if dict == "Joy" || dict == "Health" || dict == "Intellect" || dict == "Looks" || dict == "Evality": #if the stat needs to be clamped
+				if stats > 100:
+					stats = 100
+				elif stats < 0:
+					stats = 0
+		var theirMoney = global.personMoney[i] #clamps their money (in dollars)
+		if theirMoney > 8000000000000000000: #if they are frighteningly close to the 64-bit signed integer limit (just over 9.223 quintillion)
+			theirMoney = 8000000000000000000 #cap it to under 10% less than it so they can't integer overflow into immense debt
+		elif theirMoney < -8000000000000000000: #if they are so IN debt that they're frighteningly close to integer overflowing OUT of it
+			theirMoney = -8000000000000000000 #not on my watch
 
 
 func cooldown(activity): ##Returns how many times you've done a certain thing this year already using your history. This number can then be used to create a cooldown of sorts; if you've done something a million times this year, make it ineffective for once. This function only works if you make sure to actively append to history when things happen. NOTE: The exact same function can be achieved with the built-in .count("value") used on history. This function should no longer be used.
@@ -246,7 +252,51 @@ func pronounGenerator(type, selectedSex): ##Returns pronouns so you don't have t
 	return "what" #usually you can't get here unless there's an error
 
 
-func NPCCreator(NPCsex : String, NPCfirstName : String, NPClastName : String, NPCage : int, NPCrelationship : int, NPCtype : String, NPCcategory : String, NPCstats): ##Creates an NPC from several custom perameters. NPCtype can be either "family" or "misc". If NPCstats is "random", this fills it in with random values.
+func NPCStatsGenerator(): ##Generates and returns a fully random stats array for a new NPC.
+	#Index 0 = Joy, 1 = Health, 2 = Intellect, 3 = Looks, 4 = Evality
+	var stats = [randi_range(0, 100), randi_range(10, 100), randi_range(10, 95), randi_range(0, 100), randi_range(0, 100)]
+	return stats
+
+func NPCMoneyGenerator(specificSocioeconomicClass : int = -1, SEFloor = 0, SECeil = 5): ##Generates and returns an amount of money in dollars for a new NPC. You can specify a specific socioeconomic class (a number from 0 to 5, 0 being the least wealth and 5 being the most) here if you want to. A value of -1 means "randomise". SEFloor is the minimum socioeconomic class this NPC can have, and SECeil is the maximum. These are set to 0 and 5 by default, as any class outside these values will cause this function to throw a warning and automatically give the NPC it's working on $7. A floor or ceiling overrides a specified socioeconomic class if it falls outside of them. The NPC's class will always be set to the ceiling if it is above it, even if the ceiling is lower than the floor.
+	var SEChances = randi_range(1, 100) ##Short for SocioEconomic chances. Each socioeconomic class has a different chance of appearing; this number (ranging from 1 to 100) is funneled and determines which class the NPC is in below:
+	var socioeconomicClass = 0 ##How rich this person is on a scale from 0 to 5 - where 0 is the least wealthy and 5 is the most wealthy. The NPC's class is then used to generate an amount of money, categorised based on how high it is.
+	#gives them their class based on their chances
+	if SEChances <= 8: #if they are the least wealthy possible
+		socioeconomicClass = 0
+	elif SEChances > 8 && SEChances <= 25:
+		socioeconomicClass = 1
+	elif SEChances > 25 && SEChances <= 64:
+		socioeconomicClass = 2
+	elif SEChances > 64 && SEChances <= 86:
+		socioeconomicClass = 3
+	elif SEChances > 86 && SEChances <= 98:
+		socioeconomicClass = 4
+	else: #if SEChances are 99 or over (they are the most wealthy possible)
+		socioeconomicClass = 5
+	if specificSocioeconomicClass != -1: #if you specified an economic class you want, ovveride what was just decided
+		socioeconomicClass = specificSocioeconomicClass #set it to that
+	if socioeconomicClass < SEFloor: #if the class is lower than the minimum
+		socioeconomicClass = SEFloor #make it the minimum
+	if socioeconomicClass > SECeil: #if the class is higher than the maximum
+		socioeconomicClass = SECeil #make it the maximum
+	#Gives them the actual money based on their class. Remember, this value is supposed to represent their savings, not walking-around money. A negative value represents debt.
+	if socioeconomicClass == 0:
+		return randi_range(-20000, 1200)
+	elif socioeconomicClass == 1:
+		return randi_range(-5000, 7000)
+	elif socioeconomicClass == 2:
+		return randi_range(7000, 16000)
+	elif socioeconomicClass == 3:
+		return randi_range(30000, 100000)
+	elif socioeconomicClass == 4:
+		return randi_range(200000, 700000)
+	elif socioeconomicClass == 5:
+		return randi_range(5000000, 20000000)
+	else:
+		push_warning("Socioeconomic class falls outside the range of 0 - 5 at " + str(socioeconomicClass) + ". This NPC will be given $7 in savings by default.")
+		return 7
+
+func NPCCreator(NPCsex : String, NPCfirstName : String, NPClastName : String, NPCage : int, NPCrelationship : int, NPCtype : String, NPCcategory : String, NPCstats = "random", NPCSEClass = "random"): ##Creates an NPC from several custom perameters. NPCtype can be either "family" or "misc". If NPCstats is "random", this fills their stats in with random values. NPCSEClass can be any number from 0 - 5 (inclusive), representing their socioeconomic class, with 0 representing extreme poverty, 5 representing extreme wealth, and 2 - 3 being more average.
 	personSexes.append(NPCsex)
 	personFirstNames.append(NPCfirstName)
 	personLastNames.append(NPClastName)
@@ -254,8 +304,14 @@ func NPCCreator(NPCsex : String, NPCfirstName : String, NPClastName : String, NP
 	personRelationships.append(NPCrelationship)
 	personTypes.append(NPCtype)
 	personCategories.append(NPCcategory)
-	if NPCstats == "random":
-		personStats.append([randi_range(0, 100)])
+	if NPCstats == "random": #if you want to randomly generate stats
+		personStats.append(NPCStatsGenerator())
+	else: #if you have specified stats to use
+		personStats.append(NPCstats)
+	if NPCSEClass == "random": #if you want a randomly-generated class
+		personMoney.append(NPCMoneyGenerator())
+	else: #if you have specified a class for this NPC
+		personMoney.append(NPCMoneyGenerator(NPCSEClass))
 	personUIDs.append(personUIDsUsed)
 	personUIDsUsed += 1
 	XPQueued += 10
@@ -269,7 +325,7 @@ func NPCKiller(type, index): ##Kills an NPC. Type can be either "kill" or "remov
 		deadPersonTypes.append(personTypes[index])
 		deadPersonAges.append(personAges[index])
 		deadPersonSexes.append(personSexes[index])
-		XPQueued += 10
+		XPQueued += 20
 	#removal
 	personFirstNames.remove_at(index)
 	personLastNames.remove_at(index)
@@ -329,7 +385,14 @@ func anIser(undoctoredProceedingWord): ##An-iser. Returns "an " + word if the wo
 	return "a " + undoctoredProceedingWord
 
 
-func intIser(theArray): ##Turns array elements into integers
+func intIser(theArray, nestedArray : bool = false): ##Turns array elements into integers. Set nestedArray to true if the array given contains other arrays that contain the elements you want to integer-ise.
+	if nestedArray == true:
+		var intTheNestedArray = []
+		for i in theArray.size():
+			intTheNestedArray.append([])
+			for x in theArray[i].size():
+				intTheNestedArray[i].append(int(theArray[i][x]))
+		return intTheNestedArray
 	var intTheArray = []
 	for i in theArray.size():
 		intTheArray.append(int(theArray[i]))
@@ -556,6 +619,7 @@ func lifeSerialiser(): ##Serialises every life-specific variable we need to save
 		"personUIDsUsed" : personUIDsUsed,
 		"personUIDs" : personUIDs,
 		"personStats" : personStats,
+		"personMoney" : personMoney,
 		"personCategories" : personCategories,
 		#dead NPCs
 		"deadPersonFirstNames" : deadPersonFirstNames,
@@ -784,6 +848,7 @@ func loadLife(takeHome = true, base64life = ""): ##Does the actual LIFE loading 
 	personUIDsUsed = dictionary["personUIDsUsed"]
 	personUIDs = intIser(dictionary["personUIDs"])
 	personStats = dictionary["personStats"]
+	personMoney = dictionary["personMoney"]
 	personCategories = dictionary["personCategories"]
 	#dead NPCs
 	deadPersonFirstNames = dictionary["deadPersonFirstNames"]

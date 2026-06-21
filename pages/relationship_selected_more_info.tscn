@@ -1,0 +1,70 @@
+[gd_scene format=3 uid="uid://c5xnsayt5425c"]
+
+[ext_resource type="Script" uid="uid://bwd7xugnf1wv" path="res://pages/scripts/relationshipSelectedMoreInfo.gd" id="1_16cy3"]
+[ext_resource type="PackedScene" uid="uid://pmo8e2dmbkfm" path="res://objects/background.tscn" id="2_f76vi"]
+[ext_resource type="PackedScene" uid="uid://cjnbhqp8obehv" path="res://objects/back_button.tscn" id="3_q1wyw"]
+[ext_resource type="PackedScene" uid="uid://moehuc8f6dgg" path="res://objects/exit.tscn" id="4_0la7q"]
+[ext_resource type="PackedScene" uid="uid://dvna50i2k0geh" path="res://objects/body.tscn" id="6_l4b5w"]
+[ext_resource type="PackedScene" uid="uid://b3nrc0n5eeris" path="res://objects/subheading.tscn" id="7_e13o5"]
+[ext_resource type="LabelSettings" uid="uid://dl6sog5hfkb6u" path="res://styles/text/body.tres" id="7_hqaqo"]
+[ext_resource type="FontFile" uid="uid://bf7pfy6renkw4" path="res://assets/fonts/poppins/Poppins-Regular.ttf" id="8_16cy3"]
+
+[sub_resource type="Theme" id="Theme_cka52"]
+RichTextLabel/colors/default_color = Color(0, 0, 0, 1)
+RichTextLabel/font_sizes/normal_font_size = 42
+RichTextLabel/fonts/normal_font = ExtResource("8_16cy3")
+
+[node name="relationshipSelectedMoreInfo" type="Node2D" unique_id=907313831]
+script = ExtResource("1_16cy3")
+
+[node name="background" parent="." unique_id=431403932 instance=ExtResource("2_f76vi")]
+
+[node name="back" parent="." unique_id=17962498 instance=ExtResource("3_q1wyw")]
+
+[node name="exit" parent="." unique_id=1865769784 instance=ExtResource("4_0la7q")]
+offset_left = 960.0
+offset_right = 1060.0
+
+[node name="type" parent="." unique_id=1032932187 instance=ExtResource("6_l4b5w")]
+offset_top = 60.0
+offset_right = 1080.0
+offset_bottom = 120.0
+text = "Brother"
+
+[node name="name" parent="." unique_id=1227387029 instance=ExtResource("7_e13o5")]
+text = "Name Johnson"
+
+[node name="details" parent="." unique_id=1589728423 instance=ExtResource("6_l4b5w")]
+offset_top = 250.0
+offset_right = 1080.0
+offset_bottom = 310.0
+text = "Mother, Father, Strongly Disagree"
+
+[node name="infoOld" type="Label" parent="." unique_id=305687277]
+visible = false
+custom_minimum_size = Vector2(1000, 0)
+offset_left = 40.0
+offset_top = 400.0
+offset_right = 1040.0
+offset_bottom = 460.0
+text = "More info"
+label_settings = ExtResource("7_hqaqo")
+horizontal_alignment = 1
+autowrap_mode = 3
+
+[node name="scrollContainer" type="ScrollContainer" parent="." unique_id=1448027433]
+offset_left = 40.0
+offset_top = 400.0
+offset_right = 1040.0
+offset_bottom = 1800.0
+
+[node name="info" type="RichTextLabel" parent="scrollContainer" unique_id=1252513408]
+custom_minimum_size = Vector2(1000, 0)
+layout_mode = 2
+size_flags_vertical = 3
+theme = SubResource("Theme_cka52")
+bbcode_enabled = true
+horizontal_alignment = 1
+
+[connection signal="pressed" from="back" to="." method="_on_back_pressed"]
+[connection signal="pressed" from="exit" to="." method="_on_exit_pressed"]

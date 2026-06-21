@@ -1,0 +1,45 @@
+[gd_scene format=3 uid="uid://cnsmyqds8ui1u"]
+
+[ext_resource type="Script" uid="uid://dxt3w7s2xqff" path="res://pages/scripts/settingsHelp.gd" id="1_fxayr"]
+[ext_resource type="PackedScene" uid="uid://pmo8e2dmbkfm" path="res://objects/background.tscn" id="2_tdmma"]
+[ext_resource type="PackedScene" uid="uid://cjnbhqp8obehv" path="res://objects/back_button.tscn" id="3_dvaec"]
+[ext_resource type="PackedScene" uid="uid://b7bfib5vbcvk6" path="res://objects/heading.tscn" id="4_wjlp5"]
+[ext_resource type="PackedScene" uid="uid://ck7ra4cupjjkm" path="res://objects/button_default.tscn" id="5_6ks4x"]
+
+[node name="settingsHelp" type="Node2D" unique_id=1974988509]
+script = ExtResource("1_fxayr")
+
+[node name="background" parent="." unique_id=132212067 instance=ExtResource("2_tdmma")]
+
+[node name="back" parent="." unique_id=17962498 instance=ExtResource("3_dvaec")]
+
+[node name="heading" parent="." unique_id=33655322 instance=ExtResource("4_wjlp5")]
+text = "Help"
+
+[node name="vBoxContainer" type="VBoxContainer" parent="." unique_id=337752013]
+offset_top = 300.0
+offset_right = 1080.0
+offset_bottom = 1380.0
+theme_override_constants/separation = 50
+
+[node name="bugReport" parent="vBoxContainer" unique_id=1655376676 instance=ExtResource("5_6ks4x")]
+layout_mode = 2
+text = "Report a bug or issue"
+
+[node name="tellAFriend" parent="vBoxContainer" unique_id=1544237965 instance=ExtResource("5_6ks4x")]
+layout_mode = 2
+text = "Tell a friend about the game"
+
+[node name="rate" parent="vBoxContainer" unique_id=1772006797 instance=ExtResource("5_6ks4x")]
+layout_mode = 2
+text = "Provide feedback"
+
+[node name="featureSuggest" parent="vBoxContainer" unique_id=368186526 instance=ExtResource("5_6ks4x")]
+layout_mode = 2
+text = "Suggest a feature"
+
+[connection signal="pressed" from="back" to="." method="_on_back_pressed"]
+[connection signal="pressed" from="vBoxContainer/bugReport" to="." method="_on_bug_report_pressed"]
+[connection signal="pressed" from="vBoxContainer/tellAFriend" to="." method="_on_tell_a_friend_pressed"]
+[connection signal="pressed" from="vBoxContainer/rate" to="." method="_on_rate_pressed"]
+[connection signal="pressed" from="vBoxContainer/featureSuggest" to="." method="_on_feature_suggest_pressed"]
