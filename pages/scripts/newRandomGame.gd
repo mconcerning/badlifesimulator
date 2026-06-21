@@ -94,6 +94,7 @@ func cleanLife(): #resets your existing life (if any) and generates new stats
 	global.personUIDsUsed = 0
 	global.personUIDs = []
 	global.personStats = []
+	global.personMoney = []
 	global.personCategories = []
 	#dead NPCs
 	global.deadPersonFirstNames = []
@@ -375,7 +376,6 @@ func familyGenerator(): #HELP I DON'T WANT TO MAKE THIS SCRIPT FOR A THIRD TIME 
 	for i in global.personMoney.size():
 		personMoneyPretty.append("$" + global.commaiser(global.personMoney[i]))
 	print(personMoneyPretty)
-	print("money size: " + str(global.personMoney.size()))
 	print("in total, you have " + str(global.personTypes.size()) + " family members")
 
 
