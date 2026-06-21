@@ -17,10 +17,10 @@ func _ready() -> void:
 	$type.text = global.personTypes[global.IDClicked]
 	$name.text = global.personFirstNames[global.IDClicked] + " " + global.personLastNames[global.IDClicked]
 	$details.text = "(" + global.personSexes[global.IDClicked] + "), Age " + str(global.personAges[global.IDClicked]) + ", Relationship: " + str(global.personRelationships[global.IDClicked])
-	if global.personMoney[global.IDClicked] < 0: #if they are in debt
+	if global.personMoney[global.IDClicked][0] < 0: #if they are in debt
 		$scrollContainer/info.text = "[color=#b20011ff]Money: -" #make the text red
-	elif global.personMoney[global.IDClicked] == 0: #if they are completely neutral
+	elif global.personMoney[global.IDClicked][0] == 0: #if they are completely neutral
 		$scrollContainer/info.text = "[color=#000000ff]Money: " #make the text black
-	elif global.personMoney[global.IDClicked] > 0: #if they are in the green
+	elif global.personMoney[global.IDClicked][0] > 0: #if they are in the green
 		$scrollContainer/info.text = "[color=#008000ff]Money: " #make the text green
-	$scrollContainer/info.text += "$" + global.commaiser(global.personMoney[global.IDClicked]) + "[/color]\n\nJoy: " + str(statFind("Joy")) + "\nHealth: " + str(statFind("Health")) + "\nIntellect: " + str(statFind("Intellect")) + "\nLooks: " + str(statFind("Looks"))
+	$scrollContainer/info.text += "$" + global.commaiser(global.personMoney[global.IDClicked][0]) + "[/color]\nSalary: $" + global.commaiser(global.personMoney[global.IDClicked][1]) + "/yr\n\nJoy: " + str(statFind("Joy")) + "\nHealth: " + str(statFind("Health")) + "\nIntellect: " + str(statFind("Intellect")) + "\nLooks: " + str(statFind("Looks"))

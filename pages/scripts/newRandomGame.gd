@@ -353,7 +353,6 @@ func familyGenerator(): #HELP I DON'T WANT TO MAKE THIS SCRIPT FOR A THIRD TIME 
 		global.personFirstNames[whoIsBeyonce] = "Beyoncé" #beyoncéficates them
 		global.personLastNames[whoIsBeyonce] = ""
 	for i in global.personTypes.size(): #runs through everyone to add last-minute stats
-		print(i)
 		#money (savings)
 		if global.personAges[i] >= randi_range(16, 20): #if they're old enough to have established savings
 			if (global.personTypes[i] == "Grandmother" || global.personTypes[i] == "Grandfather") && randi_range(1,2) == 1: #If they're old, they're more likely to be wealthy
@@ -362,9 +361,9 @@ func familyGenerator(): #HELP I DON'T WANT TO MAKE THIS SCRIPT FOR A THIRD TIME 
 				global.personMoney.append(global.NPCMoneyGenerator()) #put them in a regular random class
 		else: #if they're not old enough, give them no savings
 			if global.personAges[i] <= randi_range(8, 12): #if they're too young to have any money at all
-				global.personMoney.append(0)
+				global.personMoney.append([0, 0])
 			else: #if they're old enough to have SOME money
-				global.personMoney.append(randi_range(0, 500))
+				global.personMoney.append([randi_range(0, 500), randi_range(0, 150)])
 	print(global.personFirstNames)
 	print(global.personLastNames)
 	print(global.personSexes)
@@ -373,9 +372,12 @@ func familyGenerator(): #HELP I DON'T WANT TO MAKE THIS SCRIPT FOR A THIRD TIME 
 	print(global.personRelationships)
 	print(global.personStats)
 	var personMoneyPretty = [] #better presentation representing money in the console than just an array of large numbers that you have to decipher
+	var personSalaryPretty = []
 	for i in global.personMoney.size():
-		personMoneyPretty.append("$" + global.commaiser(global.personMoney[i]))
+		personMoneyPretty.append("$" + global.commaiser(global.personMoney[i][0]))
+		personSalaryPretty.append("$" + global.commaiser(global.personMoney[i][1]) + "/yr")
 	print(personMoneyPretty)
+	print(personSalaryPretty)
 	print("in total, you have " + str(global.personTypes.size()) + " family members")
 
 

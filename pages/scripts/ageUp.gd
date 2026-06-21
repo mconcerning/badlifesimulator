@@ -4,6 +4,34 @@ extends Node2D #author(s): Ethan Scott
 var isDying = false
 
 
+func salaryGiver(theSalary): ##Taxxes and deducts money for the cost-of-living from a salary given, then returns the final value. Use at the point where a salary is given.
+	#income tax bracketer - modelled loosely after the Australian resident tax rates 2025 - 2026
+	var costOfLiving = 0 ##Cost of living expressed as a percentage. Cost of living is 0% if you have no income so as to prevent unnecessary debt.
+	if theSalary <= 18200:
+		global.incomeTax = 0 #0% income tax
+		costOfLiving = 65 #honestly wishful thinking but it's not fun to have 0 income
+	elif theSalary > 18200 && theSalary <= 45000:
+		global.incomeTax = 16 #16% income tax
+		costOfLiving = 60
+	elif theSalary > 45000 && theSalary <= 135000:
+		global.incomeTax = 30
+		costOfLiving = 50
+	elif theSalary > 135000 && theSalary <= 190000:
+		global.incomeTax = 37
+		costOfLiving = 40
+	elif theSalary > 190000:
+		global.incomeTax = 45
+		costOfLiving = 30
+	elif theSalary > 1000000:
+		global.incomeTax = 45
+		costOfLiving = 19
+	#print(str(global.incomeTax) + "% income tax")
+	#print("you earned $" + global.commaiser(theSalary))
+	#print("you paid $" + global.commaiser(theSalary - roundi(float(theSalary) / 100 * (100 - global.incomeTax))) + " in income tax")
+	#print("you earned $" + global.commaiser(roundi(float(theSalary) / 100 * (100 - global.incomeTax))) + " after tax")
+	return roundi(float(theSalary) / 100 * (100 - global.incomeTax - costOfLiving)) #Decides final salary. Deducts a certain percentage for income tax.
+
+
 func basicStatChanges():
 	global.age += 1 #the actual aging up
 	print("age is now " + str(global.age))
@@ -11,29 +39,7 @@ func basicStatChanges():
 	global.health += randi_range(-6, 6)
 	global.intellect += randi_range(-4, 4)
 	global.looks += randi_range(-6, 6)
-	#income tax bracketer - modelled loosely after the Australian resident tax rates 2025 - 2026
-	var combinedSalary = global.fullTimeSalary + global.partTimeSalary()
-	var costOfLiving = 0 ##Cost of living expressed as a percentage. Cost of living is 0% if you have no income so as to prevent unnecessary debt.
-	if combinedSalary <= 18200:
-		global.incomeTax = 0 #0% income tax
-		costOfLiving = 65 #honestly wishful thinking but it's not fun to have 0 income
-	elif combinedSalary > 18200 && combinedSalary <= 45000:
-		global.incomeTax = 16 #16% income tax
-		costOfLiving = 60
-	elif combinedSalary > 45000 && combinedSalary <= 135000:
-		global.incomeTax = 30
-		costOfLiving = 50
-	elif combinedSalary > 135000 && combinedSalary <= 190000:
-		global.incomeTax = 37
-		costOfLiving = 40
-	elif combinedSalary > 190000:
-		global.incomeTax = 45
-		costOfLiving = 30
-	global.money += roundi(float(combinedSalary) / 100 * (100 - global.incomeTax - costOfLiving)) #salary giver. Deducts a certain percentage for income tax.
-	#print(str(global.incomeTax) + "% income tax")
-	#print("you earned $" + global.commaiser(combinedSalary))
-	#print("you paid $" + global.commaiser(combinedSalary - roundi(float(combinedSalary) / 100 * (100 - global.incomeTax))) + " in income tax")
-	#print("you earned $" + global.commaiser(roundi(float(combinedSalary) / 100 * (100 - global.incomeTax))) + " after tax")
+	global.money += salaryGiver(global.fullTimeSalary + global.partTimeSalary()) #gives you your salary in dollars, after tax and after deducting a percentage to cover the cost of living
 	#accrewage of debt
 	if global.money < 0 && global.age >= 18: #if you're in debt
 		var debtInterest = roundi(float(-global.money) / 100 * 14) #your interest is 14%
@@ -52,12 +58,14 @@ func basicStatChanges():
 			var theStat = global.personStatsDictionary[x]
 			if theStat == "Joy" || theStat == "Health" || theStat == "Intellect" || theStat == "Looks":
 				stats[x] += randi_range(-6, 6)
-		var theirMoney = global.personMoney[i]
+		var theirMoney = global.personMoney[i][0]
 		if theirMoney > 8000000000000000000: #if they are frighteningly close to the 64-bit signed integer limit (just over 9.223 quintillion)
 			theirMoney = 8000000000000000000 #cap it to under 10% less than it so they can't integer overflow into immense debt
 		elif theirMoney < -8000000000000000000: #if they are so IN debt that they're frighteningly close to integer overflowing OUT of it
 			theirMoney = -8000000000000000000 #not on my watch
-		theirMoney += randi_range(-roundi(float(theirMoney) / 10), roundi(float(theirMoney) / 10)) #adds anywhere from negative a tenth of their money to positive a tenth of their money
+		theirMoney += salaryGiver(global.personMoney[i][1]) #gives them their salary (after tax and stuff)
+		theirMoney -= randi_range(roundi(float(theirMoney) / 25), roundi(float(theirMoney) / 10)) #deducts anywhere from a 25th to a 10th of their money (they spent some)
+		global.personMoney[i][0] = theirMoney #updates their money after all these changes
 	if global.crimes.size() >= 1: #if you have committed a crime
 		if global.multiplicativeArrestChance <= 1.75:
 			global.multiplicativeArrestChance += 0.25
