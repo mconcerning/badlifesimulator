@@ -1416,6 +1416,7 @@ func option2outcomes(): ##Outcomes for option 2
 		optionRemover(2)
 		global.personRelationships[relativeOfChoice] += 8
 		global.money += 50
+		global.personMoney[relativeOfChoice][0] -= 50 #well, they DID give you $50. That WOULD mean they now have $50 less...
 		global.evality += 4 #since you did something bad, you become slightly desensitised to doing bad things
 	elif global.revent[0] == "change-save-management-mode-to-delete-o2":
 		goingToSpecific = "res://pages/life_save_files.tscn"
@@ -1443,11 +1444,8 @@ func option2outcomes(): ##Outcomes for option 2
 		for i in parentsIndexes: #calculates your parents' combined savings
 			var where = parentsIndexes[i]
 			parentsNetWorth += (global.personMoney[where][0])
-			print(global.personMoney[where][0])
-		print(parentsNetWorth)
-		print(max(2, roundi(float(global.degreePickedCost) / (parentsNetWorth / 2) / numberOfParents)))
 		#if your parents actually do agree to pay for your tuition
-		if avgParentRelationship >= 72 && randi_range(1, max(2, roundi(float(global.degreePickedCost) / parentsNetWorth / numberOfParents))) == 1: #if you have a good relationship with your parents AND your parents actually agree to pay for your tuition (1 in (the cost of the degree / 8,000 / number of parents (e.g. 1 in ~3.125 (3) chance for a $50,000 loan with 2 parents) chance)
+		if avgParentRelationship >= 72 && randi_range(1, max(2, roundi(float(global.degreePickedCost) / 10000 / (parentsNetWorth / 100000) / numberOfParents))) == 1: #if you have a good relationship with your parents AND your parents actually agree to pay for your tuition (1 in (the cost of the degree / 10,000 / total net worth of parents / 100,000 / number of parents (e.g. 1 in ~3.125 (3) chance for a $50,000 loan with 2 parents) chance)
 			$heading.text = "Nepo baby?"
 			$body.text = "Your " + parentNoun + " agreed to pay for your University tuition!"
 			global.schoolLevel = 3 #puts you in tertiary school

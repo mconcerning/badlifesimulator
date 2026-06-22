@@ -376,8 +376,8 @@ func familyGenerator(): #HELP I DON'T WANT TO MAKE THIS SCRIPT FOR A THIRD TIME 
 	for i in global.personMoney.size():
 		personMoneyPretty.append("$" + global.commaiser(global.personMoney[i][0]))
 		personSalaryPretty.append("$" + global.commaiser(global.personMoney[i][1]) + "/yr")
-	print(personMoneyPretty)
-	print(personSalaryPretty)
+	#print(personMoneyPretty)
+	#print(personSalaryPretty)
 	print("in total, you have " + str(global.personTypes.size()) + " family members")
 
 

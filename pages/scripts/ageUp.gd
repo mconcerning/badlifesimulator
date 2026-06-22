@@ -29,14 +29,14 @@ func salaryGiver(theSalary, savings, age): ##Taxxes and deducts money for the co
 	#print("you earned $" + global.commaiser(theSalary))
 	#print("you paid $" + global.commaiser(theSalary - roundi(float(theSalary) / 100 * (100 - global.incomeTax))) + " in income tax")
 	#print("you earned $" + global.commaiser(roundi(float(theSalary) / 100 * (100 - global.incomeTax))) + " after tax")
-	var salaryATACOL = roundi(float(theSalary) / 100 * (100 - global.incomeTax - costOfLiving)) #salary after tax and cost-of-living
+	var salaryAfterTaxAndCOL = roundi(float(theSalary) / 100 * (100 - global.incomeTax - costOfLiving)) #salary after tax and cost-of-living
 	#accrewage of debt
 	if savings < 0 && age >= 18: #if you're in debt
 		var debtInterest = roundi(float(-savings) / 100 * 14) #your interest is 14%
-		salaryATACOL -= debtInterest
+		salaryAfterTaxAndCOL -= debtInterest
 		if savings == global.money && age == global.age: #if this is you getting debtted
 			print("paid $" + global.commaiser(debtInterest) + " in debt interest")
-	return salaryATACOL #Decides final salary. Can be negative in cases of extreme debt.
+	return salaryAfterTaxAndCOL #Decides final salary. Can be negative in cases of extreme debt.
 
 
 func basicStatChanges():
@@ -67,7 +67,7 @@ func basicStatChanges():
 			theirMoney = -8000000000000000000 #not on my watch
 		var salaryAfterTax = salaryGiver(global.personMoney[i][1], global.personMoney[i][0], global.personAges[i])
 		theirMoney += salaryAfterTax #gives them their salary (after tax and stuff)
-		theirMoney -= randi_range(roundi(float(salaryAfterTax) / 3), roundi(float(salaryAfterTax) * 1.4)) #deducts anywhere from a 3rd to... ALL of their salary PLUS 40% (they spent some)
+		theirMoney -= randi_range(roundi(float(salaryAfterTax) / 3), salaryAfterTax * 2) #deducts anywhere from a 3rd to... ALL of their salary PLUS 80% (they spent some)
 		global.personMoney[i][0] = theirMoney #updates their money after all these changes
 	if global.crimes.size() >= 1: #if you have committed a crime
 		if global.multiplicativeArrestChance <= 1.75:
@@ -263,8 +263,10 @@ func randomDeathChance():
 		# equation for the health that would no longer be able to keep you alive at x age: h = (a - 75) * 2
 		#print(75 - global.age + roundi(float(global.health) / 2))
 		#print(chance)
+		var which = randi_range(1, chance)
 		print("1 in " + str(chance) + " chance of death")
-		if randi_range(1, chance) == 1:
+		print(which)
+		if which == 1:
 			global.causeOfDeath = "You died of complications associated with advanced age"
 			isDying = true
 			get_tree().change_scene_to_file("res://pages/death.tscn") #kills you

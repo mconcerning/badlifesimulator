@@ -281,13 +281,13 @@ func NPCMoneyGenerator(specificSocioeconomicClass : int = -1, SEFloor = 0, SECei
 		socioeconomicClass = SECeil #make it the maximum
 	#Gives them the actual money based on their class. Remember, this value is supposed to represent their savings, not walking-around money. A negative value represents debt. The second index (1) represents their yearly salary in dollars.
 	if socioeconomicClass == 0:
-		return [randi_range(-20000, 1200), randi_range(0, 12000)]
+		return [randi_range(-20000, 1200), randi_range(0, 7000)]
 	elif socioeconomicClass == 1:
-		return [randi_range(-5000, 7000), randi_range(12000, 25000)]
+		return [randi_range(-5000, 7000), randi_range(5000, 10000)]
 	elif socioeconomicClass == 2:
-		return [randi_range(7000, 16000), randi_range(36000, 65000)]
+		return [randi_range(7000, 16000), randi_range(12000, 20000)]
 	elif socioeconomicClass == 3:
-		return [randi_range(30000, 100000), randi_range(60000, 100000)]
+		return [randi_range(30000, 100000), randi_range(20000, 34000)]
 	elif socioeconomicClass == 4:
 		return [randi_range(200000, 700000), randi_range(100000, 200000)]
 	elif socioeconomicClass == 5:
