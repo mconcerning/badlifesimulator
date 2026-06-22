@@ -1137,7 +1137,7 @@ func confirmation(): ##Non-random confirmation events that tell you that somethi
 					$heading.text += "in"
 			var joySubtracted = randi_range(roundi(float(global.intellect)/10), 14 - roundi(float(global.intellect)/10))
 			var performanceIncreased = roundi(float(global.intellect)/18) + randi_range(1, 3)
-			$body.text = "You studied for " + str(max(2, int(roundi(float(global.intellect)/20)))) + " hours.\n+ " + str(performanceIncreased) + " school performance, + " + str(int(roundi(float(global.intellect)/20)) + 1) + " Intellect, - " + str(joySubtracted) + " Joy"
+			$body.text = "You studied for " + str(max(2, roundi(float(global.intellect)/20))) + " hours.\n+ " + str(performanceIncreased) + " school performance, + " + str(roundi(float(global.intellect)/20) + 1) + " Intellect, - " + str(joySubtracted) + " Joy"
 			global.schoolPerformance += performanceIncreased
 			global.intellect += roundi(float(global.intellect)/20) + 1
 			global.joy -= joySubtracted
@@ -1426,9 +1426,12 @@ func option2outcomes(): ##Outcomes for option 2
 		var parentNoun = ""
 		var numberOfParents = global.personTypes.count("Mother") + global.personTypes.count("Father")
 		var avgParentRelationship = 0
+		var parentsIndexes = []
+		var parentsNetWorth = 0.0
 		for i in global.personTypes.size():
 			if global.personTypes[i] == "Mother" || global.personTypes[i] == "Father": #if they are a parent
 				avgParentRelationship += global.personRelationships[i]
+				parentsIndexes.append(i)
 		avgParentRelationship = roundi(float(avgParentRelationship) / numberOfParents)
 		if numberOfParents >= 2: #if you have multiple parents
 			parentNoun = "parents"
@@ -1437,8 +1440,14 @@ func option2outcomes(): ##Outcomes for option 2
 				parentNoun = "mother"
 			else: #if you only have a father
 				parentNoun = "father"
+		for i in parentsIndexes: #calculates your parents' combined savings
+			var where = parentsIndexes[i]
+			parentsNetWorth += (global.personMoney[where][0])
+			print(global.personMoney[where][0])
+		print(parentsNetWorth)
+		print(max(2, roundi(float(global.degreePickedCost) / (parentsNetWorth / 2) / numberOfParents)))
 		#if your parents actually do agree to pay for your tuition
-		if avgParentRelationship >= 72 && randi_range(1, max(2, roundi(float(global.degreePickedCost) / (8000.0 / numberOfParents)))) == 1: #if you have a good relationship with your parents AND your parents actually agree to pay for your tuition (1 in (the cost of the degree / 8,000 / number of parents (e.g. 1 in ~3.125 (3) chance for a $50,000 loan with 2 parents) chance)
+		if avgParentRelationship >= 72 && randi_range(1, max(2, roundi(float(global.degreePickedCost) / parentsNetWorth / numberOfParents))) == 1: #if you have a good relationship with your parents AND your parents actually agree to pay for your tuition (1 in (the cost of the degree / 8,000 / number of parents (e.g. 1 in ~3.125 (3) chance for a $50,000 loan with 2 parents) chance)
 			$heading.text = "Nepo baby?"
 			$body.text = "Your " + parentNoun + " agreed to pay for your University tuition!"
 			global.schoolLevel = 3 #puts you in tertiary school
