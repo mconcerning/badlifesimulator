@@ -94,7 +94,6 @@ func cleanLife(): #resets your existing life (if any) and generates new stats
 	global.personUIDsUsed = 0
 	global.personUIDs = []
 	global.personStats = []
-	global.personMoney = []
 	global.personCategories = []
 	#dead NPCs
 	global.deadPersonFirstNames = []
@@ -352,18 +351,6 @@ func familyGenerator(): #HELP I DON'T WANT TO MAKE THIS SCRIPT FOR A THIRD TIME 
 		var whoIsBeyonce = randi_range(0, global.personFirstNames.size() - 1) #picks a random family member
 		global.personFirstNames[whoIsBeyonce] = "Beyoncé" #beyoncéficates them
 		global.personLastNames[whoIsBeyonce] = ""
-	for i in global.personTypes.size(): #runs through everyone to add last-minute stats
-		#money (savings)
-		if global.personAges[i] >= randi_range(16, 20): #if they're old enough to have established savings
-			if (global.personTypes[i] == "Grandmother" || global.personTypes[i] == "Grandfather") && randi_range(1,2) == 1: #If they're old, they're more likely to be wealthy
-				global.personMoney.append(global.NPCMoneyGenerator(-1, 2, 5)) #put them in a better socioeconomic class
-			else: #if they're either not old or ARE old, but aren't wealthy (they still can be, it's just not guaranteed)
-				global.personMoney.append(global.NPCMoneyGenerator()) #put them in a regular random class
-		else: #if they're not old enough, give them no savings
-			if global.personAges[i] <= randi_range(8, 12): #if they're too young to have any money at all
-				global.personMoney.append([0, 0])
-			else: #if they're old enough to have SOME money
-				global.personMoney.append([randi_range(0, 500), randi_range(0, 150)])
 	print(global.personFirstNames)
 	print(global.personLastNames)
 	print(global.personSexes)
@@ -371,13 +358,6 @@ func familyGenerator(): #HELP I DON'T WANT TO MAKE THIS SCRIPT FOR A THIRD TIME 
 	print(global.personTypes)
 	print(global.personRelationships)
 	print(global.personStats)
-	var personMoneyPretty = [] #better presentation representing money in the console than just an array of large numbers that you have to decipher
-	var personSalaryPretty = []
-	for i in global.personMoney.size():
-		personMoneyPretty.append("$" + global.commaiser(global.personMoney[i][0]))
-		personSalaryPretty.append("$" + global.commaiser(global.personMoney[i][1]) + "/yr")
-	#print(personMoneyPretty)
-	#print(personSalaryPretty)
 	print("in total, you have " + str(global.personTypes.size()) + " family members")
 
 

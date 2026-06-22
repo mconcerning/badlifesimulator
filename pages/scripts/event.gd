@@ -1218,7 +1218,7 @@ func option1outcomes(): ##Outcomes for option 1
 		$option1.text = "Hooray"
 		optionRemover(2)
 		#adds the EGP to your relationships array
-		global.NPCCreator(global.eventPersonSex, global.eventPersonFirstName, global.eventPersonLastName, global.eventPersonAge, randi_range(20, 50), "Friend", "misc", "random", "random")
+		global.NPCCreator(global.eventPersonSex, global.eventPersonFirstName, global.eventPersonLastName, global.eventPersonAge, randi_range(20, 50), "Friend", "misc", "random")
 	elif global.revent[0] == "teenager-friend-o1":
 		if randi_range(1,3) == 1: #if they refuse to be your friend
 			$heading.text = "That's awkward..."
@@ -1228,7 +1228,7 @@ func option1outcomes(): ##Outcomes for option 1
 			$heading.text = "Sweet"
 			$body.text = "You befriended " + global.eventPersonFirstName + " " + global.eventPersonLastName + "."
 			#adds the EGP to your relationships array
-			global.NPCCreator(global.eventPersonSex, global.eventPersonFirstName, global.eventPersonLastName, global.eventPersonAge, randi_range(20, 50), "Friend", "misc", "random", "random")
+			global.NPCCreator(global.eventPersonSex, global.eventPersonFirstName, global.eventPersonLastName, global.eventPersonAge, randi_range(20, 50), "Friend", "misc", "random")
 			$option1.text = "Okay"
 		optionRemover(2)
 	elif global.revent[0] == "adult-friend-o1" || global.revent[0] == "elder-friend-o1":
@@ -1240,7 +1240,7 @@ func option1outcomes(): ##Outcomes for option 1
 			$heading.text = "A blossoming friendship"
 			$body.text = "You befriended " + global.eventPersonFirstName + " " + global.eventPersonLastName + "."
 			#adds the EGP to your relationships array
-			global.NPCCreator(global.eventPersonSex, global.eventPersonFirstName, global.eventPersonLastName, global.eventPersonAge, randi_range(20, 50), "Friend", "misc", "random", "random")
+			global.NPCCreator(global.eventPersonSex, global.eventPersonFirstName, global.eventPersonLastName, global.eventPersonAge, randi_range(20, 50), "Friend", "misc", "random")
 			$option1.text = "Okay"
 		optionRemover(2)
 	elif global.revent[0] == "toddler-0-o1":
@@ -1350,7 +1350,7 @@ func option2outcomes(): ##Outcomes for option 2
 					#global.NPCKiller("remove", i) #removes them
 				#for loops automatically increase the variable they use (in this case, i) so no need to manually increment it
 			#adds them to your relationships
-			global.NPCCreator(global.eventPersonSex, global.eventPersonFirstName, global.eventPersonLastName, global.eventPersonAge, randi_range(20, 50), global.pronounGenerator("boy", global.eventPersonSex).capitalize() + "friend", "misc", "random", "random")
+			global.NPCCreator(global.eventPersonSex, global.eventPersonFirstName, global.eventPersonLastName, global.eventPersonAge, randi_range(20, 50), global.pronounGenerator("boy", global.eventPersonSex).capitalize() + "friend", "misc", "random")
 		else: #they DON'T want to date you
 			$heading.text = "..."
 			$body.text = "You ask " + global.pronounGenerator("him", global.eventPersonSex) + " out, but " + global.pronounGenerator("he", global.eventPersonSex) + " rejects you.\nJoy - 15"
@@ -1368,7 +1368,7 @@ func option2outcomes(): ##Outcomes for option 2
 					#global.NPCKiller("remove", i) #removes them
 				#for loops automatically increase the variable they use (in this case, i) so no need to manually increment it
 			#adds them to your relationships
-			global.NPCCreator(global.eventPersonSex, global.eventPersonFirstName, global.eventPersonLastName, global.eventPersonAge, randi_range(40, 80), global.pronounGenerator("boy", global.eventPersonSex).capitalize() + "friend", "misc", "random", "random")
+			global.NPCCreator(global.eventPersonSex, global.eventPersonFirstName, global.eventPersonLastName, global.eventPersonAge, randi_range(40, 80), global.pronounGenerator("boy", global.eventPersonSex).capitalize() + "friend", "misc", "random")
 		else: #they DON'T want to date you
 			$body.text = "You ask " + global.pronounGenerator("him", global.eventPersonSex) + " out, but " + global.pronounGenerator("he", global.eventPersonSex) + " rejects you.\nJoy - 15"
 			global.joy -= 15
@@ -1385,7 +1385,7 @@ func option2outcomes(): ##Outcomes for option 2
 					#global.NPCKiller("remove", i) #removes them
 				#for loops automatically increase the variable they use (in this case, i) so no need to manually increment it
 			#adds them to your relationships
-			global.NPCCreator(global.eventPersonSex, global.eventPersonFirstName, global.eventPersonLastName, global.eventPersonAge, randi_range(20, 50), global.pronounGenerator("boy", global.eventPersonSex).capitalize() + "friend", "misc", "random", "random")
+			global.NPCCreator(global.eventPersonSex, global.eventPersonFirstName, global.eventPersonLastName, global.eventPersonAge, randi_range(20, 50), global.pronounGenerator("boy", global.eventPersonSex).capitalize() + "friend", "misc", "random")
 		else: #they DON'T want to date you
 			$heading.text = str(global.age) + " and still unmarried"
 			$body.text = "You ask " + global.pronounGenerator("him", global.eventPersonSex) + " out on a date, but " + global.pronounGenerator("he", global.eventPersonSex) + " rejects you.\nJoy - 15"
@@ -1416,7 +1416,6 @@ func option2outcomes(): ##Outcomes for option 2
 		optionRemover(2)
 		global.personRelationships[relativeOfChoice] += 8
 		global.money += 50
-		global.personMoney[relativeOfChoice][0] -= 50 #well, they DID give you $50. That WOULD mean they now have $50 less...
 		global.evality += 4 #since you did something bad, you become slightly desensitised to doing bad things
 	elif global.revent[0] == "change-save-management-mode-to-delete-o2":
 		goingToSpecific = "res://pages/life_save_files.tscn"
@@ -1427,12 +1426,9 @@ func option2outcomes(): ##Outcomes for option 2
 		var parentNoun = ""
 		var numberOfParents = global.personTypes.count("Mother") + global.personTypes.count("Father")
 		var avgParentRelationship = 0
-		var parentsIndexes = []
-		var parentsNetWorth = 0.0
 		for i in global.personTypes.size():
 			if global.personTypes[i] == "Mother" || global.personTypes[i] == "Father": #if they are a parent
 				avgParentRelationship += global.personRelationships[i]
-				parentsIndexes.append(i)
 		avgParentRelationship = roundi(float(avgParentRelationship) / numberOfParents)
 		if numberOfParents >= 2: #if you have multiple parents
 			parentNoun = "parents"
@@ -1441,11 +1437,8 @@ func option2outcomes(): ##Outcomes for option 2
 				parentNoun = "mother"
 			else: #if you only have a father
 				parentNoun = "father"
-		for i in parentsIndexes: #calculates your parents' combined savings
-			var where = parentsIndexes[i]
-			parentsNetWorth += (global.personMoney[where][0])
 		#if your parents actually do agree to pay for your tuition
-		if avgParentRelationship >= 72 && randi_range(1, max(2, roundi(float(global.degreePickedCost) / 10000 / (parentsNetWorth / 100000) / numberOfParents))) == 1: #if you have a good relationship with your parents AND your parents actually agree to pay for your tuition (1 in (the cost of the degree / 10,000 / total net worth of parents / 100,000 / number of parents (e.g. 1 in ~3.125 (3) chance for a $50,000 loan with 2 parents) chance)
+		if avgParentRelationship >= 72 && randi_range(1, max(2, roundi(float(global.degreePickedCost) / (8000.0 / numberOfParents)))) == 1: #if you have a good relationship with your parents AND your parents actually agree to pay for your tuition (1 in (the cost of the degree / 8,000 / number of parents (e.g. 1 in ~3.125 (3) chance for a $50,000 loan with 2 parents) chance)
 			$heading.text = "Nepo baby?"
 			$body.text = "Your " + parentNoun + " agreed to pay for your University tuition!"
 			global.schoolLevel = 3 #puts you in tertiary school

@@ -4,41 +4,6 @@ extends Node2D #author(s): Ethan Scott
 var isDying = false
 
 
-func salaryGiver(theSalary, savings, age): ##Taxxes and deducts money for the cost-of-living from a salary given, then returns the final value. Use at the point where a salary is given.
-	#income tax bracketer - modelled loosely after the Australian resident tax rates 2025 - 2026
-	var costOfLiving = 0 ##Cost of living expressed as a percentage. Cost of living is 0% if you have no income so as to prevent unnecessary debt.
-	if theSalary <= 18200:
-		global.incomeTax = 0 #0% income tax
-		costOfLiving = 65 #honestly wishful thinking but it's not fun to have 0 income
-	elif theSalary > 18200 && theSalary <= 45000:
-		global.incomeTax = 16 #16% income tax
-		costOfLiving = 60
-	elif theSalary > 45000 && theSalary <= 135000:
-		global.incomeTax = 30
-		costOfLiving = 50
-	elif theSalary > 135000 && theSalary <= 190000:
-		global.incomeTax = 37
-		costOfLiving = 40
-	elif theSalary > 190000:
-		global.incomeTax = 45
-		costOfLiving = 30
-	elif theSalary > 1000000:
-		global.incomeTax = 45
-		costOfLiving = 19
-	#print(str(global.incomeTax) + "% income tax")
-	#print("you earned $" + global.commaiser(theSalary))
-	#print("you paid $" + global.commaiser(theSalary - roundi(float(theSalary) / 100 * (100 - global.incomeTax))) + " in income tax")
-	#print("you earned $" + global.commaiser(roundi(float(theSalary) / 100 * (100 - global.incomeTax))) + " after tax")
-	var salaryAfterTaxAndCOL = roundi(float(theSalary) / 100 * (100 - global.incomeTax - costOfLiving)) #salary after tax and cost-of-living
-	#accrewage of debt
-	if savings < 0 && age >= 18: #if you're in debt
-		var debtInterest = roundi(float(-savings) / 100 * 14) #your interest is 14%
-		salaryAfterTaxAndCOL -= debtInterest
-		if savings == global.money && age == global.age: #if this is you getting debtted
-			print("paid $" + global.commaiser(debtInterest) + " in debt interest")
-	return salaryAfterTaxAndCOL #Decides final salary. Can be negative in cases of extreme debt.
-
-
 func basicStatChanges():
 	global.age += 1 #the actual aging up
 	print("age is now " + str(global.age))
@@ -46,7 +11,37 @@ func basicStatChanges():
 	global.health += randi_range(-6, 6)
 	global.intellect += randi_range(-4, 4)
 	global.looks += randi_range(-6, 6)
-	global.money += salaryGiver(global.fullTimeSalary + global.partTimeSalary(), global.money, global.age) #gives you your salary in dollars, after tax and after deducting a percentage to cover the cost of living
+	#income tax bracketer - modelled loosely after the Australian resident tax rates 2025 - 2026
+	var combinedSalary = global.fullTimeSalary + global.partTimeSalary()
+	var costOfLiving = 0 ##Cost of living expressed as a percentage. Cost of living is 0% if you have no income so as to prevent unnecessary debt.
+	if combinedSalary <= 18200:
+		global.incomeTax = 0 #0% income tax
+		costOfLiving = 65 #honestly wishful thinking but it's not fun to have 0 income
+	elif combinedSalary > 18200 && combinedSalary <= 45000:
+		global.incomeTax = 16 #16% income tax
+		costOfLiving = 60
+	elif combinedSalary > 45000 && combinedSalary <= 135000:
+		global.incomeTax = 30
+		costOfLiving = 50
+	elif combinedSalary > 135000 && combinedSalary <= 190000:
+		global.incomeTax = 37
+		costOfLiving = 40
+	elif combinedSalary > 190000:
+		global.incomeTax = 45
+		costOfLiving = 30
+	elif combinedSalary > 1000000:
+		global.incomeTax = 45
+		costOfLiving = 19
+	#print(str(global.incomeTax) + "% income tax")
+	#print("you earned $" + global.commaiser(combinedSalary))
+	#print("you paid $" + global.commaiser(combinedSalary - roundi(float(combinedSalary) / 100 * (100 - global.incomeTax))) + " in income tax")
+	#print("you earned $" + global.commaiser(roundi(float(combinedSalary) / 100 * (100 - global.incomeTax))) + " after tax")
+	#accrewage of debt
+	if global.money < 0 && global.age >= 18: #if you're in debt
+		var debtInterest = roundi(float(-global.money) / 100 * 14) #your interest is 14% (negative your money because a negative of a negative is a positive and the amount you owe should be positive - we don't want you profiting from your debt, now, do we?
+		global.money -= debtInterest
+		print("paid $" + global.commaiser(debtInterest) + " in debt interest")
+	global.money += roundi(float(combinedSalary) / 100 * (100 - global.incomeTax - costOfLiving)) #gives salary after tax and cost-of-living
 	#job effects
 	global.joy += global.fullTimeEffectJoy #these effects can be negative, they just... plus minus the amount.
 	global.health += global.fullTimeEffectHealth
@@ -60,15 +55,6 @@ func basicStatChanges():
 			var theStat = global.personStatsDictionary[x]
 			if theStat == "Joy" || theStat == "Health" || theStat == "Intellect" || theStat == "Looks":
 				stats[x] += randi_range(-6, 6)
-		var theirMoney = global.personMoney[i][0]
-		if theirMoney > 8000000000000000000: #if they are frighteningly close to the 64-bit signed integer limit (just over 9.223 quintillion)
-			theirMoney = 8000000000000000000 #cap it to under 10% less than it so they can't integer overflow into immense debt
-		elif theirMoney < -8000000000000000000: #if they are so IN debt that they're frighteningly close to integer overflowing OUT of it
-			theirMoney = -8000000000000000000 #not on my watch
-		var salaryAfterTax = salaryGiver(global.personMoney[i][1], global.personMoney[i][0], global.personAges[i])
-		theirMoney += salaryAfterTax #gives them their salary (after tax and stuff)
-		theirMoney -= randi_range(roundi(float(salaryAfterTax) / 3), salaryAfterTax * 2) #deducts anywhere from a 3rd to... ALL of their salary PLUS 80% (they spent some)
-		global.personMoney[i][0] = theirMoney #updates their money after all these changes
 	if global.crimes.size() >= 1: #if you have committed a crime
 		if global.multiplicativeArrestChance <= 1.75:
 			global.multiplicativeArrestChance += 0.25
