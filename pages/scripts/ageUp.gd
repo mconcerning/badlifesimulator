@@ -247,15 +247,15 @@ func randomDeathChance():
 		var chance = max(1, 75 - global.age + roundi(float(global.health) / 2)) # equation for chance of death at x age and y health (1 in [answer])
 		# equation for age at which death is inevitable at x health (max age): a = 74 + health / 2
 		# equation for the health that would no longer be able to keep you alive at x age: h = (a - 75) * 2
-		#print(75 - global.age + roundi(float(global.health) / 2))
+		print("1 in " + str(75 - global.age + roundi(float(global.health) / 2)) + " chance of death")
 		#print(chance)
 		var which = randi_range(1, chance)
-		print("1 in " + str(chance) + " chance of death")
-		print(which)
 		if which == 1:
 			global.causeOfDeath = "You died of complications associated with advanced age"
 			isDying = true
 			get_tree().change_scene_to_file("res://pages/death.tscn") #kills you
+			return #stop here
+	push_warning("add random relationship death chance")
 
 
 # Called when the node enters the scene tree for the first time.

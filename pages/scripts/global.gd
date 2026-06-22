@@ -97,6 +97,7 @@ var deadPersonSexes = []
 var deadPersonRelationships = [] ##How close you were with them when they died
 var deadPersonCause = [] ##How did said person die
 var deadPersonCategories = []
+var deadPersonRecency = [] ##Saves your age here at the year of their death - this is then subtracted from your age now to determine how long ago they died.
 
 
 #miscellaneous stuff that must be stored over multiple pages
@@ -251,46 +252,7 @@ func NPCStatsGenerator(): ##Generates and returns a fully random stats array for
 	var stats = [randi_range(0, 100), randi_range(10, 100), randi_range(10, 95), randi_range(0, 100), randi_range(0, 100)]
 	return stats
 
-#func NPCMoneyGenerator(specificSocioeconomicClass : int = -1, SEFloor = 0, SECeil = 5): ##Generates and returns an array containing both an amount of money in dollars and a yearly salary to go along with it for a new NPC. You can specify a specific socioeconomic class (a number from 0 to 5, 0 being the least wealth and 5 being the most) here if you want to. A value of -1 means "randomise". SEFloor is the minimum socioeconomic class this NPC can have, and SECeil is the maximum. These are set to 0 and 5 by default, as any class outside these values will cause this function to throw a warning and automatically give the NPC it's working on exactly $7. A floor or ceiling overrides a specified socioeconomic class if it falls outside of them. The NPC's class will always be set to the ceiling if it is above it, even if the ceiling is lower than the floor. NOTE: Not in use.
-	#var SEChances = randi_range(1, 100) ##Short for SocioEconomic chances. Each socioeconomic class has a different chance of appearing; this number (ranging from 1 to 100) is funneled and determines which class the NPC is in below:
-	#var socioeconomicClass = 0 ##How rich this person is on a scale from 0 to 5 - where 0 is the least wealthy and 5 is the most wealthy. The NPC's class is then used to generate an amount of money, categorised based on how high it is.
-	##gives them their class based on their chances
-	#if SEChances <= 8: #if they are the least wealthy possible
-		#socioeconomicClass = 0
-	#elif SEChances > 8 && SEChances <= 25:
-		#socioeconomicClass = 1
-	#elif SEChances > 25 && SEChances <= 64:
-		#socioeconomicClass = 2
-	#elif SEChances > 64 && SEChances <= 86:
-		#socioeconomicClass = 3
-	#elif SEChances > 86 && SEChances <= 98:
-		#socioeconomicClass = 4
-	#else: #if SEChances are 99 or over (they are the most wealthy possible)
-		#socioeconomicClass = 5
-	#if specificSocioeconomicClass != -1: #if you specified an economic class you want, ovveride what was just decided
-		#socioeconomicClass = specificSocioeconomicClass #set it to that
-	#if socioeconomicClass < SEFloor: #if the class is lower than the minimum
-		#socioeconomicClass = SEFloor #make it the minimum
-	#if socioeconomicClass > SECeil: #if the class is higher than the maximum
-		#socioeconomicClass = SECeil #make it the maximum
-	##Gives them the actual money based on their class. Remember, this value is supposed to represent their savings, not walking-around money. A negative value represents debt. The second index (1) represents their yearly salary in dollars.
-	#if socioeconomicClass == 0:
-		#return [randi_range(-20000, 1200), randi_range(0, 7000)]
-	#elif socioeconomicClass == 1:
-		#return [randi_range(-5000, 7000), randi_range(5000, 10000)]
-	#elif socioeconomicClass == 2:
-		#return [randi_range(7000, 16000), randi_range(12000, 20000)]
-	#elif socioeconomicClass == 3:
-		#return [randi_range(30000, 100000), randi_range(20000, 34000)]
-	#elif socioeconomicClass == 4:
-		#return [randi_range(200000, 700000), randi_range(100000, 200000)]
-	#elif socioeconomicClass == 5:
-		#return [randi_range(5000000, 20000000), randi_range(600000, 1100000)]
-	#else:
-		#push_warning("Socioeconomic class falls outside the range of 0 - 5 at " + str(socioeconomicClass) + ". This NPC will be given $7 in savings by default.")
-		#return [7, 0]
-
-func NPCCreator(NPCsex : String, NPCfirstName : String, NPClastName : String, NPCage : int, NPCrelationship : int, NPCtype : String, NPCcategory : String, NPCstats = "random"): ##Creates an NPC from several custom perameters. NPCtype can be either "family" or "misc". If NPCstats is "random", this fills their stats in with random values. NPCSEClass can be any number from 0 - 5 (inclusive), representing their socioeconomic class, with 0 representing extreme poverty, 5 representing extreme wealth, and 2 - 3 being more average.
+func NPCCreator(NPCsex : String, NPCfirstName : String, NPClastName : String, NPCage : int, NPCrelationship : int, NPCtype : String, NPCcategory : String, NPCstats = "random"): ##Creates an NPC from several custom perameters. NPCtype can be either "family" or "misc". If NPCstats is "random", this fills their stats in with random values.
 	personSexes.append(NPCsex)
 	personFirstNames.append(NPCfirstName)
 	personLastNames.append(NPClastName)
@@ -315,6 +277,8 @@ func NPCKiller(type, index): ##Kills an NPC. Type can be either "kill" or "remov
 		deadPersonTypes.append(personTypes[index])
 		deadPersonAges.append(personAges[index])
 		deadPersonSexes.append(personSexes[index])
+		deadPersonCategories.append(personCategories[index])
+		deadPersonRecency.append(age)
 		XPQueued += 20
 	#removal
 	personFirstNames.remove_at(index)
@@ -323,6 +287,7 @@ func NPCKiller(type, index): ##Kills an NPC. Type can be either "kill" or "remov
 	personTypes.remove_at(index)
 	personAges.remove_at(index)
 	personSexes.remove_at(index)
+	personCategories.remove_at(index)
 	personStats.remove_at(index)
 	personUIDs.remove_at(index)
 	XPQueued += 5
@@ -618,6 +583,7 @@ func lifeSerialiser(): ##Serialises every life-specific variable we need to save
 		"deadPersonSexes" : deadPersonSexes,
 		"deadPersonRelationships" : deadPersonRelationships,
 		"deadPersonCategories" : deadPersonCategories,
+		"deadPersonRecency" : deadPersonRecency,
 		#misc
 		"eventPersonFirstName" : eventPersonFirstName,
 		"eventPersonLastName" : eventPersonLastName,
@@ -846,6 +812,7 @@ func loadLife(takeHome = true, base64life = ""): ##Does the actual LIFE loading 
 	deadPersonSexes = dictionary["deadPersonSexes"]
 	deadPersonRelationships = intIser(dictionary["deadPersonRelationships"])
 	deadPersonCategories = dictionary["deadPersonCategories"]
+	deadPersonRecency = dictionary["deadPersonRecency"]
 	#misc
 	eventPersonFirstName = dictionary["eventPersonFirstName"]
 	eventPersonLastName = dictionary["eventPersonLastName"]

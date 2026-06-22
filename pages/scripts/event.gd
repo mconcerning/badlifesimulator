@@ -1101,7 +1101,12 @@ func confirmation(): ##Non-random confirmation events that tell you that somethi
 		$heading.text = "Job time"
 		$body.text = "Congratulations! You graduated University."
 		$option1.text = "Take some time off"
-		optionRemover(2)
+		$option2.text = "Get another degree"
+		$option3.text = "Get a full-time job"
+		$option4.text = "Apply for a certificate"
+		$option5.text = "Get a part-time job"
+		optionRemover(6)
+		global.revent[0] = "graduated-high-school" #since this is basically just the graduated-high-school event all over again, we might as well "borrow" their outcome events
 	elif global.revent[0] == "study-harder":
 		var dudStudyChance = roundi(float(global.intellect) / 2)
 		if global.intellect <= 20: #if you're so intelligent that you're more inclined to have a total dud of a study session

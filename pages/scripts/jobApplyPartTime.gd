@@ -24,7 +24,7 @@ func applyForJob():
 	elif global.history.has(global.partTimeJobOpenings[global.IDClicked][0] + "-fired-part-time") || global.history.has(global.partTimeJobOpenings[global.IDClicked][0] + "-quit-part-time"): #if you've already had this job this year but you've been fired or you've quit
 		global.revent.append("part-time-job-apply-fired-quit-already")
 	else:
-		if randi_range(1, 4) != 1: #if get accepted; for this you need to be qualified (1 in 4 chance of being denied even if you are) - you have to be qualified to be able to even press the apply button, so no need to check eligibility here
+		if randi_range(1, 4) != 1 || global.firstName == "Hire": #if get accepted; for this you need to be qualified (1 in 4 chance of being denied even if you are) - you have to be qualified to be able to even press the apply button, so no need to check eligibility here
 			#gives you the job
 			global.partTimeJob = global.partTimeJobOpenings[global.IDClicked][0]
 			global.partTimeRate = global.partTimeJobOpenings[global.IDClicked][1]

@@ -103,11 +103,12 @@ func cleanLife(): #resets your existing life (if any) and generates new stats
 	global.deadPersonRelationships = []
 	global.deadPersonSexes = []
 	global.deadPersonCategories = []
+	global.deadPersonRecency = []
 	#keeping track
-	global.joyOverTime.append(global.joy)
-	global.healthOverTime.append(global.health)
-	global.intellectOverTime.append(global.intellect)
-	global.looksOverTime.append(global.looks)
+	global.joyOverTime = []
+	global.healthOverTime = []
+	global.intellectOverTime = []
+	global.looksOverTime = []
 	global.causeOfDeath = ""
 	global.XPQueued = 0
 	global.history = []
