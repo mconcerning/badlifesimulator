@@ -108,7 +108,7 @@ func repositionResize(): ##Repositions and resizes the nodes on-screen to create
 	$option6.position.x = round(540 - (float($option6.size.x / 2)))
 
 
-func emForget(elementToDelete): ##Event Memory Forget. Checks for an "forgets" (removes) predetermined elements from event memory. Don't use this if you don't know the exact value of the element you're trying to remove. 
+func emForget(elementToDelete): ##Short for Event Memory Forget. Checks for and "forgets" (removes) predetermined elements from event memory. Don't use this if you don't know the exact value of the element you're trying to remove.
 	var eleIndex = global.eventMemory.find(elementToDelete) #element index. Sets value to -1 if it can't find the element searched for.
 	if eleIndex != -1: #if it isn't not (if it is) present
 		global.eventMemory.remove_at(eleIndex) #get rid of it
@@ -433,6 +433,18 @@ func relationships(): ##Specialised, specifically relationship-related events.
 				global.personStats[global.IDClicked][global.personStatsDictionary.find("Joy")] += 2 #they are happier now
 		$option1.text = "Okay"
 		optionRemover(2)
+	#elif global.revent[0].split("-").size() == 3 && global.revent[0].split("-")[0] + "-" + global.revent[0].split("-")[1] == "relationship-deathnotif": #Death notification event (if the event ID == "relationship-deathnotif-[relationshipUID]"). Must check the size of the split before checking each index to ensure it has the indexes we're checking - if we don't check and it doesn't, we'll get an error.
+		#var split = global.revent[0].split("-") #splits the event ID so we can get deadID by itself
+		#var deadID = split[2] #the index of the dead relationship this event is based on
+	elif global.revent[0] == "relationship-deathnotif":
+		var deadID = global.eventMemory[0]
+		$heading.text = "Funeral"
+		$body.text = "Your " + global.deadPersonTypes[deadID].to_lower() + ", " + global.deadPersonFirstNames[deadID] + " " + global.deadPersonLastNames[deadID] + ", has died. " + global.icap(global.pronounGenerator("he", global.deadPersonSexes[deadID])) + " " + global.deadPersonCause[deadID] + ".\n\n- " + str(global.eventMemory[1]) + " Joy"
+		$option1.text = "Dang"
+		optionRemover(2)
+		global.joy -= global.eventMemory[1]
+		global.eventMemory.pop_front() #get rid of both the sets of data we used
+		global.eventMemory.pop_front()
 
 
 func prison(): ##Specialised prison events.
@@ -1178,7 +1190,7 @@ func confirmation(): ##Non-random confirmation events that tell you that somethi
 
 func _on_option_1_pressed() -> void: ##On option 1 selected
 	#confirmation - option 1 will be the only button available when the event's purpose is only to display information. Generally, the button will say "Okay".
-	if global.revent[0] == "toddler-0-o1" || global.revent[0] == "toddler-0-o2" || global.revent[0] == "toddler-0-o3" || global.revent[0] == "child-0-o1" || global.revent[0] == "child-0-o2" || global.revent[0] == "child-0-o3" || global.revent[0] == "child-0-o4" || global.revent[0] == "toddler-friend-o1" || global.revent[0] == "toddler-friend-o2" || global.revent[0] == "child-friend-o1" || global.revent[0] == "child-friend-o2" || global.revent[0] == "teenager-friend-o1" || global.revent[0] == "teenager-friend-o2" || global.revent[0] == "teenager-friend-o3" || global.revent[0] == "adult-friend-o1" || global.revent[0] == "adult-friend-o2" || global.revent[0] == "adult-friend-o3" || global.revent[0] == "elder-friend-o1" || global.revent[0] == "elder-friend-o2" || global.revent[0] == "elder-friend-o3" || global.revent[0] == "child-labour-is-outlawed" || global.revent[0] == "enrolled-in-primary-school" || global.revent[0] == "enrolled-in-high-school" || global.revent[0] == "graduated-high-school" || global.revent[0] == "study-harder" || global.revent[0] == "university-degree-picked-o1" || global.revent[0] == "university-degree-picked-o2" || global.revent[0] == "university-degree-picked-o3" || global.revent[0] == "university-degree-picked-o4" || global.revent[0] == "graduated-university" || global.revent[0] == "compliment-relationship" || global.revent[0] == "skip-class" || global.revent[0] == "arrested-o1-success" || global.revent[0] == "court-trial-o2" || global.revent[0] == "dont-go-to-prison" || global.revent[0] == "full-time-job-applied-already" || global.revent[0] == "full-time-job-applied-accepted" || global.revent[0] == "full-time-job-applied-rejected" || global.revent[0] == "full-time-extra-effort" || global.revent[0] == "certificate-achieved" || global.revent[0] == "certificate-failed" || global.revent[0] == "certificate-unqualified" || global.revent[0] == "full-time-fired-performance" || global.revent[0] == "full-time-raise-performance" || global.revent[0] == "full-time-job-apply-fired-quit-already" || global.revent[0] == "full-time-fired-imprisonment" || global.revent[0] == "school-kicked-out-imprisonment" || global.revent[0] == "part-time-job-applied-accepted" || global.revent[0] == "part-time-job-applied-already" || global.revent[0] == "part-time-job-applied-rejected" || global.revent[0] == "part-time-job-apply-fired-quit-already" || global.revent[0] == "part-time-extra-effort":
+	if global.revent[0] == "toddler-0-o1" || global.revent[0] == "toddler-0-o2" || global.revent[0] == "toddler-0-o3" || global.revent[0] == "child-0-o1" || global.revent[0] == "child-0-o2" || global.revent[0] == "child-0-o3" || global.revent[0] == "child-0-o4" || global.revent[0] == "toddler-friend-o1" || global.revent[0] == "toddler-friend-o2" || global.revent[0] == "child-friend-o1" || global.revent[0] == "child-friend-o2" || global.revent[0] == "teenager-friend-o1" || global.revent[0] == "teenager-friend-o2" || global.revent[0] == "teenager-friend-o3" || global.revent[0] == "adult-friend-o1" || global.revent[0] == "adult-friend-o2" || global.revent[0] == "adult-friend-o3" || global.revent[0] == "elder-friend-o1" || global.revent[0] == "elder-friend-o2" || global.revent[0] == "elder-friend-o3" || global.revent[0] == "child-labour-is-outlawed" || global.revent[0] == "enrolled-in-primary-school" || global.revent[0] == "enrolled-in-high-school" || global.revent[0] == "graduated-high-school" || global.revent[0] == "study-harder" || global.revent[0] == "university-degree-picked-o1" || global.revent[0] == "university-degree-picked-o2" || global.revent[0] == "university-degree-picked-o3" || global.revent[0] == "university-degree-picked-o4" || global.revent[0] == "graduated-university" || global.revent[0] == "compliment-relationship" || global.revent[0] == "skip-class" || global.revent[0] == "arrested-o1-success" || global.revent[0] == "court-trial-o2" || global.revent[0] == "dont-go-to-prison" || global.revent[0] == "full-time-job-applied-already" || global.revent[0] == "full-time-job-applied-accepted" || global.revent[0] == "full-time-job-applied-rejected" || global.revent[0] == "full-time-extra-effort" || global.revent[0] == "certificate-achieved" || global.revent[0] == "certificate-failed" || global.revent[0] == "certificate-unqualified" || global.revent[0] == "full-time-fired-performance" || global.revent[0] == "full-time-raise-performance" || global.revent[0] == "full-time-job-apply-fired-quit-already" || global.revent[0] == "full-time-fired-imprisonment" || global.revent[0] == "school-kicked-out-imprisonment" || global.revent[0] == "part-time-job-applied-accepted" || global.revent[0] == "part-time-job-applied-already" || global.revent[0] == "part-time-job-applied-rejected" || global.revent[0] == "part-time-job-apply-fired-quit-already" || global.revent[0] == "part-time-extra-effort" || global.revent[0] == "relationship-deathnotif":
 		goHome()
 	#special exceptions
 	elif global.revent[0] == "go-to-prison":
@@ -1605,7 +1617,7 @@ func option4outcomes(): ##Option 4 has been picked
 		#stat effects
 		global.intellect = 100
 		global.commitCrime("Second degree homicide", 95, "Life")
-		global.NPCKiller("kill", relativeOfChoice) #kills uncle
+		global.NPCKiller("kill", relativeOfChoice, "was murdered") #kills uncle
 	elif global.revent[0] == "university-degree-picked-o4":
 		var degreesSize = global.degrees.size() #only counts university degrees; primary and high school don't count
 		if global.degrees.has("primary-school"):

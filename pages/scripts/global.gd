@@ -148,64 +148,40 @@ func isBetween(x : float, minimum : float = 0, maximum : float = 1, inclusive = 
 	return false #if true hasn't been returned yet, it's not between the two values
 
 
+func customClamp(value, minim : float = 0, maxim : float = 100): ##"Clamps" any value to between a minimum and maximum; if it is below the minimum, this makes it equal the minimum, and if it is above the maximum, this makes it equal the maximum. Then returns the edited value. Minimum and maximum are 0 and 100 by default.
+	var originalType = ""
+	if value is int:
+		originalType = "int"
+	elif value is float:
+		originalType = "float"
+	if value > maxim:
+		value = maxim
+	elif value < minim:
+		value = minim
+	if originalType == "int":
+		return roundi(value)
+	elif originalType == "float":
+		return float(value)
+
 func statClamper(): ##If stats are out of bounds (above or below their max/min value, usually 0/100 respectively), clamps them.
 	#personal
-	if joy > 100:
-		joy = 100
-	elif joy < 0:
-		joy = 0
-	int(joy)
-	if health > 100:
-		health = 100
-	elif health < 0:
-		health = 0
-	int(health)
-	if intellect > 100:
-		intellect = 100
-	elif intellect < 0:
-		intellect = 0
-	int(intellect) #ha... haha... int... intellect... get it?
-	if looks > 100:
-		looks = 100
-	elif looks < 0:
-		looks = 0
-	int(looks)
-	if evality > 100:
-		evality = 100
-	elif evality < 0:
-		evality = 0
-	int(evality)
+	joy = customClamp(joy)
+	health = customClamp(health)
+	intellect = customClamp(intellect)
+	looks = customClamp(looks)
+	evality = customClamp(evality)
 	#rest-of-life-related
-	if multiplicativeArrestChance > 2:
-		multiplicativeArrestChance = 2
-	elif multiplicativeArrestChance < 0.1:
-		multiplicativeArrestChance = 0.1
-	if schoolPerformance > 100:
-		schoolPerformance = 100
-	elif schoolPerformance < 0:
-		schoolPerformance = 0
-	if partTimePerformance > 100:
-		partTimePerformance = 100
-	elif partTimePerformance < 0:
-		partTimePerformance = 0
-	if fullTimePerformance > 100:
-		fullTimePerformance = 100
-	elif fullTimePerformance < 0:
-		fullTimePerformance = 0
+	multiplicativeArrestChance = customClamp(multiplicativeArrestChance, 0.1, 2)
+	schoolPerformance = customClamp(schoolPerformance)
+	partTimePerformance = customClamp(partTimePerformance)
+	fullTimePerformance = customClamp(fullTimePerformance)
 	#NPC-related
 	for i in personTypes.size(): #runs through everyone you know
-		if personRelationships[i] > 100:
-			personRelationships[i] = 100
-		elif personRelationships[i] < 0:
-			personRelationships[i] = 0
+		personRelationships[i] = customClamp(personRelationships[i])
 		for x in personStats[i].size(): #runs through all of their stats
-			var stats = personStats[i][x]
 			var dict = personStatsDictionary[x]
 			if dict == "Joy" || dict == "Health" || dict == "Intellect" || dict == "Looks" || dict == "Evality": #if the stat needs to be clamped
-				if stats > 100:
-					stats = 100
-				elif stats < 0:
-					stats = 0
+				personStats[i][x] = customClamp(personStats[i][x])
 
 
 func cooldown(activity): ##Returns how many times you've done a certain thing this year already using your history. This number can then be used to create a cooldown of sorts; if you've done something a million times this year, make it ineffective for once. This function only works if you make sure to actively append to history when things happen. NOTE: The exact same function can be achieved with the built-in .count("value") used on history (global.history.count(x)).
@@ -268,7 +244,7 @@ func NPCCreator(NPCsex : String, NPCfirstName : String, NPClastName : String, NP
 	personUIDsUsed += 1
 	XPQueued += 10
 
-func NPCKiller(type, index): ##Kills an NPC. Type can be either "kill" or "remove"; kill literally kills them and remove simply rids them from your relationships, i.e. when you unfriend someone.
+func NPCKiller(type : String, index : int, deathCause : String = "Specify if killing"): ##Kills an NPC. Type can be either "kill" or "remove"; "kill" literally kills them and "remove" simply rids them from your relationships, i.e. when you unfriend someone. Specify a cause of death when killing.
 	#archival
 	if type == "kill":
 		deadPersonFirstNames.append(personFirstNames[index])
@@ -279,6 +255,10 @@ func NPCKiller(type, index): ##Kills an NPC. Type can be either "kill" or "remov
 		deadPersonSexes.append(personSexes[index])
 		deadPersonCategories.append(personCategories[index])
 		deadPersonRecency.append(age)
+		deadPersonCause.append(deathCause)
+		revent.append("relationship-deathnotif") #notify the player that someone just died
+		eventMemory.append(deadPersonTypes.size() - 1) #we need to get just the index of the newly-dead person on its own later
+		eventMemory.append(customClamp(max(6, (roundi(float(global.personRelationships[index]) / 2)) + randi_range(-5, 5)))) #how much joy you will lose upon finding out they died (your relationship with them divided by two, plus a random amount from -5 to 5.
 		XPQueued += 20
 	#removal
 	personFirstNames.remove_at(index)
@@ -352,6 +332,14 @@ func intIser(theArray, nestedArray : bool = false): ##Turns array elements into 
 	for i in theArray.size():
 		intTheArray.append(int(theArray[i]))
 	return intTheArray
+
+
+func icap(word): ##Short for Initial Capitalisation. Capitalises the first letter of any word.
+	if word.length() < 2: #if the word is 1 (or 0) characters long, just capialise the whole thing
+		word = word.to_upper
+	else: #otherwise, if the word is multiple characters long, capitalise the first character
+		word = word[0].to_upper() + word.substr(1)
+	return word
 
 
 func takeOutLoan(amount : int, interest : int, paybackPeriod : int): ##Takes out a loan. Perameters are: amount in dollars, interest as a percentage, and payback period in years.
@@ -582,6 +570,7 @@ func lifeSerialiser(): ##Serialises every life-specific variable we need to save
 		"deadPersonAges" : deadPersonAges,
 		"deadPersonSexes" : deadPersonSexes,
 		"deadPersonRelationships" : deadPersonRelationships,
+		"deadPersonCause" : deadPersonCause,
 		"deadPersonCategories" : deadPersonCategories,
 		"deadPersonRecency" : deadPersonRecency,
 		#misc
@@ -811,6 +800,7 @@ func loadLife(takeHome = true, base64life = ""): ##Does the actual LIFE loading 
 	deadPersonAges = intIser(dictionary["deadPersonAges"])
 	deadPersonSexes = dictionary["deadPersonSexes"]
 	deadPersonRelationships = intIser(dictionary["deadPersonRelationships"])
+	deadPersonCause = dictionary["deadPersonCause"]
 	deadPersonCategories = dictionary["deadPersonCategories"]
 	deadPersonRecency = dictionary["deadPersonRecency"]
 	#misc

@@ -179,7 +179,7 @@ func job():
 		global.health -= randi_range(4, 6) + max(2, roundi(float(global.partTimeHours) / 10)) #it's not exactly healthy to be working 72 hours a week...
 
 
-func imprisonment(): #handles your chances of being arrested
+func imprisonment(): ##Handles your chances of being arrested
 	if global.sumCalculator(global.crimesSeverity) >= 10: #if you've committed serious enough crimes to warrant being arrested for them
 		if (randi_range(max(1, global.sumCalculator(global.crimesSeverity) - 20), global.sumCalculator(global.crimesSeverity) * (global.multiplicativeArrestChance / 2)) * global.multiplicativeArrestChance) >= global.averageFinder(global.intellectAtTimeOfCrime) && (randi_range(10,120) / global.multiplicativeArrestChance) <= global.sumCalculator(global.crimesSeverity):
 				global.revent.append("arrested")
@@ -222,7 +222,7 @@ func ageUpEventHandler():
 				global.revent.append("adult-" + str(randi_range(0, 0)))
 			elif global.age >= 66: #if age is over 66
 				global.revent.append("elder-" + str(randi_range(0, 0)))
-			print("appended event " + str(global.revent[global.revent.size() - 1])) #prints the last event ID (the one that was just appended) in the revent array
+			print("appended event " + str(global.revent.back())) #prints the last event ID (the one that was just appended) in the revent array
 	if randi_range(1, 20) == 1 && global.RAUE == true: #if you're randomly getting a new friend :) and RAUE is enabled
 		global.XPQueued += 15 #gives you XP for experiencing something
 		if global.age <= 4: #if age is 4 or below
@@ -235,7 +235,7 @@ func ageUpEventHandler():
 			global.revent.append("adult-friend")
 		elif global.age >= 66: #if age is over 66
 			global.revent.append("elder-friend")
-		print("appended event " + str(global.revent[global.revent.size() - 1])) #prints the last event ID (the one that was just appended) in the revent array
+		print("appended event " + str(global.revent.back())) #prints the last event ID (the one that was just appended) in the revent array
 
 
 func rareAgeUpEvents():
@@ -247,15 +247,23 @@ func randomDeathChance():
 		var chance = max(1, 75 - global.age + roundi(float(global.health) / 2)) # equation for chance of death at x age and y health (1 in [answer])
 		# equation for age at which death is inevitable at x health (max age): a = 74 + health / 2
 		# equation for the health that would no longer be able to keep you alive at x age: h = (a - 75) * 2
-		print("1 in " + str(75 - global.age + roundi(float(global.health) / 2)) + " chance of death")
+		print("1 in " + str(max(1, 75 - global.age + roundi(float(global.health) / 2))) + " chance of death")
 		#print(chance)
 		var which = randi_range(1, chance)
 		if which == 1:
 			global.causeOfDeath = "You died of complications associated with advanced age"
 			isDying = true
-			get_tree().change_scene_to_file("res://pages/death.tscn") #kills you
-			return #stop here
-	push_warning("add random relationship death chance")
+	#relationship death chance
+	var dyingUIDs = [] #the UIDs of everyone that is dying
+	for i in global.personAges.size():
+		if global.personAges[i] >= 69: #same equation that determines if YOU die
+			var chance = max(1, 75 - global.personAges[i] + roundi(float(global.personStats[i][global.personStatsDictionary.find("Health")]) / 2))
+			var which = randi_range(1, chance)
+			if which == 1:
+				dyingUIDs.append(global.personUIDs[i]) #we can't just use i here, because if multiple people die at once, we could end up accidentally killing the wrong person
+	for i in dyingUIDs.size(): #kills everyone that is dying
+		global.NPCKiller("kill", global.personUIDs.find(dyingUIDs[i]), "died of complications associated with old age")
+	#global.postRelationshipDeath() #if a relationship has died, this will notify you
 
 
 # Called when the node enters the scene tree for the first time.
@@ -271,6 +279,7 @@ func _ready() -> void:
 	imprisonment()
 	global.statClamper()
 	if isDying == true: #if you're dying
+		get_tree().change_scene_to_file("res://pages/death.tscn") #kills you
 		return #don't do anything below
 	#runs events if they're queued
 	if global.revent.size() > 0: #if there are random events slated to appear
