@@ -261,9 +261,8 @@ func randomDeathChance():
 			var which = randi_range(1, chance)
 			if which == 1:
 				dyingUIDs.append(global.personUIDs[i]) #we can't just use i here, because if multiple people die at once, we could end up accidentally killing the wrong person
-	for i in dyingUIDs.size(): #kills everyone that is dying
+	for i in dyingUIDs.size(): #kills everyone that is dying and notifies you of such
 		global.NPCKiller("kill", global.personUIDs.find(dyingUIDs[i]), "died of complications associated with old age")
-	#global.postRelationshipDeath() #if a relationship has died, this will notify you
 
 
 # Called when the node enters the scene tree for the first time.

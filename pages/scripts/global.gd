@@ -55,7 +55,7 @@ var degreeProficiency = [] ##How good of work you did to get the degree with the
 var licences = [] ##Contains your licences, such as a driver's licence, gun licence, etc.
 var certificates = [] ##Contains your certificate qualifications, such as a cert in plumbery, electricity, etc.
 var failedCertificates = [] ##Contains every certificate you have failed.
-var incomeTax = 30 ##How much you are taxxed on your income, expressed as a percentage.
+var incomeTax = 30 ##How much you are taxed on your income, expressed as a percentage.
 var fullTimeJob = "" ##The name of your full-time job. "" (blank) if you don't have one.
 var fullTimeSalary : int = 0 ##How much money you make annually from your full-time job
 var partTimeJob = "" ##The name of your part-time job. "" (blank) if you don't have one.
@@ -130,6 +130,10 @@ var intellectAtTimeOfCrime = []
 
 #testing variables - used in developer mode
 var RAUE = true ##RAUE is an acronym for Random Age Up Events. When true, events will randomly appear when aging up. When false, they will not.
+var joyWindow = [0, 100] ##The numbers which the value of joy should remain in between. 0, 100 by default. If both values are equal, the value will be effectively locked.
+var healthWindow = [0, 100] ##The numbers which the value of health should remain in between. 0, 100 by default. If both values are equal, the value will be effectively locked.
+var intellectWindow = [0, 100] ##The numbers which the value of intellect should remain in between. 0, 100 by default. If both values are equal, the value will be effectively locked.
+var looksWindow = [0, 100] ##The numbers which the value of looks should remain in between. 0, 100 by default. If both values are equal, the value will be effectively locked.
 
 
 #inter-life variables (non-life specific, saved into the game save file, persists across all lives)
@@ -165,10 +169,10 @@ func customClamp(value, minim : float = 0, maxim : float = 100): ##"Clamps" any 
 
 func statClamper(): ##If stats are out of bounds (above or below their max/min value, usually 0/100 respectively), clamps them.
 	#personal
-	joy = customClamp(joy)
-	health = customClamp(health)
-	intellect = customClamp(intellect)
-	looks = customClamp(looks)
+	joy = customClamp(joy, joyWindow[0], joyWindow[1])
+	health = customClamp(health, healthWindow[0], healthWindow[1])
+	intellect = customClamp(intellect, intellectWindow[0], intellectWindow[1])
+	looks = customClamp(looks, looksWindow[0], looksWindow[1])
 	evality = customClamp(evality)
 	#rest-of-life-related
 	multiplicativeArrestChance = customClamp(multiplicativeArrestChance, 0.1, 2)
@@ -256,9 +260,10 @@ func NPCKiller(type : String, index : int, deathCause : String = "Specify if kil
 		deadPersonCategories.append(personCategories[index])
 		deadPersonRecency.append(age)
 		deadPersonCause.append(deathCause)
+		#notification and effects on you
 		revent.append("relationship-deathnotif") #notify the player that someone just died
 		eventMemory.append(deadPersonTypes.size() - 1) #we need to get just the index of the newly-dead person on its own later
-		eventMemory.append(customClamp(max(6, (roundi(float(global.personRelationships[index]) / 2)) + randi_range(-5, 5)))) #how much joy you will lose upon finding out they died (your relationship with them divided by two, plus a random amount from -5 to 5.
+		eventMemory.append(customClamp(max(6, (roundi(float(global.personRelationships[index]) / 3)) + randi_range(-5, 5)))) #how much joy you will lose upon finding out they died (your relationship with them divided by two, plus a random amount from -5 to 5.
 		XPQueued += 20
 	#removal
 	personFirstNames.remove_at(index)
@@ -271,6 +276,14 @@ func NPCKiller(type : String, index : int, deathCause : String = "Specify if kil
 	personStats.remove_at(index)
 	personUIDs.remove_at(index)
 	XPQueued += 5
+
+
+func NPCisFamily(index : int): ##Checks if an (alive) NPC is a family member of yours, returns true or false.
+	const typesThatAreFamily = ["Mother", "Father", "Grandmother", "Grandfather", "Aunt", "Uncle", "Brother", "Sister", "Cousin", "Son", "Daughter", "Niece", "Nephew"]
+	if typesThatAreFamily.has(global.personTypes[index]): #if we could find your type in the types array, i.e. they are family
+		return true
+	else:
+		return false
 
 
 func sumCalculator(numbers): ##Calculates the sum of all the elements in any array.
@@ -336,10 +349,19 @@ func intIser(theArray, nestedArray : bool = false): ##Turns array elements into 
 
 func icap(word): ##Short for Initial Capitalisation. Capitalises the first letter of any word.
 	if word.length() < 2: #if the word is 1 (or 0) characters long, just capialise the whole thing
-		word = word.to_upper
+		word = word.to_upper()
 	else: #otherwise, if the word is multiple characters long, capitalise the first character
 		word = word[0].to_upper() + word.substr(1)
 	return word
+
+
+func pluraliser(number, word, wordPlural): ##Use the singular form of your word as "word" (e.g. croissant) and the plural version as "wordPlural" (croissants). "Number" should be the number of the word you have (e.g. 5 if you have 5 croissants). Returns number + your word as a plural if number is NOT 1 and number + the singular variation of word if number IS 1 (e.g. returns "50,000 croissants"). NOTE: Number is automatically comma-ised in the result (returns 50,000 instead of 50000). Comma-ising the word in input will result in destructive results (50,,000).
+	word = str(word)
+	wordPlural = str(wordPlural)
+	if number == 1:
+		return commaiser(number) + " " + word
+	else: #if plural
+		return commaiser(number) + " " + wordPlural
 
 
 func takeOutLoan(amount : int, interest : int, paybackPeriod : int): ##Takes out a loan. Perameters are: amount in dollars, interest as a percentage, and payback period in years.
@@ -496,6 +518,10 @@ func lifeSerialiser(): ##Serialises every life-specific variable we need to save
 		"RAUE" : RAUE,
 		"eventMemory" : eventMemory,
 		"IDClicked" : IDClicked,
+		"joyWindow" : joyWindow,
+		"healthWindow" : healthWindow,
+		"intellectWindow" : intellectWindow,
+		"looksWindow" : looksWindow,
 		#personal
 		"firstName" : firstName,
 		"lastName" : lastName,
@@ -724,6 +750,10 @@ func loadLife(takeHome = true, base64life = ""): ##Does the actual LIFE loading 
 	RAUE = dictionary["RAUE"]
 	eventMemory = dictionary["eventMemory"]
 	IDClicked = dictionary["IDClicked"]
+	joyWindow = intIser(dictionary["joyWindow"])
+	healthWindow = intIser(dictionary["healthWindow"])
+	intellectWindow = intIser(dictionary["intellectWindow"])
+	looksWindow = intIser(dictionary["looksWindow"])
 	#personal
 	firstName = dictionary["firstName"]
 	lastName = dictionary["lastName"]

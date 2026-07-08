@@ -1,0 +1,9 @@
+[gd_scene format=3 uid="uid://cmgyh77v4dbtl"]
+
+[ext_resource type="Theme" uid="uid://bhtcoaqlqrdhp" path="res://styles/button2/button2Theme.tres" id="1_8itw3"]
+
+[node name="button" type="Button" unique_id=1544237965]
+offset_bottom = 84.0
+size_flags_horizontal = 4
+theme = ExtResource("1_8itw3")
+text = "Permanent change"

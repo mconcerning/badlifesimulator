@@ -17,6 +17,22 @@ func _ready() -> void:
 	load("res://pages/scripts/event.gd")
 	load("res://pages/scripts/newRandomGame.gd")
 	load("res://pages/scripts/ageUp.gd")
+	#loads mods
+	var dirPath = "user://spycarsinc/bls/mods/" #mods path
+	if not DirAccess.dir_exists_absolute(dirPath): #if the mods folder does not exist
+		DirAccess.make_dir_recursive_absolute(dirPath) #create it
+		print("created mod folder")
+	else: #if the mods folder DOES exist
+		var allModFiles = DirAccess.get_files_at(dirPath)
+		if allModFiles.size() == 0: #if you have no mods
+			print("no mods to load")
+		else: #if you have mods
+			for i in allModFiles.size(): #go through all your mods
+				var modFile = dirPath + allModFiles[i] #saves the exact mod file path
+				if ProjectSettings.load_resource_pack(modFile, true): #loads the mod and checks if it's real
+					print("successfully loaded mod " + allModFiles[i]) #yay
+				else: #if the mod isn't real
+					push_warning("Mod " + allModFiles[i] + " can't load because it isn't a mod. Ensure it is a valid .pck file or it won't work.")
 	#end
 	print("running version " + global.versionNumber)
 	get_tree().change_scene_to_file("res://pages/main_menu.tscn") #change scene to main menu

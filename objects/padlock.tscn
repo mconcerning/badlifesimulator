@@ -1,0 +1,13 @@
+[gd_scene format=3 uid="uid://cdc8j5755dvt"]
+
+[ext_resource type="Texture2D" uid="uid://b4oeiqf8chy2i" path="res://assets/unlocked.png" id="1_re2j5"]
+[ext_resource type="Texture2D" uid="uid://ca1he8vk7cvp4" path="res://assets/lock.png" id="2_4futv"]
+
+[node name="padlock" type="TextureButton" unique_id=2128950529]
+offset_right = 100.0
+offset_bottom = 100.0
+toggle_mode = true
+texture_normal = ExtResource("1_re2j5")
+texture_pressed = ExtResource("2_4futv")
+ignore_texture_size = true
+stretch_mode = 0

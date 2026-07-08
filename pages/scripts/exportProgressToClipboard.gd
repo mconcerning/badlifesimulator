@@ -37,7 +37,7 @@ func _on_wait_for_clipboard_email_timeout() -> void:
 		$confirmation.text = "Error reading clipboard :( You might have tried too many times. Please wait a moment and try again."
 		return
 	if clipboard.length() > 7000 && global.bigMailto == false: #if the data you copied is simply incredibly massive; so massive that it may fail to be sent through a mailto link
-		clipboard = "Turns out your data was actually really big, so it couldn't be given directly to your email service. It has still been copied to your clipboard, though. Please delete this message and paste it here."
+		clipboard = "Turns out your data was actually really big, so it couldn't be given directly to your email service. It has still been copied to your clipboard, though. Please delete this message and paste it here.\n\nYou can disable this character limit if you would like by enabling \"big mailto\" under settings -> misc. It's not always needed."
 	emailAttemptCounter += 1
 	if emailAttemptCounter >= 3 && emailAttemptCounter < 5: #if you've tried emailing this 3 or more times in a row
 		$confirmation.text = "Copied. Running into errors? Try setting Gmail as your mailto client, and, on desktop, use a modern browser like Chrome or Firefox."

@@ -8,6 +8,7 @@
 [ext_resource type="Theme" uid="uid://bstk834mafqp" path="res://styles/button1/button1.tres" id="6_llmlx"]
 [ext_resource type="LabelSettings" uid="uid://dl6sog5hfkb6u" path="res://styles/text/body.tres" id="6_uksx0"]
 [ext_resource type="PackedScene" uid="uid://cil46lqksrpuy" path="res://objects/checkbox.tscn" id="8_4vx13"]
+[ext_resource type="PackedScene" uid="uid://cdc8j5755dvt" path="res://objects/padlock.tscn" id="8_uxr20"]
 [ext_resource type="Texture2D" uid="uid://vya22elwah4a" path="res://assets/floppy.png" id="9_flnsc"]
 
 [node name="developerMode" type="Node2D" unique_id=1691854714]
@@ -66,26 +67,78 @@ size_flags_horizontal = 4
 theme = ExtResource("6_llmlx")
 text = "Set age"
 
-[node name="setJoy" type="Button" parent="scrollContainer/centerContainer/vBoxContainer" unique_id=220462692]
+[node name="setJoy" type="Control" parent="scrollContainer/centerContainer/vBoxContainer" unique_id=1176744284]
+custom_minimum_size = Vector2(0, 84)
 layout_mode = 2
+
+[node name="joyLock" parent="scrollContainer/centerContainer/vBoxContainer/setJoy" unique_id=2128950529 instance=ExtResource("8_uxr20")]
+layout_mode = 0
+offset_left = 205.0
+offset_right = 289.0
+offset_bottom = 84.0
+
+[node name="setJoy" type="Button" parent="scrollContainer/centerContainer/vBoxContainer/setJoy" unique_id=220462692]
+layout_mode = 0
+offset_left = 355.0
+offset_right = 552.0
+offset_bottom = 84.0
 size_flags_horizontal = 4
 theme = ExtResource("6_llmlx")
 text = "Set joy"
 
-[node name="setHealth" type="Button" parent="scrollContainer/centerContainer/vBoxContainer" unique_id=49862777]
+[node name="setHealth" type="Control" parent="scrollContainer/centerContainer/vBoxContainer" unique_id=1141101566]
+custom_minimum_size = Vector2(0, 84)
 layout_mode = 2
+
+[node name="healthLock" parent="scrollContainer/centerContainer/vBoxContainer/setHealth" unique_id=1459436638 instance=ExtResource("8_uxr20")]
+layout_mode = 0
+offset_left = 153.0
+offset_right = 237.0
+offset_bottom = 84.0
+
+[node name="setHealth" type="Button" parent="scrollContainer/centerContainer/vBoxContainer/setHealth" unique_id=49862777]
+layout_mode = 0
+offset_left = 303.0
+offset_right = 604.0
+offset_bottom = 84.0
 size_flags_horizontal = 4
 theme = ExtResource("6_llmlx")
 text = "Set health"
 
-[node name="setIntellect" type="Button" parent="scrollContainer/centerContainer/vBoxContainer" unique_id=899678539]
+[node name="setIntellect" type="Control" parent="scrollContainer/centerContainer/vBoxContainer" unique_id=272553939]
+custom_minimum_size = Vector2(0, 84)
 layout_mode = 2
+
+[node name="intellectLock" parent="scrollContainer/centerContainer/vBoxContainer/setIntellect" unique_id=1670787950 instance=ExtResource("8_uxr20")]
+layout_mode = 0
+offset_left = 130.0
+offset_right = 214.0
+offset_bottom = 84.0
+
+[node name="setIntellect" type="Button" parent="scrollContainer/centerContainer/vBoxContainer/setIntellect" unique_id=899678539]
+layout_mode = 0
+offset_left = 280.0
+offset_right = 627.0
+offset_bottom = 84.0
 size_flags_horizontal = 4
 theme = ExtResource("6_llmlx")
 text = "Set intellect"
 
-[node name="setLooks" type="Button" parent="scrollContainer/centerContainer/vBoxContainer" unique_id=993642163]
+[node name="setLooks" type="Control" parent="scrollContainer/centerContainer/vBoxContainer" unique_id=979381943]
+custom_minimum_size = Vector2(0, 84)
 layout_mode = 2
+
+[node name="looksLock" parent="scrollContainer/centerContainer/vBoxContainer/setLooks" unique_id=1364217202 instance=ExtResource("8_uxr20")]
+layout_mode = 0
+offset_left = 130.0
+offset_right = 214.0
+offset_bottom = 84.0
+
+[node name="setLooks" type="Button" parent="scrollContainer/centerContainer/vBoxContainer/setLooks" unique_id=993642163]
+layout_mode = 0
+offset_left = 322.0
+offset_right = 586.0
+offset_bottom = 84.0
 size_flags_horizontal = 4
 theme = ExtResource("6_llmlx")
 text = "Set looks"
@@ -290,10 +343,14 @@ stretch_mode = 0
 
 [connection signal="pressed" from="exit" to="." method="_on_exit_pressed"]
 [connection signal="pressed" from="scrollContainer/centerContainer/vBoxContainer/setAge" to="." method="_on_set_age_pressed"]
-[connection signal="pressed" from="scrollContainer/centerContainer/vBoxContainer/setJoy" to="." method="_on_set_joy_pressed"]
-[connection signal="pressed" from="scrollContainer/centerContainer/vBoxContainer/setHealth" to="." method="_on_set_health_pressed"]
-[connection signal="pressed" from="scrollContainer/centerContainer/vBoxContainer/setIntellect" to="." method="_on_set_intellect_pressed"]
-[connection signal="pressed" from="scrollContainer/centerContainer/vBoxContainer/setLooks" to="." method="_on_set_looks_pressed"]
+[connection signal="pressed" from="scrollContainer/centerContainer/vBoxContainer/setJoy/joyLock" to="." method="_on_joy_lock_pressed"]
+[connection signal="pressed" from="scrollContainer/centerContainer/vBoxContainer/setJoy/setJoy" to="." method="_on_set_joy_pressed"]
+[connection signal="pressed" from="scrollContainer/centerContainer/vBoxContainer/setHealth/healthLock" to="." method="_on_health_lock_pressed"]
+[connection signal="pressed" from="scrollContainer/centerContainer/vBoxContainer/setHealth/setHealth" to="." method="_on_set_health_pressed"]
+[connection signal="pressed" from="scrollContainer/centerContainer/vBoxContainer/setIntellect/intellectLock" to="." method="_on_intellect_lock_pressed"]
+[connection signal="pressed" from="scrollContainer/centerContainer/vBoxContainer/setIntellect/setIntellect" to="." method="_on_set_intellect_pressed"]
+[connection signal="pressed" from="scrollContainer/centerContainer/vBoxContainer/setLooks/looksLock" to="." method="_on_looks_lock_pressed"]
+[connection signal="pressed" from="scrollContainer/centerContainer/vBoxContainer/setLooks/setLooks" to="." method="_on_set_looks_pressed"]
 [connection signal="pressed" from="scrollContainer/centerContainer/vBoxContainer/RAUE" to="." method="_on_raue_pressed"]
 [connection signal="pressed" from="scrollContainer/centerContainer/vBoxContainer/setMoney" to="." method="_on_set_money_pressed"]
 [connection signal="pressed" from="scrollContainer/centerContainer/vBoxContainer/setEvality" to="." method="_on_set_evality_pressed"]

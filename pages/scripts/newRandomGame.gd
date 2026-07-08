@@ -114,6 +114,10 @@ func cleanLife(): #resets your existing life (if any) and generates new stats
 	global.history = []
 	#testing variables
 	global.RAUE = true
+	global.joyWindow = [0, 100]
+	global.healthWindow = [0, 100]
+	global.intellectWindow = [0, 100]
+	global.looksWindow = [0, 100]
 	#prints stuff
 	print("Joy: " + str(global.joy))
 	print("Health: " + str(global.health))

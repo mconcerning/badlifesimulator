@@ -1,6 +1,9 @@
 extends Node2D #author(s): Ethan Scott
 
 
+const scroll = "scrollContainer/centerContainer/vBoxContainer/"
+
+
 func _ready() -> void:
 	if global.RAUE == true:
 		$scrollContainer/centerContainer/vBoxContainer/RAUE/RAUECheck.frame = 1
@@ -14,6 +17,29 @@ func _ready() -> void:
 		$scrollContainer/centerContainer/vBoxContainer/dangerousKbrdShortcuts/dangerousKbrdShortcutsCheck.frame = 1
 	else:
 		$scrollContainer/centerContainer/vBoxContainer/dangerousKbrdShortcuts/dangerousKbrdShortcutsCheck.frame = 0
+	if global.joyWindow[0] == global.joyWindow[1]: #if joy is locked
+		get_node(scroll + "setJoy/joyLock").button_pressed = true
+	else: #if joy is unlocked
+		get_node(scroll + "setJoy/joyLock").button_pressed = false
+	if global.healthWindow[0] == global.healthWindow[1]: #if health is locked
+		get_node(scroll + "setHealth/healthLock").button_pressed = true
+	else: #if health is unlocked
+		get_node(scroll + "setHealth/healthLock").button_pressed = false
+	if global.intellectWindow[0] == global.intellectWindow[1]: #if intellect is locked
+		get_node(scroll + "setIntellect/intellectLock").button_pressed = true
+	else: #if intellect is unlocked
+		get_node(scroll + "setIntellect/intellectLock").button_pressed = false
+	if global.looksWindow[0] == global.looksWindow[1]: #if looks is locked
+		get_node(scroll + "setLooks/looksLock").button_pressed = true
+	else: #if looks is unlocked
+		get_node(scroll + "setLooks/looksLock").button_pressed = false
+
+
+#keyboard shortcut exit save handling
+func _unhandled_input(inputMade: InputEvent) -> void: #if you make an input
+	if global.keyboardShortcutsEnabled == true && global.dangerousKeyboardShortcuts == true:
+		if inputMade.is_action_pressed("shortcut_to_gamemenu"):
+			global.saveGame()
 
 
 func _on_exit_pressed() -> void:
@@ -30,15 +56,51 @@ func _on_set_age_pressed() -> void:
 	$confirmation.text = "Successfully set age!"
 	print("set age to " + str(global.age))
 
+func _on_joy_lock_pressed() -> void:
+	if get_node(scroll + "setJoy/joyLock").button_pressed == true:
+		print("now locked")
+		global.joy = int($input.text)
+		global.joyWindow = [global.joy, global.joy]
+	else:
+		print("now unlocked")
+		global.joyWindow = [0, 100]
+	print(global.joyWindow)
+
 func _on_set_joy_pressed() -> void:
 	global.joy = int($input.text)
 	$confirmation.text = "Successfully set joy!"
 	print("set joy to " + str(global.joy))
+	if global.joyWindow[0] == global.joyWindow[1]: #if joy is locked
+		global.joyWindow = [int($input.text), int($input.text)]
+		print(global.joyWindow)
+
+func _on_health_lock_pressed() -> void:
+	if get_node(scroll + "setHealth/healthLock").button_pressed == true:
+		print("now locked")
+		global.health = int($input.text)
+		global.healthWindow = [global.health, global.health]
+	else:
+		print("now unlocked")
+		global.healthWindow = [0, 100]
+	print(global.healthWindow)
 
 func _on_set_health_pressed() -> void:
 	global.health = int($input.text)
 	$confirmation.text = "Successfully set health!"
 	print("set health to " + str(global.health))
+	if global.healthWindow[0] == global.healthWindow[1]: #if health is locked
+		global.healthWindow = [int($input.text), int($input.text)]
+		print(global.healthWindow)
+
+func _on_intellect_lock_pressed() -> void:
+	if get_node(scroll + "setIntellect/intellectLock").button_pressed == true:
+		print("now locked")
+		global.intellect = int($input.text)
+		global.intellectWindow = [global.intellect, global.intellect]
+	else:
+		print("now unlocked")
+		global.intellectWindow = [0, 100]
+	print(global.intellectWindow)
 
 func _on_set_intellect_pressed() -> void:
 	if $input.text == "π":
@@ -47,11 +109,27 @@ func _on_set_intellect_pressed() -> void:
 	global.intellect = int($input.text)
 	$confirmation.text = "Successfully set intellect!"
 	print("set intellect to " + str(global.intellect))
+	if global.intellectWindow[0] == global.intellectWindow[1]: #if intellect is locked
+		global.intellectWindow = [int($input.text), int($input.text)]
+		print(global.intellectWindow)
+
+func _on_looks_lock_pressed() -> void:
+	if get_node(scroll + "setLooks/looksLock").button_pressed == true:
+		print("now locked")
+		global.looks = int($input.text)
+		global.looksWindow = [global.looks, global.looks]
+	else:
+		print("now unlocked")
+		global.looksWindow = [0, 100]
+	print(global.looksWindow)
 
 func _on_set_looks_pressed() -> void:
 	global.looks = int($input.text)
 	$confirmation.text = "Successfully set looks!"
 	print("set looks to " + str(global.looks))
+	if global.looksWindow[0] == global.looksWindow[1]: #if looks is locked
+		global.looksWindow = [int($input.text), int($input.text)]
+		print(global.looksWindow)
 
 func _on_raue_pressed() -> void:
 	if global.RAUE == true:
@@ -254,10 +332,3 @@ func _on_dangerous_kbrd_shortcuts_pressed() -> void:
 		global.dangerousKeyboardShortcuts = false
 		$confirmation.text = "Successfully set dangerous kbrd s. cuts to false!"
 	print("set dangerous kbrd shortcuts to " + str(global.dangerousKeyboardShortcuts))
-
-
-#keyboard shortcut exit save handling
-func _unhandled_input(inputMade: InputEvent) -> void: #if you make an input
-	if global.keyboardShortcutsEnabled == true && global.dangerousKeyboardShortcuts == true:
-		if inputMade.is_action_pressed("shortcut_to_gamemenu"):
-			global.saveGame()
