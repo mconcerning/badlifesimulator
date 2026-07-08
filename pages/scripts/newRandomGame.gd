@@ -5,6 +5,7 @@ extends Node2D #author(s): Ethan Scott, GrayyGray
 func cleanLife(): #resets your existing life (if any) and generates new stats
 	#engine
 	global.revent = []
+	global.eventMemory = []
 	#personal
 	global.sex = randi_range(0,1) #turns sex into a random number, either 0 or 1
 	match global.sex: #assigns sex

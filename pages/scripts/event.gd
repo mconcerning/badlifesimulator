@@ -439,7 +439,7 @@ func relationships(): ##Specialised, specifically relationship-related events.
 	elif global.revent[0] == "relationship-deathnotif":
 		var deadID = global.eventMemory[0]
 		var isPlanner = false ##If it's your responsibility to plan the funeral
-		if (global.deadPersonTypes[deadID] == "Mother" || global.deadPersonTypes[deadID] == "Father") && (global.deadPersonTypes.count("Brother") + global.deadPersonTypes.count("Sister") == 0 || global.deadPersonRelationship >= randi_range(65, 90)) && global.age >= 18: #if the dead person is your parent and you either: don't have siblings, or you're the sibling with the best relationship with that parent, AND you're 18 or older
+		if (global.deadPersonTypes[deadID] == "Mother" || global.deadPersonTypes[deadID] == "Father") && (global.deadPersonTypes.count("Brother") + global.deadPersonTypes.count("Sister") == 0 || global.deadPersonRelationships[deadID] >= randi_range(65, 90)) && global.age >= 18: #if the dead person is your parent and you either: don't have siblings, or you're the sibling with the best relationship with that parent, AND you're 18 or older
 			isPlanner = true #then you're the planner
 			global.revent[0] = "relationship-deathnotif-planner"
 		$heading.text = "Funeral"
@@ -1366,9 +1366,10 @@ func option1outcomes(): ##Outcomes for option 1
 	elif global.revent[0] == "change-save-management-mode-to-delete-o1":
 		goingToSpecific = "res://pages/life_save_files.tscn"
 	elif global.revent[0] == "relationship-deathnotif-o1":
-		goingToSpecific = "res://pages/game_menu.tscn"
-		global.eventMemory.pop_front() #forget the data we no longer need
-		global.eventMemory.pop_back()
+		pass
+		#goingToSpecific = "res://pages/game_menu.tscn"
+		#global.eventMemory.pop_front() #forget the data we no longer need
+		#global.eventMemory.pop_back()
 	elif global.revent[0] == "relationship-deathnotif-planner-o1":
 		$heading.text = "Funeral planner"
 		$body.text = "You can choose from any of the following funeral plans. A better funeral will minimise your and your family members' grief."
@@ -1383,8 +1384,9 @@ func option1outcomes(): ##Outcomes for option 1
 		$option5.text = "Custom extended service ($" + global.commaiser(tier4price) + ")"
 		optionRemover(6)
 	elif global.revent[0] == "relationship-deathnotif-planner-o1":
-		goingToSpecific = "res://pages/game_menu.tscn"
-		global.eventMemory.pop_back() #forget the data we no longer need
+		pass
+		#goingToSpecific = "res://pages/game_menu.tscn"
+		#global.eventMemory.pop_back() #forget the data we no longer need
 
 
 func option2outcomes(): ##Outcomes for option 2
@@ -1572,7 +1574,7 @@ func option2outcomes(): ##Outcomes for option 2
 		$option1.text = "Okay"
 		optionRemover(2)
 	elif global.revent[0] == "relationship-deathnotif-o2" ||  global.revent[0] == "relationship-deathnotif-planner-o2":
-		global.evality += roundi(float(global.deadPersonRelationships[global.eventMemory[2]]) / 2) #gives you half of your relationship with the dead person in evality - it really sucks of you to just skip it like that
+		global.evality += roundi(float(global.deadPersonRelationships[global.eventMemory[0]]) / 2) #gives you half of your relationship with the dead person in evality - it really sucks of you to just skip it like that
 		goingToSpecific = "res://pages/game_menu.tscn"
 		global.eventMemory.pop_front() #forget the data we no longer need
 		global.eventMemory.pop_back()

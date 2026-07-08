@@ -65,6 +65,9 @@ func _on_joy_lock_pressed() -> void:
 		print("now unlocked")
 		global.joyWindow = [0, 100]
 	print(global.joyWindow)
+	global.statClamper()
+	print("set joy to " + str(global.joy))
+	$confirmation.text = "Successfully set joy lock!"
 
 func _on_set_joy_pressed() -> void:
 	global.joy = int($input.text)
@@ -83,6 +86,9 @@ func _on_health_lock_pressed() -> void:
 		print("now unlocked")
 		global.healthWindow = [0, 100]
 	print(global.healthWindow)
+	global.statClamper()
+	print("set health to " + str(global.health))
+	$confirmation.text = "Successfully set health lock!"
 
 func _on_set_health_pressed() -> void:
 	global.health = int($input.text)
@@ -101,6 +107,9 @@ func _on_intellect_lock_pressed() -> void:
 		print("now unlocked")
 		global.intellectWindow = [0, 100]
 	print(global.intellectWindow)
+	global.statClamper()
+	print("set intellect to " + str(global.intellect))
+	$confirmation.text = "Successfully set intellect lock!"
 
 func _on_set_intellect_pressed() -> void:
 	if $input.text == "π":
@@ -122,6 +131,9 @@ func _on_looks_lock_pressed() -> void:
 		print("now unlocked")
 		global.looksWindow = [0, 100]
 	print(global.looksWindow)
+	global.statClamper()
+	print("set looks to " + str(global.looks))
+	$confirmation.text = "Successfully set looks lock!"
 
 func _on_set_looks_pressed() -> void:
 	global.looks = int($input.text)
