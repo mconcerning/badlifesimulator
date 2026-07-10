@@ -269,12 +269,12 @@ func randomDeathChance():
 func _ready() -> void:
 	await get_tree().process_frame #waits until the frame is fully loaded. Without this, the screen flashes gray while on this scene
 	basicStatChanges()
+	randomDeathChance()
 	school()
 	job()
 	loanHandler()
 	ageUpEventHandler()
 	rareAgeUpEvents()
-	randomDeathChance()
 	imprisonment()
 	global.statClamper()
 	if isDying == true: #if you're dying

@@ -2,23 +2,12 @@ extends Node2D #author(s): Ethan Scott
 
 
 var timerRuns = 0 #how many times has the 100ms timer timed out?
-var avgJoy = averageFinder(global.joyOverTime)
-var avgHealth = averageFinder(global.healthOverTime)
-var avgIntellect = averageFinder(global.intellectOverTime)
-var avgLooks = averageFinder(global.looksOverTime)
+var avgJoy = global.averageFinder(global.joyOverTime)
+var avgHealth = global.averageFinder(global.healthOverTime)
+var avgIntellect = global.averageFinder(global.intellectOverTime)
+var avgLooks = global.averageFinder(global.looksOverTime)
 var XPThatWasQueued = 0 #since XPQueued is cleared before you can see it and moving its clearing until after you're shown it would cause issues with saving and therefore cheesing death, it is stored here temporarily and holds no bearing on how much XP you actually earn
 var didLevelUp = false
-
-
-func averageFinder(array): #finds the average value of all elements in an array (note: only works if all elements are numerals, because of maths)
-	var average = 0
-	if array.size() > 0: #if the array is not empty
-		for i in array.size(): #runs through every element in the array
-			average += array[i] #adds the value of the element at i to the average
-		average = round(average / array.size()) #divides the average by the size of the array (i.e. turns it into the mean) and rounds the result
-	else: #if the array is empty
-		average = "nothing in the array :("
-	return average
 
 
 func _on_100ms_timeout() -> void: #every 0.1s
@@ -27,19 +16,19 @@ func _on_100ms_timeout() -> void: #every 0.1s
 	elif timerRuns == 1:
 		$statsLeft.text += "Age at death: " + str(global.age)
 	elif timerRuns == 2: #first left-justified stat
-		$statsLeft.text += "\n\nAverage Joy: " + str(averageFinder(global.joyOverTime))
+		$statsLeft.text += "\n\nAverage Joy: " + str(global.averageFinder(global.joyOverTime))
 	elif timerRuns == 3:
 		$statsLeft.text += "\nJoy at death: " + str(global.joy)
 	elif timerRuns == 4:
-		$statsLeft.text += "\n\nAverage Health: " + str(averageFinder(global.healthOverTime))
+		$statsLeft.text += "\n\nAverage Health: " + str(global.averageFinder(global.healthOverTime))
 	elif timerRuns == 5:
 		$statsLeft.text += "\nHealth at death: " + str(global.health)
 	elif timerRuns == 6:
-		$statsLeft.text += "\n\nAverage Intellect: " + str(averageFinder(global.intellectOverTime))
+		$statsLeft.text += "\n\nAverage Intellect: " + str(global.averageFinder(global.intellectOverTime))
 	elif timerRuns == 7:
 		$statsLeft.text += "\nIntellect at death: " + str(global.intellect)
 	elif timerRuns == 8:
-		$statsLeft.text += "\n\nAverage Looks: " + str(averageFinder(global.looksOverTime))
+		$statsLeft.text += "\n\nAverage Looks: " + str(global.averageFinder(global.looksOverTime))
 	elif timerRuns == 9:
 		$statsLeft.text += "\nLooks at death: " + str(global.looks)
 	elif timerRuns == 10:
@@ -86,10 +75,10 @@ func _ready() -> void:
 	XPFromStats += roundi(float(global.health) / 4)
 	XPFromStats += roundi(float(global.intellect) / 4)
 	XPFromStats += roundi(float(global.looks) / 4)
-	XPFromStats += roundi(averageFinder(global.joyOverTime) / 3) #gives a third of all your average stats' values in XP upon death
-	XPFromStats += roundi(averageFinder(global.healthOverTime) / 3)
-	XPFromStats += roundi(averageFinder(global.intellectOverTime) / 3)
-	XPFromStats += roundi(averageFinder(global.looksOverTime) / 3)
+	XPFromStats += roundi(float(global.averageFinder(global.joyOverTime)) / 3) #gives a third of all your average stats' values in XP upon death
+	XPFromStats += roundi(float(global.averageFinder(global.healthOverTime)) / 3)
+	XPFromStats += roundi(float(global.averageFinder(global.intellectOverTime)) / 3)
+	XPFromStats += roundi(float(global.averageFinder(global.looksOverTime)) / 3)
 	XPFromStats = roundi(float(XPFromStats) / 100 * global.age) #how old you are directly affects how much XP you earn from having high stats so you can't just farm XP by spawning a bunch of lives and immediately dying over and over again. Also, your stats aren't worth much in XP. That's by design to discourage overprioritising them during your life.
 	if global.age <= 25: #if you're really young and die, nerf the XP you get AGAIN to prevent effortless farming
 		XPFromStats = roundi(float(XPFromStats) / 50 * global.age * 2)

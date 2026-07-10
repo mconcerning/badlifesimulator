@@ -59,7 +59,8 @@ func _on_set_age_pressed() -> void:
 func _on_joy_lock_pressed() -> void:
 	if get_node(scroll + "setJoy/joyLock").button_pressed == true:
 		print("now locked")
-		global.joy = int($input.text)
+		if $input.text != "": #if input is empty, just lock it to whatever it already is
+			global.joy = int($input.text) #otherwise, change it
 		global.joyWindow = [global.joy, global.joy]
 	else:
 		print("now unlocked")
@@ -80,7 +81,8 @@ func _on_set_joy_pressed() -> void:
 func _on_health_lock_pressed() -> void:
 	if get_node(scroll + "setHealth/healthLock").button_pressed == true:
 		print("now locked")
-		global.health = int($input.text)
+		if $input.text != "": #if input is empty, just lock it to whatever it already is
+			global.health = int($input.text) #otherwise, change it
 		global.healthWindow = [global.health, global.health]
 	else:
 		print("now unlocked")
@@ -101,7 +103,8 @@ func _on_set_health_pressed() -> void:
 func _on_intellect_lock_pressed() -> void:
 	if get_node(scroll + "setIntellect/intellectLock").button_pressed == true:
 		print("now locked")
-		global.intellect = int($input.text)
+		if $input.text != "": #if input is empty, just lock it to whatever it already is
+			global.intellect = int($input.text) #otherwise, change it
 		global.intellectWindow = [global.intellect, global.intellect]
 	else:
 		print("now unlocked")
@@ -125,7 +128,8 @@ func _on_set_intellect_pressed() -> void:
 func _on_looks_lock_pressed() -> void:
 	if get_node(scroll + "setLooks/looksLock").button_pressed == true:
 		print("now locked")
-		global.looks = int($input.text)
+		if $input.text != "": #if input is empty, just lock it to whatever it already is
+			global.looks = int($input.text) #otherwise, change it
 		global.looksWindow = [global.looks, global.looks]
 	else:
 		print("now unlocked")

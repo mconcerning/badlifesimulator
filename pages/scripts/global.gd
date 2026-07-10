@@ -193,17 +193,20 @@ func cooldown(activity): ##Returns how many times you've done a certain thing th
 	return timesActivityAppeared
 
 
-func pronounGenerator(type, selectedSex): ##Returns pronouns so you don't have to do it manually inside anything - can be one of three types: him (objective), his (possessive), he (personal), or boy (noun). Also accepts guy and man as types (returning girl and woman for women).
+func pronounGenerator(type, selectedSex): ##Returns pronouns so you don't have to do it manually inside anything - can be one of three types: him (objective), his (possessive - by default, the female equivalent will be "hers", but if the type entered is "her", this will return "her" (singular)), he (personal), or boy (noun). Also accepts guy and man as types (returning girl and woman for women).
 	if type == "him":
 		if selectedSex == "M": #if sex of person is male
 			return "him"
 		else: #if sex of person is female
 			return "her"
-	elif type == "his":
+	elif type == "his" || type == "her":
 		if selectedSex == "M": #if male
 			return "his"
 		else: #if female
-			return "hers"
+			if type == "his":
+				return "hers"
+			elif type == "her":
+				return "her"
 	elif type == "he":
 		if selectedSex == "M": #if male
 			return "he"
@@ -503,10 +506,10 @@ func averageFinder(array): ##Finds the mean average of all integer elements in a
 		if type_string(typeof(array[i])) == "int": #if this element is an integer
 			allInts.append(array[i])
 			combinedTotal += array[i]
-	if allInts.size() > 0:
-		return round(combinedTotal / allInts.size())
-	else:
+	if allInts.size() == 0:
 		return 0
+	else:
+		return roundi(combinedTotal / allInts.size())
 
 
 #savegame stuff
