@@ -193,7 +193,7 @@ func cooldown(activity): ##Returns how many times you've done a certain thing th
 	return timesActivityAppeared
 
 
-func pronounGenerator(type, selectedSex): ##Returns pronouns so you don't have to do it manually inside anything - can be one of three types: him (objective), his (possessive - by default, the female equivalent will be "hers", but if the type entered is "her", this will return "her" (singular)), he (personal), or boy (noun). Also accepts guy and man as types (returning girl and woman for women).
+func pronounGenerator(type, selectedSex): ##Returns the correct pronouns for people so you don't have to do it manually - can be one of three types: him (objective), his (possessive - by default, the female equivalent will be "hers", but if the type entered is "her", this will return "her" (singular)), he (personal), or boy (noun). Also accepts guy and man as types (returning girl and woman for women).
 	if type == "him":
 		if selectedSex == "M": #if sex of person is male
 			return "him"
@@ -265,8 +265,11 @@ func NPCKiller(type : String, index : int, deathCause : String = "Specify if kil
 		deadPersonCause.append(deathCause)
 		#notification and effects on you
 		revent.append("relationship-deathnotif") #notify the player that someone just died
-		eventMemory.append(deadPersonTypes.size() - 1) #we need to get just the index of the newly-dead person on its own later
-		eventMemory.append(customClamp(max(6, (roundi(float(global.personRelationships[index]) / 3)) + randi_range(-5, 5)))) #how much joy you will lose upon finding out they died (your relationship with them divided by two, plus a random amount from -5 to 5.
+		var deadRelationshipEventInfo = {
+			"index" : deadPersonTypes.size() - 1, #we need to get just the index of the newly-dead person on its own later
+			"joyLoss" : customClamp(max(6, (roundi(float(global.personRelationships[index]) / 3)) + randi_range(-5, 5))), #how much joy you will lose upon finding out they died (your relationship with them divided by two, plus a random amount from -5 to 5.
+		}
+		global.eventMemory.append(deadRelationshipEventInfo)
 		XPQueued += 20
 	#removal
 	personFirstNames.remove_at(index)
@@ -281,12 +284,18 @@ func NPCKiller(type : String, index : int, deathCause : String = "Specify if kil
 	XPQueued += 5
 
 
-func NPCisFamily(index : int): ##Checks if an (alive) NPC is a family member of yours, returns true or false.
-	const typesThatAreFamily = ["Mother", "Father", "Grandmother", "Grandfather", "Aunt", "Uncle", "Brother", "Sister", "Cousin", "Son", "Daughter", "Niece", "Nephew"]
-	if typesThatAreFamily.has(global.personTypes[index]): #if we could find your type in the types array, i.e. they are family
-		return true
-	else:
-		return false
+func NPCisFamily(index : int, fromType = false): ##Checks if an (alive) NPC is a family member of yours, returns true or false. To check if a dead NPC is a family member (or just check from type), change fromType to the NPC's type and give index any value (it doesn't matter what).
+	const typesThatAreFamily = ["Mother", "Father", "Grandmother", "Grandfather", "Aunt", "Uncle", "Brother", "Sister", "Cousin", "Son", "Daughter", "Niece", "Nephew", "Son", "Daughter"]
+	if fromType == false: #if checking from index
+		if typesThatAreFamily.has(global.personTypes[index]): #if we could find your type in the types array, i.e. they are family
+			return true
+		else:
+			return false
+	else: #if checking from type
+		if typesThatAreFamily.has(fromType): #if the type given is family
+			return true
+		else:
+			return false
 
 
 func sumCalculator(numbers): ##Calculates the sum of all the elements in any array.
@@ -350,12 +359,16 @@ func intIser(theArray, nestedArray : bool = false): ##Turns array elements into 
 	return intTheArray
 
 
-func icap(word): ##Short for Initial Capitalisation. Capitalises the first letter of any word.
-	if word.length() < 2: #if the word is 1 (or 0) characters long, just capialise the whole thing
-		word = word.to_upper()
-	else: #otherwise, if the word is multiple characters long, capitalise the first character
-		word = word[0].to_upper() + word.substr(1)
-	return word
+func icap(word, onlyFirstWord : bool = true): ##Short for Initial Capitalisation. Capitalises the first letter of any word. If onlyFirstWord is true, this only capitalises the first letter of the string. If it is false, this capitalises every word (see capitalize()).
+	if onlyFirstWord == true:
+		if word.length() < 2: #if the word is 1 (or 0) characters long, just capialise the whole thing
+			word = word.to_upper()
+		else: #otherwise, if the word is multiple characters long, capitalise the first character
+			word = word[0].to_upper() + word.substr(1)
+		return word
+	else: #if we want to capitalise every word
+		word = String(word)
+		return word.capitalize()
 
 
 func pluraliser(number, word, wordPlural): ##Use the singular form of your word as "word" (e.g. croissant) and the plural version as "wordPlural" (croissants). "Number" should be the number of the word you have (e.g. 5 if you have 5 croissants). Returns number + your word as a plural if number is NOT 1 and number + the singular variation of word if number IS 1 (e.g. returns "50,000 croissants"). NOTE: Number is automatically comma-ised in the result (returns 50,000 instead of 50000). Comma-ising the word in input will result in destructive results (50,,000).
@@ -664,7 +677,7 @@ func versionCompare(minimumVersion : Array[int], saveVersion : Array[int]): ##Co
 	var saveVerInt = 0
 	saveVerInt += saveVersion[0] * 100000000
 	saveVerInt += saveVersion[1] * 100000
-	saveVerInt += saveVersion[1] * 100
+	saveVerInt += saveVersion[2] * 100
 	if saveVerInt < minVerInt: #if the save version number is lower than the minimum version number
 		return false
 	else:

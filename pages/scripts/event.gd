@@ -123,7 +123,10 @@ func outcome(reventID): ##Takes you to the outcome of an event.
 func goHome(): ##Goes home. Could you have guessed? Jeez.
 	global.revent.pop_front()
 	await get_tree().process_frame
-	get_tree().change_scene_to_file("res://pages/game_menu.tscn")
+	if global.prisonSentence == 0: #if you are not in prison
+		get_tree().change_scene_to_file("res://pages/game_menu.tscn")
+	else: #if you are in prison
+		get_tree().change_scene_to_file("res://pages/prison.tscn")
 
 
 func goToPrison(): ##Takes you to prison, but that's all this does. You still need to manually set prisonSentence and all other relevant variables.
@@ -437,7 +440,7 @@ func relationships(): ##Specialised, specifically relationship-related events.
 		#var split = global.revent[0].split("-") #splits the event ID so we can get deadID by itself
 		#var deadID = split[2] #the index of the dead relationship this event is based on
 	elif global.revent[0] == "relationship-deathnotif":
-		var deadID = global.eventMemory[0]
+		var deadID = global.eventMemory[0]["index"]
 		var isPlanner = false ##If it's your responsibility to plan the funeral
 		if (global.deadPersonTypes[deadID] == "Mother" || global.deadPersonTypes[deadID] == "Father") && (global.deadPersonTypes.count("Brother") + global.deadPersonTypes.count("Sister") == 0 || global.deadPersonRelationships[deadID] >= randi_range(65, 90)) && global.age >= 18: #if the dead person is your parent and you either: don't have siblings, or you're the sibling with the best relationship with that parent, AND you're 18 or older
 			isPlanner = true #then you're the planner
@@ -449,6 +452,7 @@ func relationships(): ##Specialised, specifically relationship-related events.
 		$body.text += "- " + str(global.eventMemory[1]) + " Joy"
 		if isPlanner == true: #if you are planning the funeral
 			$option1.text = "Plan the funeral"
+			global.eventMemory[0]["funeralTierPricing"] = ([randi_range(60, 72) * 100, randi_range(95, 110) * 100, randi_range(150, 185) * 100, randi_range(220, 245) * 100]) #funeral tier pricing
 		else: #if you are not planning the funeral
 			$option1.text = "Attend the funeral"
 			if global.deadPersonRelationships[deadID] <= 18: #if you're so not close that you weren't invited
@@ -460,11 +464,31 @@ func relationships(): ##Specialised, specifically relationship-related events.
 			optionRemover(4)
 		else: #if you are not planning the funeral
 			optionRemover(3)
-		global.joy -= global.eventMemory[1]
-		for i in global.personTypes.size(): #subtracts joy from your family members
-			if global.NPCisFamily(i):
-				global.personStats[i][global.personStatsDictionary.find("Joy")] -= global.customClamp(roundi(float(global.eventMemory[1]) * float(randi_range(80, 120)) / 100), 6, 80 - randi_range(0, 10)) #subtracts from their joy the amount of joy you lost * a random amount from 0.8 to 1.2, clamped to between 6 and (80 - randi_range(0, 10)).
-		global.eventMemory.append([randi_range(60, 72) * 100, randi_range(95, 110) * 100, randi_range(150, 185) * 100, randi_range(220, 245) * 100]) #tier pricing
+		global.joy -= global.eventMemory[0]["joyLoss"]
+		if global.NPCisFamily(0, global.eventMemory[0]["type"]): #if the person who died is family, everyone else who is family is upset by their death
+			for i in global.personTypes.size(): #subtracts joy from your family members
+				if global.NPCisFamily(i):
+					global.personStats[i][global.personStatsDictionary.find("Joy")] -= global.customClamp(roundi(float(global.eventMemory[1]) * float(randi_range(40, 160)) / 100), 6, randi_range(70, 80)) #subtracts from their joy the amount of joy you lost * a random amount from 0.4 to 1.6, clamped to between 6 and randi_range(70, 80).
+	elif global.revent[0] == "relationship-deathnotif-planner-o1":
+		$heading.text = "Funeral planner"
+		$body.text = "You can choose from any of the following funeral plans. A better funeral will minimise your and your family members' grief."
+		var tier1price = global.eventMemory[0]["funeralTierPricing"][0]
+		var tier2price = global.eventMemory[0]["funeralTierPricing"][1]
+		var tier3price = global.eventMemory[0]["funeralTierPricing"][2]
+		var tier4price = global.eventMemory[0]["funeralTierPricing"][3]
+		$option1.text = "No funeral ($0)"
+		$option2.text = "Online video funeral ($" + global.commaiser(tier1price) + ")"
+		$option3.text = "In-person service ($" + global.commaiser(tier2price) + ")"
+		$option4.text = "Coffin burial ($" + global.commaiser(tier3price) + ")"
+		$option5.text = "Custom extended service ($" + global.commaiser(tier4price) + ")"
+		optionRemover(6)
+	elif global.revent[0] == "relationship-deathnotif-planner-o1-o1":
+		$heading.text = "Funeral \"planner\""
+		$body.text = "You chose to have no funeral."
+		$option1.text = "Okay"
+		optionRemover(2)
+		global.evality += randi_range(20, 32) #gives you a random amount of evality - it really sucks of you to just not give them a funeral
+		global.eventMemory.pop_front() #get rid of funeral information
 
 
 func prison(): ##Specialised prison events.
@@ -475,10 +499,10 @@ func prison(): ##Specialised prison events.
 			$option2.text = "Surrender arrest"
 		elif global.sumCalculator(global.crimesSeverity) >= 50 && global.sumCalculator(global.crimesSeverity) < 200:
 			$body.text = "While out in public, a group of uniformed police officers approach you and start asking questions."
-			$option2.text = "Answer them"
+			$option2.text = "Respond"
 		elif global.sumCalculator(global.crimesSeverity) >= 10 && global.sumCalculator(global.crimesSeverity) < 50:
 			$body.text = "While out in public, a police officer approaches you and starts asking questions."
-			$option2.text = "Answer them"
+			$option2.text = "Respond"
 		else:
 			goHome()
 		$option1.text = "Try to flee"
@@ -1210,7 +1234,7 @@ func confirmation(): ##Non-random confirmation events that tell you that somethi
 
 func _on_option_1_pressed() -> void: ##On option 1 selected
 	#confirmation - option 1 will be the only button available when the event's purpose is only to display information. Generally, the button will say "Okay".
-	if global.revent[0] == "toddler-0-o1" || global.revent[0] == "toddler-0-o2" || global.revent[0] == "toddler-0-o3" || global.revent[0] == "child-0-o1" || global.revent[0] == "child-0-o2" || global.revent[0] == "child-0-o3" || global.revent[0] == "child-0-o4" || global.revent[0] == "toddler-friend-o1" || global.revent[0] == "toddler-friend-o2" || global.revent[0] == "child-friend-o1" || global.revent[0] == "child-friend-o2" || global.revent[0] == "teenager-friend-o1" || global.revent[0] == "teenager-friend-o2" || global.revent[0] == "teenager-friend-o3" || global.revent[0] == "adult-friend-o1" || global.revent[0] == "adult-friend-o2" || global.revent[0] == "adult-friend-o3" || global.revent[0] == "elder-friend-o1" || global.revent[0] == "elder-friend-o2" || global.revent[0] == "elder-friend-o3" || global.revent[0] == "child-labour-is-outlawed" || global.revent[0] == "enrolled-in-primary-school" || global.revent[0] == "enrolled-in-high-school" || global.revent[0] == "graduated-high-school" || global.revent[0] == "study-harder" || global.revent[0] == "university-degree-picked-o1" || global.revent[0] == "university-degree-picked-o2" || global.revent[0] == "university-degree-picked-o3" || global.revent[0] == "university-degree-picked-o4" || global.revent[0] == "graduated-university" || global.revent[0] == "compliment-relationship" || global.revent[0] == "skip-class" || global.revent[0] == "arrested-o1-success" || global.revent[0] == "court-trial-o2" || global.revent[0] == "dont-go-to-prison" || global.revent[0] == "full-time-job-applied-already" || global.revent[0] == "full-time-job-applied-accepted" || global.revent[0] == "full-time-job-applied-rejected" || global.revent[0] == "full-time-extra-effort" || global.revent[0] == "certificate-achieved" || global.revent[0] == "certificate-failed" || global.revent[0] == "certificate-unqualified" || global.revent[0] == "full-time-fired-performance" || global.revent[0] == "full-time-raise-performance" || global.revent[0] == "full-time-job-apply-fired-quit-already" || global.revent[0] == "full-time-fired-imprisonment" || global.revent[0] == "school-kicked-out-imprisonment" || global.revent[0] == "part-time-job-applied-accepted" || global.revent[0] == "part-time-job-applied-already" || global.revent[0] == "part-time-job-applied-rejected" || global.revent[0] == "part-time-job-apply-fired-quit-already" || global.revent[0] == "part-time-extra-effort" || global.revent[0] == "relationship-deathnotif-o1":
+	if global.revent[0] == "toddler-0-o1" || global.revent[0] == "toddler-0-o2" || global.revent[0] == "toddler-0-o3" || global.revent[0] == "child-0-o1" || global.revent[0] == "child-0-o2" || global.revent[0] == "child-0-o3" || global.revent[0] == "child-0-o4" || global.revent[0] == "toddler-friend-o1" || global.revent[0] == "toddler-friend-o2" || global.revent[0] == "child-friend-o1" || global.revent[0] == "child-friend-o2" || global.revent[0] == "teenager-friend-o1" || global.revent[0] == "teenager-friend-o2" || global.revent[0] == "teenager-friend-o3" || global.revent[0] == "adult-friend-o1" || global.revent[0] == "adult-friend-o2" || global.revent[0] == "adult-friend-o3" || global.revent[0] == "elder-friend-o1" || global.revent[0] == "elder-friend-o2" || global.revent[0] == "elder-friend-o3" || global.revent[0] == "child-labour-is-outlawed" || global.revent[0] == "enrolled-in-primary-school" || global.revent[0] == "enrolled-in-high-school" || global.revent[0] == "graduated-high-school" || global.revent[0] == "study-harder" || global.revent[0] == "university-degree-picked-o1" || global.revent[0] == "university-degree-picked-o2" || global.revent[0] == "university-degree-picked-o3" || global.revent[0] == "university-degree-picked-o4" || global.revent[0] == "graduated-university" || global.revent[0] == "compliment-relationship" || global.revent[0] == "skip-class" || global.revent[0] == "arrested-o1-success" || global.revent[0] == "court-trial-o2" || global.revent[0] == "dont-go-to-prison" || global.revent[0] == "full-time-job-applied-already" || global.revent[0] == "full-time-job-applied-accepted" || global.revent[0] == "full-time-job-applied-rejected" || global.revent[0] == "full-time-extra-effort" || global.revent[0] == "certificate-achieved" || global.revent[0] == "certificate-failed" || global.revent[0] == "certificate-unqualified" || global.revent[0] == "full-time-fired-performance" || global.revent[0] == "full-time-raise-performance" || global.revent[0] == "full-time-job-apply-fired-quit-already" || global.revent[0] == "full-time-fired-imprisonment" || global.revent[0] == "school-kicked-out-imprisonment" || global.revent[0] == "part-time-job-applied-accepted" || global.revent[0] == "part-time-job-applied-already" || global.revent[0] == "part-time-job-applied-rejected" || global.revent[0] == "part-time-job-apply-fired-quit-already" || global.revent[0] == "part-time-extra-effort" || global.revent[0] == "relationship-deathnotif-o1" || global.revent[0] == "relationship-deathnotif-planner-o1-o1":
 		goHome()
 	#special exceptions
 	elif global.revent[0] == "go-to-prison":
@@ -1371,9 +1395,9 @@ func option1outcomes(): ##Outcomes for option 1
 		if global.deadPersonAges[global.eventMemory[0]] <= 35: #if they were 35 or younger
 			$heading.text = "Gone too soon"
 		else: #otherwise
-			$heading.text = global.icap(global.pronounGenerator("he", global.deadPersonSexes[global.eventMemory[0]])) + " was a great " + global.pronounGenerator("man", global.deadPersonSexes[global.eventMemory[0]])
-		var joyRecovered = global.customClamp(roundi(float(global.eventMemory[1]) / 2) + randi_range(-4, 4), 1, 32)
-		$body.text = "You decided to attend " + global.pronounGenerator("her", global.deadPersonSexes[global.eventMemory[0]]) + " funeral.\n\n"
+			$heading.text = global.icap(global.pronounGenerator("he", global.deadPersonSexes[global.eventMemory[0]["index"]])) + " was a great " + global.pronounGenerator("man", global.deadPersonSexes[global.eventMemory[0]["index"]])
+		var joyRecovered = global.customClamp(roundi(float(global.eventMemory[1]["joyLoss"]) / 2) + randi_range(-4, 4), 1, 32)
+		$body.text = "You decided to attend " + global.pronounGenerator("her", global.deadPersonSexes[global.eventMemory[0]["index"]]) + " funeral.\n\n"
 		if randi_range(1,2) == 1: #if (1 in 2 chance) funeral is positive
 			$body.text += "You regained " + str(joyRecovered) + " Joy."
 			global.joy += joyRecovered
@@ -1382,22 +1406,7 @@ func option1outcomes(): ##Outcomes for option 1
 			global.joy -= joyRecovered
 		$option1.text = "Okay"
 		optionRemover(2)
-		global.eventMemory.pop_at(1) #get rid of the original joy deduction amount - we don't need it anymore
-		global.eventMemory.pop_front() #forget the data we no longer need
-		global.eventMemory.pop_back()
-	elif global.revent[0] == "relationship-deathnotif-planner-o1":
-		$heading.text = "Funeral planner"
-		$body.text = "You can choose from any of the following funeral plans. A better funeral will minimise your and your family members' grief."
-		var tier1price = global.eventMemory.back()[0]
-		var tier2price = global.eventMemory.back()[1]
-		var tier3price = global.eventMemory.back()[2]
-		var tier4price = global.eventMemory.back()[3]
-		$option1.text = "No funeral ($0)"
-		$option2.text = "Online video funeral ($" + global.commaiser(tier1price) + ")"
-		$option3.text = "In-person service ($" + global.commaiser(tier2price) + ")"
-		$option4.text = "Coffin burial ($" + global.commaiser(tier3price) + ")"
-		$option5.text = "Custom extended service ($" + global.commaiser(tier4price) + ")"
-		optionRemover(6)
+		global.eventMemory.pop_front() #get rid of funeral information
 
 
 func option2outcomes(): ##Outcomes for option 2
@@ -1585,11 +1594,9 @@ func option2outcomes(): ##Outcomes for option 2
 		$option1.text = "Okay"
 		optionRemover(2)
 	elif global.revent[0] == "relationship-deathnotif-o2" ||  global.revent[0] == "relationship-deathnotif-planner-o2":
-		global.evality += roundi(float(global.deadPersonRelationships[global.eventMemory[0]]) / 2) #gives you half of your relationship with the dead person in evality - it really sucks of you to just skip it like that
+		global.evality += roundi(float(global.deadPersonRelationships[global.eventMemory[0]["index"]]) / 2) #gives you half of your relationship with the dead person in evality - it really sucks of you to just skip it like that
 		goingToSpecific = "res://pages/game_menu.tscn"
-		global.eventMemory.pop_at(1) #get rid of the joy deduction amount - we don't need it anymore
-		global.eventMemory.pop_front() #forget the data we no longer need
-		global.eventMemory.pop_back()
+		global.eventMemory.pop_front() #get rid of funeral information
 
 
 func option3outcomes(): ##Option 3 has been picked
