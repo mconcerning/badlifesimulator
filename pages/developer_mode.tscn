@@ -4,6 +4,7 @@
 [ext_resource type="Script" uid="uid://dax5d1uygehpj" path="res://pages/scripts/developerMode.gd" id="1_x7xls"]
 [ext_resource type="LabelSettings" uid="uid://bst31irnyaguk" path="res://styles/text/subheading.tres" id="2_0eyul"]
 [ext_resource type="PackedScene" uid="uid://moehuc8f6dgg" path="res://objects/exit.tscn" id="4_4vx13"]
+[ext_resource type="Texture2D" uid="uid://bemsctyd8n4h2" path="res://assets/info-circle.png" id="5_j3k1o"]
 [ext_resource type="Theme" uid="uid://dshdkxfve2nxr" path="res://styles/input/text_single_line_input.tres" id="5_mj11j"]
 [ext_resource type="Theme" uid="uid://bstk834mafqp" path="res://styles/button1/button1.tres" id="6_llmlx"]
 [ext_resource type="LabelSettings" uid="uid://dl6sog5hfkb6u" path="res://styles/text/body.tres" id="6_uksx0"]
@@ -25,6 +26,24 @@ label_settings = ExtResource("2_0eyul")
 horizontal_alignment = 1
 
 [node name="exit" parent="." unique_id=1865769784 instance=ExtResource("4_4vx13")]
+
+[node name="info" type="TextureButton" parent="." unique_id=34737837]
+offset_left = 840.0
+offset_top = 20.0
+offset_right = 940.0
+offset_bottom = 120.0
+texture_normal = ExtResource("5_j3k1o")
+ignore_texture_size = true
+stretch_mode = 0
+
+[node name="saveGame" type="TextureButton" parent="." unique_id=1317964170]
+offset_left = 960.0
+offset_top = 20.0
+offset_right = 1060.0
+offset_bottom = 120.0
+texture_normal = ExtResource("9_flnsc")
+ignore_texture_size = true
+stretch_mode = 0
 
 [node name="input" type="LineEdit" parent="." unique_id=941077151]
 offset_left = 240.0
@@ -332,16 +351,27 @@ text = "Dangerous kbrd s. cuts"
 [node name="dangerousKbrdShortcutsCheck" parent="scrollContainer/centerContainer/vBoxContainer/dangerousKbrdShortcuts" unique_id=1024996593 instance=ExtResource("8_4vx13")]
 position = Vector2(749, 0)
 
-[node name="saveGame" type="TextureButton" parent="." unique_id=1317964170]
-offset_left = 960.0
-offset_top = 20.0
-offset_right = 1060.0
-offset_bottom = 120.0
-texture_normal = ExtResource("9_flnsc")
-ignore_texture_size = true
-stretch_mode = 0
+[node name="cakPlanner" type="Button" parent="scrollContainer/centerContainer/vBoxContainer" unique_id=994680379]
+layout_mode = 2
+size_flags_horizontal = 4
+theme = ExtResource("6_llmlx")
+text = "CAK funeral planner"
+
+[node name="cakInvited" type="Button" parent="scrollContainer/centerContainer/vBoxContainer" unique_id=1625256144]
+layout_mode = 2
+size_flags_horizontal = 4
+theme = ExtResource("6_llmlx")
+text = "CAK funeral invited"
+
+[node name="cakNotInvited" type="Button" parent="scrollContainer/centerContainer/vBoxContainer" unique_id=571241714]
+layout_mode = 2
+size_flags_horizontal = 4
+theme = ExtResource("6_llmlx")
+text = "CAK funeral not invited"
 
 [connection signal="pressed" from="exit" to="." method="_on_exit_pressed"]
+[connection signal="pressed" from="info" to="." method="_on_info_pressed"]
+[connection signal="pressed" from="saveGame" to="." method="_on_save_game_pressed"]
 [connection signal="pressed" from="scrollContainer/centerContainer/vBoxContainer/setAge" to="." method="_on_set_age_pressed"]
 [connection signal="pressed" from="scrollContainer/centerContainer/vBoxContainer/setJoy/joyLock" to="." method="_on_joy_lock_pressed"]
 [connection signal="pressed" from="scrollContainer/centerContainer/vBoxContainer/setJoy/setJoy" to="." method="_on_set_joy_pressed"]
@@ -381,4 +411,6 @@ stretch_mode = 0
 [connection signal="pressed" from="scrollContainer/centerContainer/vBoxContainer/setPartTimeJobSalary" to="." method="_on_set_part_time_job_salary_pressed"]
 [connection signal="pressed" from="scrollContainer/centerContainer/vBoxContainer/setPartTimeJobPerformance" to="." method="_on_set_part_time_job_performance_pressed"]
 [connection signal="pressed" from="scrollContainer/centerContainer/vBoxContainer/dangerousKbrdShortcuts" to="." method="_on_dangerous_kbrd_shortcuts_pressed"]
-[connection signal="pressed" from="saveGame" to="." method="_on_save_game_pressed"]
+[connection signal="pressed" from="scrollContainer/centerContainer/vBoxContainer/cakPlanner" to="." method="_on_cak_planner_pressed"]
+[connection signal="pressed" from="scrollContainer/centerContainer/vBoxContainer/cakInvited" to="." method="_on_cak_invited_pressed"]
+[connection signal="pressed" from="scrollContainer/centerContainer/vBoxContainer/cakNotInvited" to="." method="_on_cak_not_invited_pressed"]

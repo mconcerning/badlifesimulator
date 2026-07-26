@@ -268,6 +268,7 @@ func NPCKiller(type : String, index : int, deathCause : String = "Specify if kil
 		var deadRelationshipEventInfo = {
 			"index" : deadPersonTypes.size() - 1, #we need to get just the index of the newly-dead person on its own later
 			"joyLoss" : customClamp(max(6, (roundi(float(global.personRelationships[index]) / 3)) + randi_range(-5, 5))), #how much joy you will lose upon finding out they died (your relationship with them divided by two, plus a random amount from -5 to 5.
+			"type" : deadPersonTypes.back()
 		}
 		global.eventMemory.append(deadRelationshipEventInfo)
 		XPQueued += 20
@@ -286,7 +287,7 @@ func NPCKiller(type : String, index : int, deathCause : String = "Specify if kil
 
 func NPCisFamily(index : int, fromType = false): ##Checks if an (alive) NPC is a family member of yours, returns true or false. To check if a dead NPC is a family member (or just check from type), change fromType to the NPC's type and give index any value (it doesn't matter what).
 	const typesThatAreFamily = ["Mother", "Father", "Grandmother", "Grandfather", "Aunt", "Uncle", "Brother", "Sister", "Cousin", "Son", "Daughter", "Niece", "Nephew", "Son", "Daughter"]
-	if fromType == false: #if checking from index
+	if fromType is bool && fromType == false: #if checking from index
 		if typesThatAreFamily.has(global.personTypes[index]): #if we could find your type in the types array, i.e. they are family
 			return true
 		else:

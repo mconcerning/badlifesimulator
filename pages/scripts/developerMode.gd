@@ -46,6 +46,8 @@ func _on_exit_pressed() -> void:
 	get_tree().change_scene_to_file("res://pages/new_game_confirmation.tscn") #go back
 	global.saveGame()
 
+func _on_info_pressed() -> void:
+	get_tree().change_scene_to_file("res://pages/devmd_info.tscn")
 
 func _on_save_game_pressed() -> void:
 	get_tree().change_scene_to_file("res://pages/save_game.tscn")
@@ -216,7 +218,7 @@ func _on_trigger_event_pressed() -> void:
 	get_tree().change_scene_to_file("res://pages/event.tscn")
 
 func _on_imprison_pressed() -> void:
-	if global.crimes.size() == 0: #if you haven't really committed any crimes
+	if str(global.crimeTimeCalculator()) != "Life" && int(global.crimeTimeCalculator()) != 0: #if you haven't really committed any crimes
 		global.prisonSentence = 999
 	print("imprisoning...")
 	get_tree().change_scene_to_file("res://pages/game_menu.tscn")
@@ -348,3 +350,18 @@ func _on_dangerous_kbrd_shortcuts_pressed() -> void:
 		global.dangerousKeyboardShortcuts = false
 		$confirmation.text = "Successfully set dangerous kbrd s. cuts to false!"
 	print("set dangerous kbrd shortcuts to " + str(global.dangerousKeyboardShortcuts))
+
+func _on_cak_planner_pressed() -> void: ##Create And Kill - funeral planner
+	global.NPCCreator("F", "Gamion", "Mother", 47, 100, "Mother", "family", "random")
+	global.NPCKiller("kill", global.personFirstNames.size() - 1, "was developed out of existence")
+	get_tree().change_scene_to_file("res://pages/event.tscn")
+
+func _on_cak_invited_pressed() -> void:
+	global.NPCCreator("F", "Junky", "Jackson", 47, 100, "Uncle", "family", "random")
+	global.NPCKiller("kill", global.personFirstNames.size() - 1, "was developed out of existence")
+	get_tree().change_scene_to_file("res://pages/event.tscn")
+
+func _on_cak_not_invited_pressed() -> void:
+	global.NPCCreator("F", "Some", "Guy", 47, 1, "Friend", "misc", "random")
+	global.NPCKiller("kill", global.personFirstNames.size() - 1, "was developed out of existence")
+	get_tree().change_scene_to_file("res://pages/event.tscn")

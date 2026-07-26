@@ -449,7 +449,7 @@ func relationships(): ##Specialised, specifically relationship-related events.
 		$body.text = "Your " + global.deadPersonTypes[deadID].to_lower() + ", " + global.deadPersonFirstNames[deadID] + " " + global.deadPersonLastNames[deadID] + ", has " + global.deadPersonCause[deadID] + ". " + global.icap(global.pronounGenerator("he", global.deadPersonSexes[deadID])) + " was " + global.pluraliser(global.deadPersonAges[deadID], "year", "years") + " old.\n\n"
 		if isPlanner == true: #if you're the planner
 			$body.text += "It is your responsibility to plan the funeral.\n\n"
-		$body.text += "- " + str(global.eventMemory[1]) + " Joy"
+		$body.text += "- " + str(global.eventMemory[0]["joyLoss"]) + " Joy"
 		if isPlanner == true: #if you are planning the funeral
 			$option1.text = "Plan the funeral"
 			global.eventMemory[0]["funeralTierPricing"] = ([randi_range(60, 72) * 100, randi_range(95, 110) * 100, randi_range(150, 185) * 100, randi_range(220, 245) * 100]) #funeral tier pricing
@@ -468,7 +468,7 @@ func relationships(): ##Specialised, specifically relationship-related events.
 		if global.NPCisFamily(0, global.eventMemory[0]["type"]): #if the person who died is family, everyone else who is family is upset by their death
 			for i in global.personTypes.size(): #subtracts joy from your family members
 				if global.NPCisFamily(i):
-					global.personStats[i][global.personStatsDictionary.find("Joy")] -= global.customClamp(roundi(float(global.eventMemory[1]) * float(randi_range(40, 160)) / 100), 6, randi_range(70, 80)) #subtracts from their joy the amount of joy you lost * a random amount from 0.4 to 1.6, clamped to between 6 and randi_range(70, 80).
+					global.personStats[i][global.personStatsDictionary.find("Joy")] -= global.customClamp(roundi(float(global.eventMemory[0]["joyLoss"]) * float(randi_range(40, 160)) / 100), 6, randi_range(70, 80)) #subtracts from their joy the amount of joy you lost * a random amount from 0.4 to 1.6, clamped to between 6 and randi_range(70, 80).
 	elif global.revent[0] == "relationship-deathnotif-planner-o1":
 		$heading.text = "Funeral planner"
 		$body.text = "You can choose from any of the following funeral plans. A better funeral will minimise your and your family members' grief."
@@ -1392,11 +1392,11 @@ func option1outcomes(): ##Outcomes for option 1
 	elif global.revent[0] == "change-save-management-mode-to-delete-o1":
 		goingToSpecific = "res://pages/life_save_files.tscn"
 	elif global.revent[0] == "relationship-deathnotif-o1":
-		if global.deadPersonAges[global.eventMemory[0]] <= 35: #if they were 35 or younger
+		if global.deadPersonAges[global.eventMemory[0]["index"]] <= 35: #if they were 35 or younger
 			$heading.text = "Gone too soon"
 		else: #otherwise
 			$heading.text = global.icap(global.pronounGenerator("he", global.deadPersonSexes[global.eventMemory[0]["index"]])) + " was a great " + global.pronounGenerator("man", global.deadPersonSexes[global.eventMemory[0]["index"]])
-		var joyRecovered = global.customClamp(roundi(float(global.eventMemory[1]["joyLoss"]) / 2) + randi_range(-4, 4), 1, 32)
+		var joyRecovered = global.customClamp(roundi(float(global.eventMemory[0]["joyLoss"]) / 2) + randi_range(-4, 4), 1, 32)
 		$body.text = "You decided to attend " + global.pronounGenerator("her", global.deadPersonSexes[global.eventMemory[0]["index"]]) + " funeral.\n\n"
 		if randi_range(1,2) == 1: #if (1 in 2 chance) funeral is positive
 			$body.text += "You regained " + str(joyRecovered) + " Joy."

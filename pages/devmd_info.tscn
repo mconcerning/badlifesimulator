@@ -1,0 +1,136 @@
+[gd_scene format=3 uid="uid://i1y726ur6tp3"]
+
+[ext_resource type="Script" uid="uid://bnkxk1t5lndqa" path="res://pages/scripts/devmdInfo.gd" id="1_cvhur"]
+[ext_resource type="PackedScene" uid="uid://pmo8e2dmbkfm" path="res://objects/background.tscn" id="2_fa1aq"]
+[ext_resource type="PackedScene" uid="uid://cjnbhqp8obehv" path="res://objects/back_button.tscn" id="3_vmilr"]
+[ext_resource type="PackedScene" uid="uid://b7bfib5vbcvk6" path="res://objects/heading.tscn" id="4_l0hoa"]
+[ext_resource type="Theme" uid="uid://d23chtp7k4s5y" path="res://styles/text/rich_text_body_and_headings.tres" id="5_fa1aq"]
+
+[node name="developerModeInfo" type="Node2D" unique_id=1974988509]
+script = ExtResource("1_cvhur")
+
+[node name="background" parent="." unique_id=132212067 instance=ExtResource("2_fa1aq")]
+
+[node name="back" parent="." unique_id=17962498 instance=ExtResource("3_vmilr")]
+
+[node name="heading" parent="." unique_id=33655322 instance=ExtResource("4_l0hoa")]
+text = "More info"
+
+[node name="scrollContainer" type="ScrollContainer" parent="." unique_id=1826959448]
+offset_left = 45.0
+offset_top = 300.0
+offset_right = 1045.0
+offset_bottom = 1800.0
+
+[node name="centerContainer" type="CenterContainer" parent="scrollContainer" unique_id=1035551520]
+layout_mode = 2
+size_flags_horizontal = 6
+size_flags_vertical = 0
+
+[node name="vBoxContainer" type="VBoxContainer" parent="scrollContainer/centerContainer" unique_id=862239922]
+layout_mode = 2
+theme_override_constants/separation = 50
+
+[node name="richTextLabel" type="RichTextLabel" parent="scrollContainer/centerContainer/vBoxContainer" unique_id=1012824352]
+custom_minimum_size = Vector2(940, 0)
+custom_maximum_size = Vector2(940, -1)
+layout_mode = 2
+theme = ExtResource("5_fa1aq")
+bbcode_enabled = true
+text = "[b]How to use[/b]
+
+Developer Mode lets you edit variables in-game and trigger events in order to make testing and debugging easier.
+
+To edit a variable, look for it in the list of buttons and change the input field to what you would like the new value to be. Note that variables should only be changed to ones of the same type. In other words, change numbers to numbers and text to text, otherwise the game could break. Variable-setting buttons will always have text saying \"set x\".
+
+Some buttons are checkboxes, not variables, toggling parts of the game on and off.
+
+Some other buttons perform actions instead of changing variables.
+
+
+[b]Typing arrays as values[/b]
+
+Some variables are arrays, meaning they are lists storing multiple entries of information.
+
+For example, the crimes array stores the name of every crime you've committed in a format like this: [\"Murder\", \"Drink driving\", \"Piracy\"].
+
+To set an array in Developer Mode, type the entire array without the square brackets or any other formatting, seperating each entry with a comma like so (inside the quotes, not including them): \"Murder,Drink driving,Piracy\".
+
+
+[b]Locking[/b]
+
+Some buttons have a padlock next to them. These padlocks lock their respective values to a certain number while they are enabled.
+
+To use a padlock, click it when it is locked to unlock and when it's unlocked to lock. If there is nothing in the input field, the stat will lock to what it already is. If the stat field is not empty, it will lock to that value.
+
+
+[b]RAUE[/b]
+
+Short for Random Age-Up Events. When enabled, you may get random events every time you age up.
+
+
+[b]Die[/b]
+
+Kills you (for testing).
+
+
+[b]XP & level setting[/b]
+
+\"Set XP\" sets how much XP you already have.
+
+\"Set XP required\" sets how many XP you need to have in order to progress to the next level.
+
+\"Set XP queued\" sets how many XP you are owed for when you die.
+
+\"Set level\" sets your numerical level. This does not change XP required on its own.
+
+
+[b]Set school level[/b]
+
+Your school level can be -1, 0, 1, 2, or 3. -1 means you have not yet been in any school. 0 means you are no longer in school. 1 means you are currently enrolled in primary school, 2 means you are enrolled in high school, and 3 means University.
+
+If you cannot access the job menu for child labour is illegal, try setting your school level to 0. This works because your ability to access the job menu is not reliant on your age but your school, and your school is usually reliant on your age.
+
+
+[b]Imprison[/b]
+
+Sentences you to prison without trial. If you have already committed crimes that will get you a sentence, this sends you to prison with that sentence. If not, gives you a 999-year sentence.
+
+
+[b]DM always req. pass[/b]
+
+Short for Developer Mode always require password. When enabled, you will need to enter the password every time in order to enter Developer Mode.
+
+
+[b]Dangerous kbrd s. cuts[/b]
+
+Short for dangerous keyboard shortcuts. When both this and regular keyboard shortctuts (in regular game settings -> misc) are enabled, will allow you to perform the following shortcuts from anywhere in the game:
+
+ctrl + shift + m -> main menu
+
+ctrl + shift + h -> home page (or refresh event, if there is one). Only works if you currently have a life loaded (if you can successfuly select \"continue life\" from the main menu, this is true)
+
+ctrl + shift + p -> p stands for preferences, takes you to settings
+
+ctrl + s -> lives management
+
+ctrl + shift + s -> save file export and import
+
+ctrl + shift + d -> developer mode
+
+
+[b]CAK funeral[/b]
+
+Short for Create And Kill funeral. Creates and kills a brand new NPC and then shows you the event stating that they died.
+
+CAK funeral planner -> it is your job to plan the funeral (you must be at least age 18 - your relationship with the deceased here is always 100)
+
+CAK funeral invited -> it is not your job to plan the funeral, but you have been invited to it
+
+CAK funeral not invited -> you have not been invited to the funeral
+
+"
+fit_content = true
+horizontal_alignment = 1
+
+[connection signal="pressed" from="back" to="." method="_on_back_pressed"]
