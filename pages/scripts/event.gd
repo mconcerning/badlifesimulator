@@ -443,7 +443,7 @@ func relationships(): ##Specialised, specifically relationship-related events.
 	elif global.revent[0] == "relationship-deathnotif":
 		var deadID = global.eventMemory[0]["index"]
 		var isPlanner = false ##If it's your responsibility to plan the funeral
-		if (global.deadPersonTypes[deadID] == "Mother" || global.deadPersonTypes[deadID] == "Father") && (global.deadPersonTypes.count("Brother") + global.deadPersonTypes.count("Sister") == 0 || global.deadPersonRelationships[deadID] >= randi_range(65, 90)) && global.age >= 18: #if the dead person is your parent and you either: don't have siblings, or you're the sibling with the best relationship with that parent, AND you're 18 or older
+		if ((global.deadPersonTypes[deadID] == "Mother" || global.deadPersonTypes[deadID] == "Father") && (global.deadPersonTypes.count("Brother") + global.deadPersonTypes.count("Sister") == 0 || global.deadPersonRelationships[deadID] >= randi_range(65, 90))) && global.age >= 18: #if the dead person is your parent and you either: don't have siblings, or you're the sibling with the best relationship with that parent, AND you're 18 or older
 			isPlanner = true #then you're the planner
 			global.revent[0] = "relationship-deathnotif-planner"
 		$heading.text = "Funeral"
@@ -453,7 +453,7 @@ func relationships(): ##Specialised, specifically relationship-related events.
 		$body.text += "- " + str(global.eventMemory[0]["joyLoss"]) + " Joy"
 		if isPlanner == true: #if you are planning the funeral
 			$option1.text = "Plan the funeral"
-			global.eventMemory[0]["funeralTierPricing"] = ([randi_range(60, 72) * 100, randi_range(95, 110) * 100, randi_range(150, 185) * 100, randi_range(220, 245) * 100]) #funeral tier pricing
+			global.eventMemory[0]["funeralTierPricing"] = ([randi_range(60, 72) * 100, randi_range(95, 110) * 100, randi_range(150, 185) * 100, randi_range(220, 245) * 100, randi_range(380, 550) * 100]) #funeral tier pricing
 		else: #if you are not planning the funeral
 			$option1.text = "Attend the funeral"
 			if global.deadPersonRelationships[deadID] <= 18: #if you're so not close that you weren't invited
@@ -477,12 +477,19 @@ func relationships(): ##Specialised, specifically relationship-related events.
 		var tier2price = global.eventMemory[0]["funeralTierPricing"][1]
 		var tier3price = global.eventMemory[0]["funeralTierPricing"][2]
 		var tier4price = global.eventMemory[0]["funeralTierPricing"][3]
+		var tier5price = global.eventMemory[0]["funeralTierPricing"][4]
 		$option1.text = "No funeral ($0)"
 		$option2.text = "Online video funeral ($" + global.commaiser(tier1price) + ")"
 		$option3.text = "In-person service ($" + global.commaiser(tier2price) + ")"
 		$option4.text = "Coffin burial ($" + global.commaiser(tier3price) + ")"
 		$option5.text = "Custom extended service ($" + global.commaiser(tier4price) + ")"
-		optionRemover(6)
+		if global.evality >= 92: #if you're pretty evil
+			$option6.text = "Bouncy castle funeral ($" + global.commaiser(tier5price) + ")"
+			optionRemover(7)
+			if global.money < tier5price:
+				$option6.disabled = true
+		else:
+			optionRemover(6)
 		#if you can't afford x funeral
 		if global.money < tier1price:
 			$option2.disabled = true
@@ -495,7 +502,9 @@ func relationships(): ##Specialised, specifically relationship-related events.
 	elif global.revent[0] == "relationship-deathnotif-planner-o1-o1":
 		$heading.text = "Funeral \"planner\""
 		var relationshipDrop = randi_range(24, 43)
-		$body.text = "You chose to have no funeral.\n\n- " + str(relationshipDrop - 6) + "-" + str(relationshipDrop + 7) + " relationship with everyone."
+		$body.text = "You chose to have no funeral."
+		if global.personRelationships.size() > 0: #if you have relationships
+			$body.text += "\n\n- " + str(relationshipDrop - 6) + "-" + str(relationshipDrop + 7) + " relationship with everyone."
 		$option1.text = "Okay"
 		optionRemover(2)
 		for i in global.personRelationships.size(): #deducts some relationship with all your relationships
@@ -518,6 +527,92 @@ func relationships(): ##Specialised, specifically relationship-related events.
 		$option1.text = "Okay"
 		optionRemover(2)
 		global.evality += randi_range(8, 14) #not a very nice funeral needless to say
+		global.money -= global.eventMemory[0]["funeralTierPricing"][0] #deduct the cost of the funeral from your balance
+		global.eventMemory.pop_front() #get rid of funeral information
+		goingHome = true #take us home
+	elif global.revent[0] == "relationship-deathnotif-planner-o1-o3":
+		if global.deadPersonRelationships[global.eventMemory[0]["index"]] <= 24: #if you barely knew them (24 relationship or lower)
+			$heading.text = "I'm just here for the food"
+		else:
+			$heading.text = "I almost feel bad eating the food"
+		$body.text = "You chose to have an in-person funeral service.\n\n"
+		var joyRecovered = global.customClamp(roundi(float(global.eventMemory[0]["joyLoss"]) / 2) + randi_range(-4, 4), 1, 32)
+		if randi_range(1, 100) < 50: #50% chance the funeral makes it worse
+			$body.text += "It didn't help you properly process your grief.\n\n- " + str(joyRecovered) + " joy, "
+			global.joy -= joyRecovered
+		else:
+			$body.text += "It helped you process your grief.\n\n+ " + str(joyRecovered) + " joy, "
+			global.joy += joyRecovered
+		$body.text += "- $" + global.commaiser(global.eventMemory[0]["funeralTierPricing"][1])
+		$option1.text = "Okay"
+		optionRemover(2)
+		global.money -= global.eventMemory[0]["funeralTierPricing"][1] #deduct the cost of the funeral from your balance
+		global.eventMemory.pop_front() #get rid of funeral information
+		goingHome = true #take us home
+	elif global.revent[0] == "relationship-deathnotif-planner-o1-o4":
+		if randi_range(1, 2) == 1: #random heading variation
+			$heading.text = "But " + global.pronounGenerator("he", global.deadPersonSexes[global.eventMemory[0]["index"]]) + " was cremated?"
+		else:
+			$heading.text = "Six feet under"
+		$body.text = "You chose to have a coffin burial service.\n\n"
+		var joyRecovered = global.customClamp(roundi(float(global.eventMemory[0]["joyLoss"]) / 2) + randi_range(-4, 4), 1, 32)
+		if randi_range(1, 100) < 32: #32% chance the funeral makes it worse
+			$body.text += "It didn't help you properly process your grief.\n\n- " + str(joyRecovered) + " joy, "
+			global.joy -= joyRecovered
+		else:
+			$body.text += "It helped you process your grief.\n\n+ " + str(joyRecovered) + " joy, "
+			global.joy += joyRecovered
+		$body.text += "- $" + global.commaiser(global.eventMemory[0]["funeralTierPricing"][2])
+		$option1.text = "Okay"
+		optionRemover(2)
+		global.money -= global.eventMemory[0]["funeralTierPricing"][2] #deduct the cost of the funeral from your balance
+		global.eventMemory.pop_front() #get rid of funeral information
+		goingHome = true #take us home
+	elif global.revent[0] == "relationship-deathnotif-planner-o1-o5":
+		$heading.text = "I just wish " + global.pronounGenerator("he", global.deadPersonSexes[global.eventMemory[0]["index"]]) + " could have had a custom extended life"
+		$body.text = "You chose to have a custom extended funeral service.\n\n"
+		var joyRecovered = global.customClamp(roundi(float(global.eventMemory[0]["joyLoss"]) / 2) + randi_range(-4, 4), 1, 32)
+		if randi_range(1, 100) < 12: #12% chance the funeral makes it worse
+			$body.text += "It didn't help you properly process your grief.\n\n- " + str(joyRecovered) + " joy, "
+			global.joy -= joyRecovered
+		else:
+			$body.text += "It helped you process your grief.\n\n+ " + str(joyRecovered) + " joy, "
+			global.joy += joyRecovered + randi_range(5, 12) #plus extra, this was a good funeral service
+		$body.text += "- $" + global.commaiser(global.eventMemory[0]["funeralTierPricing"][3])
+		$option1.text = "Okay"
+		optionRemover(2)
+		global.money -= global.eventMemory[0]["funeralTierPricing"][3] #deduct the cost of the funeral from your balance
+		global.eventMemory.pop_front() #get rid of funeral information
+		goingHome = true #take us home
+	elif global.revent[0] == "relationship-deathnotif-planner-o1-o6":
+		$heading.text = "I guess that's why they call these \"FUN\"erals, huh?"
+		$body.text = "You chose to have a bouncy castle funeral.\n\n"
+		var joyRecovered = global.customClamp(roundi(float(global.eventMemory[0]["joyLoss"]) / 2) + randi_range(-4, 4), 1, 32)
+		var relationshipDrop = global.customClamp(roundi(global.evality / 1.6) + randi_range(-10, 4), 40, 100)
+		if randi_range(1, 100) < 100 - global.evality: #100 - evality% chance the funeral makes it worse
+			joyRecovered = joyRecovered * 2
+			$body.text += "You realised part-way through that you really screwed up.\n\n- " + str(joyRecovered) + " joy, "
+			global.joy -= joyRecovered * 2
+		else:
+			joyRecovered = joyRecovered * 2
+			$body.text += "You had an awesome time bouncing"
+			if global.personRelationships.size() == 1: #if you have A relationship
+				$body.text += ", but your " + global.personTypes[0].to_lower() + " doesn't want to talk to you all of a sudden."
+			elif global.personRelationships.size() > 1: #if you have several relationships
+				$body.text += ", but nobody you know has wanted to talk to you ever since."
+			else: #if you have no relationships
+				$body.text += "."
+			$body.text += "\n\n+ " + str(joyRecovered) + " joy, "
+			global.joy += joyRecovered #YOU had fun
+		$body.text += "- $" + global.commaiser(global.eventMemory[0]["funeralTierPricing"][4])
+		if global.personRelationships.size() > 0: #if you have relationships
+			for i in global.personRelationships.size(): #lose relationship with everybody
+				global.personRelationships[i] -= relationshipDrop
+				global.personStats[i][global.personStatsDictionary.find("Joy")] -= roundi(float(relationshipDrop) / 2) #they become unhappy because you broke their trust
+		$option1.text = "Okay"
+		optionRemover(2)
+		global.evality += relationshipDrop #shouldn't matter considering it's likely maxxing out here anyway
+		global.money -= global.eventMemory[0]["funeralTierPricing"][4] #deduct the cost of the funeral from your balance
 		global.eventMemory.pop_front() #get rid of funeral information
 		goingHome = true #take us home
 
