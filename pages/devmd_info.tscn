@@ -17,21 +17,20 @@ script = ExtResource("1_cvhur")
 text = "More info"
 
 [node name="scrollContainer" type="ScrollContainer" parent="." unique_id=1826959448]
-offset_left = 45.0
+offset_left = 20.0
 offset_top = 300.0
-offset_right = 1045.0
+offset_right = 1060.0
 offset_bottom = 1800.0
 
-[node name="centerContainer" type="CenterContainer" parent="scrollContainer" unique_id=1035551520]
+[node name="vBoxContainer" type="VBoxContainer" parent="scrollContainer" unique_id=807231200]
+custom_minimum_size = Vector2(1080, 0)
 layout_mode = 2
-size_flags_horizontal = 6
-size_flags_vertical = 0
+alignment = 1
 
-[node name="vBoxContainer" type="VBoxContainer" parent="scrollContainer/centerContainer" unique_id=862239922]
+[node name="centerContainer" type="CenterContainer" parent="scrollContainer/vBoxContainer" unique_id=1903496585]
 layout_mode = 2
-theme_override_constants/separation = 50
 
-[node name="richTextLabel" type="RichTextLabel" parent="scrollContainer/centerContainer/vBoxContainer" unique_id=1012824352]
+[node name="richTextLabel" type="RichTextLabel" parent="scrollContainer/vBoxContainer/centerContainer" unique_id=1012824352]
 custom_minimum_size = Vector2(940, 0)
 custom_maximum_size = Vector2(940, -1)
 layout_mode = 2
