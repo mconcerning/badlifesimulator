@@ -40,7 +40,15 @@ text = "Big mailto"
 [node name="checkbox" parent="vBoxContainer/bigMailto" unique_id=1995986449 instance=ExtResource("6_gpqpm")]
 position = Vector2(365, 0)
 
+[node name="randomCautionPopups" parent="vBoxContainer" unique_id=721210619 instance=ExtResource("5_q6vhn")]
+layout_mode = 2
+text = "Random caution popups"
+
+[node name="checkbox" parent="vBoxContainer/randomCautionPopups" unique_id=1897210299 instance=ExtResource("6_gpqpm")]
+position = Vector2(797, 0)
+
 [connection signal="pressed" from="back" to="." method="_on_back_pressed"]
 [connection signal="pressed" from="moreInfo" to="." method="_on_more_info_pressed"]
 [connection signal="pressed" from="vBoxContainer/enableKeyboardShortcuts" to="." method="_on_enable_keyboard_shortcuts_pressed"]
 [connection signal="pressed" from="vBoxContainer/bigMailto" to="." method="_on_big_mailto_pressed"]
+[connection signal="pressed" from="vBoxContainer/randomCautionPopups" to="." method="_on_random_caution_popups_pressed"]

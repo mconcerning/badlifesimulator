@@ -35,5 +35,8 @@ func _ready() -> void:
 					push_warning("Mod " + allModFiles[i] + " can't load because it isn't a mod. Ensure it is a valid .pck file or it won't work.")
 	#end
 	print("running version " + global.versionNumber)
-	get_tree().change_scene_to_file("res://pages/main_menu.tscn") #change scene to main menu
+	if global.cautionRelatedFun && randi_range(1, 10) == 1: #if fun caution popup
+		get_tree().change_scene_to_file("res://pages/funCaution.tscn")
+	else:
+		get_tree().change_scene_to_file("res://pages/main_menu.tscn") #change scene to main menu
 	#requires a wait time otherwise the global script is busy loading and godot will throw an error when you try to change scene

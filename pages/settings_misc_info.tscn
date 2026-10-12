@@ -61,4 +61,14 @@ text = "Disables the size limit when exporting your life/progress via email. If 
 "
 autowrap_mode = 3
 
+[node name="hRandCautionFun" parent="scrollContainer/centerContainer/vBoxContainer" unique_id=1847270287 instance=ExtResource("5_clphh")]
+layout_mode = 2
+text = "Random caution popups"
+
+[node name="bRandCautionFun" parent="scrollContainer/centerContainer/vBoxContainer" unique_id=938999843 instance=ExtResource("6_ci34g")]
+custom_minimum_size = Vector2(950, 0)
+layout_mode = 2
+text = "Toggles the occasional fake caution pop-ups that may appear when you first start the game."
+autowrap_mode = 3
+
 [connection signal="pressed" from="back" to="." method="_on_back_pressed"]

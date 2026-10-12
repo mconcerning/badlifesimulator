@@ -15,6 +15,10 @@ func _ready() -> void:
 		$vBoxContainer/bigMailto/checkbox.frame = 1 #enabled
 	else:
 		$vBoxContainer/bigMailto/checkbox.frame = 0 #disabled
+	if global.cautionRelatedFun:
+		$vBoxContainer/randomCautionPopups/checkbox.frame = 1 #enabled
+	else:
+		$vBoxContainer/randomCautionPopups/checkbox.frame = 0 #disabled
 
 
 func _on_back_pressed() -> void:
@@ -42,4 +46,14 @@ func _on_big_mailto_pressed() -> void:
 	else:
 		global.bigMailto = true
 		$vBoxContainer/bigMailto/checkbox.frame = 1 #enable it
+	global.saveGame()
+
+
+func _on_random_caution_popups_pressed() -> void:
+	if global.cautionRelatedFun:
+		global.cautionRelatedFun = false
+		$vBoxContainer/randomCautionPopups/checkbox.frame = 0 #disable it
+	else:
+		global.cautionRelatedFun = true
+		$vBoxContainer/randomCautionPopups/checkbox.frame = 1 #enable it
 	global.saveGame()

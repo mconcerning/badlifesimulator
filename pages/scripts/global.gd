@@ -115,6 +115,7 @@ var customLifeSaveDir = ""
 var customLifeImportDir = ""
 var customGameSaveDir = ""
 var customGameImportDir = ""
+var cautionRelatedFun : bool = true ##Enables (or disables) the occasional fake caution popups that you may see when launching the game.
 
 
 #keeping track (for achievements, use upon death, or otherwise)
@@ -647,6 +648,7 @@ func gameSerialiser(): ##Serialises every NON-life-specific variable we need to 
 		"keyboardShortcutsEnabled" : keyboardShortcutsEnabled,
 		"dangerousKeyboardShortcuts" : dangerousKeyboardShortcuts,
 		"bigMailto" : bigMailto,
+		"cautionRelatedFun" : cautionRelatedFun,
 	}
 	return cambridgeDictionary
 
@@ -737,6 +739,7 @@ func loadGame(base64game = ""): ##Does the actual GAME loading.
 		keyboardShortcutsEnabled = dictionary["keyboardShortcutsEnabled"]
 		dangerousKeyboardShortcuts = dictionary["dangerousKeyboardShortcuts"]
 		bigMailto = dictionary["bigMailto"]
+		cautionRelatedFun = dictionary["cautionRelatedFun"]
 		if gameSaveFile != null: #if we're loading from a file, close it
 			gameSaveFile.close() #closes file so it doesn't do anything weird
 		print("hoorah, game load successful")
