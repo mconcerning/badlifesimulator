@@ -7,6 +7,8 @@ func _ready() -> void:
 		$vBoxContainer/display.disabled = true
 	elif OS.get_name() == "Android" || OS.get_name() == "iOS":
 		$vBoxContainer/display.disabled = true
+	if !global.expertMode:
+		$vBoxContainer/expert.queue_free()
 
 
 func _on_back_pressed() -> void:
@@ -29,3 +31,6 @@ func _on_misc_pressed() -> void:
 
 func _on_help_pressed() -> void:
 	get_tree().change_scene_to_file("res://pages/settings_help.tscn")
+
+func _on_expert_pressed() -> void:
+	get_tree().change_scene_to_file("res://pages/settings_expert.tscn")

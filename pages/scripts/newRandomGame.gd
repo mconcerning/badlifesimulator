@@ -6,7 +6,10 @@ func cleanLife(): #resets your existing life (if any) and generates new stats
 	#engine
 	global.revent = []
 	global.eventMemory = []
-	r.gardener() #acquire a new randomness seed
+	if global.lifeIsSeeded: #if this life is seeded
+		r.gardener(global.lifeSeed) #seed it
+	else: #if it has a random seed
+		r.gardener() #acquire a new randomness seed
 	#personal
 	global.sex = r.ng.randi_range(0,1) #turns sex into a random number, either 0 or 1
 	match global.sex: #assigns sex
@@ -16,7 +19,7 @@ func cleanLife(): #resets your existing life (if any) and generates new stats
 		1: #if 1, you are female
 			global.sex = "F"
 			print("you are female!")
-	global.sexuality = r.ng.randi_range(1,30)
+	global.sexuality = r.ng.randi_range(1,30) #randomise sexuality
 	if global.sexuality <= 15: #if you're straight
 		if global.sex == "M":
 			global.sexuality = "F"

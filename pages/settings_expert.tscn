@@ -1,0 +1,34 @@
+[gd_scene format=3 uid="uid://cee2xogk76515"]
+
+[ext_resource type="Script" uid="uid://cvjv5sc51jtlx" path="res://pages/scripts/settingsExpert.gd" id="1_facda"]
+[ext_resource type="PackedScene" uid="uid://pmo8e2dmbkfm" path="res://objects/background.tscn" id="2_1pi78"]
+[ext_resource type="PackedScene" uid="uid://cjnbhqp8obehv" path="res://objects/back_button.tscn" id="3_tyvfb"]
+[ext_resource type="PackedScene" uid="uid://b7bfib5vbcvk6" path="res://objects/heading.tscn" id="4_uih5c"]
+[ext_resource type="PackedScene" uid="uid://ck7ra4cupjjkm" path="res://objects/button_default.tscn" id="5_o38qp"]
+[ext_resource type="PackedScene" uid="uid://cil46lqksrpuy" path="res://objects/checkbox.tscn" id="7_q6fbw"]
+
+[node name="settingsExpert" type="Node2D" unique_id=1974988509]
+script = ExtResource("1_facda")
+
+[node name="background" parent="." unique_id=132212067 instance=ExtResource("2_1pi78")]
+
+[node name="back" parent="." unique_id=17962498 instance=ExtResource("3_tyvfb")]
+
+[node name="heading" parent="." unique_id=33655322 instance=ExtResource("4_uih5c")]
+text = "Expert settings"
+
+[node name="vBoxContainer" type="VBoxContainer" parent="." unique_id=337752013]
+offset_top = 300.0
+offset_right = 1080.0
+offset_bottom = 1380.0
+theme_override_constants/separation = 50
+
+[node name="enableSeeding" parent="vBoxContainer" unique_id=1523501262 instance=ExtResource("5_o38qp")]
+layout_mode = 2
+text = "Show seeds"
+
+[node name="checkbox" parent="vBoxContainer/enableSeeding" unique_id=124453344 instance=ExtResource("7_q6fbw")]
+position = Vector2(420, 0)
+
+[connection signal="pressed" from="back" to="." method="_on_back_pressed"]
+[connection signal="pressed" from="vBoxContainer/enableSeeding" to="." method="_on_enable_seeding_pressed"]

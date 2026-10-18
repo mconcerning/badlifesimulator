@@ -1,0 +1,30 @@
+[gd_scene format=3 uid="uid://o53udt3crupl"]
+
+[ext_resource type="Script" uid="uid://cyysggpbbjlid" path="res://pages/scripts/mainMenuMore.gd" id="1_ruixf"]
+[ext_resource type="PackedScene" uid="uid://pmo8e2dmbkfm" path="res://objects/background.tscn" id="2_ro7qj"]
+[ext_resource type="PackedScene" uid="uid://cjnbhqp8obehv" path="res://objects/back_button.tscn" id="3_277ad"]
+[ext_resource type="PackedScene" uid="uid://b7bfib5vbcvk6" path="res://objects/heading.tscn" id="4_585xn"]
+[ext_resource type="PackedScene" uid="uid://ck7ra4cupjjkm" path="res://objects/button_default.tscn" id="5_bv1mg"]
+
+[node name="more" type="Node2D" unique_id=1974988509]
+script = ExtResource("1_ruixf")
+
+[node name="background" parent="." unique_id=132212067 instance=ExtResource("2_ro7qj")]
+
+[node name="back" parent="." unique_id=17962498 instance=ExtResource("3_277ad")]
+
+[node name="heading" parent="." unique_id=33655322 instance=ExtResource("4_585xn")]
+text = "More"
+
+[node name="vBoxContainer" type="VBoxContainer" parent="." unique_id=337752013]
+offset_top = 300.0
+offset_right = 1080.0
+offset_bottom = 1380.0
+theme_override_constants/separation = 50
+
+[node name="startSeededLife" parent="vBoxContainer" unique_id=1523501262 instance=ExtResource("5_bv1mg")]
+layout_mode = 2
+text = "Start seeded life"
+
+[connection signal="pressed" from="back" to="." method="_on_back_pressed"]
+[connection signal="pressed" from="vBoxContainer/startSeededLife" to="." method="_on_start_seeded_life_pressed"]

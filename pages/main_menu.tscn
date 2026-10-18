@@ -43,12 +43,19 @@ offset_bottom = 584.0
 disabled = true
 text = "Continue life"
 
-[node name="newGame" parent="." unique_id=1544237965 instance=ExtResource("5_n5qs2")]
+[node name="newRandomGame" parent="." unique_id=1544237965 instance=ExtResource("5_n5qs2")]
 offset_left = 301.0
 offset_top = 650.0
 offset_right = 780.0
 offset_bottom = 734.0
 text = "Start new game"
+
+[node name="more" parent="." unique_id=1298281961 instance=ExtResource("5_n5qs2")]
+offset_left = 465.0
+offset_top = 800.0
+offset_right = 615.0
+offset_bottom = 884.0
+text = "More"
 
 [node name="progress" type="TextureButton" parent="." unique_id=1571853976]
 offset_left = 960.0
@@ -78,7 +85,8 @@ ignore_texture_size = true
 stretch_mode = 0
 
 [connection signal="pressed" from="continue" to="." method="_on_continue_pressed"]
-[connection signal="pressed" from="newGame" to="." method="_on_new_game_pressed"]
+[connection signal="pressed" from="newRandomGame" to="." method="_on_new_random_game_pressed"]
+[connection signal="pressed" from="more" to="." method="_on_more_pressed"]
 [connection signal="pressed" from="progress" to="." method="_on_progress_pressed"]
 [connection signal="pressed" from="settings" to="." method="_on_settings_pressed"]
 [connection signal="pressed" from="discord" to="." method="_on_discord_pressed"]

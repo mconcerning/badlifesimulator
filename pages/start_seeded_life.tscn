@@ -1,0 +1,65 @@
+[gd_scene format=3 uid="uid://tygwfy4k7f27"]
+
+[ext_resource type="PackedScene" uid="uid://pmo8e2dmbkfm" path="res://objects/background.tscn" id="1_0l14o"]
+[ext_resource type="Script" uid="uid://bjldugj1a2tx2" path="res://pages/scripts/startSeededLife.gd" id="1_amxna"]
+[ext_resource type="PackedScene" uid="uid://cjnbhqp8obehv" path="res://objects/back_button.tscn" id="2_amxna"]
+[ext_resource type="PackedScene" uid="uid://b7bfib5vbcvk6" path="res://objects/heading.tscn" id="4_cl6kn"]
+[ext_resource type="PackedScene" uid="uid://b5fbvau05tjc7" path="res://objects/line_edit.tscn" id="5_88cst"]
+[ext_resource type="PackedScene" uid="uid://bdmp0wqtq5xur" path="res://objects/more_info_button.tscn" id="6_cc2iu"]
+[ext_resource type="Texture2D" uid="uid://djxq1mslwpnim" path="res://assets/paste.png" id="7_aqs1t"]
+[ext_resource type="Texture2D" uid="uid://gu2yglnbm4e1" path="res://assets/x.png" id="8_aqs1t"]
+[ext_resource type="PackedScene" uid="uid://ck7ra4cupjjkm" path="res://objects/button_default.tscn" id="9_8atkd"]
+[ext_resource type="PackedScene" uid="uid://dvna50i2k0geh" path="res://objects/body.tscn" id="10_p0h0a"]
+
+[node name="startSeededLife" type="Node2D" unique_id=1408680034]
+script = ExtResource("1_amxna")
+
+[node name="background" parent="." unique_id=1933248490 instance=ExtResource("1_0l14o")]
+
+[node name="back" parent="." unique_id=17962498 instance=ExtResource("2_amxna")]
+
+[node name="heading" parent="." unique_id=33655322 instance=ExtResource("4_cl6kn")]
+text = "Seeded life"
+
+[node name="inputSeed" parent="." unique_id=299363301 instance=ExtResource("5_88cst")]
+offset_left = 240.0
+offset_top = 400.0
+offset_right = 840.0
+offset_bottom = 459.0
+placeholder_text = "Seed (numerical)"
+
+[node name="pasteClipboard" parent="." unique_id=894308063 instance=ExtResource("6_cc2iu")]
+offset_left = 890.0
+offset_top = 385.0
+offset_right = 970.0
+offset_bottom = 465.0
+texture_normal = ExtResource("7_aqs1t")
+
+[node name="emptyInput" parent="." unique_id=440341322 instance=ExtResource("6_cc2iu")]
+offset_left = 890.0
+offset_top = 485.0
+offset_right = 970.0
+offset_bottom = 565.0
+texture_normal = ExtResource("8_aqs1t")
+
+[node name="play" parent="." unique_id=1544237965 instance=ExtResource("9_8atkd")]
+offset_left = 397.0
+offset_top = 550.0
+offset_right = 683.0
+offset_bottom = 634.0
+text = "Play seed"
+
+[node name="body" parent="." unique_id=1032932187 instance=ExtResource("10_p0h0a")]
+custom_minimum_size = Vector2(1000, 0)
+offset_left = 40.0
+offset_top = 1400.0
+offset_right = 1040.0
+offset_bottom = 1586.0
+text = "NOTE:
+Seeded lives will not generate XP or unlock achievements."
+autowrap_mode = 3
+
+[connection signal="pressed" from="back" to="." method="_on_back_pressed"]
+[connection signal="pressed" from="pasteClipboard" to="." method="_on_paste_clipboard_pressed"]
+[connection signal="pressed" from="emptyInput" to="." method="_on_empty_input_pressed"]
+[connection signal="pressed" from="play" to="." method="_on_play_pressed"]

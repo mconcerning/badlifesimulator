@@ -6,8 +6,59 @@
 [ext_resource type="Texture2D" uid="uid://cq57fino8h30i" path="res://assets/red-bg.png" id="3_4vejq"]
 [ext_resource type="LabelSettings" uid="uid://bst31irnyaguk" path="res://styles/text/subheading.tres" id="5_16vjf"]
 [ext_resource type="LabelSettings" uid="uid://c3r4rskc4jrad" path="res://styles/text/heading.tres" id="5_ohchq"]
+[ext_resource type="PackedScene" uid="uid://dvna50i2k0geh" path="res://objects/body.tscn" id="6_k2gq1"]
 [ext_resource type="LabelSettings" uid="uid://dl6sog5hfkb6u" path="res://styles/text/body.tres" id="6_ohchq"]
 [ext_resource type="PackedScene" uid="uid://ck7ra4cupjjkm" path="res://objects/button_default.tscn" id="6_y31ux"]
+[ext_resource type="FontFile" uid="uid://bf7pfy6renkw4" path="res://assets/fonts/poppins/Poppins-Regular.ttf" id="7_32i6u"]
+[ext_resource type="PackedScene" uid="uid://bdmp0wqtq5xur" path="res://objects/more_info_button.tscn" id="8_mjq8d"]
+[ext_resource type="Texture2D" uid="uid://do0l24yp43c44" path="res://assets/copy.png" id="9_s7pc1"]
+[ext_resource type="PackedScene" uid="uid://b3nrc0n5eeris" path="res://objects/subheading.tscn" id="10_s7pc1"]
+
+[sub_resource type="LabelSettings" id="LabelSettings_s7pc1"]
+font = ExtResource("7_32i6u")
+font_size = 32
+font_color = Color(1, 0, 0, 1)
+
+[sub_resource type="LabelSettings" id="LabelSettings_mjq8d"]
+font = ExtResource("7_32i6u")
+font_size = 32
+font_color = Color(0, 0, 0, 1)
+
+[sub_resource type="Animation" id="Animation_ihxiv"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("confirmation:self_modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Color(1, 1, 1, 0)]
+}
+
+[sub_resource type="Animation" id="Animation_geyky"]
+resource_name = "confirmation"
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("confirmation:self_modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 1),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Color(1, 1, 1, 1), Color(1, 1, 1, 0)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_ui5de"]
+_data = {
+&"RESET": SubResource("Animation_ihxiv"),
+&"confirmation": SubResource("Animation_geyky")
+}
 
 [sub_resource type="Animation" id="Animation_4vejq"]
 length = 0.001
@@ -87,9 +138,17 @@ offset_bottom = 240.0
 text = "You died"
 label_settings = ExtResource("5_ohchq")
 horizontal_alignment = 1
-metadata/_edit_use_anchors_ = true
+
+[node name="wasSeeded" parent="." unique_id=1032932187 instance=ExtResource("6_k2gq1")]
+visible = false
+offset_top = 250.0
+offset_right = 1080.0
+offset_bottom = 296.0
+text = "Seeded life - will not gain XP"
+label_settings = SubResource("LabelSettings_s7pc1")
 
 [node name="statsTop" type="Label" parent="." unique_id=1587067014]
+custom_minimum_size = Vector2(1000, 123)
 offset_left = 40.0
 offset_top = 320.0
 offset_right = 1040.0
@@ -100,6 +159,7 @@ autowrap_mode = 3
 metadata/_edit_use_anchors_ = true
 
 [node name="statsLeft" type="Label" parent="." unique_id=1595264233]
+custom_minimum_size = Vector2(500, 1005)
 offset_left = 20.0
 offset_top = 500.0
 offset_right = 520.0
@@ -110,6 +170,7 @@ autowrap_mode = 3
 metadata/_edit_use_anchors_ = true
 
 [node name="statsRight" type="Label" parent="." unique_id=929658476]
+custom_minimum_size = Vector2(500, 1005)
 offset_left = 560.0
 offset_top = 500.0
 offset_right = 1060.0
@@ -126,6 +187,37 @@ offset_bottom = 1637.0001
 rotation = -0.065294705
 label_settings = ExtResource("5_16vjf")
 metadata/_edit_use_anchors_ = true
+
+[node name="seed" parent="." unique_id=1833707098 instance=ExtResource("6_k2gq1")]
+offset_left = 30.0
+offset_top = 20.0
+offset_right = 1024.0
+offset_bottom = 66.0
+text = ""
+label_settings = SubResource("LabelSettings_mjq8d")
+horizontal_alignment = 0
+
+[node name="copySeed" parent="." unique_id=894308063 instance=ExtResource("8_mjq8d")]
+visible = false
+offset_left = 30.0
+offset_top = 70.0
+offset_right = 80.0
+disabled = true
+texture_normal = ExtResource("9_s7pc1")
+
+[node name="confirmation" parent="copySeed" unique_id=1227387029 instance=ExtResource("10_s7pc1")]
+self_modulate = Color(1, 1, 1, 0)
+layout_mode = 0
+offset_left = 60.0
+offset_top = 51.0
+offset_right = 104.0
+offset_bottom = 133.0
+pivot_offset = Vector2(22, 41)
+text = ":)"
+
+[node name="confirmationAnimation" type="AnimationPlayer" parent="copySeed/confirmation" unique_id=1258565499]
+root_node = NodePath("../..")
+libraries/ = SubResource("AnimationLibrary_ui5de")
 
 [node name="home" parent="." unique_id=1544237965 instance=ExtResource("6_y31ux")]
 offset_left = -402.0
@@ -169,6 +261,7 @@ autostart = true
 [node name="100ms" type="Timer" parent="." unique_id=673151771]
 wait_time = 0.1
 
+[connection signal="pressed" from="copySeed" to="." method="_on_copy_seed_pressed"]
 [connection signal="pressed" from="home" to="." method="_on_home_pressed"]
 [connection signal="timeout" from="2s" to="." method="_on_2s_timeout"]
 [connection signal="timeout" from="100ms" to="." method="_on_100ms_timeout"]

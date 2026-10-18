@@ -47,8 +47,16 @@ text = "Random caution popups"
 [node name="checkbox" parent="vBoxContainer/randomCautionPopups" unique_id=1897210299 instance=ExtResource("6_gpqpm")]
 position = Vector2(797, 0)
 
+[node name="expertMode" parent="vBoxContainer" unique_id=887134004 instance=ExtResource("5_q6vhn")]
+layout_mode = 2
+text = "Expert mode"
+
+[node name="checkbox" parent="vBoxContainer/expertMode" unique_id=1783029371 instance=ExtResource("6_gpqpm")]
+position = Vector2(441, 0)
+
 [connection signal="pressed" from="back" to="." method="_on_back_pressed"]
 [connection signal="pressed" from="moreInfo" to="." method="_on_more_info_pressed"]
 [connection signal="pressed" from="vBoxContainer/enableKeyboardShortcuts" to="." method="_on_enable_keyboard_shortcuts_pressed"]
 [connection signal="pressed" from="vBoxContainer/bigMailto" to="." method="_on_big_mailto_pressed"]
 [connection signal="pressed" from="vBoxContainer/randomCautionPopups" to="." method="_on_random_caution_popups_pressed"]
+[connection signal="pressed" from="vBoxContainer/expertMode" to="." method="_on_expert_mode_pressed"]

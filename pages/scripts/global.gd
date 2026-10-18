@@ -16,6 +16,8 @@ var keyboardShortcutsEnabled = false ##Whether or not keyboard shortcuts are ena
 var dangerousKeyboardShortcuts = false ##Must also have regular keyboard shortcuts enabled. Enables risky global shortcuts that are too dangerous for the general public to have access to, a la ctrl + shift + h letting you rerandomise all luck in events - previously less able to be done, as you had to restart the entire game. This setting is only enablable in developer mode and recommended exclusively for developers, testers, and power users. See global script function for unhandled input for more information.
 var bigMailto = false ##When enabled, increases the maximum character length for the mailto link when sending yourself a save file via email.
 var eventMemory = [] ##An array that holds any extraneous data that events need to remember between several pages, isn't significant enough to warrant its own dedicated global variables, and too complex to be stored in the event ID.
+var lifeIsSeeded : bool = false ##If this current life is being played using a specified custom seed
+var lifeSeed : int = 0 ##Is set to the specified custom seed upon life start, used in newRandomGame.gd
 
 
 #personal
@@ -135,6 +137,8 @@ var joyWindow = [0, 100] ##The numbers which the value of joy should remain in b
 var healthWindow = [0, 100] ##The numbers which the value of health should remain in between. 0, 100 by default. If both values are equal, the value will be effectively locked.
 var intellectWindow = [0, 100] ##The numbers which the value of intellect should remain in between. 0, 100 by default. If both values are equal, the value will be effectively locked.
 var looksWindow = [0, 100] ##The numbers which the value of looks should remain in between. 0, 100 by default. If both values are equal, the value will be effectively locked.
+var expertMode = false ##You are NOT an expert lmfao
+var visibleSeeding = false ##Enables visibly seeded lives
 
 
 #inter-life variables (non-life specific, saved into the game save file, persists across all lives)
@@ -541,6 +545,7 @@ func lifeSerialiser(): ##Serialises every life-specific variable we need to save
 		"intellectWindow" : intellectWindow,
 		"looksWindow" : looksWindow,
 		"randomnessSeed" : r.ng.seed,
+		"isSeeded" : lifeIsSeeded,
 		#personal
 		"firstName" : firstName,
 		"lastName" : lastName,
@@ -650,6 +655,8 @@ func gameSerialiser(): ##Serialises every NON-life-specific variable we need to 
 		"dangerousKeyboardShortcuts" : dangerousKeyboardShortcuts,
 		"bigMailto" : bigMailto,
 		"cautionRelatedFun" : cautionRelatedFun,
+		"expertMode" : expertMode,
+		"visibleSeeding" : visibleSeeding,
 	}
 	return cambridgeDictionary
 
@@ -741,6 +748,8 @@ func loadGame(base64game = ""): ##Does the actual GAME loading.
 		dangerousKeyboardShortcuts = dictionary["dangerousKeyboardShortcuts"]
 		bigMailto = dictionary["bigMailto"]
 		cautionRelatedFun = dictionary["cautionRelatedFun"]
+		expertMode = dictionary["expertMode"]
+		visibleSeeding = dictionary["visibleSeeding"]
 		if gameSaveFile != null: #if we're loading from a file, close it
 			gameSaveFile.close() #closes file so it doesn't do anything weird
 		print("hoorah, game load successful")
@@ -776,6 +785,7 @@ func loadLife(takeHome = true, base64life = ""): ##Does the actual LIFE loading 
 	intellectWindow = intIser(dictionary["intellectWindow"])
 	looksWindow = intIser(dictionary["looksWindow"])
 	r.gardener(dictionary["randomnessSeed"]) #set randomness seed
+	lifeIsSeeded = dictionary["isSeeded"]
 	#personal
 	firstName = dictionary["firstName"]
 	lastName = dictionary["lastName"]

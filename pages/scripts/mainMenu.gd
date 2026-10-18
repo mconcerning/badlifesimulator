@@ -18,9 +18,14 @@ func _on_continue_pressed() -> void:
 		global.loadLife() #loads life
 
 
-func _on_new_game_pressed() -> void: #on new game button pressed
+func _on_new_random_game_pressed() -> void: #on new game button pressed
 	print("creating new random life...")
+	global.lifeIsSeeded = false #not using a predetermined seed
 	get_tree().change_scene_to_file("res://pages/new_random_game.tscn")
+
+
+func _on_more_pressed() -> void:
+	get_tree().change_scene_to_file("res://pages/main_menu_more.tscn")
 
 
 func _on_progress_pressed() -> void:

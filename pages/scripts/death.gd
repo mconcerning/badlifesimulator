@@ -15,6 +15,8 @@ func _on_100ms_timeout() -> void: #every 0.1s
 		$statsTop.text += global.causeOfDeath
 	elif timerRuns == 1:
 		$statsLeft.text += "Age at death: " + str(global.age)
+		if global.visibleSeeding:
+			$seed.text = "Seed: "
 	elif timerRuns == 2: #first left-justified stat
 		$statsLeft.text += "\n\nAverage Joy: " + str(global.averageFinder(global.joyOverTime))
 	elif timerRuns == 3:
@@ -44,8 +46,13 @@ func _on_100ms_timeout() -> void: #every 0.1s
 	elif timerRuns == 15:
 		if didLevelUp == true: #if you levelled up
 			$levelUp.text = "Level up"
+		if global.visibleSeeding:
+			$seed.text += str(r.ng.seed)
 	elif timerRuns == 16:
 		$home.position.x = 402 #puts the home button on-screen
+		if global.visibleSeeding:
+			$copySeed.disabled = false
+			$copySeed.show()
 		$"100ms".queue_free() #this is the last thing the timer has to take care of, and so it can safely be combusted in the name of (ever so slightly) improving performance
 		$backgroundRed.queue_free() #also deletes the background, because even though it would be invisible at this point, I think it interferes with you interacting with anything on-screen (i.e. the button) because it's drawn on top
 	timerRuns += 1
@@ -59,6 +66,16 @@ func _on_home_pressed() -> void:
 	get_tree().change_scene_to_file("res://pages/main_menu.tscn")
 
 
+func _on_copy_seed_pressed() -> void:
+	if global.visibleSeeding: #hey man, it's better to be safe than sorry
+		DisplayServer.clipboard_set(str(r.ng.seed))
+		await get_tree().process_frame
+		if DisplayServer.clipboard_get() == str(r.ng.seed):
+			$copySeed/confirmation.rotation_degrees = randi_range(0, 359)
+			$copySeed/confirmation/confirmationAnimation.play("RESET")
+			$copySeed/confirmation/confirmationAnimation.play("confirmation")
+
+
 #when you die
 func _ready() -> void:
 	if global.firstName == "Immortal" && global.lastName == "Guy":
@@ -68,6 +85,9 @@ func _ready() -> void:
 		DirAccess.remove_absolute("user://spycarsinc/bls/lives/" + global.currentLife + ".bls") #deletes the save file for this life
 		print("successfully deleted save file for " + global.currentLife)
 	global.currentLife = "" #no more currentLife
+	#UI
+	if global.lifeIsSeeded:
+		$wasSeeded.show()
 	#last-minute extra XP calculations
 	global.XPQueued += roundi(float(global.age) / 4) #gives you a quarter of your age in XP
 	var XPFromStats = 0
@@ -86,7 +106,8 @@ func _ready() -> void:
 		global.XPQueued += min(10000, roundi(float(global.money) / (20000.0 / float(global.level) / 2))) #gives you a (20,000 / half of your level)th of your money upon death in XP, up to 10,000
 	#the rest of everything
 	global.XPQueued += XPFromStats
-	global.XP += global.XPQueued #adds the XP you are owed to your XP
+	if !global.lifeIsSeeded: #ONLY GAIN XP IF THE LIFE IS UNSEEDED
+		global.XP += global.XPQueued #adds the XP you are owed to your XP
 	XPThatWasQueued = global.XPQueued
 	global.XPQueued = 0 #you are no longer owed XP
 	while global.XP >= global.XPRequired: #while you have more XP than you need to level up

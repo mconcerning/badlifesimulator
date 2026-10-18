@@ -19,6 +19,10 @@ func _ready() -> void:
 		$vBoxContainer/randomCautionPopups/checkbox.frame = 1 #enabled
 	else:
 		$vBoxContainer/randomCautionPopups/checkbox.frame = 0 #disabled
+	if global.expertMode:
+		$vBoxContainer/expertMode/checkbox.frame = 1 #enabled
+	else:
+		$vBoxContainer/expertMode/checkbox.frame = 0 #disabled
 
 
 func _on_back_pressed() -> void:
@@ -56,4 +60,14 @@ func _on_random_caution_popups_pressed() -> void:
 	else:
 		global.cautionRelatedFun = true
 		$vBoxContainer/randomCautionPopups/checkbox.frame = 1 #enable it
+	global.saveGame()
+
+
+func _on_expert_mode_pressed() -> void:
+	if global.expertMode:
+		global.expertMode = false
+		$vBoxContainer/expertMode/checkbox.frame = 0 #disable it
+	else:
+		global.expertMode = true
+		$vBoxContainer/expertMode/checkbox.frame = 1 #enable it
 	global.saveGame()
