@@ -61,3 +61,5 @@ func _unhandled_input(event: InputEvent) -> void: #if you make an input that god
 		_on_relationships_pressed()
 	elif event.is_action_pressed("ui_accept"): #if enter is pressed
 		_on_age_up_button_pressed()
+	elif event.is_action_pressed("f1"): #if egg menu is opened
+		_on_new_game_egg_pressed()

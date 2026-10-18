@@ -41,12 +41,13 @@ custom_minimum_size = Vector2(950, 0)
 layout_mode = 2
 text = "Enables keyboard shortcuts on desktop. These include:
 
-Game menu:
+On the game menu:
 1 (occupation menu)
 2 (assets menu)
 3 (activites menu)
 4 (relationships menu)
 enter/return/spacebar (age up)
+f1 (egg menu)
 "
 autowrap_mode = 3
 
@@ -68,7 +69,8 @@ text = "Random caution popups"
 [node name="bRandCautionFun" parent="scrollContainer/centerContainer/vBoxContainer" unique_id=938999843 instance=ExtResource("6_ci34g")]
 custom_minimum_size = Vector2(950, 0)
 layout_mode = 2
-text = "Toggles the occasional fake caution pop-ups that may appear when you first start the game."
+text = "Toggles the occasional fake caution pop-ups that may appear when you first start the game.
+"
 autowrap_mode = 3
 
 [connection signal="pressed" from="back" to="." method="_on_back_pressed"]

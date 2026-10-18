@@ -15,6 +15,7 @@ script = ExtResource("1_f8ivl")
 [node name="background" parent="." unique_id=1747168065 instance=ExtResource("2_68ntq")]
 
 [node name="title" type="Label" parent="." unique_id=1828840752]
+custom_minimum_size = Vector2(1080, 140)
 offset_top = 150.0
 offset_right = 1080.0
 offset_bottom = 173.0
@@ -24,6 +25,7 @@ horizontal_alignment = 1
 autowrap_mode = 2
 
 [node name="versionNumber" type="Label" parent="." unique_id=671678497]
+custom_minimum_size = Vector2(1080, 51)
 offset_left = 28.0
 offset_top = 1850.0
 offset_right = 1108.0

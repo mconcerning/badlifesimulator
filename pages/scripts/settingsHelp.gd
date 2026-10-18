@@ -27,7 +27,7 @@ func _on_tell_a_friend_pressed() -> void:
 		lastName = global.lastNames[randi_range(0, global.lastNames.size() - 1)] #assigns a random last name. This does not change depending on sex.
 	var randomEmailProvider = ["yahoo.web", "email.gmail", "example.com", "website.web", "bomb.zip", "virus.exe", "yes.no", "hotmail", "xbox.live"]
 	var email = firstName.to_lower() + "." + lastName.to_lower() + "@" + randomEmailProvider[randi_range(0, randomEmailProvider.size() - 1)]
-	OS.shell_open("mailto:" + email.uri_encode() + "?subject=BEST%20GAME%20OF%20ALL%20TIME&body=It%20single-handedly%20saved%20my%20marriage.%20It's%20called%20Bad%20Life%20Simulator%20and%20it%20will%20save%20yours%20too.%20What's%20that%3F%20You're%20NOT%20having%20marriage%20problems%3F%20You%20will%20be%20soon.%0A%0Ahttps%3A%2F%2Fmconcerning.github.io%2Fblslanding%2F")
+	OS.shell_open("mailto:" + email.uri_encode() + "?subject=THE%20BEST%20GAME%20OF%20ALL%20TIME&body=Dear " + firstName + " " + lastName + ", my beloved friend of over 300 years,%0A%0AThis game single-handedly saved my marriage. It's called Bad Life Simulator and it will save yours too definitely.%0A%0ASave millions and more on couples' therapy and play this simple free mobile game instead (single-player) by clicking the simple free link below:%0A%0Ahttps://mconcerning.github.io/blslanding")
 
 func _on_rate_pressed() -> void:
 	OS.shell_open("https://forms.gle/uKNJykoguQmeX5Sj8")

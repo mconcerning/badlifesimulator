@@ -35,7 +35,7 @@ func _ready() -> void:
 					push_warning("Mod " + allModFiles[i] + " can't load because it isn't a mod. Ensure it is a valid .pck file or it won't work.")
 	#end
 	print("running version " + global.versionNumber)
-	if global.cautionRelatedFun && randi_range(1, 10) == 1: #if fun caution popup
+	if global.cautionRelatedFun && randi_range(1, 20) == 1: #if fun caution popup
 		get_tree().change_scene_to_file("res://pages/funCaution.tscn")
 	else:
 		get_tree().change_scene_to_file("res://pages/main_menu.tscn") #change scene to main menu

@@ -5,6 +5,18 @@
 [ext_resource type="PackedScene" uid="uid://b3nrc0n5eeris" path="res://objects/subheading.tscn" id="3_8entc"]
 [ext_resource type="LabelSettings" uid="uid://dl6sog5hfkb6u" path="res://styles/text/body.tres" id="4_t64oj"]
 [ext_resource type="PackedScene" uid="uid://ck7ra4cupjjkm" path="res://objects/button_default.tscn" id="5_yb52j"]
+[ext_resource type="Texture2D" uid="uid://b70rovs0a53xr" path="res://assets/explosive decompression warning sign compressed.png" id="6_yb52j"]
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_cka52"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("6_yb52j")
+}],
+"loop": 0,
+"name": &"default",
+"speed": 0.0
+}]
 
 [sub_resource type="Animation" id="Animation_t64oj"]
 length = 0.001
@@ -104,6 +116,30 @@ tracks/7/keys = {
 "update": 0,
 "values": [Color(1, 1, 1, 0)]
 }
+tracks/8/type = "value"
+tracks/8/imported = false
+tracks/8/enabled = true
+tracks/8/path = NodePath("image:self_modulate")
+tracks/8/interp = 1
+tracks/8/loop_wrap = true
+tracks/8/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Color(1, 1, 1, 0)]
+}
+tracks/9/type = "value"
+tracks/9/imported = false
+tracks/9/enabled = true
+tracks/9/path = NodePath("dismiss:position")
+tracks/9/interp = 1
+tracks/9/loop_wrap = true
+tracks/9/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector2(349, 769)]
+}
 
 [sub_resource type="Animation" id="Animation_yb52j"]
 resource_name = "dismiss_button"
@@ -131,6 +167,58 @@ tracks/1/keys = {
 "transitions": PackedFloat32Array(1, 1),
 "update": 1,
 "values": [true, false]
+}
+
+[sub_resource type="Animation" id="Animation_sw2f2"]
+resource_name = "dismiss_image"
+length = 3.0000000000000004
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("image:self_modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0.5, 1.5),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Color(1, 1, 1, 0), Color(1, 1, 1, 1)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("dismiss:disabled")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 3),
+"transitions": PackedFloat32Array(1, 1),
+"update": 1,
+"values": [true, false]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("dismiss:position")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0, 1.99),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Vector2(349, 769), Vector2(349, 1069)]
+}
+tracks/3/type = "value"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath("dismiss:self_modulate")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/keys = {
+"times": PackedFloat32Array(0, 2, 2.5),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 0,
+"values": [Color(1, 1, 1, 0), Color(1, 1, 1, 0), Color(1, 1, 1, 1)]
 }
 
 [sub_resource type="Animation" id="Animation_h2qpx"]
@@ -217,6 +305,7 @@ tracks/3/keys = {
 _data = {
 &"RESET": SubResource("Animation_t64oj"),
 &"dismiss_button": SubResource("Animation_yb52j"),
+&"dismiss_image": SubResource("Animation_sw2f2"),
 &"display": SubResource("Animation_h2qpx"),
 &"yes_no_buttons": SubResource("Animation_l08ps")
 }
@@ -250,7 +339,7 @@ self_modulate = Color(1, 1, 1, 0)
 offset_left = 349.0
 offset_top = 769.0
 offset_right = 731.0
-offset_bottom = 853.0
+offset_bottom = 853.001
 text = "I understand"
 
 [node name="yes" parent="." unique_id=1102839645 instance=ExtResource("5_yb52j")]
@@ -270,6 +359,11 @@ offset_right = 581.0
 offset_bottom = 1003.0
 disabled = true
 text = "No"
+
+[node name="image" type="AnimatedSprite2D" parent="." unique_id=1197475748]
+self_modulate = Color(1, 1, 1, 0)
+position = Vector2(540, 769)
+sprite_frames = SubResource("SpriteFrames_cka52")
 
 [node name="displayAnimationPlayer" type="AnimationPlayer" parent="." unique_id=1501957030]
 libraries/ = SubResource("AnimationLibrary_sw2f2")

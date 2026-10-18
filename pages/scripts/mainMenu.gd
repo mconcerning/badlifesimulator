@@ -4,7 +4,7 @@ extends Node2D #author(s): Ethan Scott
 # Called when the node enters the scene tree for the first time. (in this case, since this is the index, on startup)
 func _ready() -> void:
 	$versionNumber.text = "v" + global.versionNumber #sets version number text
-	if global.currentLife != "": #if there is a recent life ready to be resumed
+	if global.currentLife != "" && FileAccess.file_exists("user://spycarsinc/bls/lives/" + global.currentLife + ".bls"): #if there is a recent life ready to be resumed that actually exists in the filesystem
 		$continue.disabled = false #enable the continue button
 	#easter eggs (don't look)
 	if global.firstName == "Bob" && global.lastName == "Legacy":

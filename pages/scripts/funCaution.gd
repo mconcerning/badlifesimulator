@@ -3,7 +3,7 @@ extends Node2D #author(s): Ethan Scott
 # FAKE POPUPS - JUST FOR FUN :)
 
 
-var cautions : Array[String] = ["hat?"]
+var cautions : Array[String] = ["hat?", "ominous"]
 var caution : String ##String ID of this specific caution popup
 
 
@@ -14,6 +14,7 @@ func _ready() -> void:
 
 
 func updatePopup():
+	$heading.text = "Caution"
 	$dismiss.disabled = true
 	$dismiss.self_modulate.a = 0
 	$yes.disabled = true
@@ -29,6 +30,11 @@ func updatePopup():
 			$body.text = "No hat, no play."
 			$displayAnimationPlayer.play("display")
 			$buttonAnimations.play("dismiss_button")
+		"ominous":
+			$heading.text = ""
+			$body.text = ""
+			$image.frame = 0
+			$buttonAnimations.play("dismiss_image")
 
 
 func _on_dismiss_pressed() -> void:
@@ -39,6 +45,8 @@ func _on_dismiss_pressed() -> void:
 				updatePopup()
 			else:
 				get_tree().quit()
+		"ominous":
+			get_tree().change_scene_to_file("res://pages/main_menu.tscn")
 
 
 func _on_yes_pressed() -> void:
