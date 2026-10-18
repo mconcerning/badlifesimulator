@@ -540,6 +540,7 @@ func lifeSerialiser(): ##Serialises every life-specific variable we need to save
 		"healthWindow" : healthWindow,
 		"intellectWindow" : intellectWindow,
 		"looksWindow" : looksWindow,
+		"randomnessSeed" : r.ng.seed,
 		#personal
 		"firstName" : firstName,
 		"lastName" : lastName,
@@ -774,6 +775,7 @@ func loadLife(takeHome = true, base64life = ""): ##Does the actual LIFE loading 
 	healthWindow = intIser(dictionary["healthWindow"])
 	intellectWindow = intIser(dictionary["intellectWindow"])
 	looksWindow = intIser(dictionary["looksWindow"])
+	r.gardener(dictionary["randomnessSeed"]) #set randomness seed
 	#personal
 	firstName = dictionary["firstName"]
 	lastName = dictionary["lastName"]

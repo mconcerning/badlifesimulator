@@ -24,6 +24,7 @@ config/icon="res://icon.svg"
 [autoload]
 
 global="*res://pages/scripts/global.gd"
+r="*uid://cacm4q3kw6kgy"
 
 [debug]
 

@@ -6,6 +6,7 @@ func cleanLife(): #resets your existing life (if any) and generates new stats
 	#engine
 	global.revent = []
 	global.eventMemory = []
+	r.gardener() #acquire a new randomness seed - !NOTICE UNUSED
 	#personal
 	global.sex = randi_range(0,1) #turns sex into a random number, either 0 or 1
 	match global.sex: #assigns sex
