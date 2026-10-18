@@ -130,11 +130,11 @@ func applyForJob():
 	elif global.history.has(global.jobOpenings[global.IDClicked][0] + "-fired") || global.history.has(global.jobOpenings[global.IDClicked][0] + "-quit"): #if you've already had this job this year but you've been fired or you've quit
 		global.revent.append("full-time-job-apply-fired-quit-already")
 	else:
-		if randi_range(1, 4) != 1 || global.firstName == "Hire": #if get accepted; for this you need to be qualified (1 in 4 chance of being denied even if you are) - you have to be qualified to be able to even press the apply button, so no need to check eligibility here
+		if r.ng.randi_range(1, 4) != 1 || global.firstName == "Hire": #if get accepted; for this you need to be qualified (1 in 4 chance of being denied even if you are) - you have to be qualified to be able to even press the apply button, so no need to check eligibility here
 			#gives you the job
 			global.fullTimeJob = global.jobOpenings[global.IDClicked][0]
 			global.fullTimeSalary = global.jobOpenings[global.IDClicked][1]
-			global.fullTimePerformance = randi_range(45, 60)
+			global.fullTimePerformance = r.ng.randi_range(45, 60)
 			jobEffectsGiver()
 			global.revent.append("full-time-job-applied-accepted")
 		else: #if you're unlucky and get denied for the position even though you're qualified

@@ -28,27 +28,27 @@ func optionRemover(optionXOnwards : int): ##Disables and changes the opacity to 
 
 func EGPGenerator(ageRange, minAge): ##Randomly generates EGPs (Event Generated Persons). You can then access this new EGP via the global variables eventPersonSex, eventPersonFirstName, etc. If you intend to keep this NPC permanently, generate it, then move it into the permanent relationship (person) arrays.
 	#sexer
-	if randi_range(1,2) == 1: #if EGP is male
+	if r.ng.randi_range(1,2) == 1: #if EGP is male
 		global.eventPersonSex = "M"
 	else: #if EGP is female
 		global.eventPersonSex = "F"
 	#namer
-	if randi_range(1,3000) == 1: #if they're getting a rare name, picks rare first and last names
-		var rareNameIndex = randi_range(0, global.rareFirstNames.size() - 1) #the first and last names MUST be from the same index in their respective arrays. This generates a random index for them both to be sourced from.
+	if r.ng.randi_range(1,3000) == 1: #if they're getting a rare name, picks rare first and last names
+		var rareNameIndex = r.ng.randi_range(0, global.rareFirstNames.size() - 1) #the first and last names MUST be from the same index in their respective arrays. This generates a random index for them both to be sourced from.
 		global.eventPersonFirstName = global.rareFirstNames[rareNameIndex] #assigns them a random rare first name
 		global.eventPersonLastName = global.rareglobal.lastNames[rareNameIndex] #assigns them the accompanying rare last name
 		return #done!
 	else: #if they're NOT getting a rare name
-		if randi_range(1,20) == 1: #if they're getting a unisex first name
-			global.eventPersonFirstName = global.uFirstNames[randi_range(0, global.uFirstNames.size() - 1)] #assigns them a random unisex first name
+		if r.ng.randi_range(1,20) == 1: #if they're getting a unisex first name
+			global.eventPersonFirstName = global.uFirstNames[r.ng.randi_range(0, global.uFirstNames.size() - 1)] #assigns them a random unisex first name
 		else: #if they're NOT getting a unisex first name
 			if global.eventPersonSex == "M": #if they are male
-				global.eventPersonFirstName = global.mFirstNames[randi_range(0, global.mFirstNames.size() - 1)]
+				global.eventPersonFirstName = global.mFirstNames[r.ng.randi_range(0, global.mFirstNames.size() - 1)]
 			else: #if they are female
-				global.eventPersonFirstName = global.fFirstNames[randi_range(0, global.fFirstNames.size() - 1)]
-		global.eventPersonLastName = global.lastNames[randi_range(0, global.lastNames.size() - 1)] #gives them a random last name
+				global.eventPersonFirstName = global.fFirstNames[r.ng.randi_range(0, global.fFirstNames.size() - 1)]
+		global.eventPersonLastName = global.lastNames[r.ng.randi_range(0, global.lastNames.size() - 1)] #gives them a random last name
 	#ager
-	global.eventPersonAge = global.age + randi_range(-ageRange, ageRange) #makes the event person between ageRange years younger and ageRange years older than you
+	global.eventPersonAge = global.age + r.ng.randi_range(-ageRange, ageRange) #makes the event person between ageRange years younger and ageRange years older than you
 	if global.eventPersonAge < 0: #if the event person's age is less than 0 (possible if you're under the age of the ageRange provided)
 		global.eventPersonAge = 0 #sets their age to 0
 	if global.eventPersonAge < minAge: #if the event person's age is less than the minimum age
@@ -168,7 +168,7 @@ func childhood(): ##Childhood base events - prefix is "child-"
 	if global.revent[0] == "child-friend":
 		$heading.text = "New friend?"
 		EGPGenerator(3, 0) #generates an event person to use
-		if randi_range(1,2) == 1: #random body text variation
+		if r.ng.randi_range(1,2) == 1: #random body text variation
 			$body.text = "While out and about with your " + str(global.personTypes[0]).to_lower() + ", you strike up a conversation with a random kid and you two seem to get along pretty well.\n("
 		else: #random body text variation
 			$body.text = "While out and about with your " + str(global.personTypes[0]).to_lower() + ", you strike up a conversation with a random kid and you two seem to get along pretty well.\n("
@@ -196,7 +196,7 @@ func teenagehood(): ##Teenage base events - prefix is "teenager-"
 	if global.revent[0] == "teenager-friend":
 		$heading.text = "New friend?"
 		EGPGenerator(3, 10)
-		if randi_range(1,2) == 1: #body text variation
+		if r.ng.randi_range(1,2) == 1: #body text variation
 			$body.text = "While visiting a family friend, " #this isn't unfinished, it gets appended to in a second
 		else:
 			$body.text = "While out with family, " #this isn't unfinished, it gets appended to in a second
@@ -212,7 +212,7 @@ func adulthood(): ##Adult base events - prefix is "adult-"
 	if global.revent[0] == "adult-friend":
 		$heading.text = "New connection"
 		EGPGenerator(7, 18)
-		if randi_range(1,2) == 1: #body text variation
+		if r.ng.randi_range(1,2) == 1: #body text variation
 			$body.text = "While out running errands, you strike up a conversation with a random " + global.pronounGenerator("guy", global.eventPersonSex) + " and you really hit it off.\n("
 		else: #body text variation
 			$body.text = "While eating out at a restaurant, you strike up a conversation with a random " + global.pronounGenerator("guy", global.eventPersonSex) + " and you really hit it off.\n("
@@ -228,7 +228,7 @@ func elderhood(): ##Elderly base events - prefix is "elder-"
 	if global.revent[0] == "elder-friend":
 		$heading.text = "New connection"
 		EGPGenerator(12, 55)
-		if randi_range(1,2) == 1: #body text variation
+		if r.ng.randi_range(1,2) == 1: #body text variation
 			$body.text = "While out running errands, you strike up a conversation with a random person and you realise you have a lot in common.\n("
 		else: #body text variation
 			$body.text = "While eating out at a restaurant, you strike up a conversation with a random person and you realise you have a lot in common.\n("
@@ -379,7 +379,7 @@ func specialised(): ##Runs any miscellanious specialised, non-age-up events.
 			$option4.disabled = true #you can't try it again
 	elif global.revent[0] == "certificate-do-o1":
 		#sets the event for below:
-		if (global.intellect < 50 && randi_range(1, roundi(float(global.intellect) / 10)) == 1) || randi_range(1,9) == 1:
+		if (global.intellect < 50 && r.ng.randi_range(1, roundi(float(global.intellect) / 10)) == 1) || r.ng.randi_range(1,9) == 1:
 			global.revent[0] = "certificate-failed"
 		else:
 			global.revent[0] = "certificate-achieved"
@@ -416,9 +416,9 @@ func relationships(): ##Specialised, specifically relationship-related events.
 		if global.personCategories[global.IDClicked] == "family": #if they are a family member
 			possibleCompliments.pop_at(possibleCompliments.find("incredibly attractive"))
 			badCompliments.append("incredibly attractive") #calling them hot is now negative
-		var complimentSelected = possibleCompliments[randi_range(0, possibleCompliments.size() - 1)] #picks a compliment to give
-		if randi_range(1, max(1, roundi(float(global.intellect) / 2))) == 1: #if you accidently forget to compliment them (higher change if you're less intelligent)
-			complimentSelected = badCompliments[randi_range(0, badCompliments.size() - 1)] #picks a "compliment" to give
+		var complimentSelected = possibleCompliments[r.ng.randi_range(0, possibleCompliments.size() - 1)] #picks a compliment to give
+		if r.ng.randi_range(1, max(1, roundi(float(global.intellect) / 2))) == 1: #if you accidently forget to compliment them (higher change if you're less intelligent)
+			complimentSelected = badCompliments[r.ng.randi_range(0, badCompliments.size() - 1)] #picks a "compliment" to give
 		if global.history.count("compliment-relationship-" + str(global.personUIDs[global.IDClicked])) >= 3: #if you've complimented them too much recently
 			$heading.text = "Whatever you say"
 			$body.text = "Your " + global.personTypes[global.IDClicked].to_lower() + ", " + global.personFirstNames[global.IDClicked] + ", said " + global.pronounGenerator("he", global.personSexes[global.IDClicked]) + "'s sick of you trying to compliment " + global.pronounGenerator("him", global.personSexes[global.IDClicked]) + " so much and you need to calm down."
@@ -428,10 +428,10 @@ func relationships(): ##Specialised, specifically relationship-related events.
 			$body.text = "You told your " + global.personTypes[global.IDClicked].to_lower() + ", " + global.personFirstNames[global.IDClicked] + ", that " + global.pronounGenerator("he", global.personSexes[global.IDClicked]) + "'s " + complimentSelected + "."
 			if complimentSelected == "racist" || (complimentSelected == "incredibly attractive" && global.personCategories[global.IDClicked] == "family"): #if you accidentally didn't compliment them
 				$heading.text = "...Thanks."
-				global.personRelationships[global.IDClicked] -= randi_range(5, 20)
+				global.personRelationships[global.IDClicked] -= r.ng.randi_range(5, 20)
 				global.personStats[global.IDClicked][global.personStatsDictionary.find("Joy")] -= 2 #they are less happy now
 			else: #if you did compliment them
-				var relationshipGained = randi_range(4, 7)
+				var relationshipGained = r.ng.randi_range(4, 7)
 				global.personRelationships[global.IDClicked] += relationshipGained
 				$body.text += "\n+ " + str(relationshipGained) + " relationship."
 				global.personStats[global.IDClicked][global.personStatsDictionary.find("Joy")] += 2 #they are happier now
@@ -443,7 +443,7 @@ func relationships(): ##Specialised, specifically relationship-related events.
 	elif global.revent[0] == "relationship-deathnotif":
 		var deadID = global.eventMemory[0]["index"]
 		var isPlanner = false ##If it's your responsibility to plan the funeral
-		if ((global.deadPersonTypes[deadID] == "Mother" || global.deadPersonTypes[deadID] == "Father") && (global.deadPersonTypes.count("Brother") + global.deadPersonTypes.count("Sister") == 0 || global.deadPersonRelationships[deadID] >= randi_range(65, 90))) && global.age >= 18: #if the dead person is your parent and you either: don't have siblings, or you're the sibling with the best relationship with that parent, AND you're 18 or older
+		if ((global.deadPersonTypes[deadID] == "Mother" || global.deadPersonTypes[deadID] == "Father") && (global.deadPersonTypes.count("Brother") + global.deadPersonTypes.count("Sister") == 0 || global.deadPersonRelationships[deadID] >= r.ng.randi_range(65, 90))) && global.age >= 18: #if the dead person is your parent and you either: don't have siblings, or you're the sibling with the best relationship with that parent, AND you're 18 or older
 			isPlanner = true #then you're the planner
 			global.revent[0] = "relationship-deathnotif-planner"
 		$heading.text = "Funeral"
@@ -453,7 +453,7 @@ func relationships(): ##Specialised, specifically relationship-related events.
 		$body.text += "- " + str(global.eventMemory[0]["joyLoss"]) + " Joy"
 		if isPlanner == true: #if you are planning the funeral
 			$option1.text = "Plan the funeral"
-			global.eventMemory[0]["funeralTierPricing"] = ([randi_range(60, 72) * 100, randi_range(95, 110) * 100, randi_range(150, 185) * 100, randi_range(220, 245) * 100, randi_range(380, 550) * 100]) #funeral tier pricing
+			global.eventMemory[0]["funeralTierPricing"] = ([r.ng.randi_range(60, 72) * 100, r.ng.randi_range(95, 110) * 100, r.ng.randi_range(150, 185) * 100, r.ng.randi_range(220, 245) * 100, r.ng.randi_range(380, 550) * 100]) #funeral tier pricing
 		else: #if you are not planning the funeral
 			$option1.text = "Attend the funeral"
 			if global.deadPersonRelationships[deadID] <= 18: #if you're so not close that you weren't invited
@@ -469,7 +469,7 @@ func relationships(): ##Specialised, specifically relationship-related events.
 		if global.NPCisFamily(0, global.eventMemory[0]["type"]): #if the person who died is family, everyone else who is family is upset by their death
 			for i in global.personTypes.size(): #subtracts joy from your family members
 				if global.NPCisFamily(i):
-					global.personStats[i][global.personStatsDictionary.find("Joy")] -= global.customClamp(roundi(float(global.eventMemory[0]["joyLoss"]) * float(randi_range(40, 160)) / 100), 6, randi_range(70, 80)) #subtracts from their joy the amount of joy you lost * a random amount from 0.4 to 1.6, clamped to between 6 and randi_range(70, 80).
+					global.personStats[i][global.personStatsDictionary.find("Joy")] -= global.customClamp(roundi(float(global.eventMemory[0]["joyLoss"]) * float(r.ng.randi_range(40, 160)) / 100), 6, r.ng.randi_range(70, 80)) #subtracts from their joy the amount of joy you lost * a random amount from 0.4 to 1.6, clamped to between 6 and r.ng.randi_range(70, 80).
 	elif global.revent[0] == "relationship-deathnotif-planner-o1":
 		$heading.text = "Funeral planner"
 		$body.text = "You can choose from any of the following funeral plans. A better funeral will minimise your and your family members' grief."
@@ -501,32 +501,32 @@ func relationships(): ##Specialised, specifically relationship-related events.
 			$option5.disabled = true
 	elif global.revent[0] == "relationship-deathnotif-planner-o1-o1":
 		$heading.text = "Funeral \"planner\""
-		var relationshipDrop = randi_range(24, 43)
+		var relationshipDrop = r.ng.randi_range(24, 43)
 		$body.text = "You chose to have no funeral."
 		if global.personRelationships.size() > 0: #if you have relationships
 			$body.text += "\n\n- " + str(relationshipDrop - 6) + "-" + str(relationshipDrop + 7) + " relationship with everyone."
 		$option1.text = "Okay"
 		optionRemover(2)
 		for i in global.personRelationships.size(): #deducts some relationship with all your relationships
-			global.personRelationships[i] -= relationshipDrop + randi_range(-6, 7)
-		global.evality += randi_range(20, 32) #gives you a random amount of evality - it really sucks of you to just not give them a funeral
+			global.personRelationships[i] -= relationshipDrop + r.ng.randi_range(-6, 7)
+		global.evality += r.ng.randi_range(20, 32) #gives you a random amount of evality - it really sucks of you to just not give them a funeral
 		global.eventMemory.pop_front() #get rid of funeral information
 		goingHome = true
 	elif global.revent[0] == "relationship-deathnotif-planner-o1-o2":
 		$heading.text = "Sorry my connection dropped"
 		$body.text = "You chose to have an online video funeral.\n\n"
-		var joyRecovered = global.customClamp(roundi(float(global.eventMemory[0]["joyLoss"]) / 2) + randi_range(-4, 4), 1, 32)
-		if randi_range(1, 100) < 75: #75% chance the funeral makes it worse
+		var joyRecovered = global.customClamp(roundi(float(global.eventMemory[0]["joyLoss"]) / 2) + r.ng.randi_range(-4, 4), 1, 32)
+		if r.ng.randi_range(1, 100) < 75: #75% chance the funeral makes it worse
 			$body.text += "It didn't help you properly process your grief.\n\n- " + str(joyRecovered) + " joy, "
 			global.joy -= joyRecovered
 		else:
-			joyRecovered = max(1, roundi(float(joyRecovered) / (float(randi_range(15, 22)) / 10))) #recover less joy (this funeral wasn't particularly good, so it makes sense to gain less joy)
+			joyRecovered = max(1, roundi(float(joyRecovered) / (float(r.ng.randi_range(15, 22)) / 10))) #recover less joy (this funeral wasn't particularly good, so it makes sense to gain less joy)
 			$body.text += "It helped you process your grief.\n\n+ " + str(joyRecovered) + " joy, "
 			global.joy += joyRecovered
 		$body.text += "- $" + global.commaiser(global.eventMemory[0]["funeralTierPricing"][0])
 		$option1.text = "Okay"
 		optionRemover(2)
-		global.evality += randi_range(8, 14) #not a very nice funeral needless to say
+		global.evality += r.ng.randi_range(8, 14) #not a very nice funeral needless to say
 		global.money -= global.eventMemory[0]["funeralTierPricing"][0] #deduct the cost of the funeral from your balance
 		global.eventMemory.pop_front() #get rid of funeral information
 		goingHome = true #take us home
@@ -536,8 +536,8 @@ func relationships(): ##Specialised, specifically relationship-related events.
 		else:
 			$heading.text = "I almost feel bad eating the food"
 		$body.text = "You chose to have an in-person funeral service.\n\n"
-		var joyRecovered = global.customClamp(roundi(float(global.eventMemory[0]["joyLoss"]) / 2) + randi_range(-4, 4), 1, 32)
-		if randi_range(1, 100) < 50: #50% chance the funeral makes it worse
+		var joyRecovered = global.customClamp(roundi(float(global.eventMemory[0]["joyLoss"]) / 2) + r.ng.randi_range(-4, 4), 1, 32)
+		if r.ng.randi_range(1, 100) < 50: #50% chance the funeral makes it worse
 			$body.text += "It didn't help you properly process your grief.\n\n- " + str(joyRecovered) + " joy, "
 			global.joy -= joyRecovered
 		else:
@@ -550,13 +550,13 @@ func relationships(): ##Specialised, specifically relationship-related events.
 		global.eventMemory.pop_front() #get rid of funeral information
 		goingHome = true #take us home
 	elif global.revent[0] == "relationship-deathnotif-planner-o1-o4":
-		if randi_range(1, 2) == 1: #random heading variation
+		if r.ng.randi_range(1, 2) == 1: #random heading variation
 			$heading.text = "But " + global.pronounGenerator("he", global.deadPersonSexes[global.eventMemory[0]["index"]]) + " was cremated?"
 		else:
 			$heading.text = "Six feet under"
 		$body.text = "You chose to have a coffin burial service.\n\n"
-		var joyRecovered = global.customClamp(roundi(float(global.eventMemory[0]["joyLoss"]) / 2) + randi_range(-4, 4), 1, 32)
-		if randi_range(1, 100) < 32: #32% chance the funeral makes it worse
+		var joyRecovered = global.customClamp(roundi(float(global.eventMemory[0]["joyLoss"]) / 2) + r.ng.randi_range(-4, 4), 1, 32)
+		if r.ng.randi_range(1, 100) < 32: #32% chance the funeral makes it worse
 			$body.text += "It didn't help you properly process your grief.\n\n- " + str(joyRecovered) + " joy, "
 			global.joy -= joyRecovered
 		else:
@@ -571,13 +571,13 @@ func relationships(): ##Specialised, specifically relationship-related events.
 	elif global.revent[0] == "relationship-deathnotif-planner-o1-o5":
 		$heading.text = "I just wish " + global.pronounGenerator("he", global.deadPersonSexes[global.eventMemory[0]["index"]]) + " could have had a custom extended life"
 		$body.text = "You chose to have a custom extended funeral service.\n\n"
-		var joyRecovered = global.customClamp(roundi(float(global.eventMemory[0]["joyLoss"]) / 2) + randi_range(-4, 4), 1, 32)
-		if randi_range(1, 100) < 12: #12% chance the funeral makes it worse
+		var joyRecovered = global.customClamp(roundi(float(global.eventMemory[0]["joyLoss"]) / 2) + r.ng.randi_range(-4, 4), 1, 32)
+		if r.ng.randi_range(1, 100) < 12: #12% chance the funeral makes it worse
 			$body.text += "It didn't help you properly process your grief.\n\n- " + str(joyRecovered) + " joy, "
 			global.joy -= joyRecovered
 		else:
 			$body.text += "It helped you process your grief.\n\n+ " + str(joyRecovered) + " joy, "
-			global.joy += joyRecovered + randi_range(5, 12) #plus extra, this was a good funeral service
+			global.joy += joyRecovered + r.ng.randi_range(5, 12) #plus extra, this was a good funeral service
 		$body.text += "- $" + global.commaiser(global.eventMemory[0]["funeralTierPricing"][3])
 		$option1.text = "Okay"
 		optionRemover(2)
@@ -587,9 +587,9 @@ func relationships(): ##Specialised, specifically relationship-related events.
 	elif global.revent[0] == "relationship-deathnotif-planner-o1-o6":
 		$heading.text = "I guess that's why they call these \"FUN\"erals, huh?"
 		$body.text = "You chose to have a bouncy castle funeral.\n\n"
-		var joyRecovered = global.customClamp(roundi(float(global.eventMemory[0]["joyLoss"]) / 2) + randi_range(-4, 4), 1, 32)
-		var relationshipDrop = global.customClamp(roundi(global.evality / 1.6) + randi_range(-10, 4), 40, 100)
-		if randi_range(1, 100) < 100 - global.evality: #100 - evality% chance the funeral makes it worse
+		var joyRecovered = global.customClamp(roundi(float(global.eventMemory[0]["joyLoss"]) / 2) + r.ng.randi_range(-4, 4), 1, 32)
+		var relationshipDrop = global.customClamp(roundi(global.evality / 1.6) + r.ng.randi_range(-10, 4), 40, 100)
+		if r.ng.randi_range(1, 100) < 100 - global.evality: #100 - evality% chance the funeral makes it worse
 			joyRecovered = joyRecovered * 2
 			$body.text += "You realised part-way through that you really screwed up.\n\n- " + str(joyRecovered) + " joy, "
 			global.joy -= joyRecovered * 2
@@ -734,7 +734,7 @@ func prison(): ##Specialised prison events.
 				if global.degrees.find("Law") == -1: #if you are NOT a qualified lawyer
 					if global.intellect >= 95 && global.sumCalculator(global.crimesSeverity) <= global.intellect:
 						if global.crimeTimeCalculator() is int && global.crimeTimeCalculator() > 1:
-							var sentenceLoweredBy = randi_range(1, min(3, global.crimeTimeCalculator() - 1)) #lowers your potential sentence
+							var sentenceLoweredBy = r.ng.randi_range(1, min(3, global.crimeTimeCalculator() - 1)) #lowers your potential sentence
 							$body.text += "Even though you don't have a law degree, you successfully managed to lower your sentence by " + str(sentenceLoweredBy) + " year"
 							if sentenceLoweredBy > 1:
 								$body.text += "s"
@@ -742,7 +742,7 @@ func prison(): ##Specialised prison events.
 							global.prisonPreparer(global.crimeTimeCalculator() - sentenceLoweredBy)
 							global.revent[0] = "go-to-prison"
 						elif global.crimeTimeCalculator() is int && global.crimeTimeCalculator() == 1:
-							var fine = randi_range(25, max(28, global.sumCalculator(global.criminalRecordSeverity))) * 100
+							var fine = r.ng.randi_range(25, max(28, global.sumCalculator(global.criminalRecordSeverity))) * 100
 							$body.text += "Since you were only facing a potential 1-year prison sentence, you managed to talk it down to a $" + str(fine) + " fine."
 							global.money -= fine
 							global.revent[0] = "dont-go-to-prison"
@@ -770,7 +770,7 @@ func prison(): ##Specialised prison events.
 				elif global.degrees.find("Law") != -1: #if you ARE a qualified lawyer
 					if global.degreeProficiency[global.degrees.find("Law")] - 5 >= global.evality && global.crimes.size() <= (global.degreeProficiency[global.degrees.find("Law")] / 10) && global.sumCalculator(global.criminalRecordSeverity) < (global.degreeProficiency[global.degrees.find("Law")] * 2): #if you're less evil than you are proficient as a lawyer, you haven't committed more crimes than you can handle to combat, and you aren't re-offending more than you can wave away (i.e. you CAN get a lower sentence)
 						if global.crimeTimeCalculator() is int && global.crimeTimeCalculator() > 1:
-							var sentenceLoweredBy = randi_range(1, min(20, global.crimeTimeCalculator() - 1)) #lowers your potential sentence
+							var sentenceLoweredBy = r.ng.randi_range(1, min(20, global.crimeTimeCalculator() - 1)) #lowers your potential sentence
 							$body.text += "You used your proficiency in law to successfully lower your sentence by " + str(sentenceLoweredBy) + " year"
 							if sentenceLoweredBy > 1:
 								$body.text += "s"
@@ -778,7 +778,7 @@ func prison(): ##Specialised prison events.
 							global.prisonPreparer(global.crimeTimeCalculator() - sentenceLoweredBy)
 							global.revent[0] = "go-to-prison"
 						elif global.crimeTimeCalculator() is int && global.crimeTimeCalculator() == 1: #if your sentence is so low (1 year) that it can't be lowered any more, it is converted into a fine.
-							var fine = randi_range(25, max(28, global.sumCalculator(global.criminalRecordSeverity))) * 85 - roundi(float(global.degreeProficiency[global.degrees.find("Law")]) / 7)
+							var fine = r.ng.randi_range(25, max(28, global.sumCalculator(global.criminalRecordSeverity))) * 85 - roundi(float(global.degreeProficiency[global.degrees.find("Law")]) / 7)
 							$body.text += "Since you were only facing a potential 1-year prison sentence, you managed to talk it down to a $" + global.commaiser(fine) + " fine."
 							global.money -= fine
 							global.revent[0] = "dont-go-to-prison"
@@ -805,9 +805,9 @@ func prison(): ##Specialised prison events.
 						global.revent[0] = "go-to-prison"
 			"court-trial-o2-results-o1": #public defender
 				$heading.text = "What a public defence"
-				if global.evality <= 25 && global.crimes.size() <= randi_range(3,4) && global.sumCalculator(global.criminalRecordSeverity) < 40: #if you're not very evil, you haven't committed many crimes, and you aren't re-offending much (i.e. you CAN get a lower sentence)
+				if global.evality <= 25 && global.crimes.size() <= r.ng.randi_range(3,4) && global.sumCalculator(global.criminalRecordSeverity) < 40: #if you're not very evil, you haven't committed many crimes, and you aren't re-offending much (i.e. you CAN get a lower sentence)
 					if global.crimeTimeCalculator() is int && global.crimeTimeCalculator() > 1:
-						var sentenceLoweredBy = randi_range(1, min(7, global.crimeTimeCalculator() - 1)) #lowers your potential sentence
+						var sentenceLoweredBy = r.ng.randi_range(1, min(7, global.crimeTimeCalculator() - 1)) #lowers your potential sentence
 						$body.text += "Your public defender managed to lower your sentence by " + str(sentenceLoweredBy) + " year"
 						if sentenceLoweredBy > 1:
 							$body.text += "s"
@@ -815,7 +815,7 @@ func prison(): ##Specialised prison events.
 						global.prisonPreparer(global.crimeTimeCalculator() - sentenceLoweredBy)
 						global.revent[0] = "go-to-prison"
 					elif global.crimeTimeCalculator() is int && global.crimeTimeCalculator() == 1: #if your sentence is so low (1 year) that it can't be lowered any more, it is converted into a fine.
-						var fine = randi_range(28, max(28, global.sumCalculator(global.criminalRecordSeverity))) * 100
+						var fine = r.ng.randi_range(28, max(28, global.sumCalculator(global.criminalRecordSeverity))) * 100
 						$body.text += "Since you were only facing a potential 1-year prison sentence, your public defender managed to talk it down to a $" + global.commaiser(fine) + " fine."
 						global.money -= fine
 						global.revent[0] = "dont-go-to-prison"
@@ -827,7 +827,7 @@ func prison(): ##Specialised prison events.
 						global.crimeTime = []
 						global.intellectAtTimeOfCrime = []
 					elif str(global.crimeTimeCalculator()) == "Life":
-						var newSentence = max(40, roundi(float(global.sumCalculator(global.crimeTime)) / float(randi_range(28,38)) / 100 + 1)) #gives you a new sentence of whichever of the following is bigger: either 40 years, or the sum of your criminal sentences, excluding the life sentences, divided by the approximate proficiency of your lawyer, divided by 100 (so, for example, if their proficiency is 80, this number would now now be 0.8) + 1 (1.8).
+						var newSentence = max(40, roundi(float(global.sumCalculator(global.crimeTime)) / float(r.ng.randi_range(28,38)) / 100 + 1)) #gives you a new sentence of whichever of the following is bigger: either 40 years, or the sum of your criminal sentences, excluding the life sentences, divided by the approximate proficiency of your lawyer, divided by 100 (so, for example, if their proficiency is 80, this number would now now be 0.8) + 1 (1.8).
 						$body.text += "Your public defender managed to talk your Life sentence down to " + global.anIser(str(newSentence)) + " year sentence."
 						global.prisonPreparer(newSentence)
 						global.revent[0] = "go-to-prison"
@@ -842,9 +842,9 @@ func prison(): ##Specialised prison events.
 					global.revent[0] = "go-to-prison"
 			"court-trial-o3-results-o1": #tier 1 lawyer
 				$heading.text = "That's no public defence"
-				if global.evality <= 40 && global.crimes.size() <= randi_range(3,4) && global.sumCalculator(global.criminalRecordSeverity) < 60: #if you're not very evil, you haven't committed many crimes, and you aren't re-offending much (i.e. you CAN get a lower sentence)
+				if global.evality <= 40 && global.crimes.size() <= r.ng.randi_range(3,4) && global.sumCalculator(global.criminalRecordSeverity) < 60: #if you're not very evil, you haven't committed many crimes, and you aren't re-offending much (i.e. you CAN get a lower sentence)
 					if global.crimeTimeCalculator() is int && global.crimeTimeCalculator() > 1:
-						var sentenceLoweredBy = randi_range(min(5, global.crimeTimeCalculator() - 1), min(8, global.crimeTimeCalculator() - 1)) #lowers your potential sentence by anywhere from (5 or numerical sentence - 1, whichever is smallest) to (8 or numerical sentence - 1, whichever is smallest). The numbers being generated are checked against your potential prison sentence to ensure that when it is subtracted by sentenceLoweredBy, it will never end up being lower than 1.
+						var sentenceLoweredBy = r.ng.randi_range(min(5, global.crimeTimeCalculator() - 1), min(8, global.crimeTimeCalculator() - 1)) #lowers your potential sentence by anywhere from (5 or numerical sentence - 1, whichever is smallest) to (8 or numerical sentence - 1, whichever is smallest). The numbers being generated are checked against your potential prison sentence to ensure that when it is subtracted by sentenceLoweredBy, it will never end up being lower than 1.
 						$body.text += global.lawyers[0] + " managed to lower your sentence by " + str(sentenceLoweredBy) + " year"
 						if sentenceLoweredBy > 1:
 							$body.text += "s"
@@ -852,7 +852,7 @@ func prison(): ##Specialised prison events.
 						global.prisonPreparer(global.crimeTimeCalculator() - sentenceLoweredBy)
 						global.revent[0] = "go-to-prison"
 					elif global.crimeTimeCalculator() is int && global.crimeTimeCalculator() == 1: #if your sentence is so low (1 year) that it can't be lowered any more, it is converted into a fine.
-						var fine = randi_range(28, max(28, global.sumCalculator(global.criminalRecordSeverity))) * 85
+						var fine = r.ng.randi_range(28, max(28, global.sumCalculator(global.criminalRecordSeverity))) * 85
 						$body.text += "Since you were only facing a potential 1-year prison sentence, your lawyer, " + global.lawyers[0] + ", managed to talk it down to a $" + global.commaiser(fine) + " fine."
 						global.money -= fine
 						global.revent[0] = "dont-go-to-prison"
@@ -864,7 +864,7 @@ func prison(): ##Specialised prison events.
 						global.crimeTime = []
 						global.intellectAtTimeOfCrime = []
 					elif str(global.crimeTimeCalculator()) == "Life":
-						var newSentence = max(40, roundi(float(global.sumCalculator(global.crimeTime)) / float(randi_range(48, 58)) / 100 + 1)) #gives you a new sentence of whichever of the following is bigger: either 40 years, or the sum of your criminal sentences, excluding the life sentences, divided by the approximate proficiency of your lawyer, divided by 100 (so, for example, if their proficiency is 80, this number would now now be 0.8) + 1 (1.8).
+						var newSentence = max(40, roundi(float(global.sumCalculator(global.crimeTime)) / float(r.ng.randi_range(48, 58)) / 100 + 1)) #gives you a new sentence of whichever of the following is bigger: either 40 years, or the sum of your criminal sentences, excluding the life sentences, divided by the approximate proficiency of your lawyer, divided by 100 (so, for example, if their proficiency is 80, this number would now now be 0.8) + 1 (1.8).
 						$body.text += "Your laywer, " + global.lawyers[0] + ", managed to talk your Life sentence down to " + global.anIser(str(newSentence)) + " year sentence."
 						global.prisonPreparer(newSentence)
 						global.revent[0] = "go-to-prison"
@@ -879,9 +879,9 @@ func prison(): ##Specialised prison events.
 					global.revent[0] = "go-to-prison"
 			"court-trial-o4-results-o1": #tier 2 lawyer
 				$heading.text = "That's a private defence if I've ever seen one"
-				if global.evality <= 55 && global.crimes.size() <= randi_range(5,6) && global.sumCalculator(global.criminalRecordSeverity) < 85: #if you're not very evil, you haven't committed many crimes, and you aren't re-offending much (i.e. you CAN get a lower sentence)
+				if global.evality <= 55 && global.crimes.size() <= r.ng.randi_range(5,6) && global.sumCalculator(global.criminalRecordSeverity) < 85: #if you're not very evil, you haven't committed many crimes, and you aren't re-offending much (i.e. you CAN get a lower sentence)
 					if global.crimeTimeCalculator() is int && global.crimeTimeCalculator() > 1:
-						var sentenceLoweredBy = randi_range(min(10, global.crimeTimeCalculator() - 1), min(15, global.crimeTimeCalculator() - 1)) #lowers your potential sentence by anywhere from (10 or numerical sentence - 1, whichever is smallest) to (15 or numerical sentence - 1, whichever is smallest). The numbers being generated are checked against your potential prison sentence to ensure that when it is subtracted by sentenceLoweredBy, it will never end up being lower than 1.
+						var sentenceLoweredBy = r.ng.randi_range(min(10, global.crimeTimeCalculator() - 1), min(15, global.crimeTimeCalculator() - 1)) #lowers your potential sentence by anywhere from (10 or numerical sentence - 1, whichever is smallest) to (15 or numerical sentence - 1, whichever is smallest). The numbers being generated are checked against your potential prison sentence to ensure that when it is subtracted by sentenceLoweredBy, it will never end up being lower than 1.
 						$body.text += global.lawyers[1] + " managed to lower your sentence by " + str(sentenceLoweredBy) + " year"
 						if sentenceLoweredBy > 1:
 							$body.text += "s"
@@ -889,7 +889,7 @@ func prison(): ##Specialised prison events.
 						global.prisonPreparer(global.crimeTimeCalculator() - sentenceLoweredBy)
 						global.revent[0] = "go-to-prison"
 					elif global.crimeTimeCalculator() is int && global.crimeTimeCalculator() == 1: #if your sentence is so low (1 year) that it can't be lowered any more, it is converted into a fine.
-						var fine = randi_range(28, max(28, global.sumCalculator(global.criminalRecordSeverity))) * 70
+						var fine = r.ng.randi_range(28, max(28, global.sumCalculator(global.criminalRecordSeverity))) * 70
 						$body.text += "Since you were only facing a potential 1-year prison sentence, your lawyer, " + global.lawyers[1] + ", managed to talk it down to a $" + global.commaiser(fine) + " fine."
 						global.money -= fine
 						global.revent[0] = "dont-go-to-prison"
@@ -901,7 +901,7 @@ func prison(): ##Specialised prison events.
 						global.crimeTime = []
 						global.intellectAtTimeOfCrime = []
 					elif str(global.crimeTimeCalculator()) == "Life":
-						var newSentence = max(34, roundi(float(global.sumCalculator(global.crimeTime)) / float(randi_range(64, 70)) / 100 + 1)) #gives you a new sentence of whichever of the following is bigger: either 40 years, or the sum of your criminal sentences, excluding the life sentences, divided by the approximate proficiency of your lawyer, divided by 100 (so, for example, if their proficiency is 80, this number would now now be 0.8) + 1 (1.8).
+						var newSentence = max(34, roundi(float(global.sumCalculator(global.crimeTime)) / float(r.ng.randi_range(64, 70)) / 100 + 1)) #gives you a new sentence of whichever of the following is bigger: either 40 years, or the sum of your criminal sentences, excluding the life sentences, divided by the approximate proficiency of your lawyer, divided by 100 (so, for example, if their proficiency is 80, this number would now now be 0.8) + 1 (1.8).
 						$body.text += "Your laywer, " + global.lawyers[1] + ", managed to talk your Life sentence down to " + global.anIser(str(newSentence)) + " year sentence."
 						global.prisonPreparer(newSentence)
 						global.revent[0] = "go-to-prison"
@@ -916,9 +916,9 @@ func prison(): ##Specialised prison events.
 					global.revent[0] = "go-to-prison"
 			"court-trial-o5-results-o1": #tier 3 lawyer
 				$heading.text = "Bottom of the top of the barrel"
-				if global.evality <= 80 && global.crimes.size() <= randi_range(6,7) && global.sumCalculator(global.criminalRecordSeverity) < 140: #if you're not incredibly evil, you haven't committed too many crimes, and you aren't re-offending more than your lawyer can defend (i.e. you CAN get a lower sentence)
+				if global.evality <= 80 && global.crimes.size() <= r.ng.randi_range(6,7) && global.sumCalculator(global.criminalRecordSeverity) < 140: #if you're not incredibly evil, you haven't committed too many crimes, and you aren't re-offending more than your lawyer can defend (i.e. you CAN get a lower sentence)
 					if global.crimeTimeCalculator() is int && global.crimeTimeCalculator() > 1:
-						var sentenceLoweredBy = randi_range(min(17, global.crimeTimeCalculator() - 1), min(25, global.crimeTimeCalculator() - 1)) #lowers your potential sentence by anywhere from (17 or numerical sentence - 1, whichever is smallest) to (25 or numerical sentence - 1, whichever is smallest). The numbers being generated are checked against your potential prison sentence to ensure that when it is subtracted by sentenceLoweredBy, it will never end up being lower than 1.
+						var sentenceLoweredBy = r.ng.randi_range(min(17, global.crimeTimeCalculator() - 1), min(25, global.crimeTimeCalculator() - 1)) #lowers your potential sentence by anywhere from (17 or numerical sentence - 1, whichever is smallest) to (25 or numerical sentence - 1, whichever is smallest). The numbers being generated are checked against your potential prison sentence to ensure that when it is subtracted by sentenceLoweredBy, it will never end up being lower than 1.
 						$body.text += global.lawyers[2] + " managed to lower your sentence by " + str(sentenceLoweredBy) + " year"
 						if sentenceLoweredBy > 1:
 							$body.text += "s"
@@ -926,7 +926,7 @@ func prison(): ##Specialised prison events.
 						global.prisonPreparer(global.crimeTimeCalculator() - sentenceLoweredBy)
 						global.revent[0] = "go-to-prison"
 					elif global.crimeTimeCalculator() is int && global.crimeTimeCalculator() == 1: #if your sentence is so low (1 year) that it can't be lowered any more, it is converted into a fine.
-						var fine = randi_range(28, max(28, global.sumCalculator(global.criminalRecordSeverity))) * 55
+						var fine = r.ng.randi_range(28, max(28, global.sumCalculator(global.criminalRecordSeverity))) * 55
 						$body.text += "Since you were only facing a potential 1-year prison sentence, your lawyer, " + global.lawyers[2] + ", managed to talk it down to a $" + global.commaiser(fine) + " fine."
 						global.money -= fine
 						global.revent[0] = "dont-go-to-prison"
@@ -938,7 +938,7 @@ func prison(): ##Specialised prison events.
 						global.crimeTime = []
 						global.intellectAtTimeOfCrime = []
 					elif str(global.crimeTimeCalculator()) == "Life":
-						var newSentence = max(25, roundi(float(global.sumCalculator(global.crimeTime)) / float(randi_range(78, 88)) / 100 + 1)) #gives you a new sentence of whichever of the following is bigger: either 40 years, or the sum of your criminal sentences, excluding the life sentences, divided by the approximate proficiency of your lawyer, divided by 100 (so, for example, if their proficiency is 80, this number would now now be 0.8) + 1 (1.8).
+						var newSentence = max(25, roundi(float(global.sumCalculator(global.crimeTime)) / float(r.ng.randi_range(78, 88)) / 100 + 1)) #gives you a new sentence of whichever of the following is bigger: either 40 years, or the sum of your criminal sentences, excluding the life sentences, divided by the approximate proficiency of your lawyer, divided by 100 (so, for example, if their proficiency is 80, this number would now now be 0.8) + 1 (1.8).
 						$body.text += "Your laywer, " + global.lawyers[2] + ", managed to talk your Life sentence down to " + global.anIser(str(newSentence)) + " year sentence."
 						global.prisonPreparer(newSentence)
 						global.revent[0] = "go-to-prison"
@@ -978,7 +978,7 @@ func prison(): ##Specialised prison events.
 						global.prisonPreparer(global.crimeTimeCalculator())
 						global.revent[0] = "go-to-prison"
 				else: #if you ARE a qualified lawyer
-					if (global.degreeProficiency[global.degrees.find("Law")] >= min(200, global.crimesSeverity * 2) + randi_range(1, 15) && global.intellect >= max(60, global.averageFinder(global.intellectAtTimeOfCrime)) && global.sumCalculator(global.crimesSeverity) <= 400) || randi_range(1, 25) == 1: #if your proficiency is greater than the severity of your worst crime, and you're smarter than you were when you committed most of your crimes, AND you're not some super-criminal. There is a small (1 in 25) chance you win even if you don't meet these requirements.
+					if (global.degreeProficiency[global.degrees.find("Law")] >= min(200, global.crimesSeverity * 2) + r.ng.randi_range(1, 15) && global.intellect >= max(60, global.averageFinder(global.intellectAtTimeOfCrime)) && global.sumCalculator(global.crimesSeverity) <= 400) || r.ng.randi_range(1, 25) == 1: #if your proficiency is greater than the severity of your worst crime, and you're smarter than you were when you committed most of your crimes, AND you're not some super-criminal. There is a small (1 in 25) chance you win even if you don't meet these requirements.
 						$heading.text = "Self-defence GOAT"
 						$body.text = "You successfully represented yourself in court and have been found not guilty of all charges."
 						$option1.text = "Awesome"
@@ -1000,7 +1000,7 @@ func prison(): ##Specialised prison events.
 						global.prisonPreparer(global.crimeTimeCalculator())
 						global.revent[0] = "go-to-prison"
 			"court-trial-o2-results-o2": #public defender
-				if (randi_range(25, 50) >= global.sumCalculator(global.crimesSeverity) && randi_range(75, 95) <= global.averageFinder(global.intellectAtTimeOfCrime)) || randi_range(1, 25) == 1: #if your public defender is successful in publicly defending you. i.e. if you are a) NOT a very severe criminal, and b) were VERY intelligent when you committed your crime(s). 1 in 25 chance you win even if you don't meet these requirements.
+				if (r.ng.randi_range(25, 50) >= global.sumCalculator(global.crimesSeverity) && r.ng.randi_range(75, 95) <= global.averageFinder(global.intellectAtTimeOfCrime)) || r.ng.randi_range(1, 25) == 1: #if your public defender is successful in publicly defending you. i.e. if you are a) NOT a very severe criminal, and b) were VERY intelligent when you committed your crime(s). 1 in 25 chance you win even if you don't meet these requirements.
 					if global.crimes.find("Tax evasion") == -1: #if you don't evade your taxes
 						$heading.text = "I'm so glad I paid taxes"
 					else: #if you HAVE committed tax evasion
@@ -1025,7 +1025,7 @@ func prison(): ##Specialised prison events.
 					global.prisonPreparer(global.crimeTimeCalculator())
 					global.revent[0] = "go-to-prison"
 			"court-trial-o3-results-o2":
-				if (randi_range(40, 55) >= global.sumCalculator(global.crimesSeverity) && randi_range(60, 70) <= global.averageFinder(global.intellectAtTimeOfCrime)) || randi_range(1, 20) == 1: #defence success - see public defender. Basically the same formula, just with some variables changed to give you better chances.
+				if (r.ng.randi_range(40, 55) >= global.sumCalculator(global.crimesSeverity) && r.ng.randi_range(60, 70) <= global.averageFinder(global.intellectAtTimeOfCrime)) || r.ng.randi_range(1, 20) == 1: #defence success - see public defender. Basically the same formula, just with some variables changed to give you better chances.
 					$heading.text = "$3 an hour well spent"
 					$body.text = global.lawyers[0] + ", a tier 1 lawyer, successfully cleared your name in court. You have been found not guilty of all charges."
 					$option1.text = "Sweet"
@@ -1047,7 +1047,7 @@ func prison(): ##Specialised prison events.
 					global.prisonPreparer(global.crimeTimeCalculator())
 					global.revent[0] = "go-to-prison"
 			"court-trial-o4-results-o2":
-				if (randi_range(80, 150) >= global.sumCalculator(global.crimesSeverity) && randi_range(40, 50) <= global.averageFinder(global.intellectAtTimeOfCrime)) || randi_range(1, 14) == 1: #defence success - see public defender. Basically the same formula, just with some variables changed to give you better chances.
+				if (r.ng.randi_range(80, 150) >= global.sumCalculator(global.crimesSeverity) && r.ng.randi_range(40, 50) <= global.averageFinder(global.intellectAtTimeOfCrime)) || r.ng.randi_range(1, 14) == 1: #defence success - see public defender. Basically the same formula, just with some variables changed to give you better chances.
 					$heading.text = "Money well spent"
 					$body.text = global.lawyers[1] + ", a tier 2 lawyer, successfully cleared your name in court. You have been found not guilty of all charges."
 					$option1.text = "Incredible"
@@ -1069,9 +1069,9 @@ func prison(): ##Specialised prison events.
 					global.prisonPreparer(global.crimeTimeCalculator())
 					global.revent[0] = "go-to-prison"
 			"court-trial-o5-results-o2":
-				if (randi_range(150, 350) >= global.sumCalculator(global.crimesSeverity) && randi_range(25, 40) <= global.averageFinder(global.intellectAtTimeOfCrime)) || randi_range(1, 7) == 1: #defence success - see public defender. Basically the same formula, just with some variables changed to give you better chances.
+				if (r.ng.randi_range(150, 350) >= global.sumCalculator(global.crimesSeverity) && r.ng.randi_range(25, 40) <= global.averageFinder(global.intellectAtTimeOfCrime)) || r.ng.randi_range(1, 7) == 1: #defence success - see public defender. Basically the same formula, just with some variables changed to give you better chances.
 					$heading.text = "It's only expensive if you lose"
-					if (randi_range(25, 50) >= global.sumCalculator(global.crimesSeverity) && randi_range(75, 95) <= global.averageFinder(global.intellectAtTimeOfCrime)) || randi_range(1, 25) == 1: #if your crimes were already so minor that a public defender could have resolved them
+					if (r.ng.randi_range(25, 50) >= global.sumCalculator(global.crimesSeverity) && r.ng.randi_range(75, 95) <= global.averageFinder(global.intellectAtTimeOfCrime)) || r.ng.randi_range(1, 25) == 1: #if your crimes were already so minor that a public defender could have resolved them
 						$heading.text = "Perhaps I went a little bit overboard"
 					$body.text = global.lawyers[2] + ", a tier 3 lawyer, successfully cleared your name in court. You have been found not guilty of all charges."
 					$option1.text = "Amazing"
@@ -1116,7 +1116,7 @@ func prison(): ##Specialised prison events.
 
 func job(): ##Career-related and career-specific events.
 	if global.revent[0] == "full-time-fired-performance": #if you've been fired from your full-time job for poor performance
-		if randi_range(1,2) == 1:
+		if r.ng.randi_range(1,2) == 1:
 			$heading.text = "Jobless"
 		else:
 			$heading.text = "Unemployed"
@@ -1127,10 +1127,10 @@ func job(): ##Career-related and career-specific events.
 		global.removeFullTimeJob()
 	elif global.revent[0] == "full-time-raise-performance": #if you're getting a raise at your full-time job for good performance
 		$heading.text = "Keeping up with inflation"
-		var raisePercentage = float(global.fullTimePerformance) / 20 + (float(randi_range(-150, 150)) / 100) #the percentage of your original salary you will recieve extra
+		var raisePercentage = float(global.fullTimePerformance) / 20 + (float(r.ng.randi_range(-150, 150)) / 100) #the percentage of your original salary you will recieve extra
 		var oldSalary = global.fullTimeSalary #your salary in dollars, pre-raise
 		var salaryIncrease = roundi(float(global.fullTimeSalary) / 100 * raisePercentage) #the amount in dollars your salary will increase
-		var performanceDetriment = roundi(raisePercentage * randi_range(6, 7)) #how much your performance will go down
+		var performanceDetriment = roundi(raisePercentage * r.ng.randi_range(6, 7)) #how much your performance will go down
 		$body.text = "You have been given " + global.anIser(raisePercentage) + "% raise at your job as " + global.fullTimeJob + " for your impeccable performance.\n\n- " + str(performanceDetriment) + " performance\n" + " Old salary: $" + global.commaiser(oldSalary) + "\nNew salary: $" + global.commaiser(oldSalary + salaryIncrease)
 		$option1.text = "Hooray"
 		optionRemover(2)
@@ -1163,16 +1163,16 @@ func job(): ##Career-related and career-specific events.
 		$option2.text = "Cancel"
 		optionRemover(3)
 	elif global.revent[0] == "full-time-extra-effort":
-		var healthSubtract = randi_range(9, 4)
+		var healthSubtract = r.ng.randi_range(9, 4)
 		if global.history.count("full-time-extra-effort") < 3: #if you haven't already done this 3 times this year
 			$heading.text = "Absolutely locked IN"
-			var performanceAdd = randi_range(6, 9)
+			var performanceAdd = r.ng.randi_range(6, 9)
 			var joyChange = 0
-			match randi_range(1,2):
+			match r.ng.randi_range(1,2):
 				1:
-					joyChange = randi_range(-8, -3)
+					joyChange = r.ng.randi_range(-8, -3)
 				2:
-					joyChange = randi_range(4, 9)
+					joyChange = r.ng.randi_range(4, 9)
 			$body.text = "You started putting in some extra effort at your full-time job as " + global.fullTimeJob + ".\n+ " + str(performanceAdd) + " performance, - " + str(healthSubtract) + " health, "
 			if joyChange < 0: #if the change to joy is negative
 				$body.text += "- " + str(-joyChange) + " joy"
@@ -1184,7 +1184,7 @@ func job(): ##Career-related and career-specific events.
 			global.history.append("full-time-extra-effort")
 			global.XPQueued += 2
 		else: #if you've already done this 3 or more times this year
-			var joySubtract = randi_range(3, 6)
+			var joySubtract = r.ng.randi_range(3, 6)
 			$heading.text = "Absolutely locked OUT"
 			$body.text = "You've overextended yourself too much this year.\n- " + str(healthSubtract) + " health, - " + str(joySubtract) + " joy"
 			global.health -= healthSubtract
@@ -1218,18 +1218,18 @@ func job(): ##Career-related and career-specific events.
 		$option2.text = "Cancel"
 		optionRemover(3)
 	elif global.revent[0] == "part-time-extra-effort":
-		var healthSubtract = randi_range(3, 6)
+		var healthSubtract = r.ng.randi_range(3, 6)
 		if global.history.count("part-time-extra-effort") < 3: #if you haven't already done this 3 times this year
 			$heading.text = "Working up an appetite"
 			if global.partTimeJob == "Kitchen hand":
 				$heading.text = "Yum"
-			var performanceAdd = randi_range(6, 8)
+			var performanceAdd = r.ng.randi_range(6, 8)
 			var joyChange = 0
-			match randi_range(1,2):
+			match r.ng.randi_range(1,2):
 				1:
-					joyChange = randi_range(-6, -3)
+					joyChange = r.ng.randi_range(-6, -3)
 				2:
-					joyChange = randi_range(3, 8)
+					joyChange = r.ng.randi_range(3, 8)
 			$body.text = "You started putting in some extra effort at your part-time job as " + global.partTimeJob + ".\n+ " + str(performanceAdd) + " performance, - " + str(healthSubtract) + " health, "
 			if joyChange < 0: #if the change to joy is negative
 				$body.text += "- " + str(-joyChange) + " joy"
@@ -1241,7 +1241,7 @@ func job(): ##Career-related and career-specific events.
 			global.history.append("part-time-extra-effort")
 			global.XPQueued += 2
 		else: #if you've already done this 3 or more times this year
-			var joySubtract = randi_range(2, 5)
+			var joySubtract = r.ng.randi_range(2, 5)
 			$heading.text = "Too hungry"
 			if global.partTimeJob == "Kitchen hand":
 				$heading.text = "Not hungry anymore"
@@ -1293,16 +1293,16 @@ func confirmation(): ##Non-random confirmation events that tell you that somethi
 		var dudStudyChance = roundi(float(global.intellect) / 2)
 		if global.intellect <= 20: #if you're so intelligent that you're more inclined to have a total dud of a study session
 			dudStudyChance = roundi(float(dudStudyChance) / 4) #increases your chance of having a poor study session
-		if randi_range(1, max(1, dudStudyChance)) == 1 || global.history.count("study-harder") >= 3: #if you had a total dud of a study session; happens either at random (higher chance if you're less intelligent) or if you've already studied 3 or more times this year (you're burned out)
-			match randi_range(1,2): #random heading text variation
+		if r.ng.randi_range(1, max(1, dudStudyChance)) == 1 || global.history.count("study-harder") >= 3: #if you had a total dud of a study session; happens either at random (higher chance if you're less intelligent) or if you've already studied 3 or more times this year (you're burned out)
+			match r.ng.randi_range(1,2): #random heading text variation
 				1:
 					$heading.text = "What"
 				2:
 					$heading.text = "Huh"
-			$body.text = "You tried to study for " + str(randi_range(2, 6)) + " hours, but absorbed next to no information."
-			var joySubtracted = randi_range(3, 10)
+			$body.text = "You tried to study for " + str(r.ng.randi_range(2, 6)) + " hours, but absorbed next to no information."
+			var joySubtracted = r.ng.randi_range(3, 10)
 			if global.history.count("study-harder") >= 4: #if you've tried studying WAY too many times now
-				var intellectGained = randi_range(3, 5)
+				var intellectGained = r.ng.randi_range(3, 5)
 				global.intellect += intellectGained
 				$body.text += "\n+ " + str(intellectGained) + " Intellect, - " + str(joySubtracted) + " Joy"
 			else:
@@ -1313,7 +1313,7 @@ func confirmation(): ##Non-random confirmation events that tell you that somethi
 			global.history.append("study-harder")
 		else:
 			$heading.text = "Hunkering "
-			match randi_range(1, 4): #random heading text variation
+			match r.ng.randi_range(1, 4): #random heading text variation
 				1:
 					$heading.text += "down"
 				2:
@@ -1322,8 +1322,8 @@ func confirmation(): ##Non-random confirmation events that tell you that somethi
 					$heading.text += "left"
 				4:
 					$heading.text += "in"
-			var joySubtracted = randi_range(roundi(float(global.intellect)/10), 14 - roundi(float(global.intellect)/10))
-			var performanceIncreased = roundi(float(global.intellect)/18) + randi_range(1, 3)
+			var joySubtracted = r.ng.randi_range(roundi(float(global.intellect)/10), 14 - roundi(float(global.intellect)/10))
+			var performanceIncreased = roundi(float(global.intellect)/18) + r.ng.randi_range(1, 3)
 			$body.text = "You studied for " + str(max(2, roundi(float(global.intellect)/20))) + " hours.\n+ " + str(performanceIncreased) + " school performance, + " + str(roundi(float(global.intellect)/20) + 1) + " Intellect, - " + str(joySubtracted) + " Joy"
 			global.schoolPerformance += performanceIncreased
 			global.intellect += roundi(float(global.intellect)/20) + 1
@@ -1334,21 +1334,21 @@ func confirmation(): ##Non-random confirmation events that tell you that somethi
 			global.XPQueued += 2
 	elif global.revent[0] == "skip-class":
 		global.history.append("skip-class")
-		if global.history.count("skip-class") >= randi_range(3, 4):
+		if global.history.count("skip-class") >= r.ng.randi_range(3, 4):
 			$heading.text = "Whoops"
 			$body.text = "You failed one of your classes after not attending for so long."
-			var classPerformanceDeducted = randi_range(7, 9)
-			var joyDeducted = randi_range(5, 11)
+			var classPerformanceDeducted = r.ng.randi_range(7, 9)
+			var joyDeducted = r.ng.randi_range(5, 11)
 			global.schoolPerformance -= classPerformanceDeducted
 			global.joy -= joyDeducted
 			$body.text += "\n- " + str(classPerformanceDeducted) + " performance, - " + str(joyDeducted) + " joy"
 		else:
 			$heading.text = "Skipping class"
 			const skippedClassTo = ["go bowling", "go skateboarding", "get lunch", "get ice cream", "go to the movie theatre", "go shopping"]
-			$body.text = "You skipped class to " + skippedClassTo[randi_range(0, skippedClassTo.size() - 1)] + " instead."
-			var classPerformanceDeducted = randi_range(7, 9)
-			var intellectDeducted = randi_range(3, 4)
-			var joyGained = randi_range(5, 11)
+			$body.text = "You skipped class to " + skippedClassTo[r.ng.randi_range(0, skippedClassTo.size() - 1)] + " instead."
+			var classPerformanceDeducted = r.ng.randi_range(7, 9)
+			var intellectDeducted = r.ng.randi_range(3, 4)
+			var joyGained = r.ng.randi_range(5, 11)
 			global.schoolPerformance -= classPerformanceDeducted
 			global.intellect -= intellectDeducted
 			global.joy += joyGained
@@ -1405,9 +1405,9 @@ func option1outcomes(): ##Outcomes for option 1
 		$option1.text = "Hooray"
 		optionRemover(2)
 		#adds the EGP to your relationships array
-		global.NPCCreator(global.eventPersonSex, global.eventPersonFirstName, global.eventPersonLastName, global.eventPersonAge, randi_range(20, 50), "Friend", "misc", "random")
+		global.NPCCreator(global.eventPersonSex, global.eventPersonFirstName, global.eventPersonLastName, global.eventPersonAge, r.ng.randi_range(20, 50), "Friend", "misc", "random")
 	elif global.revent[0] == "teenager-friend-o1":
-		if randi_range(1,3) == 1: #if they refuse to be your friend
+		if r.ng.randi_range(1,3) == 1: #if they refuse to be your friend
 			$heading.text = "That's awkward..."
 			$body.text = "You try to befriend " + global.pronounGenerator("him", global.eventPersonSex) + ", but " + global.pronounGenerator("he", global.eventPersonSex) + " rejects you."
 			$option1.text = "Dang"
@@ -1415,11 +1415,11 @@ func option1outcomes(): ##Outcomes for option 1
 			$heading.text = "Sweet"
 			$body.text = "You befriended " + global.eventPersonFirstName + " " + global.eventPersonLastName + "."
 			#adds the EGP to your relationships array
-			global.NPCCreator(global.eventPersonSex, global.eventPersonFirstName, global.eventPersonLastName, global.eventPersonAge, randi_range(20, 50), "Friend", "misc", "random")
+			global.NPCCreator(global.eventPersonSex, global.eventPersonFirstName, global.eventPersonLastName, global.eventPersonAge, r.ng.randi_range(20, 50), "Friend", "misc", "random")
 			$option1.text = "Okay"
 		optionRemover(2)
 	elif global.revent[0] == "adult-friend-o1" || global.revent[0] == "elder-friend-o1":
-		if randi_range(1,2) == 1: #if they refuse to be your friend
+		if r.ng.randi_range(1,2) == 1: #if they refuse to be your friend
 			$heading.text = "Okay..."
 			$body.text = "You try to befriend " + global.pronounGenerator("him", global.eventPersonSex) + ", but " + global.pronounGenerator("he", global.eventPersonSex) + " rejects you."
 			$option1.text = "Dang"
@@ -1427,7 +1427,7 @@ func option1outcomes(): ##Outcomes for option 1
 			$heading.text = "A blossoming friendship"
 			$body.text = "You befriended " + global.eventPersonFirstName + " " + global.eventPersonLastName + "."
 			#adds the EGP to your relationships array
-			global.NPCCreator(global.eventPersonSex, global.eventPersonFirstName, global.eventPersonLastName, global.eventPersonAge, randi_range(20, 50), "Friend", "misc", "random")
+			global.NPCCreator(global.eventPersonSex, global.eventPersonFirstName, global.eventPersonLastName, global.eventPersonAge, r.ng.randi_range(20, 50), "Friend", "misc", "random")
 			$option1.text = "Okay"
 		optionRemover(2)
 	elif global.revent[0] == "toddler-0-o1":
@@ -1459,8 +1459,8 @@ func option1outcomes(): ##Outcomes for option 1
 		optionRemover(2)
 		global.XPQueued += 50
 		global.schoolLevel = 3 #moves you up to tertiary schooling
-		global.schoolName = global.lastNames[randi_range(0, global.lastNames.size() - 1)] #gives the university a random name
-		match randi_range(1,3): #gives the university name a random appendix
+		global.schoolName = global.lastNames[r.ng.randi_range(0, global.lastNames.size() - 1)] #gives the university a random name
+		match r.ng.randi_range(1,3): #gives the university name a random appendix
 			1:
 				global.schoolName += " Academy"
 			2:
@@ -1475,7 +1475,7 @@ func option1outcomes(): ##Outcomes for option 1
 			fleeChance = 2
 		else:
 			fleeChance = 4
-		if global.health >= min(98, global.sumCalculator(global.crimesSeverity) * 4) && randi_range(1, fleeChance) == 1:
+		if global.health >= min(98, global.sumCalculator(global.crimesSeverity) * 4) && r.ng.randi_range(1, fleeChance) == 1:
 			$heading.text = "Short arm of the law"
 			$body.text = "You managed to run and escape from the police!"
 			global.revent[0] = "arrested-o1-success"
@@ -1522,9 +1522,9 @@ func option1outcomes(): ##Outcomes for option 1
 			$heading.text = "Gone too soon"
 		else: #otherwise
 			$heading.text = global.icap(global.pronounGenerator("he", global.deadPersonSexes[global.eventMemory[0]["index"]])) + " was a great " + global.pronounGenerator("man", global.deadPersonSexes[global.eventMemory[0]["index"]])
-		var joyRecovered = global.customClamp(roundi(float(global.eventMemory[0]["joyLoss"]) / 2) + randi_range(-4, 4), 1, 32)
+		var joyRecovered = global.customClamp(roundi(float(global.eventMemory[0]["joyLoss"]) / 2) + r.ng.randi_range(-4, 4), 1, 32)
 		$body.text = "You decided to attend " + global.pronounGenerator("her", global.deadPersonSexes[global.eventMemory[0]["index"]]) + " funeral.\n\n"
-		if randi_range(1,2) == 1: #if (1 in 2 chance) funeral is positive
+		if r.ng.randi_range(1,2) == 1: #if (1 in 2 chance) funeral is positive
 			$body.text += "You regained " + str(joyRecovered) + " Joy."
 			global.joy += joyRecovered
 		else: #if (1 in 2 chance) funeral leaves you worse off
@@ -1543,7 +1543,7 @@ func option2outcomes(): ##Outcomes for option 2
 		optionRemover(2)
 		global.evality += 4 #i mean, it was kind of rude...
 	if global.revent[0] == "teenager-friend-o2":
-		if randi_range(1, roundi((36 - float(global.looks) / 4) / 2) - 3) == 1: #if you're more physically attractive, you have a higher chance of being accepted
+		if r.ng.randi_range(1, roundi((36 - float(global.looks) / 4) / 2) - 3) == 1: #if you're more physically attractive, you have a higher chance of being accepted
 			$heading.text = "What's your number?"
 			$body.text = "You ask " + global.pronounGenerator("him", global.eventPersonSex) + " out on a date, and " + global.pronounGenerator("he", global.eventPersonSex) + " says yes.\nJoy + 15"
 			global.joy += 15
@@ -1553,7 +1553,7 @@ func option2outcomes(): ##Outcomes for option 2
 					#global.NPCKiller("remove", i) #removes them
 				#for loops automatically increase the variable they use (in this case, i) so no need to manually increment it
 			#adds them to your relationships
-			global.NPCCreator(global.eventPersonSex, global.eventPersonFirstName, global.eventPersonLastName, global.eventPersonAge, randi_range(20, 50), global.pronounGenerator("boy", global.eventPersonSex).capitalize() + "friend", "misc", "random")
+			global.NPCCreator(global.eventPersonSex, global.eventPersonFirstName, global.eventPersonLastName, global.eventPersonAge, r.ng.randi_range(20, 50), global.pronounGenerator("boy", global.eventPersonSex).capitalize() + "friend", "misc", "random")
 		else: #they DON'T want to date you
 			$heading.text = "..."
 			$body.text = "You ask " + global.pronounGenerator("him", global.eventPersonSex) + " out, but " + global.pronounGenerator("he", global.eventPersonSex) + " rejects you.\nJoy - 15"
@@ -1562,7 +1562,7 @@ func option2outcomes(): ##Outcomes for option 2
 		optionRemover(2)
 	elif global.revent[0] == "adult-friend-o2":
 		$heading.text = "You wanna go out sometime?"
-		if randi_range(1, round((36 - float(global.looks) / 4) / 2) - 3) == 1: #if you're more physically attractive, you have a higher chance of being accepted
+		if r.ng.randi_range(1, round((36 - float(global.looks) / 4) / 2) - 3) == 1: #if you're more physically attractive, you have a higher chance of being accepted
 			$body.text = "You ask " + global.pronounGenerator("him", global.eventPersonSex) + " out on a date, and " + global.pronounGenerator("he", global.eventPersonSex) + " says yes.\nJoy + 15"
 			global.joy += 15
 			#if you already have an S/O, break up with (removes) them - DISABLED
@@ -1571,14 +1571,14 @@ func option2outcomes(): ##Outcomes for option 2
 					#global.NPCKiller("remove", i) #removes them
 				#for loops automatically increase the variable they use (in this case, i) so no need to manually increment it
 			#adds them to your relationships
-			global.NPCCreator(global.eventPersonSex, global.eventPersonFirstName, global.eventPersonLastName, global.eventPersonAge, randi_range(40, 80), global.pronounGenerator("boy", global.eventPersonSex).capitalize() + "friend", "misc", "random")
+			global.NPCCreator(global.eventPersonSex, global.eventPersonFirstName, global.eventPersonLastName, global.eventPersonAge, r.ng.randi_range(40, 80), global.pronounGenerator("boy", global.eventPersonSex).capitalize() + "friend", "misc", "random")
 		else: #they DON'T want to date you
 			$body.text = "You ask " + global.pronounGenerator("him", global.eventPersonSex) + " out, but " + global.pronounGenerator("he", global.eventPersonSex) + " rejects you.\nJoy - 15"
 			global.joy -= 15
 		$option1.text = "Okay"
 		optionRemover(2)
 	elif global.revent[0] == "elder-friend-o2":
-		if randi_range(1, round(36 - float(global.looks) / 4) - 3) == 1: #if you're more physically attractive, you have a higher chance of being accepted. You have lower chances either way though since you're older.
+		if r.ng.randi_range(1, round(36 - float(global.looks) / 4) - 3) == 1: #if you're more physically attractive, you have a higher chance of being accepted. You have lower chances either way though since you're older.
 			$heading.text = "Better late than never"
 			$body.text = "You ask " + global.pronounGenerator("him", global.eventPersonSex) + " out on a date, and " + global.pronounGenerator("he", global.eventPersonSex) + " says yes.\nJoy + 15"
 			global.joy += 15
@@ -1588,7 +1588,7 @@ func option2outcomes(): ##Outcomes for option 2
 					#global.NPCKiller("remove", i) #removes them
 				#for loops automatically increase the variable they use (in this case, i) so no need to manually increment it
 			#adds them to your relationships
-			global.NPCCreator(global.eventPersonSex, global.eventPersonFirstName, global.eventPersonLastName, global.eventPersonAge, randi_range(20, 50), global.pronounGenerator("boy", global.eventPersonSex).capitalize() + "friend", "misc", "random")
+			global.NPCCreator(global.eventPersonSex, global.eventPersonFirstName, global.eventPersonLastName, global.eventPersonAge, r.ng.randi_range(20, 50), global.pronounGenerator("boy", global.eventPersonSex).capitalize() + "friend", "misc", "random")
 		else: #they DON'T want to date you
 			$heading.text = str(global.age) + " and still unmarried"
 			$body.text = "You ask " + global.pronounGenerator("him", global.eventPersonSex) + " out on a date, but " + global.pronounGenerator("he", global.eventPersonSex) + " rejects you.\nJoy - 15"
@@ -1641,12 +1641,12 @@ func option2outcomes(): ##Outcomes for option 2
 			else: #if you only have a father
 				parentNoun = "father"
 		#if your parents actually do agree to pay for your tuition
-		if avgParentRelationship >= 72 && randi_range(1, max(2, roundi(float(global.degreePickedCost) / (8000.0 / numberOfParents)))) == 1: #if you have a good relationship with your parents AND your parents actually agree to pay for your tuition (1 in (the cost of the degree / 8,000 / number of parents (e.g. 1 in ~3.125 (3) chance for a $50,000 loan with 2 parents) chance)
+		if avgParentRelationship >= 72 && r.ng.randi_range(1, max(2, roundi(float(global.degreePickedCost) / (8000.0 / numberOfParents)))) == 1: #if you have a good relationship with your parents AND your parents actually agree to pay for your tuition (1 in (the cost of the degree / 8,000 / number of parents (e.g. 1 in ~3.125 (3) chance for a $50,000 loan with 2 parents) chance)
 			$heading.text = "Nepo baby?"
 			$body.text = "Your " + parentNoun + " agreed to pay for your University tuition!"
 			global.schoolLevel = 3 #puts you in tertiary school
-			global.schoolName = global.lastNames[randi_range(0, global.lastNames.size() - 1)] #gives the university a random name
-			match randi_range(1,3): #gives the university name a random appendix
+			global.schoolName = global.lastNames[r.ng.randi_range(0, global.lastNames.size() - 1)] #gives the university a random name
+			match r.ng.randi_range(1,3): #gives the university name a random appendix
 				1:
 					global.schoolName += " Academy"
 				2:
@@ -1668,7 +1668,7 @@ func option2outcomes(): ##Outcomes for option 2
 			$heading.text = "Gone like the wind"
 			$body.text = "You decided not to attend your court trial."
 			$option1.text = "Sweet"
-			if randi_range(1,2) == 1:
+			if r.ng.randi_range(1,2) == 1:
 				global.revent[0] = "court-trial-o2-failed" #it secretly failed and you're about to be re-arrested
 			global.XPQueued += roundi(float(global.sumCalculator(global.crimesSeverity)) / 7) #extra XP, even though you get XP for committing a crime in the first place
 			global.commitCrime("Failing to appear", roundi(float(global.sumCalculator(global.crimesSeverity)) / 3), max(1, roundi(float(global.sumCalculator(global.crimesSeverity) / 12)))) #the more of a criminal you are, the more severe it is that you didn't show up (or tried not to)
@@ -1707,7 +1707,7 @@ func option2outcomes(): ##Outcomes for option 2
 			else: #if you only have a father
 				parentNoun = "father"
 		#if your parents actually do agree to pay for your certificate
-		if avgParentRelationship >= 65 && randi_range(1, max(2, roundi(float(global.degreePickedCost) / (1500.0 / numberOfParents))) + global.failedCertificates.count(global.degreePicked)) == 1: #if you have a good relationship with your parents AND your parents actually agree to pay for your tuition (1 in (the cost of the degree / 3,000 / number of parents) + number of times you've failed this same certificate). Chance for a $7,000 loan with 2 parents and without having failed this certificate before: (e.g. 1 in ~2.33 (2))
+		if avgParentRelationship >= 65 && r.ng.randi_range(1, max(2, roundi(float(global.degreePickedCost) / (1500.0 / numberOfParents))) + global.failedCertificates.count(global.degreePicked)) == 1: #if you have a good relationship with your parents AND your parents actually agree to pay for your tuition (1 in (the cost of the degree / 3,000 / number of parents) + number of times you've failed this same certificate). Chance for a $7,000 loan with 2 parents and without having failed this certificate before: (e.g. 1 in ~2.33 (2))
 			$heading.text = "Pampered"
 			$body.text = "Your " + parentNoun + " agreed to cover your certificate costs!"
 			global.XPQueued += 20
@@ -1768,8 +1768,8 @@ func option3outcomes(): ##Option 3 has been picked
 		print("loan payback duration: " + str(global.loanPaybackDuration))
 		print("going for a degree in " + global.degreePicked)
 		global.schoolLevel = 3 #puts you in tertiary school
-		global.schoolName = global.lastNames[randi_range(0, global.lastNames.size() - 1)] #gives the university a random name
-		match randi_range(1,3): #gives the university name a random appendix
+		global.schoolName = global.lastNames[r.ng.randi_range(0, global.lastNames.size() - 1)] #gives the university a random name
+		match r.ng.randi_range(1,3): #gives the university name a random appendix
 			1:
 				global.schoolName += " Academy"
 			2:
@@ -1814,12 +1814,12 @@ func option4outcomes(): ##Option 4 has been picked
 			degreesSize -= 1
 		if global.degrees.has("high-school"):
 			degreesSize -= 1
-		if global.schoolPerformance >= 85 && randi_range(1,4) != 1 && degreesSize <= 2: #if you did really well at your last school (usually highschool, unless you're going for a second degree), you're not super unlucky (3 in 4 chance), and you don't have 2 or more degrees
+		if global.schoolPerformance >= 85 && r.ng.randi_range(1,4) != 1 && degreesSize <= 2: #if you did really well at your last school (usually highschool, unless you're going for a second degree), you're not super unlucky (3 in 4 chance), and you don't have 2 or more degrees
 			$heading.text = "What a scholar"
 			$body.text = "Your application for a scholarship was accepted!"
 			global.schoolLevel = 3 #puts you in tertiary school
-			global.schoolName = global.lastNames[randi_range(0, global.lastNames.size() - 1)] #gives the university a random name
-			match randi_range(1,3): #gives the university name a random appendix
+			global.schoolName = global.lastNames[r.ng.randi_range(0, global.lastNames.size() - 1)] #gives the university a random name
+			match r.ng.randi_range(1,3): #gives the university name a random appendix
 				1:
 					global.schoolName += " Academy"
 				2:
@@ -1848,7 +1848,7 @@ func option4outcomes(): ##Option 4 has been picked
 			$body.text = "Your application for a scholarship was rejected since you've already failed this certificate before."
 			$option1.text = "Damn it"
 			global.eventMemory.append("certificate-picked-o4-rejected")
-		if global.schoolPerformance >= 70 && randi_range(1,3) != 1 && certSize <= 2: #if you did well enough at your last school (usually highschool, unless you're going for a second degree), you're not unlucky (2 in 3 chance), and you don't have 2 or more certificates already
+		if global.schoolPerformance >= 70 && r.ng.randi_range(1,3) != 1 && certSize <= 2: #if you did well enough at your last school (usually highschool, unless you're going for a second degree), you're not unlucky (2 in 3 chance), and you don't have 2 or more certificates already
 			$heading.text = "Scholarafloat"
 			$body.text = "Your application for a scholarship was accepted!"
 			$option1.text = "Hooray"

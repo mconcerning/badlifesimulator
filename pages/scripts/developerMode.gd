@@ -209,7 +209,7 @@ func _on_set_school_level_pressed() -> void:
 	print("set school level to " + str(global.schoolLevel))
 	if global.schoolLevel == 1 || global.schoolLevel == 2 || global.schoolLevel == 3:
 		global.schoolName = "Institute of Developer Mode"
-		global.schoolPerformance = global.intellect + randi_range(-6, 6)
+		global.schoolPerformance = global.intellect + r.ng.randi_range(-6, 6)
 		print("successfully enrolled in school")
 
 func _on_trigger_event_pressed() -> void:

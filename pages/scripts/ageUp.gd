@@ -7,10 +7,10 @@ var isDying = false
 func basicStatChanges():
 	global.age += 1 #the actual aging up
 	print("age is now " + str(global.age))
-	global.joy += randi_range(-6, 6) #randomly tweaks joy levels. can add anywhere from -6 (subtracts 6) to 6 (adds 6).
-	global.health += randi_range(-6, 6)
-	global.intellect += randi_range(-4, 4)
-	global.looks += randi_range(-6, 6)
+	global.joy += r.ng.randi_range(-6, 6) #randomly tweaks joy levels. can add anywhere from -6 (subtracts 6) to 6 (adds 6).
+	global.health += r.ng.randi_range(-6, 6)
+	global.intellect += r.ng.randi_range(-4, 4)
+	global.looks += r.ng.randi_range(-6, 6)
 	#income tax bracketer - modelled loosely after the Australian resident tax rates 2025 - 2026
 	var combinedSalary = global.fullTimeSalary + global.partTimeSalary()
 	var costOfLiving = 0 ##Cost of living expressed as a percentage. Cost of living is 0% if you have no income so as to prevent unnecessary debt.
@@ -54,7 +54,7 @@ func basicStatChanges():
 		for x in stats.size(): #runs through all their stats
 			var theStat = global.personStatsDictionary[x]
 			if theStat == "Joy" || theStat == "Health" || theStat == "Intellect" || theStat == "Looks":
-				stats[x] += randi_range(-6, 6)
+				stats[x] += r.ng.randi_range(-6, 6)
 	if global.crimes.size() >= 1: #if you have committed a crime
 		if global.multiplicativeArrestChance <= 1.75:
 			global.multiplicativeArrestChance += 0.25
@@ -83,19 +83,19 @@ func school():
 		if global.schoolPerformance < global.intellect: #if you're not doing as well as your functional maximum
 			global.schoolPerformance = min(global.intellect, global.schoolPerformance + float(global.intellect) / 10) #you work towards it
 		elif global.schoolPerformance > global.intellect: #if you're less intelligent than your school performance
-			if randi_range(1,3) == 1: #if you lose performance (1 in 3 chance)
+			if r.ng.randi_range(1,3) == 1: #if you lose performance (1 in 3 chance)
 				global.schoolPerformance = max(global.intellect, global.schoolPerformance - roundi(float(global.intellect) / 10)) #lose some performance
 			else: #if you gain intellect instead (2 in 3 chance)
 				global.intellect += roundi(float(global.schoolPerformance) / 10)
-		global.schoolPerformance += randi_range(-4, 4)
-		global.intellect += round(float(global.schoolPerformance) / 12) + randi_range(-3, 3) #if you're doing well in school, you're getting smarter
+		global.schoolPerformance += r.ng.randi_range(-4, 4)
+		global.intellect += round(float(global.schoolPerformance) / 12) + r.ng.randi_range(-3, 3) #if you're doing well in school, you're getting smarter
 		global.XPQueued += 3
 		global.schoolPerformanceTracker.append(global.schoolPerformance)
 	#primary school
-	if (global.age == 4 && global.schoolLevel == -1 && randi_range(1,2) == 1) || (global.age == 5 && global.schoolLevel == -1): #if you're 4 years old and aren't in school yet, there's a 1 in 2 chance of you getting put in primary school early, and if you're 5 and not in school yet, you automatically get put in no matter what
+	if (global.age == 4 && global.schoolLevel == -1 && r.ng.randi_range(1,2) == 1) || (global.age == 5 && global.schoolLevel == -1): #if you're 4 years old and aren't in school yet, there's a 1 in 2 chance of you getting put in primary school early, and if you're 5 and not in school yet, you automatically get put in no matter what
 		global.schoolLevel = 1 #you get put in primary school
-		global.schoolName = global.lastNames[randi_range(0, global.lastNames.size() - 1)] #makes school's name a random last name. Since some rare last names are just straight up blank... I'm not including those.
-		match randi_range(1,3): #gives the high school a random appendix to make a full name, i.e. "McKenzie College"
+		global.schoolName = global.lastNames[r.ng.randi_range(0, global.lastNames.size() - 1)] #makes school's name a random last name. Since some rare last names are just straight up blank... I'm not including those.
+		match r.ng.randi_range(1,3): #gives the high school a random appendix to make a full name, i.e. "McKenzie College"
 			1:
 				global.schoolName += " Academy"
 			2:
@@ -103,14 +103,14 @@ func school():
 			3:
 				global.schoolName += " Primary School"
 		global.revent.append("enrolled-in-primary-school")
-		global.schoolPerformance = global.intellect + randi_range(-6, 6) #you are doing as well in school as you are intelligent, with a little bit of random variation (sets your performance for the first time so it's not immediately blank)
+		global.schoolPerformance = global.intellect + r.ng.randi_range(-6, 6) #you are doing as well in school as you are intelligent, with a little bit of random variation (sets your performance for the first time so it's not immediately blank)
 		global.schoolPerformanceTracker = []
 		print("you are now attending " + global.schoolName + ", a level " + str(global.schoolLevel) + " school")
 	#high school
 	if global.workExperience.count("school-1") == 7: #if you've already been attending primary school for 7 years
 		global.schoolLevel = 2 #moves you to high school
-		global.schoolName = global.lastNames[randi_range(0, global.lastNames.size() - 1)] #gives the high school a random name
-		match randi_range(1,3): #gives the high school name a random appendix
+		global.schoolName = global.lastNames[r.ng.randi_range(0, global.lastNames.size() - 1)] #gives the high school a random name
+		match r.ng.randi_range(1,3): #gives the high school name a random appendix
 			1:
 				global.schoolName += " Academy"
 			2:
@@ -163,25 +163,25 @@ func school():
 
 func job():
 	if global.fullTimeJob != "": #if you have a full-time job
-		if global.fullTimePerformance <= 35 && randi_range(1, roundi(float(global.fullTimePerformance) / 10)) == 1: #if you're performing too poorly and end up getting fired
+		if global.fullTimePerformance <= 35 && r.ng.randi_range(1, roundi(float(global.fullTimePerformance) / 10)) == 1: #if you're performing too poorly and end up getting fired
 			global.revent.append("full-time-fired-performance")
 		else: #if you haven't been fired
-			if global.fullTimePerformance >= 80 && randi_range(1,3) == 1: #if you're getting a raise
+			if global.fullTimePerformance >= 80 && r.ng.randi_range(1,3) == 1: #if you're getting a raise
 				global.revent.append("full-time-raise-performance")
 			global.workExperience.append(global.fullTimeJob) #you get work experience for it
 			global.XPQueued += 25
-			global.fullTimePerformance += randi_range(-6, 6)
+			global.fullTimePerformance += r.ng.randi_range(-6, 6)
 	if global.partTimeJob != "": #if you have a part-time job
 		global.workExperience.append(global.partTimeJob) #you get work experience for it
 		global.XPQueued += 15
-		global.partTimePerformance += randi_range(-6, 6)
+		global.partTimePerformance += r.ng.randi_range(-6, 6)
 	if global.fullTimeJob != "" && global.partTimeJob != "": #if you have both a full-time and part-time job
-		global.health -= randi_range(4, 6) + max(2, roundi(float(global.partTimeHours) / 10)) #it's not exactly healthy to be working 72 hours a week...
+		global.health -= r.ng.randi_range(4, 6) + max(2, roundi(float(global.partTimeHours) / 10)) #it's not exactly healthy to be working 72 hours a week...
 
 
 func imprisonment(): ##Handles your chances of being arrested
 	if global.sumCalculator(global.crimesSeverity) >= 10: #if you've committed serious enough crimes to warrant being arrested for them
-		if (randi_range(max(1, global.sumCalculator(global.crimesSeverity) - 20), global.sumCalculator(global.crimesSeverity) * (global.multiplicativeArrestChance / 2)) * global.multiplicativeArrestChance) >= global.averageFinder(global.intellectAtTimeOfCrime) && (randi_range(10,120) / global.multiplicativeArrestChance) <= global.sumCalculator(global.crimesSeverity):
+		if (r.ng.randi_range(max(1, global.sumCalculator(global.crimesSeverity) - 20), global.sumCalculator(global.crimesSeverity) * (global.multiplicativeArrestChance / 2)) * global.multiplicativeArrestChance) >= global.averageFinder(global.intellectAtTimeOfCrime) && (r.ng.randi_range(10,120) / global.multiplicativeArrestChance) <= global.sumCalculator(global.crimesSeverity):
 				global.revent.append("arrested")
 
 
@@ -208,22 +208,22 @@ func loanHandler(): #i hate maths so much oh my god
 
 
 func ageUpEventHandler():
-	if randi_range(1, 2) == 1 && global.RAUE == true: #if you're getting a random event (1 in 2 chance) and random events are enabled
+	if r.ng.randi_range(1, 2) == 1 && global.RAUE == true: #if you're getting a random event (1 in 2 chance) and random events are enabled
 		global.XPQueued += 15 #gives you XP for experiencing something
 		if global.age >= 2: #you must be 2 or over to get random age up events
 			print("choosing random age up event...")
 			if global.age <= 4: #if age is 4 or below
-				global.revent.append("toddler-" + str(randi_range(0, 0))) #second number in the randi_range is the last ID for the event that exists
+				global.revent.append("toddler-" + str(r.ng.randi_range(0, 0))) #second number in the randi_range is the last ID for the event that exists
 			elif global.age >= 5 && global.age <= 12: #if age is between 5 and 12
-				global.revent.append("child-" + str(randi_range(0, 0)))
+				global.revent.append("child-" + str(r.ng.randi_range(0, 0)))
 			elif global.age >= 13 && global.age <= 19: #if age is between 13 and 19
-				global.revent.append("teenager-" + str(randi_range(0, 0)))
+				global.revent.append("teenager-" + str(r.ng.randi_range(0, 0)))
 			elif global.age >= 20 && global.age <= 65: #if age is between 20 and 65
-				global.revent.append("adult-" + str(randi_range(0, 0)))
+				global.revent.append("adult-" + str(r.ng.randi_range(0, 0)))
 			elif global.age >= 66: #if age is over 66
-				global.revent.append("elder-" + str(randi_range(0, 0)))
+				global.revent.append("elder-" + str(r.ng.randi_range(0, 0)))
 			print("appended event " + str(global.revent.back())) #prints the last event ID (the one that was just appended) in the revent array
-	if randi_range(1, 20) == 1 && global.RAUE == true: #if you're randomly getting a new friend :) and RAUE is enabled
+	if r.ng.randi_range(1, 20) == 1 && global.RAUE == true: #if you're randomly getting a new friend :) and RAUE is enabled
 		global.XPQueued += 15 #gives you XP for experiencing something
 		if global.age <= 4: #if age is 4 or below
 			global.revent.append("toddler-friend")
@@ -249,7 +249,7 @@ func randomDeathChance():
 		# equation for the health that would no longer be able to keep you alive at x age: h = (a - 75) * 2
 		print("1 in " + str(max(1, 75 - global.age + roundi(float(global.health) / 2))) + " chance of death")
 		#print(chance)
-		var which = randi_range(1, chance)
+		var which = r.ng.randi_range(1, chance)
 		if which == 1:
 			global.causeOfDeath = "You died of complications associated with advanced age"
 			isDying = true
@@ -258,7 +258,7 @@ func randomDeathChance():
 	for i in global.personAges.size():
 		if global.personAges[i] >= 69: #same equation that determines if YOU die
 			var chance = max(1, 75 - global.personAges[i] + roundi(float(global.personStats[i][global.personStatsDictionary.find("Health")]) / 2))
-			var which = randi_range(1, chance)
+			var which = r.ng.randi_range(1, chance)
 			if which == 1:
 				dyingUIDs.append(global.personUIDs[i]) #we can't just use i here, because if multiple people die at once, we could end up accidentally killing the wrong person
 	for i in dyingUIDs.size(): #kills everyone that is dying and notifies you of such
