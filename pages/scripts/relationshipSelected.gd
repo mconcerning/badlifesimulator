@@ -15,10 +15,13 @@ func _on_more_info_pressed() -> void:
 func _ready() -> void:
 	$type.text = global.personTypes[global.IDClicked]
 	$name.text = global.personFirstNames[global.IDClicked] + " " + global.personLastNames[global.IDClicked]
-	$details.text = "(" + global.personSexes[global.IDClicked] + "), Age " + str(global.personAges[global.IDClicked]) + ", Relationship: " + str(global.personRelationships[global.IDClicked])
+	var gender : String = global.personGenders[global.IDClicked]
+	if global.personSexes[global.IDClicked] != global.personGenders[global.IDClicked]:
+		gender = global.personSexes[global.IDClicked] + "t" + global.personGenders[global.IDClicked]
+	$details.text = "(" + gender + "), Age " + str(global.personAges[global.IDClicked]) + ", Relationship: " + str(global.personRelationships[global.IDClicked])
 	if global.age < 3 || global.personAges[global.IDClicked] < 3: #if you're really young, or they're really young (2 or younger)
 		$scrollContainer/centerContainer/vBoxContainer/compliment.disabled = true #you can't talk -> you can't compliment
-	$scrollContainer/centerContainer/vBoxContainer/compliment.text += global.pronounGenerator("him", global.personSexes[global.IDClicked])
+	$scrollContainer/centerContainer/vBoxContainer/compliment.text += global.pronounGenerator("him", global.personGenders[global.IDClicked])
 
 
 func _on_compliment_pressed() -> void:

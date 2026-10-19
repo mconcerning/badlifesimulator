@@ -25,6 +25,7 @@ var firstName = "" ##Your first name. Both this and last name should begin with 
 var lastName = ""
 var age : int = 0 ##Age in years
 var sex = "" ##Will become either M for Male or F for Female during new life generation. For simplicity's sake I am not yet adding intersexuality and other stuff, but I may later.
+var gender = "" ##May differ from sex, but does not by default. Sex is biological whereas gender is identity-based.
 var joy : int = 0
 var health : int = 0
 var intellect : int = 0
@@ -84,6 +85,7 @@ var personLastNames = []
 var personTypes = [] ##Mother/father/brother/sister/friend/girlfriend/boyfriend etc.
 var personAges = []
 var personSexes = []
+var personGenders = []
 var personRelationships = []
 var personUIDsUsed : int = 0
 var personUIDs = [] ##Stores unique ID numbers for each NPC. Used when we have to keep track of EXACTLY the same person. Differs from their INDEX, accessed through other arrays, which can change if NPCs are removed. This stays consistent per person throughout their entire life. Each person's UID is entirely unique. personUIDsUsed is set to 0 at the start of a new life, and appended here before being incremented whenever a new person is added. A person's UID is popped upon their removal from other arrays, but their UID will never be used again. Use only when using indexes is insufficient. Most times it is fine, and in some cases even preferable, to simply use those.
@@ -96,6 +98,7 @@ var deadPersonLastNames = []
 var deadPersonTypes = []
 var deadPersonAges = []
 var deadPersonSexes = []
+var deadPersonGenders = []
 var deadPersonRelationships = [] ##How close you were with them when they died
 var deadPersonCause = [] ##How did said person die
 var deadPersonCategories = []
@@ -108,6 +111,7 @@ var eventPersonFirstName = ""
 var eventPersonLastName = ""
 var eventPersonAge = ""
 var eventPersonSex = ""
+var eventPersonGender = ""
 #other
 var degreePicked = ""
 var degreePickedCost = ""
@@ -242,6 +246,7 @@ func NPCStatsGenerator(): ##Generates and returns a fully random stats array for
 
 func NPCCreator(NPCsex : String, NPCfirstName : String, NPClastName : String, NPCage : int, NPCrelationship : int, NPCtype : String, NPCcategory : String, NPCstats = "random"): ##Creates an NPC from several custom perameters. NPCtype can be either "family" or "misc". If NPCstats is "random", this fills their stats in with random values.
 	personSexes.append(NPCsex)
+	personGenders.append(NPCsex)
 	personFirstNames.append(NPCfirstName)
 	personLastNames.append(NPClastName)
 	personAges.append(NPCage)
@@ -265,6 +270,7 @@ func NPCKiller(type : String, index : int, deathCause : String = "Specify if kil
 		deadPersonTypes.append(personTypes[index])
 		deadPersonAges.append(personAges[index])
 		deadPersonSexes.append(personSexes[index])
+		deadPersonGenders.append(personGenders[index])
 		deadPersonCategories.append(personCategories[index])
 		deadPersonRecency.append(age)
 		deadPersonCause.append(deathCause)
@@ -284,6 +290,7 @@ func NPCKiller(type : String, index : int, deathCause : String = "Specify if kil
 	personTypes.remove_at(index)
 	personAges.remove_at(index)
 	personSexes.remove_at(index)
+	personGenders.remove_at(index)
 	personCategories.remove_at(index)
 	personStats.remove_at(index)
 	personUIDs.remove_at(index)
@@ -551,6 +558,7 @@ func lifeSerialiser(): ##Serialises every life-specific variable we need to save
 		"lastName" : lastName,
 		"age" : age,
 		"sex" : sex,
+		"gender" : gender,
 		"joy" : joy,
 		"health" : health,
 		"intellect" : intellect,
@@ -608,6 +616,7 @@ func lifeSerialiser(): ##Serialises every life-specific variable we need to save
 		"personTypes" : personTypes,
 		"personAges" : personAges,
 		"personSexes" : personSexes,
+		"personGenders" : personGenders,
 		"personRelationships" : personRelationships,
 		"personUIDsUsed" : personUIDsUsed,
 		"personUIDs" : personUIDs,
@@ -619,6 +628,7 @@ func lifeSerialiser(): ##Serialises every life-specific variable we need to save
 		"deadPersonTypes" : deadPersonTypes,
 		"deadPersonAges" : deadPersonAges,
 		"deadPersonSexes" : deadPersonSexes,
+		"deadPersonGenders" : deadPersonGenders,
 		"deadPersonRelationships" : deadPersonRelationships,
 		"deadPersonCause" : deadPersonCause,
 		"deadPersonCategories" : deadPersonCategories,
@@ -628,6 +638,7 @@ func lifeSerialiser(): ##Serialises every life-specific variable we need to save
 		"eventPersonLastName" : eventPersonLastName,
 		"eventPersonAge" : eventPersonAge,
 		"eventPersonSex" : eventPersonSex,
+		"eventPersonGender" : eventPersonGender,
 		"degreePicked" : degreePicked,
 		"degreePickedCost" : degreePickedCost,
 		"degreePickedLoanDuration" : degreePickedLoanDuration,
@@ -791,6 +802,7 @@ func loadLife(takeHome = true, base64life = ""): ##Does the actual LIFE loading 
 	lastName = dictionary["lastName"]
 	age = dictionary["age"]
 	sex = dictionary["sex"]
+	gender = dictionary["gender"]
 	joy = dictionary["joy"]
 	health = dictionary["health"]
 	intellect = dictionary["intellect"]
@@ -850,6 +862,7 @@ func loadLife(takeHome = true, base64life = ""): ##Does the actual LIFE loading 
 	personTypes = dictionary["personTypes"]
 	personAges = intIser(dictionary["personAges"])
 	personSexes = dictionary["personSexes"]
+	personGenders = dictionary["personGenders"]
 	personRelationships = intIser(dictionary["personRelationships"])
 	personUIDsUsed = dictionary["personUIDsUsed"]
 	personUIDs = intIser(dictionary["personUIDs"])
@@ -861,6 +874,7 @@ func loadLife(takeHome = true, base64life = ""): ##Does the actual LIFE loading 
 	deadPersonTypes = dictionary["deadPersonTypes"]
 	deadPersonAges = intIser(dictionary["deadPersonAges"])
 	deadPersonSexes = dictionary["deadPersonSexes"]
+	deadPersonGenders = dictionary["deadPersonGenders"]
 	deadPersonRelationships = intIser(dictionary["deadPersonRelationships"])
 	deadPersonCause = dictionary["deadPersonCause"]
 	deadPersonCategories = dictionary["deadPersonCategories"]
@@ -870,6 +884,7 @@ func loadLife(takeHome = true, base64life = ""): ##Does the actual LIFE loading 
 	eventPersonLastName = dictionary["eventPersonLastName"]
 	eventPersonAge = dictionary["eventPersonAge"]
 	eventPersonSex = dictionary["eventPersonSex"]
+	eventPersonGender = dictionary["eventPersonGender"]
 	degreePicked = dictionary["degreePicked"]
 	degreePickedCost = dictionary["degreePickedCost"]
 	degreePickedLoanDuration = dictionary["degreePickedLoanDuration"]

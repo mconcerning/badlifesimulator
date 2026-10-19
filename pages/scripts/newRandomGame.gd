@@ -19,6 +19,7 @@ func cleanLife(): #resets your existing life (if any) and generates new stats
 		1: #if 1, you are female
 			global.sex = "F"
 			print("you are female!")
+	global.gender = global.sex #match gender to sex to start
 	global.sexuality = r.ng.randi_range(1,30) #randomise sexuality
 	if global.sexuality <= 15: #if you're straight
 		if global.sex == "M":
@@ -95,6 +96,7 @@ func cleanLife(): #resets your existing life (if any) and generates new stats
 	global.personTypes = []
 	global.personAges = []
 	global.personSexes = []
+	global.personGenders = []
 	global.personRelationships = []
 	global.personUIDsUsed = 0
 	global.personUIDs = []
@@ -107,6 +109,7 @@ func cleanLife(): #resets your existing life (if any) and generates new stats
 	global.deadPersonAges = []
 	global.deadPersonRelationships = []
 	global.deadPersonSexes = []
+	global.deadPersonGenders = []
 	global.deadPersonCategories = []
 	global.deadPersonRecency = []
 	#keeping track
@@ -268,13 +271,17 @@ func familyGenerator(): #HELP I DON'T WANT TO MAKE THIS SCRIPT FOR A THIRD TIME 
 	for i in global.personTypes.size(): #sets a variable, i, to run through every item in the personTypes array. Runs once for every item in it. Index of the family member corresponds with the index of their sex.
 		if global.personTypes[i] == "Mother" || global.personTypes[i] == "Sister" || global.personTypes[i] == "Grandmother" || global.personTypes[i] == "Aunt": #if family member at index i is female
 			global.personSexes.append("F") #appends female
+			global.personGenders.append("F")
 		elif global.personTypes[i] == "Father" || global.personTypes[i] == "Brother" || global.personTypes[i] == "Grandfather" || global.personTypes[i] == "Uncle": #if family member at index i is male
 			global.personSexes.append("M") #appends male
+			global.personGenders.append("M")
 		else: #if family member at index i is your cousin (the only remaining possible type of family member)
 			if r.ng.randi_range(1, 2) == 1: #if cousin is female
 				global.personSexes.append("F") #appends female
+				global.personGenders.append("F")
 			else: #if cousin is male
 				global.personSexes.append("M") #appends male
+				global.personGenders.append("M")
 	#namer
 	var parentsAreMarried = false #parents aren't married by default, but this might change:
 	if howManyParents == 2: #if you have two parents

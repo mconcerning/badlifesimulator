@@ -31,7 +31,10 @@ func _ready() -> void:
 		buttonInstance.pressed.connect(personClicked.bind(family[i], "family"))
 		#label below
 		var labelInstance = labelBelowLabel.instantiate() #creates the label for the family member at index family[i]
-		labelInstance.text = global.personTypes[family[i]] + " (" + global.personSexes[family[i]] + "), Age " + str(global.personAges[family[i]]) + ", Relationship: " + str(global.personRelationships[family[i]]) + "\n"
+		var gender : String = global.personGenders[family[i]]
+		if global.personSexes[family[i]] != global.personGenders[family[i]]:
+			gender = global.personSexes[family[i]] + "t" + global.personGenders[family[i]]
+		labelInstance.text = global.personTypes[family[i]] + " (" + gender + "), Age " + str(global.personAges[family[i]]) + ", Relationship: " + str(global.personRelationships[family[i]]) + "\n"
 		if labelInstance.get_minimum_size().x >= 1000:
 			labelInstance.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 			labelInstance.size.x = 900
@@ -49,7 +52,10 @@ func _ready() -> void:
 			buttonInstance.pressed.connect(personClicked.bind(misc[i], "type"))
 			#label below
 			var labelInstance = labelBelowLabel.instantiate() #creates the label for the misc person at index misc[i]
-			labelInstance.text = global.personTypes[misc[i]] + " (" + global.personSexes[misc[i]] + "), Age " + str(global.personAges[misc[i]]) + ", Relationship: " + str(global.personRelationships[misc[i]]) + "\n"
+			var gender : String = global.personGenders[family[i]]
+			if global.personSexes[family[i]] != global.personGenders[family[i]]:
+				gender = global.personSexes[family[i]] + "t" + global.personGenders[family[i]]
+			labelInstance.text = global.personTypes[misc[i]] + " (" + gender + "), Age " + str(global.personAges[misc[i]]) + ", Relationship: " + str(global.personRelationships[misc[i]]) + "\n"
 			if labelInstance.get_minimum_size().x >= 1000:
 				labelInstance.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 				labelInstance.size.x = 900
@@ -63,7 +69,10 @@ func _ready() -> void:
 			buttonInstance.pressed.connect(personClicked.bind(misc[i], "type"))
 			#label below
 			var labelInstance = labelBelowLabel.instantiate() #creates the label for the misc person at index misc[i]
-			labelInstance.text = global.personTypes[misc[i]] + " (" + global.personSexes[misc[i]] + "), Age " + str(global.personAges[misc[i]]) + ", Relationship: " + str(global.personRelationships[misc[i]]) + "\n"
+			var gender : String = global.personGenders[misc[i]]
+			if global.personSexes[misc[i]] != global.personGenders[misc[i]]:
+				gender = global.personSexes[misc[i]] + "t" + global.personGenders[misc[i]]
+			labelInstance.text = global.personTypes[misc[i]] + " (" + gender + "), Age " + str(global.personAges[misc[i]]) + ", Relationship: " + str(global.personRelationships[misc[i]]) + "\n"
 			if labelInstance.get_minimum_size().x >= 1000:
 				labelInstance.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 				labelInstance.size.x = 900

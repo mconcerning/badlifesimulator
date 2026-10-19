@@ -52,9 +52,9 @@ text = "Start new game"
 
 [node name="more" parent="." unique_id=1298281961 instance=ExtResource("5_n5qs2")]
 offset_left = 465.0
-offset_top = 800.0
+offset_top = 950.0
 offset_right = 615.0
-offset_bottom = 884.0
+offset_bottom = 1034.0
 text = "More"
 
 [node name="progress" type="TextureButton" parent="." unique_id=1571853976]
