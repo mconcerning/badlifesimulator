@@ -2,6 +2,8 @@ extends Node2D #author(s): Ethan Scott
 
 
 var isDying = false
+var prevFullTimePerformance : int
+var prevPartTimePerformance : int
 
 
 func basicStatChanges():
@@ -171,12 +173,22 @@ func job():
 			global.workExperience.append(global.fullTimeJob) #you get work experience for it
 			global.XPQueued += 25
 			global.fullTimePerformance += r.ng.randi_range(-6, 6)
+	prevFullTimePerformance = global.fullTimePerformance
+	prevPartTimePerformance = global.partTimePerformance
 	if global.partTimeJob != "": #if you have a part-time job
-		global.workExperience.append(global.partTimeJob) #you get work experience for it
-		global.XPQueued += 15
-		global.partTimePerformance += r.ng.randi_range(-6, 6)
+		if global.partTimePerformance <= 30 && r.ng.randi_range(1, roundi(float(global.partTimePerformance) / 10)) == 1: #if you're performing too poorly and end up getting fired
+			global.revent.append("part-time-fired-performance")
+		else: #if you weren't fired
+			global.workExperience.append(global.partTimeJob) #you get work experience for it
+			global.XPQueued += 15
+			global.partTimePerformance += r.ng.randi_range(-6, 6)
 	if global.fullTimeJob != "" && global.partTimeJob != "": #if you have both a full-time and part-time job
 		global.health -= r.ng.randi_range(4, 6) + max(2, roundi(float(global.partTimeHours) / 10)) #it's not exactly healthy to be working 72 hours a week...
+	#low performance warning
+	if global.fullTimePerformance <= 35 && prevFullTimePerformance > 35:
+		global.revent.append("low-full-time-performance-warning")
+	if global.partTimePerformance <= 30 && prevPartTimePerformance > 30:
+		global.revent.append("low-part-time-performance-warning")
 
 
 func imprisonment(): ##Handles your chances of being arrested

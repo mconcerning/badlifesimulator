@@ -365,3 +365,8 @@ func _on_cak_not_invited_pressed() -> void:
 	global.NPCCreator("F", "Some", "Guy", 47, 1, "Friend", "misc", "random")
 	global.NPCKiller("kill", global.personFirstNames.size() - 1, "was developed out of existence")
 	get_tree().change_scene_to_file("res://pages/event.tscn")
+
+func _on_set_gender_pressed() -> void:
+	global.gender = $input.text
+	$confirmation.text = "Successfully set gender!"
+	print("set gender to " + str(global.gender))

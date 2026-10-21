@@ -369,6 +369,12 @@ size_flags_horizontal = 4
 theme = ExtResource("6_llmlx")
 text = "CAK funeral not invited"
 
+[node name="setGender" type="Button" parent="scrollContainer/centerContainer/vBoxContainer" unique_id=363212239]
+layout_mode = 2
+size_flags_horizontal = 4
+theme = ExtResource("6_llmlx")
+text = "Set gender"
+
 [connection signal="pressed" from="exit" to="." method="_on_exit_pressed"]
 [connection signal="pressed" from="info" to="." method="_on_info_pressed"]
 [connection signal="pressed" from="saveGame" to="." method="_on_save_game_pressed"]
@@ -414,3 +420,4 @@ text = "CAK funeral not invited"
 [connection signal="pressed" from="scrollContainer/centerContainer/vBoxContainer/cakPlanner" to="." method="_on_cak_planner_pressed"]
 [connection signal="pressed" from="scrollContainer/centerContainer/vBoxContainer/cakInvited" to="." method="_on_cak_invited_pressed"]
 [connection signal="pressed" from="scrollContainer/centerContainer/vBoxContainer/cakNotInvited" to="." method="_on_cak_not_invited_pressed"]
+[connection signal="pressed" from="scrollContainer/centerContainer/vBoxContainer/setGender" to="." method="_on_set_gender_pressed"]

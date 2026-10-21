@@ -7,6 +7,7 @@
 [ext_resource type="PackedScene" uid="uid://ck7ra4cupjjkm" path="res://objects/button_default.tscn" id="5_1lnki"]
 [ext_resource type="LabelSettings" uid="uid://d2sr5rgpltp8f" path="res://styles/text/small_body.tres" id="5_tphct"]
 [ext_resource type="Theme" uid="uid://b7ik156icwyyk" path="res://styles/button1/button1EventOptions.tres" id="6_tadka"]
+[ext_resource type="PackedScene" uid="uid://c7mtxc0kmsorg" path="res://objects/money.tscn" id="8_ueyd5"]
 
 [node name="event" type="Node2D" unique_id=102854654]
 script = ExtResource("1_pi1xr")
@@ -99,6 +100,11 @@ offset_bottom = 2284.0
 theme = ExtResource("6_tadka")
 text = "Cancel event spawn"
 metadata/_edit_use_anchors_ = true
+
+[node name="money" parent="." unique_id=91619562 instance=ExtResource("8_ueyd5")]
+visible = false
+offset_top = 1700.0
+offset_bottom = 1760.0
 
 [connection signal="pressed" from="option1" to="." method="_on_option_1_pressed"]
 [connection signal="pressed" from="option2" to="." method="_on_option_2_pressed"]

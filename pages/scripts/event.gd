@@ -4,7 +4,7 @@ extends Node2D #author(s): Ethan Scott
 
 
 var goingToSpecific : String = "false" ##Use this instead of the goToSpecific() function to go to a specific page after an event. Set the value to the path of the scene you want to go to and the game will take you there as soon as all other processing is complete. Please note that in order for this to work properly, its value must be SET DURING an event or outcome, NOT when an option is clicked.
-var goingHome : bool = false ##Set to true if you would like this event to take you home.
+var goingHome : bool = false ##Set to true if you would like this event to take you home when option 1 is pressed.
 
 
 func optionRemover(optionXOnwards : int): ##Disables and changes the opacity to 0 of unused buttons (optionXOnwards is the number representing which button you want to disable (option 1, 2, 3, 4... etc). It and every button after it will be disabled).
@@ -100,6 +100,9 @@ func repositionResize(): ##Repositions and resizes the nodes on-screen to create
 	$option4.position.y = $option3.position.y + $option3.get_minimum_size().y + 50
 	$option5.position.y = $option4.position.y + $option4.get_minimum_size().y + 50
 	$option6.position.y = $option5.position.y + $option5.get_minimum_size().y + 50
+	$money.position.y = $option6.position.y + $option6.get_minimum_size().y + 100
+	if $money.position.y > 1750:
+		$money.position.y = 1750
 	$heading.position.x = round(540 - (float($heading.size.x / 2))) #centres heading text horizontally on the screen
 	$body.position.x = round(540 - (float($body.size.x / 2)))
 	$option1.position.x = round(540 - (float($option1.size.x / 2))) #centres button horizontally on the screen
@@ -329,6 +332,7 @@ func specialised(): ##Runs any miscellanious specialised, non-age-up events.
 			$option2.disabled = true #if you have no parents, you can't exactly ask them to pay for your tuition
 		$option3.text = "Take out the loan"
 		$option4.text = "Apply for a scholarship"
+		$money.show()
 		optionRemover(5)
 		if global.eventMemory.has("university-degree-picked-o2-refused"): #if your parents already refused to pay for your tuition
 			$option2.disabled = true #you can't just keep pestering them until they cave
@@ -373,6 +377,7 @@ func specialised(): ##Runs any miscellanious specialised, non-age-up events.
 			$option2.disabled = true #if you have no parents, you can't exactly ask them to pay for your tuition
 		$option3.text = "Take out the loan"
 		$option4.text = "Apply for a scholarship"
+		$money.show()
 		optionRemover(5)
 		if global.eventMemory.has("certificate-picked-o2-refused"): #if your parents already refused to pay for your tuition
 			$option2.disabled = true #you can't just keep pestering them until they cave
@@ -474,6 +479,7 @@ func relationships(): ##Specialised, specifically relationship-related events.
 	elif global.revent[0] == "relationship-deathnotif-planner-o1":
 		$heading.text = "Funeral planner"
 		$body.text = "You can choose from any of the following funeral plans. A better funeral will minimise your and your family members' grief."
+		$money.show()
 		var tier1price = global.eventMemory[0]["funeralTierPricing"][0]
 		var tier2price = global.eventMemory[0]["funeralTierPricing"][1]
 		var tier3price = global.eventMemory[0]["funeralTierPricing"][2]
@@ -681,6 +687,7 @@ func prison(): ##Specialised prison events.
 		else:
 			$body.text += str(global.crimes.size()) + " crimes."
 		$body.text += "\n\nWould you like to pick a lawyer to represent you in court?"
+		$money.show()
 		$option1.text = "I am my own lawyer"
 		$option2.text = "Public defender ($0)"
 		$option3.text = global.lawyers[0] + " ($" + global.commaiser(global.sumCalculator(global.crimesSeverity) * global.lawyerCostMultiplier[0]) + ")"
@@ -1126,6 +1133,14 @@ func job(): ##Career-related and career-specific events.
 		optionRemover(2)
 		global.history.append(global.fullTimeJob + "-fired")
 		global.removeFullTimeJob()
+	elif global.revent[0] == "part-time-fired-performance": #if you've been fired from your part-time job for poor performance
+		$heading.text = "Part-time more like no-time"
+		$body.text = "You've been fired from your part-time job as " + global.partTimeJob + ". They say it's because of your poor performance."
+		$option1.text = "Okay"
+		optionRemover(2)
+		goingHome = true
+		global.history.append(global.partTimeJob + "-fired")
+		global.removePartTimeJob()
 	elif global.revent[0] == "full-time-raise-performance": #if you're getting a raise at your full-time job for good performance
 		$heading.text = "Keeping up with inflation"
 		var raisePercentage = float(global.fullTimePerformance) / 20 + (float(r.ng.randi_range(-150, 150)) / 100) #the percentage of your original salary you will recieve extra
@@ -1251,6 +1266,18 @@ func job(): ##Career-related and career-specific events.
 			global.joy -= joySubtract
 		$option1.text = "Okay"
 		optionRemover(2)
+	elif global.revent[0] == "low-full-time-performance-warning":
+		$heading.text = "Poorformance"
+		$body.text = "Your boss warned you that your performance at your full-time job as " + global.fullTimeJob + " is poor.\n\nYou may be at risk of being fired."
+		$option1.text = "Okay"
+		optionRemover(2)
+		goingHome = true
+	elif global.revent[0] == "low-part-time-performance-warning":
+		$heading.text = "Can barely even hold down a PART-time job"
+		$body.text = "Your boss warned you that your performance at your part-time job as " + global.partTimeJob + " is poor.\n\nYou may be at risk of being fired."
+		$option1.text = "Okay"
+		optionRemover(2)
+		goingHome = true
 
 
 func confirmation(): ##Non-random confirmation events that tell you that something just happened.
